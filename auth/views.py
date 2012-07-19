@@ -18,7 +18,9 @@ class Team(View):
         form = TeamForm(request.POST)
         if form.is_valid():
             authorization = {'authorization': request.session.get('tsuru_token')}
-            response = requests.post('%s/teams' % settings.TSURU_HOST, dict(form.data), headers=authorization)
+            response = requests.post('%s/teams' % settings.TSURU_HOST,
+                                     data=json.dumps(form.data),
+                                     headers=authorization)
             if response.status_code == 200:
                 return HttpResponse("OK")
             else:
