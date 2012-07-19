@@ -1,9 +1,13 @@
+from mock import patch, Mock
+
+from django.conf import settings
 from django.test import TestCase
 from django.test.client import RequestFactory
 from django.http import Http404
 
 from auth.views import login, team, signup
 from auth.forms import TeamForm, LoginForm
+
 
 class LoginViewTest(TestCase):
     def test_root_should_show_login_template(self):
@@ -25,8 +29,10 @@ class LoginViewTest(TestCase):
 
 class TeamViewTest(TestCase):
     def setUp(self):
-        self.request = RequestFactory().get('/')
+        self.factory = RequestFactory()
+        self.request = self.factory.get('/')
         self.response = team(self.request)
+        self.response_mock = Mock()
 
     def test_team_should_render_expected_template(self):
         self.assertEqual('auth/team.html', self.response.template_name)
@@ -43,6 +49,29 @@ class TeamViewTest(TestCase):
             self.client.get('/team/')
         except Http404:
             assert False
+
+    def test_post_with_name_should_send_request_post_to_tsuru_with_args_expected(self):
+        request = self.factory.post('/team/', {'name': 'test-team'})
+        with patch('requests.post') as post:
+            team(request)
+            self.assertEqual(1, post.call_count)
+            post.assert_called_with('%s/teams' % settings.TSURU_HOST, {u'name': [u'test-team']})
+
+    def test_post_with_valid_name_should_return_200(self):
+        request = self.factory.post('/team/', {'name': 'test-team'})
+        with patch('requests.post') as post:
+            self.response_mock.status_code = 200
+            post.side_effect = Mock(return_value=self.response_mock)
+            response = team(request)
+            self.assertEqual(200, response.status_code)
+
+    def test_post_with_invalid_name_should_return_500(self):
+        request = self.factory.post('/team/', {'name': 'test-team'})
+        with patch('requests.post') as post:
+            self.response_mock.status_code = 500
+            post.side_effect = Mock(return_value=self.response_mock)
+            response = team(request)
+            self.assertEqual(500, response.status_code)
 
 
 class SignUpViewTest(TestCase):
