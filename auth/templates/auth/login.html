@@ -5,17 +5,18 @@
 {% endblock extra_css %}
 
 {% block content %}
+
     <div class="row">
         <div class="login-form">
             <h2>Login</h2>
             <form action="">
                 <fieldset>
                     <div class="clearfix">
-                        <input type="text" placeholder="Username">
+                        <input type="text" name="{{login_form.username.name}}" placeholder="Username">
                     </div>
 
                     <div class="clearfix">
-                        <input type="password" placeholder="Password">
+                        <input type="password" name="{{login_form.password.name}}" placeholder="Password">
                     </div>
 
                     <button class="btn primary" type="submit">Sign in</button>
@@ -23,4 +24,5 @@
             </form>
         </div>
     </div>
+
 {% endblock content %}
