@@ -9,13 +9,16 @@
     <div class="row">
         <div class="login-form">
             <h2>Login</h2>
-            <form action="">
+            <form action="" method="post">
+                {% csrf_token %}
                 <fieldset>
-                    <div class="clearfix">
-                        <input type="text" name="{{login_form.username.name}}" placeholder="Username">
+                    <div class="clearfix control-group{% if login_form.errors.username %} error{% endif %}">
+                        {{login_form.errors.username}}
+                        <input type="text" name="{{login_form.username.name}}" placeholder="Username" value="{{login_form.username.value}}">
                     </div>
 
-                    <div class="clearfix">
+                    <div class="clearfix control-group{% if login_form.errors.password %} error{% endif %}">
+                        {{login_form.errors.password}}
                         <input type="password" name="{{login_form.password.name}}" placeholder="Password">
                     </div>
 

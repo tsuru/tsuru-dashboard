@@ -5,26 +5,37 @@ from django.test import TestCase
 from django.test.client import RequestFactory
 from django.http import Http404
 
-from auth.views import login, team, signup
-from auth.forms import TeamForm, LoginForm
+from auth.views import Login, team, Signup
+from auth.forms import TeamForm, LoginForm, SignupForm
 
 
 class LoginViewTest(TestCase):
     def test_root_should_show_login_template(self):
         request = RequestFactory().get('/')
-        response = login(request)
+        response = Login().get(request)
         self.assertEqual('auth/login.html', response.template_name)
 
     def test_login_should_show_template(self):
         request = RequestFactory().get('/login')
-        response = login(request)
+        response = Login().get(request)
         self.assertEqual('auth/login.html', response.template_name)
 
     def test_login_form_should_be_in_the_view_context(self):
         request = RequestFactory().get('/')
-        response = login(request)
+        response = Login().get(request)
         form = response.context_data['login_form']
         self.assertIsInstance(form, LoginForm)
+
+    def test_should_validate_data_from_post(self):
+        data = {'username': 'invalid name', 'password': ''}
+        request = RequestFactory().post('/', data)
+        response = Login().post(request)
+        form = response.context_data['login_form']
+
+        self.assertEqual('auth/login.html', response.template_name)
+        self.assertIsInstance(form, LoginForm)
+        self.assertEqual('invalid name', form.data['username'])
+
 
 
 class TeamViewTest(TestCase):
@@ -74,8 +85,14 @@ class TeamViewTest(TestCase):
             self.assertEqual(500, response.status_code)
 
 
-class SignUpViewTest(TestCase):
+class SignupViewTest(TestCase):
+    def setUp(self):
+        self.request = RequestFactory().get('/')
+        self.response = Signup().get(self.request)
+
     def test_signup_should_show_template(self):
-        request = RequestFactory().get('/signup')
-        response = signup(request)
-        self.assertEqual('auth/signup.html', response.template_name)
+        self.assertEqual('auth/signup.html', self.response.template_name)
+
+    def test_context_should_contain_form(self):
+        form = self.response.context_data['signup_form']
+        self.assertIsInstance(form, SignupForm)

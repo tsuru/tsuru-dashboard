@@ -3,8 +3,9 @@ import requests
 from django.conf import settings
 from django.template.response import TemplateResponse
 from django.http import HttpResponse
+from django.views.generic.base import View
+from auth.forms import TeamForm, LoginForm, SignupForm
 
-from auth.forms import TeamForm, LoginForm
 
 def team(request):
     if request.method == 'POST':
@@ -19,8 +20,19 @@ def team(request):
     context['form'] = TeamForm()
     return TemplateResponse(request, 'auth/team.html', context)
 
-def login(request):
-    return TemplateResponse(request, 'auth/login.html', context={'login_form': LoginForm()})
 
-def signup(request):
-    return TemplateResponse(request, 'auth/signup.html')
+class Login(View):
+
+	def get(self, request):
+		return TemplateResponse(request, 'auth/login.html', context={'login_form': LoginForm()})
+
+	def post(self, request):
+		form = LoginForm(request.POST)
+		if not form.is_valid():
+			return TemplateResponse(request, 'auth/login.html', context={'login_form': form})
+
+
+class Signup(View):
+
+	def get(self, request):
+		return TemplateResponse(request, 'auth/signup.html', context={'signup_form': SignupForm()})
