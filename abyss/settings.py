@@ -15,7 +15,7 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite',
+        'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_PATH, 'data.db'),
         'USER': '',
         'PASSWORD': '',
@@ -52,7 +52,7 @@ USE_TZ = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
-MEDIA_ROOT = os.path.jon(BASE_PATH, 'media')
+MEDIA_ROOT = os.path.join(BASE_PATH, 'media')
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
