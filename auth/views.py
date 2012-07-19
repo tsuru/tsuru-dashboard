@@ -7,8 +7,13 @@ from django.views.generic.base import View
 from auth.forms import TeamForm, LoginForm, SignupForm
 
 
-def team(request):
-    if request.method == 'POST':
+class Team(View):
+    def get(self, request):
+        context = {}
+        context['form'] = TeamForm()
+        return TemplateResponse(request, 'auth/team.html', context)
+
+    def post(self, request):
         form = TeamForm(request.POST)
         if form.is_valid():
             response = requests.post('%s/teams' % settings.TSURU_HOST, dict(form.data))
@@ -16,9 +21,6 @@ def team(request):
                 return HttpResponse("")
             else:
                 return HttpResponse(response.content, status=response.status_code)
-    context = {}
-    context['form'] = TeamForm()
-    return TemplateResponse(request, 'auth/team.html', context)
 
 
 class Login(View):
