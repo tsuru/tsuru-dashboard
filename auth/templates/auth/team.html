@@ -4,7 +4,8 @@
           <div class="row">
               <div class="team-form">
                   <h2>Team</h2>
-                  <form action="">
+                  <form action="" method="post">
+                     {% csrf_token %}
                      <fieldset>
                         <div class="clearfix">
                             <label>name</label>

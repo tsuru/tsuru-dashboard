@@ -18,9 +18,10 @@ class Team(View):
         if form.is_valid():
             response = requests.post('%s/teams' % settings.TSURU_HOST, dict(form.data))
             if response.status_code == 200:
-                return HttpResponse("")
+                return HttpResponse("OK")
             else:
                 return HttpResponse(response.content, status=response.status_code)
+        return TemplateResponse(request, 'auth/team.html', {'form': form})
 
 
 class Login(View):
