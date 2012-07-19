@@ -2,49 +2,11 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Bootstrap, from Twitter</title>
+    <title>Abyss - The Tsuru web admin</title>
     <meta name="description" content="">
     <meta name="author" content="">
-
-    <!-- Le styles -->
-    <link href="{{ STATIC_URL }}css/bootstrap.css" rel="stylesheet">
-    <style type="text/css">
-      /* Override some defaults */
-      html, body {
-        background-color: #eee;
-      }
-      body {
-        padding-top: 40px; 
-      }
-      .container {
-        width: 300px;
-      }
-
-      /* The white background content wrapper */
-      .container > .content {
-        background-color: #fff;
-        padding: 20px;
-        margin: 0 -20px; 
-        -webkit-border-radius: 10px 10px 10px 10px;
-           -moz-border-radius: 10px 10px 10px 10px;
-                border-radius: 10px 10px 10px 10px;
-        -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.15);
-           -moz-box-shadow: 0 1px 2px rgba(0,0,0,.15);
-                box-shadow: 0 1px 2px rgba(0,0,0,.15);
-      }
-
-    .login-form {
-      margin-left: 65px;
-    }
-  
-    legend {
-      margin-right: -50px;
-      font-weight: bold;
-      color: #404040;
-    }
-
-    </style>
-
+    <link href="{{ STATIC_URL }}css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ STATIC_URL }}css/login.css" rel="stylesheet">
 </head>
 <body>
   <div class="container">
@@ -66,6 +28,6 @@
               </div>
           </div>
       </div>
-  </div> <!-- /container -->
+  </div>
 </body>
 </html>
