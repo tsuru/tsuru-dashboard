@@ -15,7 +15,7 @@ class SignupForm(forms.Form):
     email = forms.EmailField(max_length=60)
     password = forms.CharField(widget=widgets.PasswordInput, min_length=6)
     same_password_again = forms.CharField(widget=widgets.PasswordInput, min_length=6)
-    
+
     def clean(self):
         cleaned_data = super(SignupForm, self).clean()
         password = cleaned_data.get("password")
