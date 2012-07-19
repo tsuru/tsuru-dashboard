@@ -5,7 +5,13 @@
               <div class="team-form">
                   <h2>Team</h2>
                   <form action="">
-                     {{ form }}
+                     <fieldset>
+                        <div class="clearfix">
+                            <label>name</label>
+                            <input type="text" name="{{ form.name.name }}" placeholder="Type a name for your team...">
+                        </div>
+                        <button class="btn primary" type="submit">Create</button>
+                     </fieldset>
                   </form>
               </div>
           </div>
