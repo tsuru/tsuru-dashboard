@@ -34,6 +34,7 @@ class LoginFormTest(TestCase):
 		field = forms.LoginForm.base_fields['username']
 		self.assertIsInstance(field, EmailField)
 
+
 class SignupFormTest(TestCase):
     def test_signup_form_should_have_email_password_and_same_password_again_fields(self):
         self.assertIn('email', forms.SignupForm.base_fields)
