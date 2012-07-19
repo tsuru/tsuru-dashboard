@@ -2,13 +2,17 @@ from django.test import TestCase
 from django.test.client import RequestFactory
 from django.http import Http404
 
-from auth.views import login, team
+from auth.views import login, team, signup
 from auth.forms import TeamForm, LoginForm
 
-
 class LoginViewTest(TestCase):
-    def test_login_expected_template_view(self):
+    def test_root_should_show_login_template(self):
         request = RequestFactory().get('/')
+        response = login(request)
+        self.assertEqual('auth/login.html', response.template_name)
+
+    def test_login_should_show_template(self):
+        request = RequestFactory().get('/login')
         response = login(request)
         self.assertEqual('auth/login.html', response.template_name)
 
@@ -39,3 +43,10 @@ class TeamViewTest(TestCase):
             self.client.get('/team/')
         except Http404:
             assert False
+
+
+class SignUpViewTest(TestCase):
+    def test_signup_should_show_template(self):
+        request = RequestFactory().get('/signup')
+        response = signup(request)
+        self.assertEqual('auth/signup.html', response.template_name)
