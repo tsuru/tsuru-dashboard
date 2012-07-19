@@ -13,13 +13,13 @@
                 {% csrf_token %}
                 <fieldset>
                     <div class="clearfix control-group{% if login_form.errors.username %} error{% endif %}">
-                        {{login_form.errors.username}}
                         <input type="text" name="{{login_form.username.name}}" placeholder="Username" {% if login_form.username.value %}value="{{login_form.username.value}}"{% endif %}>
+                        <span class="help-inline">{{login_form.errors.username}}</span>
                     </div>
 
                     <div class="clearfix control-group{% if login_form.errors.password %} error{% endif %}">
-                        {{login_form.errors.password}}
                         <input type="password" name="{{login_form.password.name}}" placeholder="Password">
+                        <span class="help-inline">{{login_form.errors.password}}</span>
                     </div>
 
                     <button class="btn primary" type="submit">Sign in</button>

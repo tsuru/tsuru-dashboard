@@ -86,13 +86,21 @@ class TeamViewTest(TestCase):
 
 
 class SignupViewTest(TestCase):
-    def setUp(self):
-        self.request = RequestFactory().get('/')
-        self.response = Signup().get(self.request)
-
     def test_signup_should_show_template(self):
-        self.assertEqual('auth/signup.html', self.response.template_name)
+        response = Signup().get(RequestFactory().get('/'))
+        self.assertEqual('auth/signup.html', response.template_name)
 
     def test_context_should_contain_form(self):
-        form = self.response.context_data['signup_form']
+        response = Signup().get(RequestFactory().get('/'))
+        form = response.context_data['signup_form']
         self.assertIsInstance(form, SignupForm)
+
+    def test_should_validate_data_from_post(self):
+        data = {'email': '', 'password': '', 'same_password_again': ''}
+        request = RequestFactory().post('/', data)
+        response = Signup().post(request)
+        form = response.context_data['signup_form']
+
+        self.assertEqual(form.errors['email'][0], u'This field is required.')
+        self.assertEqual(form.errors['password'][0], u'This field is required.')
+        self.assertEqual(form.errors['same_password_again'][0], u'This field is required.')
