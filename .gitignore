@@ -3,3 +3,4 @@
 *.db
 /abyss/static
 /abyss/media
+.DS_Store
