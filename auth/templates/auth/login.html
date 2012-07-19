@@ -11,6 +11,7 @@
             <h2>Login</h2>
             <form action="" method="post">
                 {% csrf_token %}
+                {% if msg %}<div class="error-msg">{{ msg }}</div>{% endif %}
                 <fieldset>
                     <div class="clearfix control-group{% if login_form.errors.username %} error{% endif %}">
                         <input type="text" name="{{login_form.username.name}}" placeholder="Username" {% if login_form.username.value %}value="{{login_form.username.value}}"{% endif %}>

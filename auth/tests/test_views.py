@@ -3,7 +3,7 @@ from mock import patch, Mock
 from django.conf import settings
 from django.test import TestCase
 from django.test.client import RequestFactory
-from django.http import Http404
+from django.http import Http404, HttpResponseRedirect
 
 from auth.views import Login, Team, Signup
 from auth.forms import TeamForm, LoginForm, SignupForm
@@ -36,19 +36,6 @@ class LoginViewTest(TestCase):
         self.assertIsInstance(form, LoginForm)
         self.assertEqual('invalid name', form.data['username'])
 
-    def test_should_return_200_when_post_is_valid(self):
-        data = {'username': 'email@email.com', 'password': '123456'}
-        request = RequestFactory().post('/', data)
-        request.session = {}
-
-        with patch('requests.post') as post:
-            response_mock = Mock()
-            response_mock.status_code = 200
-            response_mock.text = '{"token": "my beautiful token"}'
-            post.side_effect = Mock(return_value=response_mock)
-            response = Login().post(request)
-            self.assertEqual(200, response.status_code)
-
     def test_should_return_200_when_user_does_not_exist(self):
         data = {'username': 'invalid@email.com', 'password': '123456'}
         request = RequestFactory().post('/', data)
@@ -63,17 +50,17 @@ class LoginViewTest(TestCase):
             error_msg = response.context_data['msg']
             self.assertEqual('User not found', error_msg)
 
-    def test_post_with_name_should_send_request_post_to_tsuru_with_args_expected(self):
-        data = {'username': 'invalid@email.com', 'password': '123456'}
+    def test_should_send_request_post_to_tsuru_with_args_expected(self):
+        data = {'username': 'valid@email.com', 'password': '123456'}
         request = RequestFactory().post('/', data)
-        expected_url = '%s/users/invalid@email.com/tokens'%settings.TSURU_HOST
+        expected_url = '%s/users/valid@email.com/tokens'%settings.TSURU_HOST
 
         with patch('requests.post') as post:
             Login().post(request)
             self.assertEqual(1, post.call_count)
             post.assert_called_with(expected_url, data='{"password": "123456"}')
 
-    def test_post_with_name_should_send_request_post_to_tsuru_with_args_expected(self):
+    def test_should_set_token_in_the_session(self):
         data = {'username': 'valid@email.com', 'password': '123456'}
         request = RequestFactory().post('/', data)
         request.session = {}
@@ -85,6 +72,21 @@ class LoginViewTest(TestCase):
             post.side_effect = Mock(return_value=response_mock)
             response = Login().post(request)
             self.assertEqual('my beautiful token', request.session["tsuru_token"])
+
+    def test_redirect_to_team_creation_page_when_login_is_successful(self):
+        data = {'username': 'valid@email.com', 'password': '123456'}
+        request = RequestFactory().post('/', data)
+        request.session = {}
+
+        with patch('requests.post') as post:
+            response_mock = Mock()
+            response_mock.status_code = 200
+            response_mock.text = '{"token": "my beautiful token"}'
+            post.side_effect = Mock(return_value=response_mock)
+            response = Login().post(request)
+            self.assertIsInstance(response, HttpResponseRedirect)
+            self.assertEqual('/team', response['Location'])
+
 
 
 class TeamViewTest(TestCase):
