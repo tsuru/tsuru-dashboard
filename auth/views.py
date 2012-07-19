@@ -3,7 +3,7 @@ import requests
 
 from django.conf import settings
 from django.template.response import TemplateResponse
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic.base import View
 from auth.forms import TeamForm, LoginForm, SignupForm
 
@@ -18,7 +18,9 @@ class Team(View):
         form = TeamForm(request.POST)
         if form.is_valid():
             authorization = {'authorization': request.session.get('tsuru_token')}
-            response = requests.post('%s/teams' % settings.TSURU_HOST, dict(form.data), headers=authorization)
+            response = requests.post('%s/teams' % settings.TSURU_HOST,
+                                     data=json.dumps(form.data),
+                                     headers=authorization)
             if response.status_code == 200:
                 return HttpResponse("OK")
             else:
@@ -42,7 +44,7 @@ class Login(View):
 			if response.status_code == 200:
 				result = json.loads(response.text)
 				request.session['tsuru_token'] = result['token']
-				return HttpResponse("")
+				return HttpResponseRedirect("/team")
 			context['msg'] = 'User not found'
 		return TemplateResponse(request, 'auth/login.html', context=context)
 
