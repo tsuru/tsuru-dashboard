@@ -22,6 +22,17 @@ class LoginViewTest(TestCase):
         form = response.context_data['login_form']
         self.assertIsInstance(form, LoginForm)
 
+    def test_should_validate_data_from_post(self):
+        data = {'username': 'invalid name', 'password': ''}
+        request = RequestFactory().post('/', data)
+        response = Login().post(request)
+        form = response.context_data['login_form']
+
+        self.assertEqual('auth/login.html', response.template_name)
+        self.assertIsInstance(form, LoginForm)
+        self.assertEqual('invalid name', form.data['username'])
+
+
 
 class TeamViewTest(TestCase):
     def setUp(self):

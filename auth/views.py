@@ -15,6 +15,11 @@ class Login(View):
 	def get(self, request):
 		return TemplateResponse(request, 'auth/login.html', context={'login_form': LoginForm()})
 
+	def post(self, request):
+		form = LoginForm(request.POST)
+		if not form.is_valid():
+			return TemplateResponse(request, 'auth/login.html', context={'login_form': form})
+
 
 class Signup(View):
 
