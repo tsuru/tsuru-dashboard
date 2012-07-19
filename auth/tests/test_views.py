@@ -45,14 +45,14 @@ class TeamViewTest(TestCase):
             assert False
 
 
-class SignUpViewTest(TestCase):
+class SignupViewTest(TestCase):
+    def setUp(self):
+        self.request = RequestFactory().get('/')
+        self.response = Signup().get(self.request)
+        
     def test_signup_should_show_template(self):
-        request = RequestFactory().get('/signup')
-        response = Signup().get(request)
-        self.assertEqual('auth/signup.html', response.template_name)
+        self.assertEqual('auth/signup.html', self.response.template_name)
  
     def test_context_should_contain_form(self):
-        request = RequestFactory().get('/signup')
-        response = Signup().get(request)
-        form = response.context_data['signup_form']
+        form = self.response.context_data['signup_form']
         self.assertIsInstance(form, SignupForm)
