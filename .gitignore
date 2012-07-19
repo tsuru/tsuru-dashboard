@@ -1,3 +1,5 @@
 *.sw[p-z]
 *.pyc
 *.db
+/abyss/static
+/abyss/media
