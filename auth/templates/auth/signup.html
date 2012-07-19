@@ -8,7 +8,7 @@
             <fieldset>
                 <div class="clearfix control-group{% if signup_form.errors.email %} error{% endif %}">
                     <label>email</label>
-                    <input type="text" name="{{signup_form.email.name}}" placeholder="type your email here…" class="span3">
+                    <input type="text" name="{{signup_form.email.name}}" placeholder="type your email here…" class="span3" value="{{signup_form.email.value}}">
                     <span class="help-inline">{{signup_form.errors.email}}</span>
                 </div>
 

@@ -101,6 +101,6 @@ class SignupViewTest(TestCase):
         response = Signup().post(request)
         form = response.context_data['signup_form']
 
-        self.assertEqual(form.errors['email'][0], u'This field is required.')
-        self.assertEqual(form.errors['password'][0], u'This field is required.')
-        self.assertEqual(form.errors['same_password_again'][0], u'This field is required.')
+        self.assertIn(u'This field is required.', form.errors['email'])
+        self.assertIn(u'This field is required.', form.errors['password'])
+        self.assertIn(u'This field is required.', form.errors['same_password_again'])
