@@ -1,3 +1,4 @@
+import json
 import requests
 
 from django.conf import settings
@@ -30,8 +31,18 @@ class Login(View):
 
 	def post(self, request):
 		form = LoginForm(request.POST)
-		if not form.is_valid():
-			return TemplateResponse(request, 'auth/login.html', context={'login_form': form})
+		context = {'login_form': form}
+		if form.is_valid():
+			username = form.data.get('username')
+			data = {"password": form.data.get('password')}
+			url = '%s/users/%s/tokens' % (settings.TSURU_HOST, username)
+			response = requests.post(url, data=json.dumps(data))
+			if response.status_code == 200:
+				result = json.loads(response.text)
+				request.session['tsuru_token'] = result['token']
+				return HttpResponse("")
+			context['msg'] = 'User not found'
+		return TemplateResponse(request, 'auth/login.html', context=context)
 
 
 class Signup(View):
