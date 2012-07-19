@@ -1,23 +1,25 @@
 <div class="navbar navbar-fixed-top">
-  <div class="navbar-inner">
-    <div class="container">
-      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </a>
-      <a class="brand" href="#">Abyss</a>
-      <div class="nav-collapse">
-        <ul class="nav">
-          <li class="active"><a href="/">Home</a></li>
-          <li><a href="/signup">Sign up</a></li>
-          <li><a href="https://github.com/timeredbull/abyss/blob/master/README.md">About</a></li>
-          <li><a href="https://github.com/timeredbull">Contact</a></li>
-          {% if request.session.tsuru_token %}
-              <li><a href="/logout">Logout</a></li>
-          {% endif %}
-        </ul>
-      </div>
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+            <a class="brand" href="#">Abyss</a>
+            <div class="nav-collapse">
+                <ul class="nav">
+                    <li class="active"><a href="/">Home</a></li>
+                    {% if not request.session.tsuru_token %}
+                        <li><a href="/signup">Sign up</a></li>
+                    {% endif %}
+                    <li><a href="https://github.com/timeredbull/abyss/blob/master/README.md">About</a></li>
+                    <li><a href="https://github.com/timeredbull">Contact</a></li>
+                    {% if request.session.tsuru_token %}
+                        <li><a href="/logout">Logout</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
