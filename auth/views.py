@@ -22,10 +22,10 @@ class Team(View):
                                      data=json.dumps(form.data),
                                      headers=authorization)
             if response.status_code == 200:
-                return HttpResponse("OK")
+                return TemplateResponse(request, 'auth/team.html', {'form': form, 'message': "Time was successfully created"})
             else:
-                return HttpResponse(response.content, status=response.status_code)
-        return TemplateResponse(request, 'auth/team.html', {'form': form})
+                return TemplateResponse(request, 'auth/team.html', {'form': form, 'errors': response.content})
+        return TemplateResponse(request, 'auth/team.html', {'form': form, 'errors': form.errors})
 
 
 class Login(View):

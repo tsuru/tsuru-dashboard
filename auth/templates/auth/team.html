@@ -6,6 +6,16 @@
                   <h2>Team</h2>
                   <form action="" method="post">
                      {% csrf_token %}
+                     {% if message %}
+                        <div class="alert alert-success">
+                           {{ message }}
+                        </div>
+                     {% endif %}
+                     {% if error %}
+                        <div class="alert alert-error">
+                           {{ error }}
+                        </div>
+                     {% endif %}
                      <fieldset>
                         <div class="clearfix">
                             <label>name</label>

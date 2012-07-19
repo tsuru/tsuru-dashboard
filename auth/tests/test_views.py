@@ -121,25 +121,26 @@ class TeamViewTest(TestCase):
                                     data='{"name": "test-team"}',
                                     headers={'authorization': self.request_post.session['tsuru_token']})
 
-    def test_post_with_valid_name_should_return_200(self):
+    def test_post_with_valid_name_should_return_context_with_message_expected(self):
         with patch('requests.post') as post:
             self.response_mock.status_code = 200
             post.side_effect = Mock(return_value=self.response_mock)
             response = Team().post(self.request_post)
-            self.assertEqual(200, response.status_code)
+            self.assertEqual("Time was successfully created", response.context_data.get('message'))
 
     def test_post_with_invalid_name_should_return_500(self):
         with patch('requests.post') as post:
             self.response_mock.status_code = 500
+            self.response_mock.content = 'Error'
             post.side_effect = Mock(return_value=self.response_mock)
             response = Team().post(self.request_post)
-            self.assertEqual(500, response.status_code)
+            self.assertEqual('Error', response.context_data.get('errors'))
 
     def test_post_without_name_should_return_form_with_errors(self):
         request = self.factory.post('/team/', {'name': ''})
         request.session = {}
         response = Team().post(request)
-        errors =  response.context_data.get('form').errors
+        errors =  response.context_data.get('errors')
         self.assertIn('name', errors)
         self.assertIn(u'This field is required.', errors.get('name'))
 
