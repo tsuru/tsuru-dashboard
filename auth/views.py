@@ -63,7 +63,7 @@ class Signup(View):
         response = requests.post('%s/users' % settings.TSURU_HOST, data=json.dumps(post_data))
         
         if response.status_code == 201:
-            return TemplateResponse(request, 'auth/signup.html', context={'signup_form': '', 'message': 'User "%s" successfully created!' % form.data['email']})
+            return TemplateResponse(request, 'auth/signup.html', context={'signup_form': SignupForm(), 'message': 'User "%s" successfully created!' % form.data['email']})
         else:
             return TemplateResponse(request, 'auth/signup.html', context={'signup_form': form, 'error': response.content}, status=response.status_code)
 
