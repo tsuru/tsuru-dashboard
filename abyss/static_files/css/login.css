@@ -1,9 +1,7 @@
 html, body {
     background-color: #eee;
   }
-  body {
-    padding-top: 40px; 
-  }
+  
   .container {
     width: 300px;
   }
