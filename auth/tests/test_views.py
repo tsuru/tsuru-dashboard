@@ -43,6 +43,8 @@ class TeamViewTest(TestCase):
         self.factory = RequestFactory()
         self.request = self.factory.get('/')
         self.response = Team().get(self.request)
+        self.request_post = self.factory.post('/team/', {'name': 'test-team'})
+        self.request_post.session = {}
         self.response_mock = Mock()
 
     def test_team_should_render_expected_template(self):
@@ -62,30 +64,31 @@ class TeamViewTest(TestCase):
             assert False
 
     def test_post_with_name_should_send_request_post_to_tsuru_with_args_expected(self):
-        request = self.factory.post('/team/', {'name': 'test-team'})
+        self.request_post.session = {'tsuru_token': 'tokentest'}
         with patch('requests.post') as post:
-            Team().post(request)
+            Team().post(self.request_post)
             self.assertEqual(1, post.call_count)
-            post.assert_called_with('%s/teams' % settings.TSURU_HOST, {u'name': [u'test-team']})
+            post.assert_called_with('%s/teams' % settings.TSURU_HOST,
+                                    {u'name': [u'test-team']},
+                                    headers={'authorization': self.request_post.session['tsuru_token']})
 
     def test_post_with_valid_name_should_return_200(self):
-        request = self.factory.post('/team/', {'name': 'test-team'})
         with patch('requests.post') as post:
             self.response_mock.status_code = 200
             post.side_effect = Mock(return_value=self.response_mock)
-            response = Team().post(request)
+            response = Team().post(self.request_post)
             self.assertEqual(200, response.status_code)
 
     def test_post_with_invalid_name_should_return_500(self):
-        request = self.factory.post('/team/', {'name': 'test-team'})
         with patch('requests.post') as post:
             self.response_mock.status_code = 500
             post.side_effect = Mock(return_value=self.response_mock)
-            response = Team().post(request)
+            response = Team().post(self.request_post)
             self.assertEqual(500, response.status_code)
 
     def test_post_without_name_should_return_form_with_errors(self):
         request = self.factory.post('/team/', {'name': ''})
+        request.session = {}
         response = Team().post(request)
         errors =  response.context_data.get('form').errors
         self.assertIn('name', errors)
