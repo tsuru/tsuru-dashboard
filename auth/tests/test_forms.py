@@ -9,6 +9,9 @@ class TeamFormTest(TestCase):
     def test_forms_should_have_TeamForm(self):
         self.assertTrue(hasattr(forms, 'TeamForm'))
 
+    def test_team_should_have_name_field(self):
+        self.assertIn('name', forms.TeamForm.base_fields)
+
 
 class LoginFormTest(TestCase):
 	def test_login_should_have_username_and_password_fields(self):
