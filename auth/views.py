@@ -22,10 +22,10 @@ class Team(View):
                                      data=json.dumps(form.data),
                                      headers=authorization)
             if response.status_code == 200:
-                return HttpResponse("OK")
+                return TemplateResponse(request, 'auth/team.html', {'form': form, 'message': "Time was successfully created"})
             else:
-                return HttpResponse(response.content, status=response.status_code)
-        return TemplateResponse(request, 'auth/team.html', {'form': form})
+                return TemplateResponse(request, 'auth/team.html', {'form': form, 'errors': response.content})
+        return TemplateResponse(request, 'auth/team.html', {'form': form, 'errors': form.errors})
 
 
 class Login(View):
@@ -66,12 +66,11 @@ class Signup(View):
         form = SignupForm(request.POST)
         if not form.is_valid():
             return TemplateResponse(request, 'auth/signup.html', context={'signup_form': form})
-
-        response = requests.post('%s/users' % settings.TSURU_HOST, dict(form.data))
-
-        if response.status_code == 200:
-            return TemplateResponse(request, 'auth/signup.html', {'form': form, 'message': "Cool"})
+        post_data = {'email': form.data['email'], 'password' : form.data['password']}
+        response = requests.post('%s/users' % settings.TSURU_HOST, data=json.dumps(post_data))
+        if response.status_code == 201:
+            return TemplateResponse(request, 'auth/signup.html', context={'signup_form': '', 'message': 'User "%s" successfully created!' % form.data['email']})
         else:
-            return TemplateResponse(request, 'auth/signup.html', {'form': form, 'error': response.content}, status=response.status_code)
+            return TemplateResponse(request, 'auth/signup.html', context={'signup_form': form, 'error': response.content}, status=response.status_code)
 
 
