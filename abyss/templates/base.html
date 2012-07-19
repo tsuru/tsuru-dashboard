@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Abyss - The Tsuru web admin</title>
+    <meta name="description" content="Abyss - The Tsuru web admin">
+    <meta name="author" content="Time Redbull">
+    <link href="{{ STATIC_URL }}css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ STATIC_URL }}css/bootstrap-responsive.css" rel="stylesheet">
+    
+    {% block extra_css %}
+    {% endblock extra_css %}
+</head>
+<body>
+  <div class="container">
+      <div class="content">
+          {% block content %}
+          {% endblock content %}
+      </div>
+  </div>
+</body>
+</html>

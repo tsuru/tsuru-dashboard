@@ -1,16 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>Abyss - The Tsuru web admin</title>
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link href="{{ STATIC_URL }}css/bootstrap.min.css" rel="stylesheet">
+{% extends "base.html" %}
+
+{% block extra_css %}
     <link href="{{ STATIC_URL }}css/login.css" rel="stylesheet">
-</head>
-<body>
-  <div class="container">
-      <div class="content">
+{% endblock extra_css %}
+
+{% block content %}
           <div class="row">
               <div class="login-form">
                   <h2>Login</h2>
@@ -27,7 +21,4 @@
                   </form>
               </div>
           </div>
-      </div>
-  </div>
-</body>
-</html>
+{% endblock content %}
