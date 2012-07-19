@@ -5,10 +5,23 @@
         <form class="well" id="signup" action="/signup" method="POST">
             {% csrf_token %}
             <h2>Sign up</h2>
+            
+            {% if message %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+            {% endif %}
+            
+            {% if error %}
+            <div class="alert alert-error">
+                {{ error }}
+            </div>
+            {% endif %}
+                
             <fieldset>
                 <div class="clearfix control-group{% if signup_form.errors.email %} error{% endif %}">
                     <label>email</label>
-                    <input type="text" name="{{signup_form.email.name}}" placeholder="type your email here…" class="span3" value="{{signup_form.email.value}}">
+                    <input type="text" name="{{signup_form.email.name}}" placeholder="type your email here…" class="span3" {% if signup_form.email.value %}value="{{signup_form.email.value}}"{% endif %}>
                     <span class="help-inline">{{signup_form.errors.email}}</span>
                 </div>
 
