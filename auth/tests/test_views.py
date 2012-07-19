@@ -5,7 +5,7 @@ from django.test import TestCase
 from django.test.client import RequestFactory
 from django.http import Http404
 
-from auth.views import Login, team, Signup
+from auth.views import Login, Team, Signup
 from auth.forms import TeamForm, LoginForm, SignupForm
 
 
@@ -42,7 +42,7 @@ class TeamViewTest(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
         self.request = self.factory.get('/')
-        self.response = team(self.request)
+        self.response = Team().get(self.request)
         self.response_mock = Mock()
 
     def test_team_should_render_expected_template(self):
@@ -64,7 +64,7 @@ class TeamViewTest(TestCase):
     def test_post_with_name_should_send_request_post_to_tsuru_with_args_expected(self):
         request = self.factory.post('/team/', {'name': 'test-team'})
         with patch('requests.post') as post:
-            team(request)
+            Team().post(request)
             self.assertEqual(1, post.call_count)
             post.assert_called_with('%s/teams' % settings.TSURU_HOST, {u'name': [u'test-team']})
 
@@ -73,7 +73,7 @@ class TeamViewTest(TestCase):
         with patch('requests.post') as post:
             self.response_mock.status_code = 200
             post.side_effect = Mock(return_value=self.response_mock)
-            response = team(request)
+            response = Team().post(request)
             self.assertEqual(200, response.status_code)
 
     def test_post_with_invalid_name_should_return_500(self):
@@ -81,7 +81,7 @@ class TeamViewTest(TestCase):
         with patch('requests.post') as post:
             self.response_mock.status_code = 500
             post.side_effect = Mock(return_value=self.response_mock)
-            response = team(request)
+            response = Team().post(request)
             self.assertEqual(500, response.status_code)
 
 
