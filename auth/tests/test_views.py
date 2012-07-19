@@ -3,7 +3,7 @@ from django.test.client import RequestFactory
 from django.http import Http404
 
 from auth.views import login, team
-from auth.forms import TeamForm
+from auth.forms import TeamForm, LoginForm
 
 
 class LoginViewTest(TestCase):
@@ -11,6 +11,12 @@ class LoginViewTest(TestCase):
         request = RequestFactory().get('/')
         response = login(request)
         self.assertEqual('auth/login.html', response.template_name)
+
+    def test_login_form_should_be_in_the_view_context(self):
+        request = RequestFactory().get('/')
+        response = login(request)
+        form = response.context_data['login_form']
+        self.assertIsInstance(form, LoginForm)
 
 
 class TeamViewTest(TestCase):
