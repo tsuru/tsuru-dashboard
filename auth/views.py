@@ -3,7 +3,7 @@ import requests
 
 from django.conf import settings
 from django.template.response import TemplateResponse
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic.base import View
 from auth.forms import TeamForm, LoginForm, SignupForm
 
@@ -44,7 +44,7 @@ class Login(View):
 			if response.status_code == 200:
 				result = json.loads(response.text)
 				request.session['tsuru_token'] = result['token']
-				return HttpResponse("")
+				return HttpResponseRedirect("/team")
 			context['msg'] = 'User not found'
 		return TemplateResponse(request, 'auth/login.html', context=context)
 
@@ -58,12 +58,13 @@ class Signup(View):
         form = SignupForm(request.POST)
         if not form.is_valid():
             return TemplateResponse(request, 'auth/signup.html', context={'signup_form': form})
-            
-        response = requests.post('%s/users' % settings.TSURU_HOST, dict(form.data))
         
-        if response.status_code == 200:
-            return TemplateResponse(request, 'auth/signup.html', {'form': form, 'message': "Cool"})
+        post_data = {'email': form.data['email'], 'password' : form.data['password']}
+        response = requests.post('%s/users' % settings.TSURU_HOST, data=json.dumps(post_data))
+        
+        if response.status_code == 201:
+            return TemplateResponse(request, 'auth/signup.html', context={'signup_form': '', 'message': 'User "%s" successfully created!' % form.data['email']})
         else:
-            return TemplateResponse(request, 'auth/signup.html', {'form': form, 'error': response.content}, status=response.status_code)
+            return TemplateResponse(request, 'auth/signup.html', context={'signup_form': form, 'error': response.content}, status=response.status_code)
 
 
