@@ -26,7 +26,10 @@
           {% block content %}
           {% endblock content %}
       </div>
-
   </div>
+
+  <script src="{{ STATIC_URL }}js/jquery-1.7.2.min.js"></script>
+  {% block extra_js %}
+  {% endblock extra_js %}
 </body>
 </html>
