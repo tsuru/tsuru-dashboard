@@ -14,7 +14,7 @@
                 <fieldset>
                     <div class="clearfix control-group{% if login_form.errors.username %} error{% endif %}">
                         {{login_form.errors.username}}
-                        <input type="text" name="{{login_form.username.name}}" placeholder="Username" value="{{login_form.username.value}}">
+                        <input type="text" name="{{login_form.username.name}}" placeholder="Username" {% if login_form.username.value %}value="{{login_form.username.value}}"{% endif %}>
                     </div>
 
                     <div class="clearfix control-group{% if login_form.errors.password %} error{% endif %}">
