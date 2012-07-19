@@ -12,6 +12,13 @@ class LoginViewTest(TestCase):
         response = login(request)
         self.assertEqual('auth/login.html', response.template_name)
 
+    def test_login_form_should_be_in_the_view_context(self):
+    	request = RequestFactory().get('/')
+    	response = login(request)
+    	form = response.context_data['login_form']
+    	self.assertIsInstance(form, LoginForm)
+
+
 class LoginFormTest(TestCase):
 	def test_login_should_have_username_and_password_fields(self):
 		self.assertIn('username', LoginForm.base_fields)
