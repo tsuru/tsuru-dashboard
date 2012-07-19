@@ -84,6 +84,13 @@ class TeamViewTest(TestCase):
             response = Team().post(request)
             self.assertEqual(500, response.status_code)
 
+    def test_post_without_name_should_return_form_with_errors(self):
+        request = self.factory.post('/team/', {'name': ''})
+        response = Team().post(request)
+        errors =  response.context_data.get('form').errors
+        self.assertIn('name', errors)
+        self.assertIn(u'This field is required.', errors.get('name'))
+
 
 class SignupViewTest(TestCase):
     def test_signup_should_show_template(self):
