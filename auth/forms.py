@@ -15,3 +15,15 @@ class SignupForm(forms.Form):
     email = forms.EmailField(max_length=60)
     password = forms.CharField(widget=widgets.PasswordInput, min_length=6)
     same_password_again = forms.CharField(widget=widgets.PasswordInput, min_length=6)
+    
+    def clean(self):
+        cleaned_data = super(SignupForm, self).clean()
+        password = cleaned_data.get("password")
+        same_password_again = cleaned_data.get("same_password_again")
+
+        if not password == same_password_again:
+            msg = "You must type the same password twice!"
+            self._errors["same_password_again"] = self.error_class([msg])
+            raise forms.ValidationError(msg)
+
+        return cleaned_data

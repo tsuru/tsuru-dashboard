@@ -96,21 +96,33 @@ class TeamViewTest(TestCase):
 
 
 class SignupViewTest(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.request = self.factory.get('/')
+        self.response = Signup().get(self.request)
+        self.response_mock = Mock()
+        
     def test_signup_should_show_template(self):
-        response = Signup().get(RequestFactory().get('/'))
-        self.assertEqual('auth/signup.html', response.template_name)
+        self.assertEqual('auth/signup.html', self.response.template_name)
 
     def test_context_should_contain_form(self):
-        response = Signup().get(RequestFactory().get('/'))
-        form = response.context_data['signup_form']
+        form = self.response.context_data['signup_form']
         self.assertIsInstance(form, SignupForm)
 
     def test_should_validate_data_from_post(self):
         data = {'email': '', 'password': '', 'same_password_again': ''}
-        request = RequestFactory().post('/', data)
+        request = self.factory.post('/signup', data)
         response = Signup().post(request)
         form = response.context_data['signup_form']
 
-        self.assertEqual(form.errors['email'][0], u'This field is required.')
-        self.assertEqual(form.errors['password'][0], u'This field is required.')
-        self.assertEqual(form.errors['same_password_again'][0], u'This field is required.')
+        self.assertIn(u'This field is required.', form.errors['email'])
+        self.assertIn(u'This field is required.', form.errors['password'])
+        self.assertIn(u'This field is required.', form.errors['same_password_again'])
+
+    def test_post_with_data_should_send_request_post_to_tsuru_with_args_expected(self):
+        data = {'email': 'test@test.com', 'password': 'abc123', 'same_password_again': 'abc123'}
+        request = self.factory.post('/signup', data)
+        with patch('requests.post') as post:
+            Signup().post(request)
+            self.assertEqual(1, post.call_count)
+            post.assert_called_with('%s/users' % settings.TSURU_HOST, {u'password': [u'abc123'], u'same_password_again': [u'abc123'], u'email': [u'test@test.com']})
