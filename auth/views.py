@@ -49,18 +49,26 @@ class Login(View):
 		return TemplateResponse(request, 'auth/login.html', context=context)
 
 
+class Logout(View):
+
+    def get(self, request):
+        if 'tsuru_token' in request.session:
+            del request.session['tsuru_token']
+        return HttpResponseRedirect('/')
+
+
 class Signup(View):
 
     def get(self, request):
         return TemplateResponse(request, 'auth/signup.html', context={'signup_form': SignupForm()})
-        
+
     def post(self, request):
         form = SignupForm(request.POST)
         if not form.is_valid():
             return TemplateResponse(request, 'auth/signup.html', context={'signup_form': form})
-            
+
         response = requests.post('%s/users' % settings.TSURU_HOST, dict(form.data))
-        
+
         if response.status_code == 200:
             return TemplateResponse(request, 'auth/signup.html', {'form': form, 'message': "Cool"})
         else:

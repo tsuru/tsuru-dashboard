@@ -5,7 +5,7 @@ from django.test import TestCase
 from django.test.client import RequestFactory
 from django.http import Http404, HttpResponseRedirect
 
-from auth.views import Login, Team, Signup
+from auth.views import Login, Logout, Signup, Team
 from auth.forms import TeamForm, LoginForm, SignupForm
 
 
@@ -53,7 +53,7 @@ class LoginViewTest(TestCase):
     def test_should_send_request_post_to_tsuru_with_args_expected(self):
         data = {'username': 'valid@email.com', 'password': '123456'}
         request = RequestFactory().post('/', data)
-        expected_url = '%s/users/valid@email.com/tokens'%settings.TSURU_HOST
+        expected_url = '%s/users/valid@email.com/tokens' % settings.TSURU_HOST
 
         with patch('requests.post') as post:
             Login().post(request)
@@ -70,7 +70,7 @@ class LoginViewTest(TestCase):
             response_mock.status_code = 200
             response_mock.text = '{"token": "my beautiful token"}'
             post.side_effect = Mock(return_value=response_mock)
-            response = Login().post(request)
+            Login().post(request)
             self.assertEqual('my beautiful token', request.session["tsuru_token"])
 
     def test_redirect_to_team_creation_page_when_login_is_successful(self):
@@ -87,6 +87,29 @@ class LoginViewTest(TestCase):
             self.assertIsInstance(response, HttpResponseRedirect)
             self.assertEqual('/team', response['Location'])
 
+
+class LogoutViewTest(TestCase):
+
+    def test_should_remove_tsuru_token_from_session(self):
+        request = RequestFactory().get('/logout/')
+        request.session = {'tsuru_token': 'my beautiful token'}
+        Logout().get(request)
+        token = request.session.get('tsuru_token')
+        self.assertIsNone(token)
+
+    def test_should_redirect_to_index(self):
+        request = RequestFactory().get('/logout/')
+        request.session = {'tsuru_token': 'my beautiful token'}
+        response = Logout().get(request)
+        self.assertIsInstance(response, HttpResponseRedirect)
+        self.assertEqual('/', response['Location'])
+
+    def test_should_redirect_to_index_if_the_user_is_not_logged_in(self):
+        request = RequestFactory().get('/logout/')
+        request.session = {}
+        response = Logout().get(request)
+        self.assertIsInstance(response, HttpResponseRedirect)
+        self.assertEqual('/', response['Location'])
 
 
 class TeamViewTest(TestCase):
@@ -141,7 +164,7 @@ class TeamViewTest(TestCase):
         request = self.factory.post('/team/', {'name': ''})
         request.session = {}
         response = Team().post(request)
-        errors =  response.context_data.get('form').errors
+        errors = response.context_data.get('form').errors
         self.assertIn('name', errors)
         self.assertIn(u'This field is required.', errors.get('name'))
 
@@ -152,7 +175,7 @@ class SignupViewTest(TestCase):
         self.request = self.factory.get('/')
         self.response = Signup().get(self.request)
         self.response_mock = Mock()
-        
+
     def test_signup_should_show_template(self):
         self.assertEqual('auth/signup.html', self.response.template_name)
 
