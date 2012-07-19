@@ -92,6 +92,8 @@ class TeamViewTest(TestCase):
         self.factory = RequestFactory()
         self.request = self.factory.get('/')
         self.response = Team().get(self.request)
+        self.request_post = self.factory.post('/team/', {'name': 'test-team'})
+        self.request_post.session = {}
         self.response_mock = Mock()
 
     def test_team_should_render_expected_template(self):
@@ -111,45 +113,65 @@ class TeamViewTest(TestCase):
             assert False
 
     def test_post_with_name_should_send_request_post_to_tsuru_with_args_expected(self):
-        request = self.factory.post('/team/', {'name': 'test-team'})
+        self.request_post.session = {'tsuru_token': 'tokentest'}
         with patch('requests.post') as post:
-            Team().post(request)
+            Team().post(self.request_post)
             self.assertEqual(1, post.call_count)
-            post.assert_called_with('%s/teams' % settings.TSURU_HOST, {u'name': [u'test-team']})
+            post.assert_called_with('%s/teams' % settings.TSURU_HOST,
+                                    {u'name': [u'test-team']},
+                                    headers={'authorization': self.request_post.session['tsuru_token']})
 
     def test_post_with_valid_name_should_return_200(self):
-        request = self.factory.post('/team/', {'name': 'test-team'})
         with patch('requests.post') as post:
             self.response_mock.status_code = 200
             post.side_effect = Mock(return_value=self.response_mock)
-            response = Team().post(request)
+            response = Team().post(self.request_post)
             self.assertEqual(200, response.status_code)
 
     def test_post_with_invalid_name_should_return_500(self):
-        request = self.factory.post('/team/', {'name': 'test-team'})
         with patch('requests.post') as post:
             self.response_mock.status_code = 500
             post.side_effect = Mock(return_value=self.response_mock)
-            response = Team().post(request)
+            response = Team().post(self.request_post)
             self.assertEqual(500, response.status_code)
+
+    def test_post_without_name_should_return_form_with_errors(self):
+        request = self.factory.post('/team/', {'name': ''})
+        request.session = {}
+        response = Team().post(request)
+        errors =  response.context_data.get('form').errors
+        self.assertIn('name', errors)
+        self.assertIn(u'This field is required.', errors.get('name'))
 
 
 class SignupViewTest(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.request = self.factory.get('/')
+        self.response = Signup().get(self.request)
+        self.response_mock = Mock()
+        
     def test_signup_should_show_template(self):
-        response = Signup().get(RequestFactory().get('/'))
-        self.assertEqual('auth/signup.html', response.template_name)
+        self.assertEqual('auth/signup.html', self.response.template_name)
 
     def test_context_should_contain_form(self):
-        response = Signup().get(RequestFactory().get('/'))
-        form = response.context_data['signup_form']
+        form = self.response.context_data['signup_form']
         self.assertIsInstance(form, SignupForm)
 
     def test_should_validate_data_from_post(self):
         data = {'email': '', 'password': '', 'same_password_again': ''}
-        request = RequestFactory().post('/', data)
+        request = self.factory.post('/signup', data)
         response = Signup().post(request)
         form = response.context_data['signup_form']
 
-        self.assertEqual(form.errors['email'][0], u'This field is required.')
-        self.assertEqual(form.errors['password'][0], u'This field is required.')
-        self.assertEqual(form.errors['same_password_again'][0], u'This field is required.')
+        self.assertIn(u'This field is required.', form.errors['email'])
+        self.assertIn(u'This field is required.', form.errors['password'])
+        self.assertIn(u'This field is required.', form.errors['same_password_again'])
+
+    def test_post_with_data_should_send_request_post_to_tsuru_with_args_expected(self):
+        data = {'email': 'test@test.com', 'password': 'abc123', 'same_password_again': 'abc123'}
+        request = self.factory.post('/signup', data)
+        with patch('requests.post') as post:
+            Signup().post(request)
+            self.assertEqual(1, post.call_count)
+            post.assert_called_with('%s/users' % settings.TSURU_HOST, {u'password': [u'abc123'], u'same_password_again': [u'abc123'], u'email': [u'test@test.com']})

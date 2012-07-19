@@ -17,11 +17,13 @@ class Team(View):
     def post(self, request):
         form = TeamForm(request.POST)
         if form.is_valid():
-            response = requests.post('%s/teams' % settings.TSURU_HOST, dict(form.data))
+            authorization = {'authorization': request.session.get('tsuru_token')}
+            response = requests.post('%s/teams' % settings.TSURU_HOST, dict(form.data), headers=authorization)
             if response.status_code == 200:
-                return HttpResponse("")
+                return HttpResponse("OK")
             else:
                 return HttpResponse(response.content, status=response.status_code)
+        return TemplateResponse(request, 'auth/team.html', {'form': form})
 
 
 class Login(View):
@@ -54,3 +56,12 @@ class Signup(View):
         form = SignupForm(request.POST)
         if not form.is_valid():
             return TemplateResponse(request, 'auth/signup.html', context={'signup_form': form})
+            
+        response = requests.post('%s/users' % settings.TSURU_HOST, dict(form.data))
+        
+        if response.status_code == 200:
+            return TemplateResponse(request, 'auth/signup.html', {'form': form, 'message': "Cool"})
+        else:
+            return TemplateResponse(request, 'auth/signup.html', {'form': form, 'error': response.content}, status=response.status_code)
+
+
