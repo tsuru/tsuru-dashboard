@@ -1,6 +1,6 @@
 from django.template.response import TemplateResponse
 
-from auth.forms import TeamForm, LoginForm
+from auth.forms import TeamForm, LoginForm, SignupForm
 
 def team(request):
     context = {}
@@ -11,4 +11,4 @@ def login(request):
     return TemplateResponse(request, 'auth/login.html', context={'login_form': LoginForm()})
 
 def signup(request):
-    return TemplateResponse(request, 'auth/signup.html')
+    return TemplateResponse(request, 'auth/signup.html', context={'signup_form': SignupForm()})

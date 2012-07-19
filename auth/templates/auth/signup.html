@@ -2,28 +2,26 @@
 
 {% block content %}
     <div class="row">
-        <form class="well">
+        <form class="well" id="signup" action="">
             <h2>Sign up</h2>
-            <form id="signup" action="">
-                <fieldset>
-                    <div class="clearfix">
-                        <label>email</label>
-                        <input type="text" placeholder="type your email here…" class="span3">
-                    </div>
+            <fieldset>
+                <div class="clearfix">
+                    <label>email</label>
+                    <input type="text" name="{{signup_form.email.name}}" placeholder="type your email here…" class="span3">
+                </div>
 
-                    <div class="clearfix">
-                        <label>password</label>
-                        <input type="password" placeholder="type your password..." class="span3">
-                    </div>
-            
-                    <div class="clearfix">
-                        <label>check that password pls</label>
-                        <input type="password" placeholder="type that same password again..." class="span3">
-                    </div>
-                    
-                    <button class="btn" type="submit">Submit</button>
-                </fieldset>
-            </form>
+                <div class="clearfix">
+                    <label>password</label>
+                    <input type="password" name="{{signup_form.password.name}}" placeholder="type your password..." class="span3">
+                </div>
+        
+                <div class="clearfix">
+                    <label>check that password pls</label>
+                    <input type="password" name="{{signup_form.same_password_again.name}}" placeholder="type that same password again..." class="span3">
+                </div>
+                
+                <button class="btn" type="submit">Submit</button>
+            </fieldset>
         </form>
     </div>
 {% endblock content %}

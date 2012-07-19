@@ -3,7 +3,7 @@ from django.test.client import RequestFactory
 from django.http import Http404
 
 from auth.views import login, team, signup
-from auth.forms import TeamForm, LoginForm
+from auth.forms import TeamForm, LoginForm, SignupForm
 
 class LoginViewTest(TestCase):
     def test_root_should_show_login_template(self):
@@ -50,3 +50,9 @@ class SignUpViewTest(TestCase):
         request = RequestFactory().get('/signup')
         response = signup(request)
         self.assertEqual('auth/signup.html', response.template_name)
+ 
+    def test_context_should_contain_form(self):
+        request = RequestFactory().get('/signup')
+        response = signup(request)
+        form = response.context_data['signup_form']
+        self.assertIsInstance(form, SignupForm)
