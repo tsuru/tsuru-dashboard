@@ -42,3 +42,10 @@
         </form>
     </div>
 {% endblock content %}
+
+{% block extra_js %}
+<script>
+ $(".nav li").removeClass("active");
+ $(".nav #login").addClass("active");
+</script>
+{% endblock %}
