@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import os
+
 from django.conf import settings
 from django.test import TestCase
 from django.test.simple import DjangoTestSuiteRunner, reorder_suite
@@ -15,7 +17,8 @@ class DiscoveryRunner(DjangoTestSuiteRunner):
             suite = loader.loadTestsFromNames(test_labels)
 
         if suite is None:
-            suite = loader.discover(start_dir=settings.BASE_PATH)
+            path = os.path.abspath(os.path.join(settings.BASE_PATH, ".."))
+            suite = loader.discover(start_dir=path)
 
         if extra_tests:
             for test in extra_tests:

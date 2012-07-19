@@ -126,7 +126,7 @@ INSTALLED_APPS = (
     'auth',
 )
 
-#TEST_RUNNER = 'abyss.runner.DiscoveryRunner'
+TEST_RUNNER = 'abyss.runner.DiscoveryRunner'
 
 TSURU_HOST = "http://tsuru.plataformas.glb.com:8080"
 
