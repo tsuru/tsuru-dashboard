@@ -44,11 +44,12 @@ class Signup(View):
         form = SignupForm(request.POST)
         if not form.is_valid():
             return TemplateResponse(request, 'auth/signup.html', context={'signup_form': form})
-            
-        response = requests.post('%s/users' % settings.TSURU_HOST, dict(form.data))
+        
+        post_data = {'email': form.data['email'], 'password' : form.data['password']}
+        response = requests.post('%s/users' % settings.TSURU_HOST, data=json.dumps(post_data))
         
         if response.status_code == 200:
-            return TemplateResponse(request, 'auth/signup.html', {'form': form, 'message': "Cool"})
+            return TemplateResponse(request, 'auth/signup.html', {'form': form, 'message': response.content})
         else:
             return TemplateResponse(request, 'auth/signup.html', {'form': form, 'error': response.content}, status=response.status_code)
 
