@@ -39,6 +39,10 @@ class Team(LoginRequiredView):
         return TemplateResponse(request, 'auth/team.html', {'form': form, 'errors': form.errors})
 
 
+class AddUserToTeam(LoginRequiredView):
+    pass
+
+
 class Login(View):
 
 	def get(self, request):
