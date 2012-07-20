@@ -27,3 +27,6 @@ class SignupForm(forms.Form):
             raise forms.ValidationError(msg)
 
         return cleaned_data
+
+class TokenForm(forms.Form):
+    token = forms.CharField(max_length=2000)
