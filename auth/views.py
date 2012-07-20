@@ -6,7 +6,7 @@ from django.template.response import TemplateResponse
 from django.http import HttpResponseRedirect
 from django.views.generic.base import View
 
-from auth.forms import TeamForm, LoginForm, SignupForm
+from auth.forms import TeamForm, LoginForm, SignupForm, KeyForm
 
 
 class LoginRequiredView(View):
@@ -84,4 +84,25 @@ class Signup(View):
         else:
             return TemplateResponse(request, 'auth/signup.html', context={'signup_form': form, 'error': response.content}, status=response.status_code)
 
+
+class Key(LoginRequiredView):
+    def get(self, request):
+        context = {}
+        context['form'] = KeyForm()
+        return TemplateResponse(request, 'auth/key.html', context=context)
+
+    def post(self, request):
+        form = KeyForm(request.POST)
+        if not form.is_valid():
+            return TemplateResponse(request, 'auth/key.html', context={"form": form})
+
+        authorization = {'authorization': request.session.get('tsuru_token')}
+        response = requests.post('%s/users/keys' % settings.TSURU_HOST,
+                                 data=json.dumps(request.POST),
+                                 headers=authorization)
+
+        if response.status_code == 200:
+            return TemplateResponse(request, 'auth/key.html', context={"form": form, "message": "The Key was successfully added"})
+        else:
+            return TemplateResponse(request, 'auth/key.html', context={"form": form, "errors": response.content})
 

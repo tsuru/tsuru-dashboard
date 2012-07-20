@@ -28,5 +28,5 @@ class SignupForm(forms.Form):
 
         return cleaned_data
 
-class TokenForm(forms.Form):
-    token = forms.CharField(max_length=2000)
+class KeyForm(forms.Form):
+    key = forms.CharField(max_length=2000)

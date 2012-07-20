@@ -61,13 +61,13 @@ class SignupFormTest(TestCase):
         self.assertIn(u'You must type the same password twice!', form.errors['same_password_again'])
 
 
-class TokenFormTest(TestCase):
-    def test_forms_should_have_TokenForm(self):
-        self.assertTrue(hasattr(forms, 'TokenForm'))
+class KeyFormTest(TestCase):
+    def test_forms_should_have_KeyForm(self):
+        self.assertTrue(hasattr(forms, 'KeyForm'))
 
-    def test_team_should_have_token_field(self):
-        self.assertIn('token', forms.TokenForm.base_fields)
+    def test_team_should_have_key_field(self):
+        self.assertIn('key', forms.KeyForm.base_fields)
 
-    def test_token_should_have_at_most_2000_characters(self):
-        field = forms.TokenForm.base_fields['token']
+    def test_key_should_have_at_most_2000_characters(self):
+        field = forms.KeyForm.base_fields['key']
         self.assertEqual(2000, field.max_length)
