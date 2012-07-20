@@ -17,9 +17,12 @@ class CreateApp(View):
         form = AppForm(request.POST)
         if form.is_valid():
             authorization = {'authorization': request.session.get('tsuru_token')}
-            response = requests.post('%s/teams' % settings.TSURU_HOST,
+            data = form.data
+            data.update({"framework": "django"})
+            response = requests.post('%s/apps' % settings.TSURU_HOST,
                                      data=json.dumps(form.data),
                                      headers=authorization)
-            if not response.status_code == 200:
-                return TemplateResponse(request, 'auth/team.html', {'form': form, 'msg': response.content})
+            if response.status_code == 200:
+                return TemplateResponse(request, 'apps/create.html', {'form': form, 'message': "App was successfully created"})
+            return TemplateResponse(request, 'apps/create.html', {'form': form, 'error': response.content})
         return TemplateResponse(request, 'apps/create.html', {'form': form})

@@ -2,6 +2,7 @@ from mock import patch, Mock
 
 from django.test import TestCase
 from django.test.client import RequestFactory
+from django.conf import settings
 
 from apps.views import CreateApp
 from apps import forms
@@ -38,7 +39,7 @@ class CreateAppViewTest(TestCase):
             response_mock.content = 'Error'
             post.side_effect = Mock(return_value=response_mock)
             response = CreateApp().post(request)
-            self.assertEqual('Error', response.context_data.get('msg'))
+            self.assertEqual('Error', response.context_data.get("error"))
 
     def test_post_without_name_should_return_form_with_errors(self):
         request = RequestFactory().post("/", {"name": ""})
@@ -47,3 +48,25 @@ class CreateAppViewTest(TestCase):
         form =  response.context_data.get('form')
         self.assertIn('name', form.errors)
         self.assertIn(u'This field is required.', form.errors.get('name'))
+
+    def test_post_with_name_should_send_request_post_to_tsuru_with_args_expected(self):
+        request = RequestFactory().post("/", {"name": "myepe"})
+        request.session = {'tsuru_token': 'tokentest'}
+        with patch('requests.post') as post:
+            CreateApp().post(request)
+            self.assertEqual(1, post.call_count)
+            post.assert_called_with(
+                '%s/apps' % settings.TSURU_HOST,
+                data='{"framework": "django", "name": "myepe"}',
+                headers={'authorization': request.session['tsuru_token']}
+            )
+
+    def test_post_with_valid_name_should_return_context_with_message_expected(self):
+        request = RequestFactory().post("/", {"name": "myepe"})
+        request.session = {}
+        response_mock = Mock()
+        with patch('requests.post') as post:
+            response_mock.status_code = 200
+            post.side_effect = Mock(return_value=response_mock)
+            response = CreateApp().post(request)
+            self.assertEqual("App was successfully created", response.context_data.get('message'))
