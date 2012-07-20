@@ -9,7 +9,17 @@ from django.views.generic.base import View
 from auth.forms import TeamForm, LoginForm, SignupForm
 
 
+class LoginRequiredView(View):
+
+	def dispatch(self, request, *args, **kwargs):
+		token = request.session.get('tsuru_token')
+		if not token:
+			return HttpResponseRedirect('/')
+		return super(LoginRequiredView, self).dispatch(request, *args, **kwargs)
+
+
 class Team(View):
+
     def get(self, request):
         context = {}
         context['form'] = TeamForm()
