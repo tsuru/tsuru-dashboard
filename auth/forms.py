@@ -11,6 +11,20 @@ class TeamForm(forms.Form):
     name = forms.CharField(max_length=60)
 
 
+class AddUserToTeamForm(forms.Form):
+
+    def __init__(self, teams=None, *args, **kwargs):
+        super(AddUserToTeamForm, self).__init__(*args, **kwargs)
+        if teams:
+            choices = []
+            for team in teams:
+                choices.append((team, team))
+            self.fields["team"].choices = choices
+
+    email = forms.EmailField(max_length=60)
+    team = forms.ChoiceField(choices=[])
+
+
 class SignupForm(forms.Form):
     email = forms.EmailField(max_length=60)
     password = forms.CharField(widget=widgets.PasswordInput, min_length=6)
