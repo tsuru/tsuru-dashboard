@@ -66,6 +66,6 @@ class TeamViewTest(TestCase):
         request = self.factory.post('/team/', {'name': ''})
         request.session = {}
         response = Team().post(request)
-        errors =  response.context_data.get('errors')
-        self.assertIn('name', errors)
-        self.assertIn(u'This field is required.', errors.get('name'))
+        form =  response.context_data.get('form')
+        self.assertIn('name', form.errors)
+        self.assertIn(u'This field is required.', form.errors.get('name'))

@@ -36,7 +36,7 @@ class Team(LoginRequiredView):
                 return TemplateResponse(request, 'auth/team.html', {'form': form, 'message': "Time was successfully created"})
             else:
                 return TemplateResponse(request, 'auth/team.html', {'form': form, 'errors': response.content})
-        return TemplateResponse(request, 'auth/team.html', {'form': form, 'errors': form.errors})
+        return TemplateResponse(request, 'auth/team.html', {'form': form})
 
 
 class AddUserToTeam(LoginRequiredView):
@@ -109,4 +109,3 @@ class Key(LoginRequiredView):
             return TemplateResponse(request, 'auth/key.html', context={"form": form, "message": "The Key was successfully added"})
         else:
             return TemplateResponse(request, 'auth/key.html', context={"form": form, "errors": response.content})
-
