@@ -16,6 +16,7 @@
                     <li><a href="https://github.com/timeredbull/abyss/blob/master/README.md">About</a></li>
                     <li><a href="https://github.com/timeredbull">Contact</a></li>
                     {% if request.session.tsuru_token %}
+                        <li><a href="/key">Key</a></li>
                         <li><a href="/logout">Logout</a></li>
                     {% endif %}
                 </ul>

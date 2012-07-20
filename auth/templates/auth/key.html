@@ -2,8 +2,8 @@
 
 {% block content %}
           <div class="row">
-              <div class="team-form">
-                  <h2>Team</h2>
+              <div class="key-form">
+                  <h2>Key</h2>
                   <form action="" method="post">
                      {% csrf_token %}
                      {% if message %}
@@ -17,10 +17,10 @@
                         </div>
                      {% endif %}
                      <fieldset>
-                        <div class="clearfix control-group{% if form.errors.name %} error{% endif %}">
-                            <label>name</label>
-                            <input type="text" name="{{ form.name.name }}" placeholder="Type a name for your team...">
-                            <span class="help-inline">{{ form.errors.name }}</span>
+                        <div class="clearfix control-group{% if form.errors.key %} error{% endif %}">
+                            <label>key</label>
+                            <textarea class="input-xlarge" name="{{ form.key.name }}" rows=8></textarea>
+                            <span class="help-inline">{{ form.errors.key }}</span>
                         </div>
                         <button class="btn primary" type="submit">Create</button>
                      </fieldset>
