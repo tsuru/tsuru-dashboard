@@ -2,7 +2,7 @@ from django.conf.urls import patterns, url
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 from auth.views import Login, Logout, Signup, Team, Key
-from apps.views import CreateApp
+from apps.views import CreateApp, AppAddTeam
 
 
 urlpatterns = patterns('',
@@ -15,6 +15,7 @@ urlpatterns = patterns('',
     url(r'^signup$', Signup.as_view(), name='signup'),
 
     url(r'^app/create/$', CreateApp.as_view(), name='create-app'),
+    url(r'^app/team/add/$', AppAddTeam.as_view(), name='app-add-team'),
 )
 
 urlpatterns += staticfiles_urlpatterns()
