@@ -5,11 +5,12 @@ from django.test import TestCase
 from django.test.client import RequestFactory
 from django.http import Http404
 
-from auth.views import Team
+from auth.views import LoginRequiredView, Team
 from auth.forms import TeamForm
 
 
 class TeamViewTest(TestCase):
+
     def setUp(self):
         self.factory = RequestFactory()
         self.request = self.factory.get('/')
@@ -17,6 +18,9 @@ class TeamViewTest(TestCase):
         self.request_post = self.factory.post('/team/', {'name': 'test-team'})
         self.request_post.session = {}
         self.response_mock = Mock()
+
+    def test_should_require_login_to_create_team(self):
+        assert issubclass(Team, LoginRequiredView)
 
     def test_team_should_render_expected_template(self):
         self.assertEqual('auth/team.html', self.response.template_name)

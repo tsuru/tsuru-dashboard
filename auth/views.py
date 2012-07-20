@@ -18,7 +18,7 @@ class LoginRequiredView(View):
 		return super(LoginRequiredView, self).dispatch(request, *args, **kwargs)
 
 
-class Team(View):
+class Team(LoginRequiredView):
 
     def get(self, request):
         context = {}
