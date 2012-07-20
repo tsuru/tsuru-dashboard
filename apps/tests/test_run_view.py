@@ -51,9 +51,10 @@ class RunViewTest(TestCase):
     def test_post_with_valid_app_and_command_should_return_context_with_message_expected(self):
         with patch('requests.post') as post:
             self.response_mock.status_code = 200
+            self.response_mock.content = "command runned"
             post.side_effect = Mock(return_value=self.response_mock)
             response = Run().post(self.request_post)
-            self.assertEqual("The Command was executed with successfully", response.context_data.get('message'))
+            self.assertEqual("command runned", response.context_data.get('message'))
 
     def test_post_with_invalid_app_or_command_should_return_error_message_expected_on_context(self):
         with patch('requests.post') as post:

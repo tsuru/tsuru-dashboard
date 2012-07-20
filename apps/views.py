@@ -66,5 +66,5 @@ class Run(LoginRequiredView):
         tsuru_url = '%s/apps/%s/run' % (settings.TSURU_HOST, form.data.get('app'))
         response = requests.post(tsuru_url, data=form.data.get('command'), headers=authorization)
         if response.status_code == 200:
-            return TemplateResponse(request, self.template, {'form': form, 'message': "The Command was executed with successfully"})
+            return TemplateResponse(request, self.template, {'form': form, 'message': response.content})
         return TemplateResponse(request, self.template, {'form': form, 'errors': response.content })
