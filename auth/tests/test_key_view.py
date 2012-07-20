@@ -32,7 +32,7 @@ class KeyViewTest(TestCase):
         form = self.response.context_data.get('form')
         self.assertTrue(isinstance(form, KeyForm))
 
-    def test_get_request_team_url_should_return_200(self):
+    def test_get_request_key_url_should_return_200(self):
         try:
             self.client.get('/key/')
         except Http404:
