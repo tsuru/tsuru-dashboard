@@ -4,6 +4,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from auth.views import Login, Logout, Signup, Team
 from apps.views import Apps
 
+
 urlpatterns = patterns('',
     url(r'^$', Login.as_view(), name='login'),
 

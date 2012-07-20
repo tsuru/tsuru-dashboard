@@ -1,7 +1,8 @@
 from django.test import TestCase
-from apps import forms
 from django.test.client import RequestFactory
+
 from apps.views import Apps
+from apps import forms
 
 
 class AppFormTest(TestCase):
@@ -14,8 +15,9 @@ class AppFormTest(TestCase):
 
 
 class ViewTest(TestCase):
+
     def test_should_use_app_template(self):
         request = RequestFactory().get("/")
-        response = Apps().get(request)        
+        response = Apps().get(request)
         self.assertEqual("apps/create.html", response.template_name)
 
