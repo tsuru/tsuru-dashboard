@@ -33,7 +33,7 @@ class Team(LoginRequiredView):
                                      data=json.dumps(form.data),
                                      headers=authorization)
             if response.status_code == 200:
-                return TemplateResponse(request, 'auth/team.html', {'form': form, 'message': "Time was successfully created"})
+                return TemplateResponse(request, 'auth/team.html', {'form': form, 'message': "Team was successfully created"})
             else:
                 return TemplateResponse(request, 'auth/team.html', {'form': form, 'errors': response.content})
         return TemplateResponse(request, 'auth/team.html', {'form': form})

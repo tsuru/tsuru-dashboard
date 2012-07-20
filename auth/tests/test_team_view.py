@@ -52,7 +52,7 @@ class TeamViewTest(TestCase):
             self.response_mock.status_code = 200
             post.side_effect = Mock(return_value=self.response_mock)
             response = Team().post(self.request_post)
-            self.assertEqual("Time was successfully created", response.context_data.get('message'))
+            self.assertEqual("Team was successfully created", response.context_data.get('message'))
 
     def test_post_with_invalid_name_should_return_500(self):
         with patch('requests.post') as post:
