@@ -21,3 +21,8 @@ class CreateAppViewTest(TestCase):
         response = CreateApp().get(request)
         self.assertEqual("apps/create.html", response.template_name)
 
+    def test_AppForm_should_be_in_context(self):
+        request = RequestFactory().get("/")
+        response = CreateApp().get(request)
+        app_form = response.context_data['app_form']
+        self.assertIsInstance(app_form, forms.AppForm)
