@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+          <div class="row">
+              <div class="app-add-team-form">
+                  <h2>Add Team to App</h2>
+                  <form action="" method="post">
+                     {% csrf_token %}
+                     {% if message %}
+                        <div class="alert alert-success">
+                           {{ message }}
+                        </div>
+                     {% endif %}
+                     {% if errors %}
+                        <div class="alert alert-error">
+                           {{ errors }}
+                        </div>
+                     {% endif %}
+                     <fieldset>
+                        <div class="clearfix control-group{% if form.errors.app %} error{% endif %}">
+                            <label>app</label>
+                            <input type="text" class="input-xlarge" name="{{ form.app.name }}">
+                            <span class="help-inline">{{ form.errors.app }}</span>
+                        </div>
+                        <div class="clearfix control-group{% if form.errors.team %} error{% endif %}">
+                            <label>team</label>
+                            <input type="text" class="input-xlarge" name="{{ form.team.name }}">
+                            <span class="help-inline">{{ form.errors.team }}</span>
+                        </div>
+                        <button class="btn primary" type="submit">Create</button>
+                     </fieldset>
+                  </form>
+              </div>
+          </div>
+{% endblock content %}
