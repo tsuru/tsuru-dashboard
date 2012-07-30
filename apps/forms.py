@@ -12,3 +12,7 @@ class AppAddTeamForm(forms.Form):
 class RunForm(forms.Form):
     app = forms.CharField(max_length=60)
     command = forms.CharField(max_length=1000)
+
+class SetEnvForm(forms.Form):
+    app = forms.CharField(max_length=60)
+    env = forms.CharField(max_length=1000)

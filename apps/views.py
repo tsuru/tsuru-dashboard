@@ -5,7 +5,7 @@ from django.views.generic.base import View
 from django.template.response import TemplateResponse
 from django.conf import settings
 
-from apps.forms import AppForm, AppAddTeamForm, RunForm
+from apps.forms import AppForm, AppAddTeamForm, RunForm, SetEnvForm
 from auth.views import LoginRequiredView
 
 
@@ -65,6 +65,28 @@ class Run(LoginRequiredView):
         authorization = {'authorization': request.session.get('tsuru_token')}
         tsuru_url = '%s/apps/%s/run' % (settings.TSURU_HOST, form.data.get('app'))
         response = requests.post(tsuru_url, data=form.data.get('command'), headers=authorization)
+        if response.status_code == 200:
+            return TemplateResponse(request, self.template, {'form': form, 'message': response.content})
+        return TemplateResponse(request, self.template, {'form': form, 'errors': response.content })
+
+
+class SetEnv(LoginRequiredView):
+    template = "apps/set_env.html"
+
+    def get(self, request):
+        context = {}
+        context['form'] = SetEnvForm()
+        return TemplateResponse(request, self.template, context)
+
+    def post(self, request):
+        form = SetEnvForm(request.POST)
+        if not form.is_valid():
+            return TemplateResponse(request, self.template, {'form': form})
+
+        authorization = {'authorization': request.session.get('tsuru_token')}
+        tsuru_url = '%s/apps/%s/env' % (settings.TSURU_HOST, form.data.get('app'))
+        response = requests.post(tsuru_url, data=form.data.get('env'), headers=authorization)
+
         if response.status_code == 200:
             return TemplateResponse(request, self.template, {'form': form, 'message': response.content})
         return TemplateResponse(request, self.template, {'form': form, 'errors': response.content })
