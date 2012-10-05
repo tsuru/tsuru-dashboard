@@ -29,6 +29,18 @@ class CreateApp(View):
         return TemplateResponse(request, 'apps/create.html', {'form': form})
 
 
+class ListApp(View):
+    def get(self, request):
+        authorization = {'authorization': request.session.get('tsuru_token')}
+        response = requests.get('%s/apps' % settings.TSURU_HOST, headers=authorization)
+        apps = []
+        if response.status_code == 200:
+            result = json.loads(response.content)
+            for r in result:
+                apps.append(r['name'])
+        return TemplateResponse(request, "apps/list.html", {'apps':apps})
+
+
 class AppAddTeam(LoginRequiredView):
     template = "apps/app_add_team.html"
 
