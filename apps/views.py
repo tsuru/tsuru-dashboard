@@ -18,8 +18,6 @@ class CreateApp(View):
         form = AppForm(request.POST)
         if form.is_valid():
             authorization = {'authorization': request.session.get('tsuru_token')}
-            data = form.data
-            data.update({"framework": "django"})
             response = requests.post('%s/apps' % settings.TSURU_HOST,
                                      data=json.dumps(form.data),
                                      headers=authorization)
