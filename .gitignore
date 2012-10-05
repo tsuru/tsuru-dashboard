@@ -4,3 +4,5 @@
 /abyss/static
 /abyss/media
 .DS_Store
+.coverage
+htmlcov
