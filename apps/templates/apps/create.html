@@ -1,1 +1,26 @@
-apps
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="app-form">
+        <h2>App</h2>
+        <form action="" method="post">
+           {% csrf_token %}
+           {% if message %}
+              <div class="alert alert-success">
+                 {{ message }}
+              </div>
+           {% endif %}
+           {% if errors %}
+              <div class="alert alert-error">
+                 {{ errors }}
+              </div>
+           {% endif %}
+           <fieldset>
+               {{ app_form.as_p }}
+              <button class="btn primary" type="submit">Add</button>
+           </fieldset>
+        </form>
+    </div>
+</div>
+{% endblock content %}
