@@ -31,11 +31,7 @@ class ListApp(View):
     def get(self, request):
         authorization = {'authorization': request.session.get('tsuru_token')}
         response = requests.get('%s/apps' % settings.TSURU_HOST, headers=authorization)
-        apps = []
-        if response.status_code == 200:
-            result = json.loads(response.content)
-            for r in result:
-                apps.append(r['name'])
+        apps = response.json
         return TemplateResponse(request, "apps/list.html", {'apps':apps})
 
 

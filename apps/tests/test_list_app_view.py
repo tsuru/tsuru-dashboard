@@ -20,10 +20,8 @@ class ListAppViewTest(TestCase):
     def teste_should_get_list_of_apps_from_tsuru(self):
         request = RequestFactory().get("/")
         request.session = {"tsuru_token":"admin"}
-        response_mock = Mock()
         with patch('requests.get') as get:
-            response_mock.status_code = 200
-            response_mock.content = '[{"name":"django"}, {"name":"rails"}]'
-            get.side_effect = Mock(return_value=response_mock)
+            expected = [{"Framework":"python","Name":"pacote","Repository":"git@tsuru.com:pacote.git","State":"creating"}]
+            get.return_value = Mock(status_code=200, json=expected)
             response = ListApp().get(request)
-            self.assertEqual(["django","rails"], response.context_data.get("apps"))
+            self.assertEqual([{"Framework":"python","Name":"pacote","Repository":"git@tsuru.com:pacote.git","State":"creating"}], response.context_data.get("apps"))
