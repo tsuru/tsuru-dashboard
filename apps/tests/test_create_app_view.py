@@ -22,7 +22,7 @@ class CreateAppViewTest(TestCase):
         self.assertIsInstance(app_form, forms.AppForm)
 
     def test_post_with_invalid_name_should_return_500(self):
-        request = RequestFactory().post("/", {"name": "myepe"})
+        request = RequestFactory().post("/", {"name": "myepe", "framework": "python"})
         request.session = {}
         response_mock = Mock()
         with patch('requests.post') as post:
@@ -41,7 +41,7 @@ class CreateAppViewTest(TestCase):
         self.assertIn(u'This field is required.', form.errors.get('name'))
 
     def test_post_with_name_should_send_request_post_to_tsuru_with_args_expected(self):
-        request = RequestFactory().post("/", {"name": "myepe"})
+        request = RequestFactory().post("/", {"name": "myepe", "framework": "django"})
         request.session = {'tsuru_token': 'tokentest'}
         with patch('requests.post') as post:
             CreateApp().post(request)
@@ -53,7 +53,7 @@ class CreateAppViewTest(TestCase):
             )
 
     def test_post_with_valid_name_should_return_context_with_message_expected(self):
-        request = RequestFactory().post("/", {"name": "myepe"})
+        request = RequestFactory().post("/", {"name": "myepe", "framework": "python"})
         request.session = {}
         response_mock = Mock()
         with patch('requests.post') as post:
