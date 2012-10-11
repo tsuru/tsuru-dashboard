@@ -84,4 +84,4 @@ class LoginViewTest(TestCase):
             post.side_effect = Mock(return_value=response_mock)
             response = Login().post(request)
             self.assertIsInstance(response, HttpResponseRedirect)
-            self.assertEqual('/team', response['Location'])
+            self.assertEqual('/app', response['Location'])
