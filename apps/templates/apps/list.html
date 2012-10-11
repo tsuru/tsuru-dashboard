@@ -5,7 +5,7 @@
     <div class="app-form">
         <h2>Apps</h2>
         {% for app in apps %}
-        <p>{{ app.Name }}</p>
+        <p>{{ app.Name }} - <a href="/app/{{ app.Name }}/remove/">remove</a></p>
         {% endfor %}
     </div>
 </div>
