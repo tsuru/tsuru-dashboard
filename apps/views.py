@@ -1,16 +1,28 @@
 import json
 import requests
 
-from django.views.generic.base import View
+from django.views.generic.base import View, TemplateView
 from django.template.response import TemplateResponse
 from django.conf import settings
+from django.http import HttpResponse
 
 from apps.forms import AppForm, AppAddTeamForm, RunForm, SetEnvForm
 from auth.views import LoginRequiredView
 
 
-class CreateApp(View):
+class RemoveApp(TemplateView):
+    def get(self, request, *args, **kwargs):
+        app_name = self.kwargs["name"]
+        authorization = {'authorization': request.session.get('tsuru_token')}
+        response = requests.delete(
+            "{0}/apps/{1}".format(settings.TSURU_HOST, app_name),
+            headers=authorization
+        )
+        if response.status_code > 399:
+            return HttpResponse(response.text, status=response.status_code)
 
+
+class CreateApp(View):
     def get(self, request):
         return TemplateResponse(request, "apps/create.html", {"app_form": AppForm()})
 
