@@ -24,4 +24,4 @@ class RemoveAppTestCase(TestCase):
             response = RemoveApp.as_view()(request, name="appname")
         self.assertEqual(302, response.status_code)
         self.assertIsInstance(response, HttpResponseRedirect)
-        self.assertEqual("/app", response.items()[1][1])
+        self.assertEqual("/app", response['Location'])
