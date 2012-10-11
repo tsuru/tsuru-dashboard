@@ -15,7 +15,7 @@ urlpatterns = patterns('',
     url(r'^signup$', Signup.as_view(), name='signup'),
 
     url(r'^app/$', ListApp.as_view(), name='list-app'),
-    url(r'^app/(?P<name>[\w-]+)/$', RemoveApp.as_view(), name='remove-app'),
+    url(r'^app/(?P<name>[\w-]+)/remove/$', RemoveApp.as_view(), name='remove_app'),
     url(r'^app/create/$', CreateApp.as_view(), name='create-app'),
     url(r'^app/team/add/$', AppAddTeam.as_view(), name='app-add-team'),
     url(r'^app/run/$', Run.as_view(), name='run'),
