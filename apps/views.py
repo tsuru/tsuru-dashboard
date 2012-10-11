@@ -1,7 +1,6 @@
 import json
 import requests
 
-from django.views.generic.base import View, TemplateView
 from django.template.response import TemplateResponse
 from django.conf import settings
 from django.http import HttpResponse, HttpResponseRedirect
@@ -10,7 +9,7 @@ from apps.forms import AppForm, AppAddTeamForm, RunForm, SetEnvForm
 from auth.views import LoginRequiredView
 
 
-class RemoveApp(TemplateView):
+class RemoveApp(LoginRequiredView):
     def get(self, request, *args, **kwargs):
         app_name = self.kwargs["name"]
         authorization = {'authorization': request.session.get('tsuru_token')}
@@ -23,7 +22,7 @@ class RemoveApp(TemplateView):
         return HttpResponseRedirect("/app")
 
 
-class CreateApp(View):
+class CreateApp(LoginRequiredView):
     def get(self, request):
         return TemplateResponse(request, "apps/create.html", {"app_form": AppForm()})
 
@@ -40,7 +39,7 @@ class CreateApp(View):
         return TemplateResponse(request, 'apps/create.html', {'form': form})
 
 
-class ListApp(View):
+class ListApp(LoginRequiredView):
     def get(self, request):
         authorization = {'authorization': request.session.get('tsuru_token')}
         response = requests.get('%s/apps' % settings.TSURU_HOST, headers=authorization)
