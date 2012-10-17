@@ -1,12 +1,14 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="row">
     <div class="app-form">
         <h2>Apps</h2>
         {% for app in apps %}
-        <p>{{ app.Name }} - <a href="/app/{{ app.Name }}/remove/">remove</a></p>
+        <div class="row">
+            <div class="span12">
+                {{ app.Name}}
+            </div>
+        </div>
         {% endfor %}
     </div>
-</div>
 {% endblock content %}
