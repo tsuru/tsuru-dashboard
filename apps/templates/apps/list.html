@@ -6,7 +6,7 @@
         {% for app in apps %}
         <div class="row">
             <div class="span12">
-                {{ app.Name}}
+                <a href="{% url detail-app app.Name %}">{{ app.Name}}
             </div>
         </div>
         {% endfor %}

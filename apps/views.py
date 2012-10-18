@@ -15,7 +15,7 @@ class AppDetail(LoginRequiredView):
         authorization = {'authorization': request.session.get('tsuru_token')}
         response = requests.get('{0}/apps/{1}'.format(settings.TSURU_HOST, app_name), headers=authorization)
         app = response.json
-        return TemplateResponse(request, "apps/detail.html", {"app": app})
+        return TemplateResponse(request, "apps/details.html", {"app": app})
 
 
 class RemoveApp(LoginRequiredView):
