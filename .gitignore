@@ -6,3 +6,4 @@
 .DS_Store
 .coverage
 htmlcov
+local_settings.py
