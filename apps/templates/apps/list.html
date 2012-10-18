@@ -1,12 +1,30 @@
 {% extends "base.html" %}
 
+{% block extra_css %}
+    <link href="{{ STATIC_URL }}css/apps.css" rel="stylesheet">
+{% endblock extra_css %}
+
 {% block content %}
+    <h2>Apps</h2>
     <div class="app-form">
-        <h2>Apps</h2>
         {% for app in apps %}
-        <div class="row">
-            <div class="span12">
-                <a href="{% url detail-app app.Name %}">{{ app.Name}}
+        <div class="row-fluid">
+            <div class="span12 app-item">
+                <div class="span8 app-name">
+                    <a href="#"> {{ app.Name }} </a>
+                </div>
+                <div class="span1 option app-services">
+                    <a href="#"> <i class="icon-tag"></i> </a>
+                </div>
+                <div class="span1 option app-log">
+                    <a href="#"> <i class="icon-tasks"></i> </a>
+                </div>
+                <div class="span1 option app-collaborators">
+                    <a href="#"> <i class="icon-user"></i> </a>
+                </div>
+                <div class="span1 option app-remove">
+                    <a href="#"> <i class="icon-trash"></i> </a>
+                </div>
             </div>
         </div>
         {% endfor %}
