@@ -5,28 +5,34 @@
 {% endblock extra_css %}
 
 {% block content %}
-    <h2>Apps</h2>
-    <div class="app-form">
-        {% for app in apps %}
+    <div class="app-list">
         <div class="row-fluid">
-            <div class="span12 app-item">
-                <div class="span8 app-name">
-                    <a href="#"> {{ app.Name }} </a>
-                </div>
-                <div class="span1 option app-services">
-                    <a href="#"> <i class="icon-tag"></i> </a>
-                </div>
-                <div class="span1 option app-log">
-                    <a href="#"> <i class="icon-tasks"></i> </a>
-                </div>
-                <div class="span1 option app-collaborators">
-                    <a href="#"> <i class="icon-user"></i> </a>
-                </div>
-                <div class="span1 option app-remove">
-                    <a href="#"> <i class="icon-trash"></i> </a>
-                </div>
+            <div class="span10 offset1">
+                <h2>Apps</h2>
             </div>
         </div>
-        {% endfor %}
+        <div class="row-fluid">
+            <div class="span10 offset1 app-item">
+                {% for app in apps %}
+                <div class="row-fluid">
+                    <div class="span8 app-name">
+                        <a href="#"> {{ app.Name }} </a>
+                    </div>
+                    <div class="span1 option app-services">
+                        <a href="#"> <i class="icon-tag"></i> </a>
+                    </div>
+                    <div class="span1 option app-log">
+                        <a href="#"> <i class="icon-tasks"></i> </a>
+                    </div>
+                    <div class="span1 option app-collaborators">
+                        <a href="#"> <i class="icon-user"></i> </a>
+                    </div>
+                    <div class="span1 option app-remove">
+                        <a href="#"> <i class="icon-trash"></i> </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
     </div>
 {% endblock content %}
