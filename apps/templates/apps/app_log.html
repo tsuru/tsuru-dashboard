@@ -2,11 +2,13 @@
 
 {% block content %}
     <div class="app-form">
-        <h2>Log</h2>
+        <h2>{{ app }}</h2>
         <div class="row">
             <div class="span12">
                 <ul>
-                    <header>{{ app }}</header>
+                    <header>
+                        <h3>Log</h3>
+                    </header>
                     {% for log in logs %}
                     <li>
                         {{ log.Date }} - {{ log.Message }}
