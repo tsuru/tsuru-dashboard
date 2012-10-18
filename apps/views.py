@@ -9,6 +9,15 @@ from apps.forms import AppForm, AppAddTeamForm, RunForm, SetEnvForm
 from auth.views import LoginRequiredView
 
 
+class AppDetail(LoginRequiredView):
+    def get(self, request, *args, **kwargs):
+        app_name = kwargs["app_name"]
+        authorization = {'authorization': request.session.get('tsuru_token')}
+        response = requests.get('{0}/apps/{1}'.format(settings.TSURU_HOST, app_name), headers=authorization)
+        app = response.json
+        return TemplateResponse(request, "apps/detail.html", {"app": app})
+
+
 class RemoveApp(LoginRequiredView):
     def get(self, request, *args, **kwargs):
         app_name = self.kwargs["name"]
