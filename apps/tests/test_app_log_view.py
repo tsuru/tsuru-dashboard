@@ -1,3 +1,5 @@
+import json
+
 from mock import patch, Mock
 
 from django.conf import settings
@@ -18,6 +20,7 @@ class AppLogViewTest(TestCase):
         self.app_name = 'app-teste'
         self.response_mock = Mock()
         self.response_mock.status_code = 200
+        self.response_mock.content = '{}'
         with patch('requests.get') as get:
             get.return_value = self.response_mock
             self.response = AppLog().get(self.request, self.app_name)
@@ -28,8 +31,8 @@ class AppLogViewTest(TestCase):
     def test_run_should_render_expected_template(self):
         self.assertEqual('apps/app_log.html', self.response.template_name)
 
-    def test_context_should_contain_log(self):
-        self.assertIn('log', self.response.context_data.keys())
+    def test_context_should_contain_logs(self):
+        self.assertIn('logs', self.response.context_data.keys())
 
     def test_context_should_contain_app(self):
         self.assertIn('app', self.response.context_data.keys())
@@ -44,12 +47,12 @@ class AppLogViewTest(TestCase):
                                     headers={'authorization': self.request.session['tsuru_token']})
 
     def test_get_with_valid_app_should_return_expected_context(self):
-        self.response_mock.content = 'Logs'
+        self.response_mock.content = '[{"logs": "teste"}]'
         with patch('requests.get') as get:
             get.return_value = self.response_mock
             response = AppLog().get(self.request, self.app_name)
 
-            self.assertEqual(self.response_mock.content, response.context_data['log'])
+            self.assertEqual(json.loads(self.response_mock.content), response.context_data['logs'])
 
     def test_get_with_invalid_app_should_return_context_with_error(self):
         self.response_mock.status_code = 404

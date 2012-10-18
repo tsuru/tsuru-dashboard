@@ -128,5 +128,6 @@ class AppLog(LoginRequiredView):
         response = requests.get(tsuru_url, headers=authorization)
 
         if response.status_code == 200:
-            return TemplateResponse(request, self.template, {'log': response.content, 'app': app_name})
+            logs = json.loads(response.content)
+            return TemplateResponse(request, self.template, {'logs': logs, 'app': app_name})
         return TemplateResponse(request, self.template, {'errors': response.content})
