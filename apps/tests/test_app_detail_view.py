@@ -13,7 +13,7 @@ class AppDetailTestCase(TestCase):
         with mock.patch("requests.get") as get:
             get.return_value = mock.Mock(status_code=200, json={})
             response = AppDetail.as_view()(request, app_name="app1")
-        self.assertEqual("apps/detail.html", response.template_name)
+        self.assertEqual("apps/details.html", response.template_name)
 
     def test_should_get_the_app_info_from_tsuru(self):
         request = RequestFactory().get("/")
