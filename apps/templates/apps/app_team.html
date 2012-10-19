@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+    <link href="{{ STATIC_URL }}css/apps.css" rel="stylesheet">
+{% endblock extra_css %}
+
+{% block content %}
+    <div class="app-teams">
+        <div class="row title">
+            <div class="span10 offset1">
+                <h2>{{ app.Name }}</h2>
+                <span class="label my-label label-collaborators">Teams</span>
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div class="span10 offset1 app-teams">
+                {% for team in app.Teams %}
+                <div class="row-fluid team">
+                    <div class="span10">
+                        <span>{{ team }}</span>
+                    </div>
+                    <div class="span1 option team-add-member">
+                        <a href="#" rel="tooltip" class="tooltips" data-placement="top" data-original-title="Add Team Member">
+                            <i class="icon-plus-sign"></i>
+                        </a>
+                    </div>
+                    <div class="span1 option team-add-member">
+                        <a href="#" rel="tooltip" class="tooltips" data-placement="top" data-original-title="Remove Team Member">
+                            <i class="icon-trash"></i>
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="span10 offset1 team-create">
+                <a href="{% url app-add-team app.Name %}" class="btn btn-info">Create Team</a>
+            </div>
+        </div>
+        <div class="row-fluid app-menu">
+            <div class="span8 offset2">
+                <div class="span3">
+                    <div class="span8 offset2 circle services-circle">
+                        <a href="#">Services</a>
+                    </div>
+                </div>
+                <div class="span3">
+                    <div class="span8 offset2 circle log-circle">
+                       <a href="{% url app_log app.Name %}">Log</a>
+                    </div>
+                </div>
+                <div class="span3">
+                    <div class="span8 offset2 circle circle-selected">
+                        <span>Teams</span>
+                    </div>
+                </div>
+                <div class="span3">
+                    <div class="span8 offset2 circle settings-circle">
+                        <a href="#">Settings</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

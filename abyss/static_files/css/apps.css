@@ -1,4 +1,4 @@
-.app-item, .app-log .log, .app-details .details {
+.app-item, .app-log .log, .app-details .details, .app-teams .team, .app-create .create-form {
     border: 1px solid #D9D9D9;
     -webkit-border-radius: 5px;
        -moz-border-radius: 5px;
@@ -12,7 +12,7 @@
     margin-bottom: 20px;
 }
 
-.app-item .app-name a {
+.app-item .app-name a, .app-teams .team {
     display: inline-block;
     line-height: 30px;
     padding: 5px 0px 5px 20px;
@@ -149,3 +149,16 @@
 .settings-circle:hover {
     background: #A4A875;
     border-radius: 50%;
+}
+
+.app-list .app-create, .app-teams .team-create {
+    margin-top: 20px;
+}
+
+.app-create .create-form {
+    padding: 10px 0px 0px 10px;
+}
+
+.app-create .create-form .alert-success, .app-create .create-form .alert-error {
+    margin-right: 10px;
+}

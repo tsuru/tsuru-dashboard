@@ -8,13 +8,8 @@
     <div class="app-list">
         <div class="row-fluid">
             <div class="span10 offset1">
-                <div class="span10">
+                <div class="span12">
                     <h2>Apps</h2>
-                </div>
-                <div class="span2">
-                    <a href="">
-                        <i class="icon-plus-sign"></i>
-                    </a>
                 </div>
             </div>
         </div>
@@ -32,13 +27,18 @@
                         <a href="{% url app_log app.Name %}" rel="tooltip" class="tooltips" data-placement="top" data-original-title="Log"> <i class="icon-tasks"></i> </a>
                     </div>
                     <div class="span1 option app-collaborators">
-                        <a href="#" rel="tooltip" class="tooltips" data-placement="top" data-original-title="Collaborators"> <i class="icon-user"></i> </a>
+                        <a href="{% url app-teams app.Name %}" rel="tooltip" class="tooltips" data-placement="top" data-original-title="Collaborators"> <i class="icon-user"></i> </a>
                     </div>
                     <div class="span1 option app-settings">
                         <a href="#" rel="tooltip" class="tooltips" data-placement="top" data-original-title="Settings"> <i class="icon-wrench"></i> </a>
                     </div>
                 </div>
                 {% endfor %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="span10 offset1 app-create">
+                <a href="{% url create-app %}" class="btn btn-info">Create App</a>
             </div>
         </div>
     </div>
