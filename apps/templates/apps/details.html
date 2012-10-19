@@ -1,17 +1,30 @@
 {% extends "base.html" %}
 
-{% block content %}
-    <div class="app-form">
-        <a href="{% url list-app%}">Voltar</a>
-        <h2>{{app.Name}}</h2>
-        <p><b>Repositório:</b> {{app.Repository}}</p>
-        <p><b>Times:</b> {{app.Teams|join:", "}}</p>
-        <p><b>Framework:</b> {{app.Framework}}</p>
-        <p><b>Status:</b> {{app.State}}</p>
+{% block extra_css %}
+    <link href="{{ STATIC_URL }}css/apps.css" rel="stylesheet">
+{% endblock extra_css %}
 
-        <a href="#">Serviços</a> | 
+{% block content %}
+    <div class="app-details">
+        <a href="{% url list-app%}">Back</a>
+        <div class="row title">
+            <div class="span10 offset1">
+                <h2>{{ app.Name }}</h2>
+                <span class="label my-label label-details">Details</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="span10 offset1 details">
+                <p><b>Repository:</b> {{app.Repository}}</p>
+                <p><b>Teams:</b> {{app.Teams|join:", "}}</p>
+                <p><b>Framework:</b> {{app.Framework}}</p>
+                <p><b>Status:</b> {{app.State}}</p>
+            </div>
+        </div>
+
+        <a href="#">Services</a> | 
         <a href="#">Log</a> | 
-        <a href="#">Time</a> | 
+        <a href="#">Teams</a> | 
         <a href="#">Settings</a>
     </div>
 {% endblock content %}
