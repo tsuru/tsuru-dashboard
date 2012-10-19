@@ -1,14 +1,18 @@
 {% extends "base.html" %}
 
+{% block extra_css %}
+    <link href="{{ STATIC_URL }}css/apps.css" rel="stylesheet">
+{% endblock extra_css %}
+
 {% block content %}
-    <div class="app-form">
+    <div class="app-log">
         <div class="row">
             <div class="span10 offset1">
                 <h2>{{ app }}</h2>
             </div>
         </div>
         <div class="row">
-            <div class="span10 offset1">
+            <div class="span10 offset1 log">
                 <ul>
                     <header>
                         <h3>Log</h3>
