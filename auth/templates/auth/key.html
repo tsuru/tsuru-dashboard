@@ -28,3 +28,10 @@
               </div>
           </div>
 {% endblock content %}
+
+{% block extra_js %}
+<script>
+ $(".nav li").removeClass("active");
+ $(".nav #key").addClass("active");
+</script>
+{% endblock %}

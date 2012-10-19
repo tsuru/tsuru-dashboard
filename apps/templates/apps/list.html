@@ -36,3 +36,10 @@
         </div>
     </div>
 {% endblock content %}
+
+{% block extra_js %}
+<script>
+ $(".nav li").removeClass("active");
+ $(".nav #apps").addClass("active");
+</script>
+{% endblock %}

@@ -14,9 +14,9 @@
                         <li id="signup"><a href="/signup">Sign up</a></li>
                     {% endif %}
                     {% if request.session.tsuru_token %}
-                        <li><a href="/app">Apps</a></li>
-                        <li><a href="/key">Key</a></li>
-                        <li><a href="/logout">Logout</a></li>
+                        <li id="apps"><a href="/app">Apps</a></li>
+                        <li id="key"><a href="/key">Key</a></li>
+                        <li id="logout"><a href="/logout">Logout</a></li>
                     {% endif %}
                 </ul>
             </div>
