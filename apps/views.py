@@ -1,8 +1,6 @@
 import json
 import requests
 
-from datetime import datetime
-
 from django.template.response import TemplateResponse
 from django.conf import settings
 from django.http import HttpResponse, HttpResponseRedirect
@@ -77,6 +75,7 @@ class AppAddTeam(LoginRequiredView):
         if response.status_code == 200:
             return TemplateResponse(request, self.template, {'form': form, 'message': "The Team was successfully added"})
         return TemplateResponse(request, self.template, {'form': form, 'errors': response.content })
+
 
 class Run(LoginRequiredView):
     template = "apps/run.html"
