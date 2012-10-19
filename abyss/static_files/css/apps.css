@@ -10,7 +10,7 @@
 .app-item .app-name a {
     display: inline-block;
     line-height: 30px;
-    padding: 5px 0px 10px 20px;
+    padding: 5px 0px 5px 20px;
     width: 100%;
 }
 
