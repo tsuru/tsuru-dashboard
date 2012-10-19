@@ -16,13 +16,13 @@
                 {% for app in apps %}
                 <div class="row-fluid">
                     <div class="span8 app-name">
-                        <a href="/app/{{ app.Name }}/" rel="tooltip" class="tooltips" data-placement="left" data-original-title="App Details"> {{ app.Name }} </a>
+                        <a href="{% url detail-app app.Name %}" rel="tooltip" class="tooltips" data-placement="left" data-original-title="App Details"> {{ app.Name }} </a>
                     </div>
                     <div class="span1 option app-services">
                         <a href="#" rel="tooltip" class="tooltips" data-placement="top" data-original-title="Services"> <i class="icon-tag"></i> </a>
                     </div>
                     <div class="span1 option app-log">
-                        <a href="/app/{{ app.Name }}/log/" rel="tooltip" class="tooltips" data-placement="top" data-original-title="Log"> <i class="icon-tasks"></i> </a>
+                        <a href="{% url app_log app.Name %}" rel="tooltip" class="tooltips" data-placement="top" data-original-title="Log"> <i class="icon-tasks"></i> </a>
                     </div>
                     <div class="span1 option app-collaborators">
                         <a href="#" rel="tooltip" class="tooltips" data-placement="top" data-original-title="Collaborators"> <i class="icon-user"></i> </a>

@@ -6,17 +6,17 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </a>
-            <a class="brand" href="/app">Abyss</a>
+            <a class="brand" href="{% url list-app %}">Abyss</a>
             <div class="nav-collapse">
                 <ul class="nav">
                     {% if not request.session.tsuru_token %}
-                        <li id="login"><a href="/">Login</a></li>
-                        <li id="signup"><a href="/signup">Sign up</a></li>
+                        <li id="login"><a href="{% url login %}">Login</a></li>
+                        <li id="signup"><a href="{% url signup %}">Sign up</a></li>
                     {% endif %}
                     {% if request.session.tsuru_token %}
-                        <li id="apps"><a href="/app">Apps</a></li>
-                        <li id="key"><a href="/key">Key</a></li>
-                        <li id="logout"><a href="/logout">Logout</a></li>
+                        <li id="apps"><a href="{% url list-app %}">Apps</a></li>
+                        <li id="key"><a href="{% url token %}">Key</a></li>
+                        <li id="logout"><a href="{% url logout %}">Logout</a></li>
                     {% endif %}
                 </ul>
             </div>

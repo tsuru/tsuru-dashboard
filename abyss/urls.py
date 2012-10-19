@@ -14,13 +14,13 @@ urlpatterns = patterns('',
     url(r'^key/$', Key.as_view(), name='token'),
     url(r'^signup$', Signup.as_view(), name='signup'),
 
-    url(r'^app/$', ListApp.as_view(), name='list-app'),
+    url(r'^apps/$', ListApp.as_view(), name='list-app'),
+    url(r'^apps/create/$', CreateApp.as_view(), name='create-app'),
+    url(r'^app/run/$', Run.as_view(), name='run'),
     url(r'^app/(?P<app_name>[\w-]+)/$', AppDetail.as_view(), name='detail-app'),
     url(r'^app/(?P<name>[\w-]+)/remove/$', RemoveApp.as_view(), name='remove_app'),
     url(r'^app/(?P<app_name>[\w-]+)/log/$', AppLog.as_view(), name='app_log'),
-    url(r'^app/create/$', CreateApp.as_view(), name='create-app'),
     url(r'^app/team/add/$', AppAddTeam.as_view(), name='app-add-team'),
-    url(r'^app/run/$', Run.as_view(), name='run'),
     url(r'^app/env/set/$', SetEnv.as_view(), name='set-env'),
 )
 
