@@ -58,8 +58,8 @@
     background: #47834B;
 }
 
-.app-item .app-remove a:hover {
-    background: #CE534D;
+.app-item .app-settings a:hover {
+    background: #A4A875;
 }
 
 .label-details {
@@ -78,8 +78,8 @@
     background-color: #47834B;
 }
 
-.label-remove {
-    background-color: #CE534D;
+.label-settings {
+    background-color: #A4A875;
 }
 
 .my-label {
@@ -142,6 +142,6 @@
     border-radius: 50%;
 }
 
-.remove-circle:hover {
-    background: #CE534D;
+.settings-circle:hover {
+    background: #A4A875;
     border-radius: 50%;
