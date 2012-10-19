@@ -8,10 +8,10 @@ from django.test.client import RequestFactory
 from django.http import Http404
 
 from auth.views import LoginRequiredView
-from apps.views import AppLog
+from apps.views import GetEnv
 
 
-class AppLogViewTest(TestCase):
+class GetEnvViewTest(TestCase):
 
     def setUp(self):
         self.factory = RequestFactory()
@@ -23,16 +23,16 @@ class AppLogViewTest(TestCase):
         self.response_mock.content = '{}'
         with patch('requests.get') as get:
             get.return_value = self.response_mock
-            self.response = AppLog().get(self.request, self.app_name)
+            self.response = GetEnv().get(self.request, self.app_name)
 
     def test_should_require_login_to_set_env(self):
-        assert issubclass(AppLog, LoginRequiredView)
+        assert issubclass(GetEnv, LoginRequiredView)
 
     def test_run_should_render_expected_template(self):
-        self.assertEqual('apps/app_log.html', self.response.template_name)
+        self.assertEqual('apps/app_env.html', self.response.template_name)
 
-    def test_context_should_contain_logs(self):
-        self.assertIn('logs', self.response.context_data.keys())
+    def test_context_should_contain_envs(self):
+        self.assertIn('envs', self.response.context_data.keys())
 
     def test_context_should_contain_app(self):
         self.assertIn('app', self.response.context_data.keys())
@@ -42,17 +42,18 @@ class AppLogViewTest(TestCase):
 
     def test_get_with_app_should_send_request_get_to_tsuru_with_args_expected(self):
         with patch('requests.get') as get:
-            AppLog().get(self.request, self.app_name)
-            get.assert_called_with('%s/apps/%s/log' % (settings.TSURU_HOST, self.app_name),
+            GetEnv().get(self.request, self.app_name)
+            get.assert_called_with('%s/apps/%s/env' % (settings.TSURU_HOST, self.app_name),
                                     headers={'authorization': self.request.session['tsuru_token']})
 
     def test_get_with_valid_app_should_return_expected_context(self):
-        self.response_mock.content = '[{"logs": "teste"}]'
+        self.response_mock.content = 'env1\nenv2\n'
         with patch('requests.get') as get:
             get.return_value = self.response_mock
-            response = AppLog().get(self.request, self.app_name)
+            response = GetEnv().get(self.request, self.app_name)
 
-            self.assertEqual(json.loads(self.response_mock.content), response.context_data['logs'])
+            expected_response = self.response_mock.content.split('\n')
+            self.assertEqual(expected_response, response.context_data['envs'])
 
     def test_get_with_invalid_app_should_return_context_with_error(self):
         self.response_mock.status_code = 404
@@ -60,13 +61,13 @@ class AppLogViewTest(TestCase):
 
         with patch('requests.get') as get:
             get.return_value = self.response_mock
-            response = AppLog().get(self.request, 'invalid-app')
+            response = GetEnv().get(self.request, 'invalid-app')
 
             self.assertIn('errors', response.context_data.keys())
             self.assertEqual(self.response_mock.content, response.context_data['errors'])
 
     def test_get_request_run_url_should_return_200(self):
         try:
-            self.client.get('/app/%s/log/' % self.app_name)
+            self.client.get('/app/%s/env/' % self.app_name)
         except Http404:
             assert False

@@ -132,3 +132,17 @@ class AppLog(LoginRequiredView):
             logs = json.loads(response.content)
             return TemplateResponse(request, self.template, {'logs': logs, 'app': app_name})
         return TemplateResponse(request, self.template, {'errors': response.content})
+
+
+class GetEnv(LoginRequiredView):
+    template = "apps/app_env.html"
+
+    def get(self, request, app_name):
+        authorization = {'authorization': request.session.get('tsuru_token')}
+        tsuru_url = '%s/apps/%s/env' % (settings.TSURU_HOST, app_name)
+        response = requests.get(tsuru_url, headers=authorization)
+
+        if response.status_code == 200:
+            envs = response.content.split('\n')
+            return TemplateResponse(request, self.template, {'app': app_name, 'envs': envs})
+        return TemplateResponse(request, self.template, {'errors': response.content})

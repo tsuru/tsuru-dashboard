@@ -2,7 +2,7 @@ from django.conf.urls import patterns, url
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 from auth.views import Login, Logout, Signup, Team, Key
-from apps.views import CreateApp, AppAddTeam, Run, SetEnv, ListApp, RemoveApp, AppLog, AppDetail
+from apps.views import CreateApp, AppAddTeam, Run, SetEnv, ListApp, RemoveApp, AppLog, AppDetail, GetEnv
 
 
 urlpatterns = patterns('',
@@ -22,6 +22,7 @@ urlpatterns = patterns('',
     url(r'^app/(?P<app_name>[\w-]+)/log/$', AppLog.as_view(), name='app_log'),
     url(r'^app/team/add/$', AppAddTeam.as_view(), name='app-add-team'),
     url(r'^app/env/set/$', SetEnv.as_view(), name='set-env'),
+    url(r'^app/(?P<app_name>[\w-]+)/env/$', GetEnv.as_view(), name='get-env'),
 )
 
 urlpatterns += staticfiles_urlpatterns()
