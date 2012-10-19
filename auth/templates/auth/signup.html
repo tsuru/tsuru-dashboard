@@ -1,11 +1,15 @@
 {% extends "base.html" %}
 
+{% block extra_css %}
+    <link href="{{ STATIC_URL }}css/entry.css" rel="stylesheet">
+{% endblock extra_css %}
+
 {% block content %}
+
     <div class="row">
-        <form class="well" id="signup" action="/signup" method="POST">
-            {% csrf_token %}
+        <div class="signup-form">
             <h2>Sign up</h2>
-            
+
             {% if message %}
             <div class="alert alert-success">
                 {{ message }}
@@ -17,30 +21,32 @@
                 {{ error }}
             </div>
             {% endif %}
-                
-            <fieldset>
-                <div class="clearfix control-group{% if signup_form.errors.email %} error{% endif %}">
-                    <label>email</label>
-                    <input type="text" name="{{signup_form.email.name}}" placeholder="type your email here…" class="span3" {% if signup_form.email.value %}value="{{signup_form.email.value}}"{% endif %}>
-                    <span class="help-inline">{{signup_form.errors.email}}</span>
-                </div>
 
-                <div class="clearfix control-group{% if signup_form.errors.password %} error{% endif %}">
-                    <label>password</label>
-                    <input type="password" name="{{signup_form.password.name}}" placeholder="type your password..." class="span3">
-                    <span class="help-inline">{{signup_form.errors.password}}</span>
-                </div>
-        
-                <div class="clearfix control-group{% if signup_form.errors.same_password_again %} error{% endif %}">
-                    <label>check that password pls</label>
-                    <input type="password" name="{{signup_form.same_password_again.name}}" placeholder="type that same password again..." class="span3">
-                    <span class="help-inline">{{signup_form.errors.same_password_again}}</span>
-                </div>
-                
-                <button class="btn" type="submit">Submit</button>
-            </fieldset>
-        </form>
+            <form action="/signup" method="post">
+                {% csrf_token %}
+                {% if msg %}<div class="alert alert-error">{{ msg }}</div>{% endif %}
+                <fieldset>
+                    <div class="clearfix control-group{% if signup_form.errors.email %} error{% endif %}">
+                        <input type="text" name="{{signup_form.email.name}}" placeholder="type your email here…" class="span3" {% if signup_form.email.value %}value="{{signup_form.email.value}}"{% endif %}>
+                        <span class="help-inline">{{signup_form.errors.email}}</span>
+                    </div>
+
+                    <div class="clearfix control-group{% if signup_form.errors.password %} error{% endif %}">
+                        <input type="password" name="{{signup_form.password.name}}" placeholder="type your password..." class="span3">
+                        <span class="help-inline">{{signup_form.errors.password}}</span>
+                    </div>
+
+                    <div class="clearfix control-group{% if signup_form.errors.same_password_again %} error{% endif %}">
+                        <input type="password" name="{{signup_form.same_password_again.name}}" placeholder="type that same password again..." class="span3">
+                        <span class="help-inline">{{signup_form.errors.same_password_again}}</span>
+                    </div>
+
+                    <button class="btn btn-info" type="submit">Sign up</button>
+                </fieldset>
+            </form>
+        </div>
     </div>
+
 {% endblock content %}
 
 {% block extra_js %}
