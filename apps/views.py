@@ -36,6 +36,7 @@ class CreateApp(LoginRequiredView):
         return TemplateResponse(request, "apps/create.html", {"app_form": AppForm()})
 
     def post(self, request):
+        context = {}
         form = AppForm(request.POST)
         if form.is_valid():
             authorization = {'authorization': request.session.get('tsuru_token')}
@@ -43,9 +44,11 @@ class CreateApp(LoginRequiredView):
                                      data=json.dumps(form.data),
                                      headers=authorization)
             if response.status_code == 200:
-                return TemplateResponse(request, 'apps/create.html', {'form': form, 'message': "App was successfully created"})
-            return TemplateResponse(request, 'apps/create.html', {'form': form, 'error': response.content})
-        return TemplateResponse(request, 'apps/create.html', {'form': form})
+                context.update({'message': "App was successfully created"})
+            else:
+               context.update({'errors': response.content})
+        context.update({'app_form': form})
+        return TemplateResponse(request, 'apps/create.html', context)
 
 
 class ListApp(LoginRequiredView):
