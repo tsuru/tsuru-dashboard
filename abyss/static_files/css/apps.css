@@ -149,3 +149,8 @@
 .settings-circle:hover {
     background: #A4A875;
     border-radius: 50%;
+}
+
+.app-list .app-create {
+    margin-top: 20px;
+}
