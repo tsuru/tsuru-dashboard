@@ -2,7 +2,7 @@ from django.conf.urls import patterns, url
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 from auth.views import Login, Logout, Signup, Team, Key
-from apps.views import CreateApp, AppAddTeam, Run, SetEnv, ListApp, RemoveApp, AppLog, AppDetail, GetEnv, AppTeams
+from apps.views import CreateApp, AppAddTeam, Run, ListApp, RemoveApp, AppLog, AppDetail, AppEnv, AppTeams
 
 
 urlpatterns = patterns('',
@@ -20,10 +20,9 @@ urlpatterns = patterns('',
     url(r'^app/(?P<app_name>[\w-]+)/$', AppDetail.as_view(), name='detail-app'),
     url(r'^app/(?P<name>[\w-]+)/remove/$', RemoveApp.as_view(), name='remove_app'),
     url(r'^app/(?P<app_name>[\w-]+)/log/$', AppLog.as_view(), name='app_log'),
+    url(r'^app/(?P<app_name>[\w-]+)/env/$', AppEnv.as_view(), name='get-env'),
     url(r'^app/(?P<app_name>[\w-]+)/teams/$', AppTeams.as_view(), name='app-teams'),
     url(r'^app/(?P<app_name>[\w-]+)/team/add/$', AppAddTeam.as_view(), name='app-add-team'),
-    url(r'^app/env/set/$', SetEnv.as_view(), name='set-env'),
-    url(r'^app/(?P<app_name>[\w-]+)/env/$', GetEnv.as_view(), name='get-env'),
 )
 
 urlpatterns += staticfiles_urlpatterns()

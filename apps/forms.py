@@ -15,5 +15,4 @@ class RunForm(forms.Form):
     command = forms.CharField(max_length=1000)
 
 class SetEnvForm(forms.Form):
-    app = forms.CharField(max_length=60)
     env = forms.CharField(max_length=1000)

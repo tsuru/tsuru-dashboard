@@ -25,6 +25,34 @@
                 </ul>
             </div>
         </div>
+
+        <div class="row">
+            <div class="span10 offset1 set-env-app-form">
+                <h4>Set Env to App</h4>
+                <form action="" method="post">
+                    {% csrf_token %}
+                    {% if message %}
+                        <div class="alert alert-success">
+                            {{ message }}
+                        </div>
+                    {% endif %}
+                    {% if errors %}
+                        <div class="alert alert-error">
+                            {{ errors }}
+                        </div>
+                    {% endif %}
+                    <fieldset>
+                        <div class="clearfix control-group{% if form.errors.env %} error{% endif %}">
+                            <label>env</label>
+                            <input type="text" class="input-xxlarge" name="{{ form.env.name }}">
+                            <span class="help-inline">{{ form.errors.env }}</span>
+                        </div>
+                        <button class="btn primary" type="submit">Create</button>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+
         <div class="row-fluid app-menu">
             <div class="span8 offset2">
                 <div class="span3">
