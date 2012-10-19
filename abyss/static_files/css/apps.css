@@ -1,4 +1,4 @@
-.app-item, .app-log .log, .app-details .details, .app-teams .team {
+.app-item, .app-log .log, .app-details .details, .app-teams .team, .app-create .create-form {
     border: 1px solid #D9D9D9;
     -webkit-border-radius: 5px;
        -moz-border-radius: 5px;
@@ -153,4 +153,12 @@
 
 .app-list .app-create {
     margin-top: 20px;
+}
+
+.app-create .create-form {
+    padding: 10px 0px 0px 10px;
+}
+
+.app-create .create-form .alert-success, .app-create .create-form .alert-error {
+    margin-right: 10px;
 }
