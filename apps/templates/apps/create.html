@@ -27,7 +27,16 @@
                         </div>
                     {% endif %}
                     <fieldset>
-                       {{ app_form.as_p }}
+                      <div class="clearfix control-group{% if app_form.errors.name %} error{% endif %}">
+                          <label>Name</label>
+                           <input type="text" class="input-xlarge" name="{{ app_form.name.name }}">
+                          <span class="help-inline">{{ app_form.errors.name }}</span>
+                      </div>
+                      <div class="clearfix control-group{% if app_form.errors.framework %} error{% endif %}">
+                          <label>Framework</label>
+                          <input type="text" class="input-xlarge" name="{{ app_form.framework.name }}">
+                          <span class="help-inline">{{ app_form.errors.framework }}</span>
+                      </div>
                       <button class="btn primary" type="submit">Add</button>
                     </fieldset>
                 </form>
