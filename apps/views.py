@@ -68,17 +68,17 @@ class AppAddTeam(LoginRequiredView):
         context['form'] = AppAddTeamForm()
         return TemplateResponse(request, self.template, context=context)
 
-    def post(self, request):
+    def post(self, request, app_name):
         form = AppAddTeamForm(request.POST)
         if not form.is_valid():
             return TemplateResponse(request, self.template, {'form': form})
 
         authorization = {'authorization': request.session.get('tsuru_token')}
-        tsuru_url = '%s/apps/%s/%s' % (settings.TSURU_HOST, form.data.get('app'), form.data.get('team'))
+        tsuru_url = '%s/apps/%s/%s' % (settings.TSURU_HOST, app_name, form.data.get('team'))
         response = requests.put(tsuru_url, headers=authorization)
         if response.status_code == 200:
-            return TemplateResponse(request, self.template, {'form': form, 'message': "The Team was successfully added"})
-        return TemplateResponse(request, self.template, {'form': form, 'errors': response.content })
+            return TemplateResponse(request, self.template, {'form': form, 'app_name': app_name, 'message': "The Team was successfully added"})
+        return TemplateResponse(request, self.template, {'form': form, 'app_name': app_name, 'errors': response.content })
 
 
 class Run(LoginRequiredView):

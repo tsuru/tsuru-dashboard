@@ -30,13 +30,13 @@ class CreateAppViewTest(TestCase):
             response_mock.content = 'Error'
             post.side_effect = Mock(return_value=response_mock)
             response = CreateApp().post(request)
-            self.assertEqual('Error', response.context_data.get("error"))
+            self.assertEqual('Error', response.context_data.get("errors"))
 
     def test_post_without_name_should_return_form_with_errors(self):
         request = RequestFactory().post("/", {"name": ""})
         request.session = {}
         response = CreateApp().post(request)
-        form =  response.context_data.get('form')
+        form =  response.context_data.get('app_form')
         self.assertIn('name', form.errors)
         self.assertIn(u'This field is required.', form.errors.get('name'))
 

@@ -7,7 +7,6 @@ class AppForm(forms.Form):
 
 
 class AppAddTeamForm(forms.Form):
-    app = forms.CharField(max_length=60)
     team = forms.CharField(max_length=60)
 
 class RunForm(forms.Form):
