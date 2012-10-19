@@ -1,0 +1,29 @@
+.container {
+    width: 300px;
+}
+
+.container > .content {
+    background-color: #fff;
+    padding: 20px;
+    margin: 0 -20px; 
+    -webkit-border-radius: 5px;
+       -moz-border-radius: 5px;
+            border-radius: 5px;
+    -webkit-box-shadow: 0 0px 25px #D9D9D9;
+       -moz-box-shadow: 0 0px 25px #D9D9D9;
+            box-shadow: 0 0px 25px #D9D9D9;
+}
+
+.login-form {
+    margin-left: 65px;
+}
+
+.signup-form {
+    margin-left: 45px;
+}
+
+legend {
+    margin-right: -50px;
+    font-weight: bold;
+    color: #404040;
+}
