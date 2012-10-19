@@ -3,6 +3,10 @@
 *.db
 /abyss/static
 /abyss/media
+/abyss/local
+/abyss/lib
+/abyss/bin
+/abyss/include
 .DS_Store
 .coverage
 htmlcov
