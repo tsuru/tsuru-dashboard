@@ -95,3 +95,53 @@
 .app-details .details {
     padding: 10px 0px 0px 10px;
 }
+
+.app-menu {
+    margin-top: 50px;
+}
+
+.circle {
+    background: #F2F2F2;
+    height: 120px;
+    width: 120px;
+    text-align: center;
+    -webkit-border-radius: 50%;
+       -moz-border-radius: 50%;
+            border-radius: 50%;
+}
+
+.circle a, .circle span {
+    color: #777777;
+    display: inline-block;
+    padding-bottom: 52px;
+    padding-top: 52px;
+    text-decoration: none;
+    width: 100%;
+}
+
+.circle a:hover {
+    color: #FCFCFC;
+}
+
+.circle-selected {
+    background: #C4C4C4;
+}
+
+.services-circle:hover {
+    background: #91D6D5;
+    border-radius: 50%;
+}
+
+.log-circle:hover {
+    background: #60AA85;
+    border-radius: 50%;
+}
+
+.collaborators-circle:hover {
+    background: #47834B;
+    border-radius: 50%;
+}
+
+.remove-circle:hover {
+    background: #CE534D;
+    border-radius: 50%;

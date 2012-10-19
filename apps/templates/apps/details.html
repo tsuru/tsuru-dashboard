@@ -21,10 +21,29 @@
                 <p><b>Status:</b> {{app.State}}</p>
             </div>
         </div>
-
-        <a href="#">Services</a> | 
-        <a href="#">Log</a> | 
-        <a href="#">Teams</a> | 
-        <a href="#">Settings</a>
+        <div class="row-fluid app-menu">
+            <div class="span8 offset2">
+                <div class="span3">
+                    <div class="span8 offset2 circle services-circle">
+                        <a href="#">Services</a>
+                    </div>
+                </div>
+                <div class="span3">
+                    <div class="span8 offset2 circle log-circle">
+                        <a href="/app/{{ app.Name }}/log/">Log</a>
+                    </div>
+                </div>
+                <div class="span3">
+                    <div class="span8 offset2 circle collaborators-circle">
+                        <a href="#">Teams</a>
+                    </div>
+                </div>
+                <div class="span3">
+                    <div class="span8 offset2 circle remove-circle">
+                        <a href="#">Remove App</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock content %}
