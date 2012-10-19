@@ -1,4 +1,4 @@
-.app-item, .app-log .log, .app-details .details, .app-teams .team, .app-create .create-form, .app-add-team .create-form {
+.app-item, .app-log .log, .app-details .details, .app-teams .teams, .app-create .create-form, .app-add-team .create-form {
     border: 1px solid #D9D9D9;
     -webkit-border-radius: 5px;
        -moz-border-radius: 5px;
