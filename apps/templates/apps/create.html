@@ -1,26 +1,37 @@
 {% extends "base.html" %}
 
+{% block extra_css %}
+    <link href="{{ STATIC_URL }}css/apps.css" rel="stylesheet">
+{% endblock extra_css %}
+
 {% block content %}
-<div class="row">
-    <div class="app-form">
-        <h2>Create App</h2>
-        <form action="" method="post">
-           {% csrf_token %}
-           {% if message %}
-              <div class="alert alert-success">
-                 {{ message }}
-              </div>
-           {% endif %}
-           {% if errors %}
-              <div class="alert alert-error">
-                 {{ errors }}
-              </div>
-           {% endif %}
-           <fieldset>
-               {{ app_form.as_p }}
-              <button class="btn primary" type="submit">Add</button>
-           </fieldset>
-        </form>
+    <div class="app-create">
+        <div class="row title">
+            <div class="span10 offset1">
+                <h2>App</h2>
+                <span class="label my-label">Create</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="span10 offset1 create-form">
+                <form action="" method="post">
+                    {% csrf_token %}
+                    {% if message %}
+                        <div class="alert alert-success">
+                            {{ message }}
+                        </div>
+                    {% endif %}
+                    {% if errors %}
+                        <div class="alert alert-error">
+                            {{ errors }}
+                        </div>
+                    {% endif %}
+                    <fieldset>
+                       {{ app_form.as_p }}
+                      <button class="btn primary" type="submit">Add</button>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
     </div>
-</div>
 {% endblock content %}
