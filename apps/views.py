@@ -98,28 +98,6 @@ class Run(LoginRequiredView):
         return TemplateResponse(request, self.template, {'form': form, 'errors': response.content })
 
 
-class SetEnv(LoginRequiredView):
-    template = "apps/set_env.html"
-
-    def get(self, request):
-        context = {}
-        context['form'] = SetEnvForm()
-        return TemplateResponse(request, self.template, context)
-
-    def post(self, request):
-        form = SetEnvForm(request.POST)
-        if not form.is_valid():
-            return TemplateResponse(request, self.template, {'form': form})
-
-        authorization = {'authorization': request.session.get('tsuru_token')}
-        tsuru_url = '%s/apps/%s/env' % (settings.TSURU_HOST, form.data.get('app'))
-        response = requests.post(tsuru_url, data=form.data.get('env'), headers=authorization)
-
-        if response.status_code == 200:
-            return TemplateResponse(request, self.template, {'form': form, 'message': response.content})
-        return TemplateResponse(request, self.template, {'form': form, 'errors': response.content })
-
-
 class AppLog(LoginRequiredView):
     template = "apps/app_log.html"
 
@@ -134,15 +112,52 @@ class AppLog(LoginRequiredView):
         return TemplateResponse(request, self.template, {'errors': response.content})
 
 
-class GetEnv(LoginRequiredView):
+class AppEnv(LoginRequiredView):
     template = "apps/app_env.html"
 
     def get(self, request, app_name):
-        authorization = {'authorization': request.session.get('tsuru_token')}
-        tsuru_url = '%s/apps/%s/env' % (settings.TSURU_HOST, app_name)
-        response = requests.get(tsuru_url, headers=authorization)
+        context = {}
+        context['app'] = app_name
+        context['form'] = SetEnvForm(initial=context)
+
+        response = self.get_envs(request, app_name)
 
         if response.status_code == 200:
             envs = response.content.split('\n')
-            return TemplateResponse(request, self.template, {'app': app_name, 'envs': envs})
+            context['envs'] = envs
+            return TemplateResponse(request, self.template, context)
         return TemplateResponse(request, self.template, {'errors': response.content})
+
+    def post(self, request, app_name):
+        context = {}
+        context['app'] = app_name
+
+        response = self.get_envs(request, app_name)
+        if response.status_code == 200:
+            form = SetEnvForm(request.POST)
+            context['form'] = form
+            if not form.is_valid():
+                return TemplateResponse(request, self.template, context)
+
+            envs = response.content.split('\n')
+            envs.append(request.POST['env'])
+            context['envs'] = envs
+
+            response = self.set_env(request, app_name, form)
+
+            if response.status_code == 200:
+                context['message'] = response.content
+                return TemplateResponse(request, self.template, context)
+
+        context['errors'] = response.content
+        return TemplateResponse(request, self.template, context)
+
+    def get_envs(self, request, app_name):
+        authorization = {'authorization': request.session.get('tsuru_token')}
+        tsuru_url = '%s/apps/%s/env' % (settings.TSURU_HOST, app_name)
+        return requests.get(tsuru_url, headers=authorization)
+
+    def set_env(self, request, app_name, form):
+        authorization = {'authorization': request.session.get('tsuru_token')}
+        tsuru_url = '%s/apps/%s/env' % (settings.TSURU_HOST, app_name)
+        return requests.post(tsuru_url, data=form.data.get('env'), headers=authorization)
