@@ -92,6 +92,10 @@
     margin-top: 10px;
 }
 
+.app-log .log li {
+    list-style-type: none;
+}
+
 .app-details .details {
     padding: 10px 0px 0px 10px;
 }
