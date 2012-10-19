@@ -1,4 +1,4 @@
-.app-item, .app-log .log {
+.app-item, .app-log .log, .app-details .details {
     border: 1px solid #D9D9D9;
     -webkit-border-radius: 5px;
        -moz-border-radius: 5px;
@@ -7,6 +7,11 @@
        -moz-box-shadow: 0 0px 25px #D9D9D9;
             box-shadow: 0 0px 25px #D9D9D9;
 }
+
+.title {
+    margin-bottom: 20px;
+}
+
 .app-item .app-name a {
     display: inline-block;
     line-height: 30px;
@@ -55,4 +60,38 @@
 
 .app-item .app-remove a:hover {
     background: #CE534D;
+}
+
+.label-details {
+    background-color: #B2D1E5;
+}
+
+.label-services {
+    background-color: #91D6D5;
+}
+
+.label-log {
+    background-color: #60AA85;
+}
+
+.label-collaborators {
+    background-color: #47834B;
+}
+
+.label-remove {
+    background-color: #CE534D;
+}
+
+.my-label {
+    font-weight: 500;
+    font-size: 16px;
+    padding-bottom: 2px;
+}
+
+.app-log .log ul {
+    margin-top: 10px;
+}
+
+.app-details .details {
+    padding: 10px 0px 0px 10px;
 }
