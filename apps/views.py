@@ -1,8 +1,6 @@
 import json
 import requests
 
-from datetime import datetime
-
 from django.template.response import TemplateResponse
 from django.conf import settings
 from django.http import HttpResponse, HttpResponseRedirect
@@ -78,6 +76,7 @@ class AppAddTeam(LoginRequiredView):
             return TemplateResponse(request, self.template, {'form': form, 'message': "The Team was successfully added"})
         return TemplateResponse(request, self.template, {'form': form, 'errors': response.content })
 
+
 class Run(LoginRequiredView):
     template = "apps/run.html"
 
@@ -145,4 +144,17 @@ class AppTeams(LoginRequiredView):
         if response.status_code == 200:
             app = response.json
             return TemplateResponse(request, self.template, {'app': app})
+        return TemplateResponse(request, self.template, {'errors': response.content})
+
+class GetEnv(LoginRequiredView):
+    template = "apps/app_env.html"
+
+    def get(self, request, app_name):
+        authorization = {'authorization': request.session.get('tsuru_token')}
+        tsuru_url = '%s/apps/%s/env' % (settings.TSURU_HOST, app_name)
+        response = requests.get(tsuru_url, headers=authorization)
+
+        if response.status_code == 200:
+            envs = response.content.split('\n')
+            return TemplateResponse(request, self.template, {'app': app_name, 'envs': envs})
         return TemplateResponse(request, self.template, {'errors': response.content})
