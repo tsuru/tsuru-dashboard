@@ -14,7 +14,8 @@ class AppAddTeamTestCas(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
         self.request = self.factory.get('/')
-        self.response = AppAddTeam().get(self.request)
+        self.app_name = 'app-teste'
+        self.response = AppAddTeam().get(self.request, self.app_name)
         self.request_post = self.factory.post('/', {'app': 'app-test', 'team': 'team-test'})
         self.request_post.session = {}
         self.response_mock = Mock()
@@ -34,7 +35,7 @@ class AppAddTeamTestCas(TestCase):
 
     def test_get_request_team_url_should_return_200(self):
         try:
-            self.client.get('/app/team/add')
+            self.client.get('/app/%s/team/add' % self.app_name)
         except Http404:
             assert False
 
