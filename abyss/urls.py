@@ -21,7 +21,7 @@ urlpatterns = patterns('',
     url(r'^app/(?P<name>[\w-]+)/remove/$', RemoveApp.as_view(), name='remove_app'),
     url(r'^app/(?P<app_name>[\w-]+)/log/$', AppLog.as_view(), name='app_log'),
     url(r'^app/(?P<app_name>[\w-]+)/teams/$', AppTeams.as_view(), name='app-teams'),
-    url(r'^app/team/add/$', AppAddTeam.as_view(), name='app-add-team'),
+    url(r'^app/(?P<app_name>[\w-]+)/team/add/$', AppAddTeam.as_view(), name='app-add-team'),
     url(r'^app/env/set/$', SetEnv.as_view(), name='set-env'),
     url(r'^app/(?P<app_name>[\w-]+)/env/$', GetEnv.as_view(), name='get-env'),
 )

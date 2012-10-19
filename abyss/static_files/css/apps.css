@@ -151,6 +151,6 @@
     border-radius: 50%;
 }
 
-.app-list .app-create {
+.app-list .app-create, .app-teams .team-create {
     margin-top: 20px;
 }

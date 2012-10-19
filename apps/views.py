@@ -62,8 +62,9 @@ class ListApp(LoginRequiredView):
 class AppAddTeam(LoginRequiredView):
     template = "apps/app_add_team.html"
 
-    def get(self, request):
+    def get(self, request, app_name):
         context = {}
+        context['app_name'] = app_name
         context['form'] = AppAddTeamForm()
         return TemplateResponse(request, self.template, context=context)
 
