@@ -23,9 +23,9 @@ class RemoveApp(LoginRequiredView):
         app_name = self.kwargs["name"]
         authorization = {'authorization': request.session.get('tsuru_token')}
         response = requests.delete(
-            "{0}/apps/{1}".format(settings.TSURU_HOST, app_name),
-            headers=authorization
-        )
+                "{0}/apps/{1}".format(settings.TSURU_HOST, app_name),
+                headers=authorization
+                )
         if response.status_code > 399:
             return HttpResponse(response.text, status=response.status_code)
         return HttpResponseRedirect("/app")
@@ -41,12 +41,12 @@ class CreateApp(LoginRequiredView):
         if form.is_valid():
             authorization = {'authorization': request.session.get('tsuru_token')}
             response = requests.post('%s/apps' % settings.TSURU_HOST,
-                                     data=json.dumps(form.data),
-                                     headers=authorization)
+                    data=json.dumps(form.data),
+                    headers=authorization)
             if response.status_code == 200:
                 context.update({'message': "App was successfully created"})
             else:
-               context.update({'errors': response.content})
+                context.update({'errors': response.content})
         context.update({'app_form': form})
         return TemplateResponse(request, 'apps/create.html', context)
 
@@ -115,6 +115,7 @@ class AppLog(LoginRequiredView):
             return TemplateResponse(request, self.template, {'logs': logs, 'app': app_name})
         return TemplateResponse(request, self.template, {'errors': response.content})
 
+
 class AppTeams(LoginRequiredView):
     template = "apps/app_team.html"
 
@@ -127,6 +128,7 @@ class AppTeams(LoginRequiredView):
             app = response.json
             return TemplateResponse(request, self.template, {'app': app})
         return TemplateResponse(request, self.template, {'errors': response.content})
+
 
 class AppEnv(LoginRequiredView):
     template = "apps/app_env.html"
