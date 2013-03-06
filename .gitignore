@@ -9,5 +9,6 @@
 /abyss/include
 .DS_Store
 .coverage
+.venv
 htmlcov
 local_settings.py
