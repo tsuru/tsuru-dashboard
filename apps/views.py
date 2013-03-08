@@ -55,8 +55,11 @@ class ListApp(LoginRequiredView):
     def get(self, request):
         authorization = {'authorization': request.session.get('tsuru_token')}
         response = requests.get('%s/apps' % settings.TSURU_HOST, headers=authorization)
-        apps = response.json
-        return TemplateResponse(request, "apps/list.html", {'apps':apps})
+        apps = response.json()
+        print apps
+        if (len(apps) == 0) or (apps is None) or (apps == ''):
+            apps = '{}'
+        return TemplateResponse(request, "apps/list.html", {'apps':'{}'})
 
 
 class AppAddTeam(LoginRequiredView):
