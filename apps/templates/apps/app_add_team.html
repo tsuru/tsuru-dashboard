@@ -14,7 +14,7 @@
     </div>
     <div class="row">
         <div class="span10 offset1 create-form">
-            <form action="{% url app-add-team app_name %}" method="post">
+            <form action="{% url 'app-add-team' app_name %}" method="post">
              {% csrf_token %}
              {% if message %}
                 <div class="alert alert-success">

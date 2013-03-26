@@ -3,8 +3,8 @@ from django.forms import widgets
 
 
 class LoginForm(forms.Form):
-	username = forms.EmailField(max_length=60)
-	password = forms.CharField(widget=widgets.PasswordInput, min_length=6)
+    username = forms.EmailField(max_length=60)
+    password = forms.CharField(widget=widgets.PasswordInput, min_length=6)
 
 
 class TeamForm(forms.Form):
@@ -12,7 +12,6 @@ class TeamForm(forms.Form):
 
 
 class AddUserToTeamForm(forms.Form):
-
     def __init__(self, teams=None, *args, **kwargs):
         super(AddUserToTeamForm, self).__init__(*args, **kwargs)
         if teams:
@@ -41,6 +40,7 @@ class SignupForm(forms.Form):
             raise forms.ValidationError(msg)
 
         return cleaned_data
+
 
 class KeyForm(forms.Form):
     key = forms.CharField(max_length=2000)

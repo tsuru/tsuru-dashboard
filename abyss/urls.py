@@ -4,8 +4,16 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from auth.views import Login, Logout, Signup, Team, Key
 from apps.views import CreateApp, AppAddTeam, Run, ListApp, RemoveApp, AppLog, AppDetail, AppEnv, AppTeams
 
+from django.views.generic.base import TemplateView, RedirectView
+
+class TextPlainView(TemplateView):
+    def render_to_response(self, context, **kwargs):
+        return super(TextPlainView, self).render_to_response(
+            context, content_type='text/plain', **kwargs)
 
 urlpatterns = patterns('',
+    url(r'^robots\.txt$', TextPlainView.as_view(template_name='robots.txt')),
+    url(r'^favicon\.ico$', RedirectView.as_view(url='/static/img/favicon.ico')),
     url(r'^$', Login.as_view(), name='login'),
 
     url(r'^login$', Login.as_view(), name='login'),

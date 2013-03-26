@@ -14,7 +14,7 @@ class AppDetail(LoginRequiredView):
         app_name = kwargs["app_name"]
         authorization = {'authorization': request.session.get('tsuru_token')}
         response = requests.get('{0}/apps/{1}'.format(settings.TSURU_HOST, app_name), headers=authorization)
-        app = response.json
+        app = response.json()
         return TemplateResponse(request, "apps/details.html", {"app": app})
 
 
@@ -55,10 +55,16 @@ class ListApp(LoginRequiredView):
     def get(self, request):
         authorization = {'authorization': request.session.get('tsuru_token')}
         response = requests.get('%s/apps' % settings.TSURU_HOST, headers=authorization)
-        apps = response.content
-        if (len(apps) == 0) or (apps is None) or (apps == ''):
-            apps = '{}'
-        return TemplateResponse(request, "apps/list.html", {'apps':apps})
+        context = {}
+        if response.status_code == 204:
+            apps = {}
+            return TemplateResponse(request, "apps/list.html", {'apps': apps})
+        elif response.status_code == 200:
+            apps = response.json()
+            return TemplateResponse(request, "apps/list.html", {'apps': apps})
+        else:
+            context.update({'errors': response.content})
+            return TemplateResponse(request, 'apps/list.html', context)
 
 
 class AppAddTeam(LoginRequiredView):
@@ -111,11 +117,16 @@ class AppLog(LoginRequiredView):
         authorization = {'authorization': request.session.get('tsuru_token')}
         tsuru_url = '%s/apps/%s/log' % (settings.TSURU_HOST, app_name)
         response = requests.get(tsuru_url, headers=authorization)
-
-        if response.status_code == 200:
-            logs = json.loads(response.content)
+        context = {}
+        if response.status_code == 204:
+            logs = {}
             return TemplateResponse(request, self.template, {'logs': logs, 'app': app_name})
-        return TemplateResponse(request, self.template, {'errors': response.content})
+        elif response.status_code == 200:
+            logs = response.json() #json.loads(response.content)
+            return TemplateResponse(request, self.template, {'logs': logs, 'app': app_name})
+        else:
+            context.update({'errors': response.content})
+            return TemplateResponse(request, self.template, context)
 
 
 class AppTeams(LoginRequiredView):
@@ -127,7 +138,7 @@ class AppTeams(LoginRequiredView):
         response = requests.get(tsuru_url, headers=authorization)
 
         if response.status_code == 200:
-            app = response.json
+            app = response.json()
             return TemplateResponse(request, self.template, {'app': app})
         return TemplateResponse(request, self.template, {'errors': response.content})
 
