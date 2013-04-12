@@ -17,7 +17,6 @@
                 <p><b>Repository:</b> {{app.Repository}}</p>
                 <p><b>Teams:</b> {{app.Teams|join:", "}}</p>
                 <p><b>Framework:</b> {{app.Framework}}</p>
-                <p><b>Status:</b> {{app.State}}</p>
                 <a href="{% url 'remove_app' app.Name %}" class="btn btn-danger">Delete this app</a>
             </div>
         </div>
