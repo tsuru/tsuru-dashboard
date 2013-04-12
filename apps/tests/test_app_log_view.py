@@ -43,7 +43,7 @@ class AppLogViewTest(TestCase):
     def test_get_with_app_should_send_request_get_to_tsuru_with_args_expected(self):
         with patch('requests.get') as get:
             AppLog().get(self.request, self.app_name)
-            get.assert_called_with('%s/apps/%s/log' % (settings.TSURU_HOST, self.app_name),
+            get.assert_called_with('%s/apps/%s/log?lines=10' % (settings.TSURU_HOST, self.app_name),
                                     headers={'authorization': self.request.session['tsuru_token']})
 
     def test_get_with_valid_app_should_return_expected_context(self):

@@ -107,7 +107,7 @@ class AppLog(LoginRequiredView):
 
     def get(self, request, app_name):
         authorization = {'authorization': request.session.get('tsuru_token')}
-        tsuru_url = '%s/apps/%s/log' % (settings.TSURU_HOST, app_name)
+        tsuru_url = '%s/apps/%s/log?lines=10' % (settings.TSURU_HOST, app_name)
         response = requests.get(tsuru_url, headers=authorization)
 
         if response.status_code == 200:
