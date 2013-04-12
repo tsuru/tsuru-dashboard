@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.test.client import RequestFactory
 from django.http import HttpResponseRedirect
+from django.core.urlresolvers import reverse
 
 from apps.views import RemoveApp
 
@@ -25,4 +26,4 @@ class RemoveAppTestCase(TestCase):
         response = RemoveApp.as_view()(self.request, name="appname")
         self.assertEqual(302, response.status_code)
         self.assertIsInstance(response, HttpResponseRedirect)
-        self.assertEqual("/app", response['Location'])
+        self.assertEqual(reverse('list-app'), response['Location'])

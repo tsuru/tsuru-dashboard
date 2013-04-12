@@ -4,6 +4,7 @@ import requests
 from django.template.response import TemplateResponse
 from django.conf import settings
 from django.http import HttpResponse, HttpResponseRedirect
+from django.core.urlresolvers import reverse
 
 from apps.forms import AppForm, AppAddTeamForm, RunForm, SetEnvForm
 from auth.views import LoginRequiredView
@@ -28,7 +29,7 @@ class RemoveApp(LoginRequiredView):
                 )
         if response.status_code > 399:
             return HttpResponse(response.text, status=response.status_code)
-        return HttpResponseRedirect("/app")
+        return HttpResponseRedirect(reverse('list-app'))
 
 
 class CreateApp(LoginRequiredView):
