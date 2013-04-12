@@ -18,16 +18,16 @@
                 {% for app in apps %}
                 <div class="row-fluid">
                     <div class="span8 app-name">
-                        <a href="{% url detail-app app.Name %}" rel="tooltip" class="tooltips" data-placement="left" data-original-title="App Details"> {{ app.Name }} </a>
+                        <a href="{% url 'detail-app' app.Name %}" rel="tooltip" class="tooltips" data-placement="left" data-original-title="App Details"> {{ app.Name }} </a>
                     </div>
                     <div class="span1 option app-services">
                         <a href="#" rel="tooltip" class="tooltips" data-placement="top" data-original-title="Services"> <i class="icon-tag"></i> </a>
                     </div>
                     <div class="span1 option app-log">
-                        <a href="{% url app_log app.Name %}" rel="tooltip" class="tooltips" data-placement="top" data-original-title="Log"> <i class="icon-tasks"></i> </a>
+                        <a href="{% url 'app_log' app.Name %}" rel="tooltip" class="tooltips" data-placement="top" data-original-title="Log"> <i class="icon-tasks"></i> </a>
                     </div>
                     <div class="span1 option app-collaborators">
-                        <a href="{% url app-teams app.Name %}" rel="tooltip" class="tooltips" data-placement="top" data-original-title="Collaborators"> <i class="icon-user"></i> </a>
+                        <a href="{% url 'app-teams' app.Name %}" rel="tooltip" class="tooltips" data-placement="top" data-original-title="Collaborators"> <i class="icon-user"></i> </a>
                     </div>
                     <div class="span1 option app-settings">
                         <a href="#" rel="tooltip" class="tooltips" data-placement="top" data-original-title="Settings"> <i class="icon-wrench"></i> </a>
@@ -38,7 +38,7 @@
         </div>
         <div class="row">
             <div class="span10 offset1 app-create">
-                <a href="{% url create-app %}" class="btn btn-info">Create App</a>
+                <a href="{% url 'create-app' %}" class="btn btn-info">Create App</a>
             </div>
         </div>
     </div>

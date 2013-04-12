@@ -29,12 +29,12 @@
                 </div>
                 <div class="span3">
                     <div class="span8 offset2 circle log-circle">
-                        <a href="{% url app_log app.Name %}">Log</a>
+                        <a href="{% url 'app_log' app.Name %}">Log</a>
                     </div>
                 </div>
                 <div class="span3">
                     <div class="span8 offset2 circle collaborators-circle">
-                        <a href="{% url app-teams app.Name %}">Teams</a>
+                        <a href="{% url 'app-teams' app.Name %}">Teams</a>
                     </div>
                 </div>
                 <div class="span3">
