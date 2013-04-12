@@ -12,3 +12,5 @@
 .venv
 htmlcov
 local_settings.py
+*.sublime-*
+.idea
