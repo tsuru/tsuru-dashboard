@@ -9,14 +9,20 @@ from django.core.urlresolvers import reverse
 from apps.forms import AppForm, AppAddTeamForm, RunForm, SetEnvForm
 from auth.views import LoginRequiredView
 
+from pluct import resource
+
 
 class AppDetail(LoginRequiredView):
     def get(self, request, *args, **kwargs):
         app_name = kwargs["app_name"]
-        authorization = {'authorization': request.session.get('tsuru_token')}
-        response = requests.get('{0}/apps/{1}'.format(settings.TSURU_HOST, app_name), headers=authorization)
-        app = response.json
-        return TemplateResponse(request, "apps/details.html", {"app": app})
+        token = request.session.get('tsuru_token').replace('type ', '')
+        auth = {
+            'type': 'type',
+            'credentials': token,
+        }
+        url = '{0}/apps/{1}'.format(settings.TSURU_HOST, app_name)
+        app = resource.get(url, auth)
+        return TemplateResponse(request, "apps/details.html", {"app": app.data})
 
 
 class RemoveApp(LoginRequiredView):
