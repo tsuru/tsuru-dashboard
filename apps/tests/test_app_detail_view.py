@@ -3,33 +3,38 @@ from django.test.client import RequestFactory
 
 from apps.views import AppDetail
 
+from pluct.resource import Resource
+
 import mock
 
 
 class AppDetailTestCase(TestCase):
-    def test_should_use_detail_template(self):
+    @mock.patch("pluct.resource.get")
+    def test_should_use_detail_template(self, get):
         request = RequestFactory().get("/")
         request.session = {"tsuru_token":"admin"}
-        with mock.patch("requests.get") as get:
-            get.return_value = mock.Mock(status_code=200, json={})
-            response = AppDetail.as_view()(request, app_name="app1")
+        response = AppDetail.as_view()(request, app_name="app1")
         self.assertEqual("apps/details.html", response.template_name)
 
-    def test_should_get_the_app_info_from_tsuru(self):
+    @mock.patch("pluct.resource.get")
+    def test_should_get_the_app_info_from_tsuru(self, get):
         request = RequestFactory().get("/")
         request.session = {"tsuru_token":"admin"}
         expected = {
-            "Name": "app1",
-            "Framework": "php",
-            "Repository": "git@git.com:php.git",
-            "State": "dead",
-            "Units": [
+            "name": "app1",
+            "framework": "php",
+            "repository": "git@git.com:php.git",
+            "state": "dead",
+            "units": [
                 {"Ip": "10.10.10.10"},
                 {"Ip": "9.9.9.9"}
             ],
-            "Teams": ["tsuruteam", "crane"]
+            "teams": ["tsuruteam", "crane"]
         }
-        with mock.patch("requests.get") as get:
-            get.return_value = mock.Mock(status_code=200, json=expected)
-            response = AppDetail.as_view()(request, app_name="app1")
+        resource = Resource(
+            url="url.com",
+            data=expected,
+        )
+        get.return_value = resource
+        response = AppDetail.as_view()(request, app_name="app1")
         self.assertDictEqual(expected, response.context_data["app"])
