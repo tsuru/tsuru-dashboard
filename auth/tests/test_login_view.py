@@ -70,7 +70,8 @@ class LoginViewTest(TestCase):
             response_mock.text = '{"token": "my beautiful token"}'
             post.side_effect = Mock(return_value=response_mock)
             Login().post(request)
-            self.assertEqual('my beautiful token', request.session["tsuru_token"])
+            self.assertEqual('type my beautiful token',
+                             request.session["tsuru_token"])
 
     def test_redirect_to_team_creation_page_when_login_is_successful(self):
         data = {'username': 'valid@email.com', 'password': '123456'}

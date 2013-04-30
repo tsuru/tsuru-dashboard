@@ -59,7 +59,7 @@ class Login(View):
 			response = requests.post(url, data=json.dumps(data))
 			if response.status_code == 200:
 				result = json.loads(response.text)
-				request.session['tsuru_token'] = result['token']
+				request.session['tsuru_token'] = "type {0}".format(result['token'])
 				return HttpResponseRedirect("/apps")
 			context['msg'] = 'User not found'
 		return TemplateResponse(request, 'auth/login.html', context=context)
