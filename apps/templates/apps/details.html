@@ -8,16 +8,16 @@
     <div class="app-details">
         <div class="row title">
             <div class="span10 offset1">
-                <h2>{{ app.Name }}</h2>
+                <h2>{{ app.name }}</h2>
                 <span class="label my-label label-details">Details</span>
             </div>
         </div>
         <div class="row">
             <div class="span10 offset1 details">
-                <p><b>Repository:</b> {{app.Repository}}</p>
-                <p><b>Teams:</b> {{app.Teams|join:", "}}</p>
-                <p><b>Framework:</b> {{app.Framework}}</p>
-                <a href="{% url 'remove_app' app.Name %}" class="btn btn-danger">Delete this app</a>
+                <p><b>Repository:</b> {{app.repository}}</p>
+                <p><b>Teams:</b> {{app.teams|join:", "}}</p>
+                <p><b>Framework:</b> {{app.framework}}</p>
+                <a href="{% url 'remove_app' app.name %}" class="btn btn-danger">Delete this app</a>
             </div>
         </div>
         <div class="row-fluid app-menu">
@@ -29,12 +29,12 @@
                 </div>
                 <div class="span3">
                     <div class="span8 offset2 circle log-circle">
-                        <a href="{% url 'app_log' app.Name %}">Log</a>
+                        <a href="{% url 'app_log' app.name %}">Log</a>
                     </div>
                 </div>
                 <div class="span3">
                     <div class="span8 offset2 circle collaborators-circle">
-                        <a href="{% url 'app-teams' app.Name %}">Teams</a>
+                        <a href="{% url 'app-teams' app.name %}">Teams</a>
                     </div>
                 </div>
                 <div class="span3">
