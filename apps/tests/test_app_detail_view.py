@@ -10,17 +10,10 @@ import mock
 
 class AppDetailTestCase(TestCase):
     @mock.patch("pluct.resource.get")
-    def test_should_use_detail_template(self, get):
+    def setUp(self, get):
         request = RequestFactory().get("/")
         request.session = {"tsuru_token":"admin"}
-        response = AppDetail.as_view()(request, app_name="app1")
-        self.assertEqual("apps/details.html", response.template_name)
-
-    @mock.patch("pluct.resource.get")
-    def test_should_get_the_app_info_from_tsuru(self, get):
-        request = RequestFactory().get("/")
-        request.session = {"tsuru_token":"admin"}
-        expected = {
+        self.expected = {
             "name": "app1",
             "framework": "php",
             "repository": "git@git.com:php.git",
@@ -33,8 +26,13 @@ class AppDetailTestCase(TestCase):
         }
         resource = Resource(
             url="url.com",
-            data=expected,
+            data=self.expected,
         )
         get.return_value = resource
-        response = AppDetail.as_view()(request, app_name="app1")
-        self.assertDictEqual(expected, response.context_data["app"])
+        self.response = AppDetail.as_view()(request, app_name="app1")
+
+    def test_should_use_detail_template(self):
+        self.assertEqual("apps/details.html", self.response.template_name)
+
+    def test_should_get_the_app_info_from_tsuru(self):
+        self.assertDictEqual(self.expected, self.response.context_data["app"])
