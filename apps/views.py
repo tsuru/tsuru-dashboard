@@ -113,14 +113,16 @@ class AppLog(LoginRequiredView):
     template = "apps/app_log.html"
 
     def get(self, request, app_name):
-        authorization = {'authorization': request.session.get('tsuru_token')}
-        tsuru_url = '%s/apps/%s/log?lines=10' % (settings.TSURU_HOST, app_name)
-        response = requests.get(tsuru_url, headers=authorization)
-
-        if response.status_code == 200:
-            logs = json.loads(response.content)
-            return TemplateResponse(request, self.template, {'logs': logs, 'app': app_name})
-        return TemplateResponse(request, self.template, {'errors': response.content})
+        token = request.session.get('tsuru_token').replace('type ', '')
+        auth = {
+            'type': 'type',
+            'credentials': token,
+        }
+        url = '{0}/apps/{1}'.format(settings.TSURU_HOST, app_name)
+        app = resource.get(url, auth)
+        response = app.log(lines=10)
+        return TemplateResponse(request, self.template,
+                                {'logs': response.json(), 'app': app_name})
 
 
 class AppTeams(LoginRequiredView):
