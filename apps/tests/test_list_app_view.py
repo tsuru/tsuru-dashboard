@@ -21,7 +21,10 @@ class ListAppViewTest(TestCase):
         request = RequestFactory().get("/")
         request.session = {"tsuru_token":"admin"}
         with patch('requests.get') as get:
-            expected = [{"Framework":"python","Name":"pacote","Repository":"git@tsuru.com:pacote.git","State":"creating"}]
+            expected = [{"framework":"python","name":"pacote",
+                         "repository":"git@tsuru.com:pacote.git","state":"creating"}]
             get.return_value = Mock(status_code=200, json=expected)
             response = ListApp().get(request)
-            self.assertEqual([{"Framework":"python","Name":"pacote","Repository":"git@tsuru.com:pacote.git","State":"creating"}], response.context_data.get("apps"))
+            self.assertEqual([{"framework":"python","name":"pacote",
+                               "repository":"git@tsuru.com:pacote.git","state":"creating"}],
+                             response.context_data.get("apps"))
