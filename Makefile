@@ -3,3 +3,6 @@ clean:
 
 deps:
 	@pip install -r test-requirements.txt
+
+test: clean deps
+	@./manage.py test
