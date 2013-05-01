@@ -1,41 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>Abyss - The Tsuru web admin</title>
-    <meta name="description" content="Abyss - The Tsuru web admin">
-    <meta name="author" content="Time Redbull">
+	<head>
+		<title>Abyss - The Tsuru web admin</title>
+		<meta charset="UTF-8" />
+		<meta name="description" content="Abyss - The Tsuru web admin">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap.min.css" />
+		<link rel="stylesheet" href="{{ STATIC_URL}}css/bootstrap-responsive.min.css" />
+		<link rel="stylesheet" href="{{ STATIC_URL}}css/fullcalendar.css" />
+		<link rel="stylesheet" href="{{ STATIC_URL}}css/unicorn.main.css" />
+		<link rel="stylesheet" href="{{ STATIC_URL}}css/unicorn.grey.css" class="skin-color" />
+		{% block extra_css %}
+		{% endblock extra_css %}
+	</head>
+	<body>
+		<div id="header">
+			<h1><a href="/">Abyss</a></h1>
+		</div>
+		<div id="user-nav" class="navbar navbar-inverse">
+			<ul class="nav btn-group">
+				<li class="btn btn-inverse" ><a title="" href="#"><i class="icon icon-user"></i> <span class="text">Profile</span></a></li>
+				<li class="btn btn-inverse"><a title="" href="#"><i class="icon icon-cog"></i> <span class="text">Settings</span></a></li>
+				<li class="btn btn-inverse"><a title="" href="login.html"><i class="icon icon-share-alt"></i> <span class="text">Logout</span></a></li>
+			</ul>
+		</div>
+		<div id="content">
 
-    <link href="{{ STATIC_URL }}css/abyss.css" rel="stylesheet">
-    <link href="{{ STATIC_URL }}css/bootstrap-responsive.min.css" rel="stylesheet">
-    <link href="{{ STATIC_URL }}css/bootstrap.min.css" rel="stylesheet">
+			{% block content %}
+			{% endblock content %}
+		</div>
+		<!-- <script src="{{ STATIC_URL }}js/jquery-1.7.2.min.js"></script> -->
+		<!-- <script src ="{{ STATIC_URL }}js/bootstrap-tooltip.js"></script> -->
 
-    {% block extra_css %}
-    {% endblock extra_css %}
+		<!-- <script type="text/javascript"> -->
+			<!-- 	$('.tooltips').tooltip(); -->
+			<!-- 	</script> -->
 
-    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-</head>
-<body>
-  <div class="container">
-      <div class="content">
-          {% include "navbar.html" %}
-
-          {% block content %}
-          {% endblock content %}
-      </div>
-  </div>
-
-  <script src="{{ STATIC_URL }}js/jquery-1.7.2.min.js"></script>
-  <script src ="{{ STATIC_URL }}js/bootstrap-tooltip.js"></script>
-
-  <script type="text/javascript">
-    $('.tooltips').tooltip();
-  </script>
-
-  {% block extra_js %}
-  {% endblock extra_js %}
-</body>
+		{% block extra_js %}
+		{% endblock extra_js %}
+	</body>
 </html>
