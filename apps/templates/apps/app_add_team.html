@@ -1,41 +1,41 @@
 {% extends "base.html" %}
 
-{% block extra_css %}
-    <link href="{{ STATIC_URL }}css/apps.css" rel="stylesheet">
-{% endblock extra_css %}
-
 {% block content %}
-<div class="app-add-team">
-    <div class="row title">
-        <div class="span10 offset1">
-            <h2>{{ app_name }}</h2>
-            <span class="label my-label">Add Team</span>
-        </div>
-    </div>
-    <div class="row">
-        <div class="span10 offset1 create-form">
-            <form action="{% url 'app-add-team' app_name %}" method="post">
-             {% csrf_token %}
-             {% if message %}
-                <div class="alert alert-success">
-                   {{ message }}
-                </div>
-             {% endif %}
-             {% if errors %}
-                <div class="alert alert-error">
-                   {{ errors }}
-                </div>
-             {% endif %}
-             <fieldset>
-                <div class="clearfix control-group{% if form.errors.team %} error{% endif %}">
-                    <label>Team name</label>
-                    <input type="text" class="input-xlarge" name="{{ form.team.name }}">
-                    <span class="help-inline">{{ form.errors.team }}</span>
-                </div>
-                <button class="btn primary" type="submit">Add</button>
-             </fieldset>
-            </form>
-        </div>
-    </div>
+<div id="content-header">
+	<h1>{{ app_name }}</h1>
+</div>
+<div class="container-fluid">
+	<div class="app-add-team">
+		<div class="row title">
+			<div class="span10">
+				<h2>Add Team</h2>
+			</div>
+		</div>
+		<div class="row">
+			<div class="span10 create-form">
+				<form action="{% url 'app-add-team' app_name %}" method="post">
+					{% csrf_token %}
+					{% if message %}
+					<div class="alert alert-success">
+						{{ message }}
+					</div>
+					{% endif %}
+					{% if errors %}
+					<div class="alert alert-error">
+						{{ errors }}
+					</div>
+					{% endif %}
+					<fieldset>
+						<div class="clearfix control-group{% if form.errors.team %} error{% endif %}">
+							<label>Team name</label>
+							<input type="text" class="input-xlarge" name="{{ form.team.name }}">
+							<span class="help-inline">{{ form.errors.team }}</span>
+						</div>
+						<button class="btn primary" type="submit">Add</button>
+					</fieldset>
+				</form>
+			</div>
+		</div>
+	</div>
 </div>
 {% endblock content %}
