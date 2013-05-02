@@ -1,19 +1,18 @@
 {% extends "base.html" %}
 
-{% block extra_css %}
-    <link href="{{ STATIC_URL }}css/apps.css" rel="stylesheet">
-{% endblock extra_css %}
-
 {% block content %}
+<div id="content-header">
+	<h1>Apps</h1>
+</div>
+<div class="container-fluid">
     <div class="app-create">
         <div class="row title">
-            <div class="span10 offset1">
-                <h2>App</h2>
-                <span class="label my-label">Create</span>
+            <div class="span12">
+                <h2>Create</h2>
             </div>
         </div>
         <div class="row">
-            <div class="span10 offset1 create-form">
+            <div class="span12 create-form">
                 <form action="" method="post">
                     {% csrf_token %}
                     {% if message %}
@@ -43,4 +42,5 @@
             </div>
         </div>
     </div>
+</div>
 {% endblock content %}
