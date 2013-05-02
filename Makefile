@@ -7,3 +7,4 @@ deps:
 test: clean deps
 	@coverage run manage.py test
 	@coverage report
+	@flake8 .
