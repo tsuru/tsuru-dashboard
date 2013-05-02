@@ -56,7 +56,8 @@ class LoginViewTest(TestCase):
         with patch('requests.post') as post:
             Login().post(request)
             self.assertEqual(1, post.call_count)
-            post.assert_called_with(expected_url, data='{"password": "123456"}')
+            post.assert_called_with(expected_url,
+                                    data='{"password": "123456"}')
 
     def test_should_set_token_in_the_session(self):
         data = {'username': 'valid@email.com', 'password': '123456'}
