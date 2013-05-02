@@ -1,5 +1,6 @@
 from mock import patch
 
+from django.conf import settings
 from django.test import TestCase
 from django.test.client import RequestFactory
 
@@ -19,5 +20,6 @@ class ListServiceViewTest(TestCase):
         response = ListService.as_view()(request)
         self.assertEqual("services/list.html", response.template_name)
         self.assertDictEqual(expected, response.context_data['services'])
-        get.assert_called_with('http://54.243.182.138:8080/services',
-                               {'credentials': 'admin', 'type': 'type'})
+        get.assert_called_with(
+            '{0}/services'.format(settings.TSURU_HOST),
+            {'credentials': 'admin', 'type': 'type'})
