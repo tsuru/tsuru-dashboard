@@ -71,7 +71,7 @@ class Login(View):
                 return HttpResponseRedirect("/apps")
             context['msg'] = 'User not found'
         return TemplateResponse(request, 'auth/login.html',
-                                    context=context)
+                                context=context)
 
 
 class Logout(View):
