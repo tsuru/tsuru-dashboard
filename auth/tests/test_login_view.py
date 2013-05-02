@@ -30,7 +30,6 @@ class LoginViewTest(TestCase):
         request = RequestFactory().post('/', data)
         response = Login().post(request)
         form = response.context_data['login_form']
-
         self.assertEqual('auth/login.html', response.template_name)
         self.assertIsInstance(form, LoginForm)
         self.assertEqual('invalid name', form.data['username'])

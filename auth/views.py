@@ -70,7 +70,7 @@ class Login(View):
                     result['token'])
                 return HttpResponseRedirect("/apps")
             context['msg'] = 'User not found'
-            return TemplateResponse(request, 'auth/login.html',
+        return TemplateResponse(request, 'auth/login.html',
                                     context=context)
 
 
@@ -79,7 +79,7 @@ class Logout(View):
     def get(self, request):
         if 'tsuru_token' in request.session:
             del request.session['tsuru_token']
-            return HttpResponseRedirect('/')
+        return HttpResponseRedirect('/')
 
 
 class Signup(View):
