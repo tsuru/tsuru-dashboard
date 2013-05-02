@@ -5,4 +5,5 @@ deps:
 	@pip install -r test-requirements.txt
 
 test: clean deps
-	@./manage.py test
+	@coverage run manage.py test
+	@coverage report
