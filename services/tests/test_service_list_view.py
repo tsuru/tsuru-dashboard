@@ -13,3 +13,5 @@ class ListServiceViewTest(TestCase):
         request.session = {"tsuru_token": "admin"}
         response = ListService.as_view()(request)
         self.assertEqual("services/list.html", response.template_name)
+        get.assert_called_with('http://54.243.182.138:8080/services',
+                               {'credentials': 'admin', 'type': 'type'})
