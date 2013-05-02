@@ -1,19 +1,18 @@
 {% extends "base.html" %}
 
-{% block extra_css %}
-    <link href="{{ STATIC_URL }}css/apps.css" rel="stylesheet">
-{% endblock extra_css %}
-
 {% block content %}
+<div id="content-header">
+	<h1>{{ app.name }}</h1>
+</div>
+<div class="container-fluid">
     <div class="app-teams">
         <div class="row title">
-            <div class="span10 offset1">
-                <h2>{{ app.name }}</h2>
-                <span class="label my-label label-collaborators">Teams</span>
+            <div class="span10">
+                <h2>Teams</h2>
             </div>
         </div>
         <div class="row-fluid">
-            <div class="span10 offset1 teams">
+            <div class="span12 teams">
                 {% for team in app.teams %}
                 <div class="row-fluid team">
                     <div class="span10">
@@ -34,33 +33,34 @@
             </div>
         </div>
         <div class="row">
-            <div class="span10 offset1 team-create">
+            <div class="span10 team-create">
                 <a href="{% url 'app-add-team' app.name %}" class="btn btn-info">Add Team</a>
             </div>
         </div>
         <div class="row-fluid app-menu">
-            <div class="span8 offset2">
+            <div class="span8">
                 <div class="span3">
-                    <div class="span8 offset2 circle services-circle">
+                    <div class="span8 circle services-circle">
                         <a href="#">Services</a>
                     </div>
                 </div>
                 <div class="span3">
-                    <div class="span8 offset2 circle log-circle">
+                    <div class="span8 circle log-circle">
                        <a href="{% url 'app_log' app.name %}">Log</a>
                     </div>
                 </div>
                 <div class="span3">
-                    <div class="span8 offset2 circle circle-selected">
+                    <div class="span8 circle circle-selected">
                         <span>Teams</span>
                     </div>
                 </div>
                 <div class="span3">
-                    <div class="span8 offset2 circle settings-circle">
+                    <div class="span8 circle settings-circle">
                         <a href="#">Settings</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 {% endblock content %}
