@@ -84,6 +84,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'auth',
     'apps',
+    'services',
 )
 
 TEST_RUNNER = 'abyss.runner.DiscoveryRunner'
