@@ -28,7 +28,6 @@ urlpatterns = patterns(
         AppTeams.as_view(), name='app-teams'),
     url(r'^app/(?P<app_name>[\w-]+)/team/add/$',
         AppAddTeam.as_view(), name='app-add-team'),
-    url(r'^envs/$', "auth.views.env_vars", name='envs'),
 )
 
 urlpatterns += staticfiles_urlpatterns()

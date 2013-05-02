@@ -1,10 +1,9 @@
 import json
 import requests
-import os
 
 from django.conf import settings
 from django.template.response import TemplateResponse
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect
 from django.views.generic.base import View
 
 from auth.forms import TeamForm, LoginForm, SignupForm, KeyForm
@@ -139,7 +138,3 @@ class Key(LoginRequiredView):
             return TemplateResponse(request, 'auth/key.html',
                                     context={"form": form,
                                              "errors": response.content})
-
-
-def env_vars(request):
-    return HttpResponse(os.environ)
