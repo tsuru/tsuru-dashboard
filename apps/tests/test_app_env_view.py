@@ -45,11 +45,12 @@ class AppEnvViewTest(TestCase):
     def test_app_on_context_should_contain_app_name(self):
         self.assertEqual(self.app_name, self.response.context_data['app'])
 
-    def test_get_with_app_should_send_request_get_to_tsuru_with_args_expected(self):
+    def test_get_with_app_should_send_request_to_tsuru(self):
         with patch('requests.get') as get:
             AppEnv().get(self.request, self.app_name)
-            get.assert_called_with('%s/apps/%s/env' % (settings.TSURU_HOST, self.app_name),
-                                    headers={'authorization': self.request.session['tsuru_token']})
+            get.assert_called_with(
+                '%s/apps/%s/env' % (settings.TSURU_HOST, self.app_name),
+                headers={'authorization': self.request.session['tsuru_token']})
 
     def test_get_with_valid_app_should_return_expected_context(self):
         with patch('requests.get') as get:
@@ -68,7 +69,8 @@ class AppEnvViewTest(TestCase):
             response = AppEnv().get(self.request, 'invalid-app')
 
             self.assertIn('errors', response.context_data.keys())
-            self.assertEqual(self.response_mock.content, response.context_data['errors'])
+            self.assertEqual(self.response_mock.content,
+                             response.context_data['errors'])
 
     def test_get_request_to_url_should_return_200(self):
         try:
@@ -87,16 +89,18 @@ class AppEnvViewTest(TestCase):
         form = self.response.context_data.get('form')
         self.assertTrue({'app': self.app_name}, form.initial)
 
-    def test_post_with_app_and_env_should_send_request_post_to_tsuru_with_args_expected(self):
+    def test_post_should_send_request_post_to_tsuru(self):
         self.request_post.session = {'tsuru_token': 'tokentest'}
         with patch('requests.post') as post:
             self.view.post(self.request_post, self.app_name)
             self.assertEqual(1, post.call_count)
-            post.assert_called_with(u'%s/apps/%s/env' % (settings.TSURU_HOST, self.app_name),
-                                    data=u'env-test',
-                                    headers={'authorization': self.request_post.session['tsuru_token']})
+            post.assert_called_with(
+                u'%s/apps/%s/env' % (settings.TSURU_HOST, self.app_name),
+                data=u'env-test',
+                headers={'authorization':
+                         self.request_post.session['tsuru_token']})
 
-    def test_post_with_valid_app_and_env_should_return_context_with_message_expected(self):
+    def test_postshould_return_context_with_message_expected(self):
         with patch('requests.post') as post:
             self.response_mock.status_code = 200
             self.response_mock.content = "env added"
@@ -104,7 +108,7 @@ class AppEnvViewTest(TestCase):
             response = self.view.post(self.request_post, self.app_name)
             self.assertEqual("env added", response.context_data.get('message'))
 
-    def test_post_with_invalid_app_or_env_should_return_error_message_expected_on_context(self):
+    def test_invalid_post_should_return_error_message(self):
         with patch('requests.post') as post:
             self.response_mock.status_code = 500
             self.response_mock.content = 'Error'
@@ -118,7 +122,8 @@ class AppEnvViewTest(TestCase):
             post.side_effect = Mock(return_value=self.response_mock)
             response = self.view.post(self.request_post, self.app_name)
             self.assertIn('form', response.context_data.keys())
-            self.assertTrue(isinstance(response.context_data.get('form'), SetEnvForm))
+            self.assertTrue(isinstance(response.context_data.get('form'),
+                                       SetEnvForm))
 
     def test_post_without_env_should_return_form_with_errors(self):
         with patch('requests.post'):
@@ -128,14 +133,14 @@ class AppEnvViewTest(TestCase):
             self.assertIn('form', response.context_data.keys())
             form = response.context_data.get('form')
             self.assertTrue(isinstance(form, SetEnvForm))
-            self.assertEqual(u'This field is required.', form.errors.get('env')[0])
+            self.assertEqual(u'This field is required.',
+                             form.errors.get('env')[0])
 
-    def test_post_with_valid_app_should_return_env_list_of_envs_with_new_env(self):
+    def test_post_with_valid_app_returns_env_list(self):
         self.response_mock.content = 'env1\nenv2\n'
         with patch('requests.post') as post:
             post.return_value = self.response_mock
             response = self.view.post(self.request_post, self.app_name)
-
             expected_response = self.response_mock.content.split('\n')
             expected_response.append(self.request_post.POST['env'])
             self.assertIn('envs', response.context_data.keys())
@@ -143,6 +148,8 @@ class AppEnvViewTest(TestCase):
 
     def test_post_request_to_url_should_return_200(self):
         try:
-            self.client.post('/app/%s/env/' % self.app_name, self.request_post.POST)
+            self.client.post(
+                '/app/%s/env/' % self.app_name,
+                self.request_post.POST)
         except Http404:
             assert False
