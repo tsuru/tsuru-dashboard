@@ -28,7 +28,8 @@ class AddUserToTeamForm(forms.Form):
 class SignupForm(forms.Form):
     email = forms.EmailField(max_length=60)
     password = forms.CharField(widget=widgets.PasswordInput, min_length=6)
-    same_password_again = forms.CharField(widget=widgets.PasswordInput, min_length=6)
+    same_password_again = forms.CharField(widget=widgets.PasswordInput,
+                                          min_length=6)
 
     def clean(self):
         cleaned_data = super(SignupForm, self).clean()
@@ -41,6 +42,7 @@ class SignupForm(forms.Form):
             raise forms.ValidationError(msg)
 
         return cleaned_data
+
 
 class KeyForm(forms.Form):
     key = forms.CharField(max_length=2000)
