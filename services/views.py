@@ -13,6 +13,6 @@ class ListService(LoginRequiredView):
             'credentials': token,
         }
         url = "{0}/services".format(settings.TSURU_HOST)
-        services = resource.get(url, auth)
+        services = resource.get(url, auth).data
         return TemplateResponse(request, "services/list.html",
                                 {'services': services})
