@@ -1,6 +1,3 @@
-import json
-
-from datetime import datetime
 from mock import patch, Mock
 
 from django.conf import settings

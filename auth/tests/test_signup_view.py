@@ -1,5 +1,4 @@
 from django.conf import settings
-from django.http import HttpResponseRedirect
 from django.test import TestCase
 from django.test.client import RequestFactory
 from mock import Mock, patch
