@@ -36,4 +36,5 @@ class SignupViewTest(TestCase):
         with patch('requests.post') as post:
             Signup().post(request)
             self.assertEqual(1, post.call_count)
-            post.assert_called_with('%s/users' % settings.TSURU_HOST, data='{"password": "abc123", "email": "test@test.com"}')
+            post.assert_called_with('%s/users' % settings.TSURU_HOST,
+                                    data='{"password": "abc123", "email": "test@test.com"}')
