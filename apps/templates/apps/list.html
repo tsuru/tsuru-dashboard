@@ -1,52 +1,46 @@
 {% extends "base.html" %}
 
-{% block extra_css %}
-    <link href="{{ STATIC_URL }}css/apps.css" rel="stylesheet">
-{% endblock extra_css %}
-
 {% block content %}
-    <div class="app-list">
-        <div class="row-fluid">
-            <div class="span10 offset1">
-                <div class="span12">
-                    <h2>Apps</h2>
-                </div>
-            </div>
-        </div>
-        <div class="row-fluid">
-            <div class="span10 offset1 app-item">
-                {% for app in apps %}
-                <div class="row-fluid">
-                    <div class="span8 app-name">
-                        <a href="{% url 'detail-app' app.name %}" rel="tooltip" class="tooltips" data-placement="left" data-original-title="App Details"> {{ app.name }} </a>
-                    </div>
-                    <div class="span1 option app-services">
-                        <a href="#" rel="tooltip" class="tooltips" data-placement="top" data-original-title="Services"> <i class="icon-tag"></i> </a>
-                    </div>
-                    <div class="span1 option app-log">
-                        <a href="{% url 'app_log' app.name %}" rel="tooltip" class="tooltips" data-placement="top" data-original-title="Log"> <i class="icon-tasks"></i> </a>
-                    </div>
-                    <div class="span1 option app-collaborators">
-                        <a href="{% url 'app-teams' app.name %}" rel="tooltip" class="tooltips" data-placement="top" data-original-title="Collaborators"> <i class="icon-user"></i> </a>
-                    </div>
-                    <div class="span1 option app-settings">
-                        <a href="#" rel="tooltip" class="tooltips" data-placement="top" data-original-title="Settings"> <i class="icon-wrench"></i> </a>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-        <div class="row">
-            <div class="span10 offset1 app-create">
-                <a href="{% url 'create-app' %}" class="btn btn-info">Create App</a>
-            </div>
-        </div>
-    </div>
+<div id="content-header">
+	<h1>Apps</h1>
+</div>
+<div class="container-fluid">
+	<div class="app-list">
+		<div class="row-fluid">
+			<div class="span12 app-item">
+				{% for app in apps %}
+				<div class="row-fluid">
+					<div class="span8 app-name">
+						<a href="{% url 'detail-app' app.name %}" rel="tooltip" class="tooltips" data-placement="left" data-original-title="App Details"> {{ app.name }} </a>
+					</div>
+					<div class="span1 option app-services">
+						<a href="#" rel="tooltip" class="tooltips" data-placement="top" data-original-title="Services"> <i class="icon-tag"></i> </a>
+					</div>
+					<div class="span1 option app-log">
+						<a href="{% url 'app_log' app.name %}" rel="tooltip" class="tooltips" data-placement="top" data-original-title="Log"> <i class="icon-tasks"></i> </a>
+					</div>
+					<div class="span1 option app-collaborators">
+						<a href="{% url 'app-teams' app.name %}" rel="tooltip" class="tooltips" data-placement="top" data-original-title="Collaborators"> <i class="icon-user"></i> </a>
+					</div>
+					<div class="span1 option app-settings">
+						<a href="#" rel="tooltip" class="tooltips" data-placement="top" data-original-title="Settings"> <i class="icon-wrench"></i> </a>
+					</div>
+				</div>
+				{% endfor %}
+			</div>
+		</div>
+		<div class="row">
+			<div class="span12 app-create">
+				<a href="{% url 'create-app' %}" class="btn btn-info">Create App</a>
+			</div>
+		</div>
+	</div>
+</div>
 {% endblock content %}
 
 {% block extra_js %}
 <script>
- $(".nav li").removeClass("active");
- $(".nav #apps").addClass("active");
+	$(".nav li").removeClass("active");
+	$(".nav #apps").addClass("active");
 </script>
 {% endblock %}
