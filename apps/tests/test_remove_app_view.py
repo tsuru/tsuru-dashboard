@@ -11,7 +11,7 @@ import mock
 class RemoveAppTestCase(TestCase):
     def setUp(self):
         self.request = RequestFactory().get("/name/remove")
-        self.request.session = {"tsuru_token":"admin"}
+        self.request.session = {"tsuru_token": "admin"}
 
     @mock.patch('requests.delete')
     def test_should_returns_404_when_app_does_not_exists(self, delete):
