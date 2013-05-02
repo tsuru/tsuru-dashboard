@@ -38,21 +38,24 @@ class TeamViewTest(TestCase):
         except Http404:
             assert False
 
-    def test_post_with_name_should_send_request_post_to_tsuru_with_args_expected(self):
+    def test_post_sends_request_to_tsuru(self):
         self.request_post.session = {'tsuru_token': 'tokentest'}
         with patch('requests.post') as post:
             Team().post(self.request_post)
             self.assertEqual(1, post.call_count)
-            post.assert_called_with('%s/teams' % settings.TSURU_HOST,
-                                    data='{"name": "test-team"}',
-                                    headers={'authorization': self.request_post.session['tsuru_token']})
+            post.assert_called_with(
+                '%s/teams' % settings.TSURU_HOST,
+                data='{"name": "test-team"}',
+                headers={'authorization':
+                         self.request_post.session['tsuru_token']})
 
-    def test_post_with_valid_name_should_return_context_with_message_expected(self):
+    def test_invalid_post_returns_message_in_context(self):
         with patch('requests.post') as post:
             self.response_mock.status_code = 200
             post.side_effect = Mock(return_value=self.response_mock)
             response = Team().post(self.request_post)
-            self.assertEqual("Team was successfully created", response.context_data.get('message'))
+            self.assertEqual("Team was successfully created",
+                             response.context_data.get('message'))
 
     def test_post_with_invalid_name_should_return_500(self):
         with patch('requests.post') as post:
@@ -66,6 +69,6 @@ class TeamViewTest(TestCase):
         request = self.factory.post('/team/', {'name': ''})
         request.session = {}
         response = Team().post(request)
-        form =  response.context_data.get('form')
+        form = response.context_data.get('form')
         self.assertIn('name', form.errors)
         self.assertIn(u'This field is required.', form.errors.get('name'))
