@@ -12,7 +12,7 @@ class AppDetailTestCase(TestCase):
     @mock.patch("pluct.resource.get")
     def setUp(self, get):
         request = RequestFactory().get("/")
-        request.session = {"tsuru_token":"admin"}
+        request.session = {"tsuru_token": "admin"}
         self.expected = {
             "name": "app1",
             "framework": "php",
