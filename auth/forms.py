@@ -3,8 +3,8 @@ from django.forms import widgets
 
 
 class LoginForm(forms.Form):
-	username = forms.EmailField(max_length=60)
-	password = forms.CharField(widget=widgets.PasswordInput, min_length=6)
+    username = forms.EmailField(max_length=60)
+    password = forms.CharField(widget=widgets.PasswordInput, min_length=6)
 
 
 class TeamForm(forms.Form):
@@ -19,7 +19,7 @@ class AddUserToTeamForm(forms.Form):
             choices = []
             for team in teams:
                 choices.append((team, team))
-            self.fields["team"].choices = choices
+                self.fields["team"].choices = choices
 
     email = forms.EmailField(max_length=60)
     team = forms.ChoiceField(choices=[])
