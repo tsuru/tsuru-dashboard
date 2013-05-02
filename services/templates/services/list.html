@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div id="content-header">
+	<h1>Services</h1>
+</div>
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span12">
+			{% for service in services %}
+			<div class="row-fluid">
+				<div class="span12 ">
+					<a href="" data-placement="left"> {{ service.name }} </a>
+				</div>
+			</div>
+			{% endfor %}
+		</div>
+	</div>
+</div>
+{% endblock %}
