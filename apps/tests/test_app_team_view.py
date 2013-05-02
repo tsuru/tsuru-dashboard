@@ -32,12 +32,13 @@ class AppTeamsViewTest(TestCase):
 
     def test_context_should_contain_app(self):
         self.assertIn('app', self.response.context_data.keys())
-    
+
     def test_get_with_app_should_send_request_get_to_tsuru_with_args_expected(self):
         with patch('requests.get') as get:
             AppTeams().get(self.request, self.app_name)
-            get.assert_called_with('%s/apps/%s' % (settings.TSURU_HOST, self.app_name),
-                                    headers={'authorization': self.request.session['tsuru_token']})
+            get.assert_called_with(
+                '%s/apps/%s' % (settings.TSURU_HOST, self.app_name),
+                headers={'authorization': self.request.session['tsuru_token']})
 
     def test_get_with_valid_app_should_return_expected_context(self):
         expected = {
@@ -54,7 +55,7 @@ class AppTeamsViewTest(TestCase):
         with mock.patch("requests.get") as get:
             get.return_value = mock.Mock(status_code=200, json=expected)
             response = AppTeams.as_view()(self.request, app_name="app1")
-        self.assertDictEqual(expected, response.context_data["app"])        
+        self.assertDictEqual(expected, response.context_data["app"])
 
     def test_get_with_invalid_app_should_return_context_with_error(self):
         self.response_mock.status_code = 404
@@ -65,7 +66,8 @@ class AppTeamsViewTest(TestCase):
             response = AppTeams().get(self.request, 'invalid-app')
 
             self.assertIn('errors', response.context_data.keys())
-            self.assertEqual(self.response_mock.content, response.context_data['errors'])
+            self.assertEqual(self.response_mock.content,
+                             response.context_data['errors'])
 
     def test_get_request_run_url_should_return_200(self):
         try:
