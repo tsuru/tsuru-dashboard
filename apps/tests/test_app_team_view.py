@@ -10,6 +10,7 @@ from apps.views import AppTeams
 
 import mock
 
+
 class AppTeamsViewTest(TestCase):
 
     def setUp(self):
@@ -33,7 +34,7 @@ class AppTeamsViewTest(TestCase):
     def test_context_should_contain_app(self):
         self.assertIn('app', self.response.context_data.keys())
 
-    def test_get_with_app_should_send_request_get_to_tsuru_with_args_expected(self):
+    def test_get_sends_request_to_tsuru_with_args_expected(self):
         with patch('requests.get') as get:
             AppTeams().get(self.request, self.app_name)
             get.assert_called_with(
