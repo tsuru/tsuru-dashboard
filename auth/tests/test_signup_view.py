@@ -6,6 +6,7 @@ from mock import Mock, patch
 from auth.forms import SignupForm
 from auth.views import Signup
 
+
 class SignupViewTest(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
@@ -28,13 +29,16 @@ class SignupViewTest(TestCase):
 
         self.assertIn(u'This field is required.', form.errors['email'])
         self.assertIn(u'This field is required.', form.errors['password'])
-        self.assertIn(u'This field is required.', form.errors['same_password_again'])
+        self.assertIn(u'This field is required.',
+                      form.errors['same_password_again'])
 
-    def test_post_with_data_should_send_request_post_to_tsuru_with_args_expected(self):
-        data = {'email': 'test@test.com', 'password': 'abc123', 'same_password_again': 'abc123'}
+    def test_post_sends_to_tsuru_with_args_expected(self):
+        data = {'email': 'test@test.com', 'password': 'abc123',
+                'same_password_again': 'abc123'}
         request = self.factory.post('/signup', data)
         with patch('requests.post') as post:
             Signup().post(request)
             self.assertEqual(1, post.call_count)
-            post.assert_called_with('%s/users' % settings.TSURU_HOST,
-                                    data='{"password": "abc123", "email": "test@test.com"}')
+            post.assert_called_with(
+                '%s/users' % settings.TSURU_HOST,
+                data='{"password": "abc123", "email": "test@test.com"}')
