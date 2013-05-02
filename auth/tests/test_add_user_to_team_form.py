@@ -20,7 +20,7 @@ class AddUserToTeamFormTest(TestCase):
 
     def test_should_receive_list_of_choices_via_constructor(self):
         form = forms.AddUserToTeamForm(teams=["team1", "team2"])
-        expected = [("team1", "team1") , ("team2", "team2")]
+        expected = [("team1", "team1"), ("team2", "team2")]
         self.assertEqual(expected, form.fields["team"].choices)
         self.assertEqual(expected, form.fields["team"].widget.choices)
 
