@@ -1,25 +1,33 @@
-<div class="navbar navbar-fixed-top">
-    <div class="navbar-inner">
-        <div class="container">
-            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </a>
-            <a class="brand" href="{% url 'list-app' %}">Abyss</a>
-            <div class="nav-collapse">
-                <ul class="nav">
-                    {% if not request.session.tsuru_token %}
-                        <li id="login"><a href="{% url 'login' %}">Login</a></li>
-                        <li id="signup"><a href="{% url 'signup' %}">Sign up</a></li>
-                    {% endif %}
-                    {% if request.session.tsuru_token %}
-                        <li id="apps"><a href="{% url 'list-app' %}">Apps</a></li>
-                        <li id="key"><a href="{% url 'token' %}">Key</a></li>
-                        <li id="logout"><a href="{% url 'logout' %}">Logout</a></li>
-                    {% endif %}
-                </ul>
-            </div>
-        </div>
-    </div>
+<!-- <div class="navbar navbar-fixed-top"> -->
+<!-- 	<div class="navbar-inner"> -->
+<!-- 		<div class="container"> -->
+<!-- 			<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> -->
+<!-- 				<span class="icon-bar"></span> -->
+<!-- 				<span class="icon-bar"></span> -->
+<!-- 				<span class="icon-bar"></span> -->
+<!-- 			</a> -->
+<!-- 			<a class="brand" href="{% url 'list-app' %}">Abyss</a> -->
+<!-- 			<div class="nav-collapse"> -->
+<!-- 				<ul class="nav"> -->
+<!-- 					{% if not request.session.tsuru_token %} -->
+<!-- 					<li id="login"><a href="{% url 'login' %}">Login</a></li> -->
+<!-- 					<li id="signup"><a href="{% url 'signup' %}">Sign up</a></li> -->
+<!-- 					{% endif %} -->
+<!-- 					{% if request.session.tsuru_token %} -->
+<!-- 					<li id="apps"><a href="{% url 'list-app' %}">Apps</a></li> -->
+<!-- 					<li id="key"><a href="{% url 'token' %}">Key</a></li> -->
+<!-- 					<li id="logout"><a href="{% url 'logout' %}">Logout</a></li> -->
+<!-- 					{% endif %} -->
+<!-- 				</ul> -->
+<!-- 			</div> -->
+<!-- 		</div> -->
+<!-- 	</div> -->
+<!-- </div> -->
+
+<div id="user-nav" class="navbar navbar-inverse">
+	<ul class="nav btn-group">
+		<!-- <li class="btn btn-inverse" ><a title="" href="#"><i class="icon icon-user"></i> <span class="text">Profile</span></a></li> -->
+		<!-- <li class="btn btn-inverse"><a title="" href="#"><i class="icon icon-cog"></i> <span class="text">Settings</span></a></li> -->
+		<li class="btn btn-inverse"><a title="" href="{% url 'logout' %}"><i class="icon icon-share-alt"></i> <span class="text">Logout</span></a></li>
+	</ul>
 </div>
