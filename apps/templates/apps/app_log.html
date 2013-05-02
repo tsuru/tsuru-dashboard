@@ -1,51 +1,51 @@
 {% extends "base.html" %}
 
-{% block extra_css %}
-    <link href="{{ STATIC_URL }}css/apps.css" rel="stylesheet">
-{% endblock extra_css %}
-
 {% block content %}
-    <div class="app-log">
-        <div class="row title">
-            <div class="span10 offset1">
-                <h2>{{ app }}</h2>
-                <span class="label my-label label-log">Log</span>
-            </div>
-        </div>
-        <div class="row">
-            <div class="span10 offset1 log">
-                <ul>
-                    {% for log in logs %}
-                    <li>
-                        {{ log.Date }} - {{ log.Message }}
-                    </li>
-                    {% endfor %}
-                <ul>
-            </div>
-        </div>
-        <div class="row-fluid app-menu">
-            <div class="span8 offset2">
-                <div class="span3">
-                    <div class="span8 offset2 circle services-circle">
-                        <a href="#">Services</a>
-                    </div>
-                </div>
-                <div class="span3">
-                    <div class="span8 offset2 circle circle-selected">
-                        <span>Log</span>
-                    </div>
-                </div>
-                <div class="span3">
-                    <div class="span8 offset2 circle collaborators-circle">
-                        <a href="{% url 'app-teams' app %}">Teams</a>
-                    </div>
-                </div>
-                <div class="span3">
-                    <div class="span8 offset2 circle settings-circle">
-                        <a href="#">Settings</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+<div id="content-header">
+	<h1>{{ app }}</h1>
+</div>
+<div class="container-fluid">
+	<div class="app-log">
+		<div class="row title">
+			<div class="span10">
+				<h2>log</h2>
+			</div>
+		</div>
+		<div class="row">
+			<div class="span10 log">
+				<ul>
+					{% for log in logs %}
+					<li>
+					{{ log.Date }} - {{ log.Message }}
+					</li>
+					{% endfor %}
+				</ul>
+			</div>
+		</div>
+		<div class="row-fluid app-menu">
+			<div class="span8">
+				<div class="span3">
+					<div class="span8 circle services-circle">
+						<a href="#">Services</a>
+					</div>
+				</div>
+				<div class="span3">
+					<div class="span8 circle circle-selected">
+						<span>Log</span>
+					</div>
+				</div>
+				<div class="span3">
+					<div class="span8 circle collaborators-circle">
+						<a href="{% url 'app-teams' app %}">Teams</a>
+					</div>
+				</div>
+				<div class="span3">
+					<div class="span8 circle settings-circle">
+						<a href="#">Settings</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 {% endblock content %}
