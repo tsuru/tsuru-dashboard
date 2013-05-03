@@ -3,6 +3,12 @@
 {% block content %}
 <div id="content-header">
 	<h1>Apps</h1>
+	<div class="btn-group">
+		<a class="btn btn-large tip-bottom" title="Create App" href="{% url 'create-app' %}"><i class="icon-plus"></i></a>
+	</div>
+</div>
+<div id="breadcrumb">
+	<a href="#" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a>
 </div>
 <div class="container-fluid">
 	<div class="app-list">
@@ -27,11 +33,6 @@
 					</div>
 				</div>
 				{% endfor %}
-			</div>
-		</div>
-		<div class="row">
-			<div class="span12 app-create">
-				<a href="{% url 'create-app' %}" class="btn btn-info">Create App</a>
 			</div>
 		</div>
 	</div>
