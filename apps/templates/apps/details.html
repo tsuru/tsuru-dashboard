@@ -3,40 +3,23 @@
 {% block content %}
 <div id="content-header">
 	<h1>{{ app.name }}</h1>
+	<div class="btn-group">
+		<a class="btn btn-large tip-bottom" title="Log" href="{% url 'app_log' app.name %}"><i class="icon-tasks"></i></a>
+		<a class="btn btn-large tip-bottom" title="Teams" href="{% url 'app-teams' app.name %}"><i class="icon-user"></i></a>
+		<a class="btn btn-large tip-bottom" title="Settings" href="#"><i class="icon-wrench"></i></a>
+		<a class="btn btn-large tip-bottom" title="Delete" href="{% url 'remove_app' app.name %}"><i class="icon-remove"></i></a>
+	</div>
+</div>
+<div id="breadcrumb">
+	<a href="#" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a>
+	<a href="{% url 'list-app' %}" class="tip-bottom"> Apps</a>
 </div>
 <div class="container-fluid">
-	<div class="app-details">
-		<div class="row">
-			<div class="span10 details">
-				<p><b>Repository:</b> {{app.repository}}</p>
-				<p><b>Teams:</b> {{app.teams|join:", "}}</p>
-				<p><b>Framework:</b> {{app.framework}}</p>
-				<a href="{% url 'remove_app' app.name %}" class="btn btn-danger">Delete this app</a>
-			</div>
-		</div>
-		<div class="row-fluid app-menu">
-			<div class="span8">
-				<div class="span3">
-					<div class="span8 circle services-circle">
-						<a href="#">Services</a>
-					</div>
-				</div>
-				<div class="span3">
-					<div class="span8 circle log-circle">
-						<a href="{% url 'app_log' app.name %}">Log</a>
-					</div>
-				</div>
-				<div class="span3">
-					<div class="span8 circle collaborators-circle">
-						<a href="{% url 'app-teams' app.name %}">Teams</a>
-					</div>
-				</div>
-				<div class="span3">
-					<div class="span8 circle settings-circle">
-						<a href="#">Settings</a>
-					</div>
-				</div>
-			</div>
+	<div class="row-fluid">
+		<div class="span12">
+			<p><strong>Repository:</strong> {{app.repository}}</p>
+			<p><strong>Teams:</strong> {{app.teams|join:", "}}</p>
+			<p><strong>Framework:</strong> {{app.framework}}</p>
 		</div>
 	</div>
 </div>
