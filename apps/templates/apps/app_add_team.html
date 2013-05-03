@@ -2,39 +2,39 @@
 
 {% block content %}
 <div id="content-header">
-	<h1>{{ app_name }}</h1>
+	<h1>Add Team</h1>
+	{# {% include "apps/navbar.html" %} #}
+</div>
+<div id="breadcrumb">
+	<a href="#" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a>
+	<a href="{% url 'list-app' %}" class="tip-bottom"> Apps</a>
+	<a href="{% url 'detail-app' app_name %}" class="tip-bottom"> {{ app_name }}</a>
+	<a href="{% url 'app-teams' app_name %}" class="tip-bottom"> Teams</a>
 </div>
 <div class="container-fluid">
-	<div class="app-add-team">
-		<div class="row title">
-			<div class="span10">
-				<h2>Add Team</h2>
-			</div>
-		</div>
-		<div class="row">
-			<div class="span10 create-form">
-				<form action="{% url 'app-add-team' app_name %}" method="post">
-					{% csrf_token %}
-					{% if message %}
-					<div class="alert alert-success">
-						{{ message }}
+	<div class="row-fluid">
+		<div class="span12">
+			<form action="{% url 'app-add-team' app_name %}" method="post">
+				{% csrf_token %}
+				{% if message %}
+				<div class="alert alert-success">
+					{{ message }}
+				</div>
+				{% endif %}
+				{% if errors %}
+				<div class="alert alert-error">
+					{{ errors }}
+				</div>
+				{% endif %}
+				<fieldset>
+					<div class="clearfix control-group{% if form.errors.team %} error{% endif %}">
+						<label>Team name</label>
+						<input type="text" class="input-xlarge" name="{{ form.team.name }}">
+						<span class="help-inline">{{ form.errors.team }}</span>
 					</div>
-					{% endif %}
-					{% if errors %}
-					<div class="alert alert-error">
-						{{ errors }}
-					</div>
-					{% endif %}
-					<fieldset>
-						<div class="clearfix control-group{% if form.errors.team %} error{% endif %}">
-							<label>Team name</label>
-							<input type="text" class="input-xlarge" name="{{ form.team.name }}">
-							<span class="help-inline">{{ form.errors.team }}</span>
-						</div>
-						<button class="btn primary" type="submit">Add</button>
-					</fieldset>
-				</form>
-			</div>
+					<button class="btn primary" type="submit">Add</button>
+				</fieldset>
+			</form>
 		</div>
 	</div>
 </div>
