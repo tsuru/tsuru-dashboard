@@ -2,45 +2,42 @@
 
 {% block content %}
 <div id="content-header">
-	<h1>Apps</h1>
+	<h1>Create App</h1>
+</div>
+<div id="breadcrumb">
+	<a href="#" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a>
+	<a href="{% url 'list-app' %}" class="tip-bottom"> Apps</a>
 </div>
 <div class="container-fluid">
-    <div class="app-create">
-        <div class="row title">
-            <div class="span12">
-                <h2>Create</h2>
-            </div>
-        </div>
-        <div class="row">
-            <div class="span12 create-form">
-                <form action="" method="post">
-                    {% csrf_token %}
-                    {% if message %}
-                        <div class="alert alert-success">
-                            {{ message }}
-                        </div>
-                    {% endif %}
-                    {% if errors %}
-                        <div class="alert alert-error">
-                            {{ errors }}
-                        </div>
-                    {% endif %}
-                    <fieldset>
-                      <div class="clearfix control-group{% if app_form.errors.name %} error{% endif %}">
-                          <label>Name</label>
-                           <input type="text" class="input-xlarge" name="{{ app_form.name.name }}">
-                          <span class="help-inline">{{ app_form.errors.name }}</span>
-                      </div>
-                      <div class="clearfix control-group{% if app_form.errors.framework %} error{% endif %}">
-                          <label>Framework</label>
-                          <input type="text" class="input-xlarge" name="{{ app_form.framework.name }}">
-                          <span class="help-inline">{{ app_form.errors.framework }}</span>
-                      </div>
-                      <button class="btn primary" type="submit">Add</button>
-                    </fieldset>
-                </form>
-            </div>
-        </div>
-    </div>
+	<div class="row-fluid">
+		<div class="span12">
+			<form action="" method="post">
+				{% csrf_token %}
+				{% if message %}
+				<div class="alert alert-success">
+					{{ message }}
+				</div>
+				{% endif %}
+				{% if errors %}
+				<div class="alert alert-error">
+					{{ errors }}
+				</div>
+				{% endif %}
+				<fieldset>
+					<div class="clearfix control-group{% if app_form.errors.name %} error{% endif %}">
+						<label>Name</label>
+						<input type="text" class="input-xlarge" name="{{ app_form.name.name }}">
+						<span class="help-inline">{{ app_form.errors.name }}</span>
+					</div>
+					<div class="clearfix control-group{% if app_form.errors.framework %} error{% endif %}">
+						<label>Framework</label>
+						<input type="text" class="input-xlarge" name="{{ app_form.framework.name }}">
+						<span class="help-inline">{{ app_form.errors.framework }}</span>
+					</div>
+					<button class="btn primary" type="submit">Add</button>
+				</fieldset>
+			</form>
+		</div>
+	</div>
 </div>
 {% endblock content %}
