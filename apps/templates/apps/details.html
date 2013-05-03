@@ -1,5 +1,17 @@
 {% extends "base.html" %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{{ STATIC_URL }}css/jquery-ui.css" />
+<style>
+	#h-slider {
+		width: 300px;
+		margin: 15px;
+	}
+	#h-slider.ui-slider-range { background: #ef2929; }
+	#h-slider.ui-slider-handle { border-color: #ef2929; }
+</style>
+{% endblock %}
+
 {% block content %}
 <div id="content-header">
 	<h1>{{ app.name }}</h1>
@@ -12,12 +24,65 @@
 <div class="container-fluid">
 	<div class="row-fluid">
 		<div class="span12">
-			<p><strong>App url:</strong> <a href="http://{{ app.ip }}" target="_blank">http://{{ app.ip }}</a></p>
-			<p><strong>Git clone url:</strong> {{ app.repository }}</p>
-			<p><strong>Domain:</strong> {{ app.cname }}</p>
-			<p><strong>Teams:</strong> {{ app.teams|join:", " }}</p>
-			<p><strong>Framework:</strong> {{ app.framework }}</p>
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon">
+						<i class="icon-signal"></i>
+					</span>
+					<h5>Units</h5>
+				</div>
+				<div class="widget-content">
+					<div id="h-slider"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row-fluid">
+		<div class="span12">
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon">
+						<i class="icon-signal"></i>
+					</span>
+					<h5>Info</h5>
+				</div>
+				<div class="widget-content">
+					<p><strong>App url:</strong> <a href="http://{{ app.ip }}" target="_blank">http://{{ app.ip }}</a></p>
+					<p><strong>Git clone url:</strong> {{ app.repository }}</p>
+					<p><strong>Domain:</strong> {{ app.cname }}</p>
+					<p><strong>Teams:</strong> {{ app.teams|join:", " }}</p>
+					<p><strong>Framework:</strong> {{ app.framework }}</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row-fluid">
+		<div class="span12">
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon">
+						<i class="icon-signal"></i>
+					</span>
+					<h5>Dangerous!</h5>
+				</div>
+				<div class="widget-content">
+					<a class="btn btn-danger" href="{% url 'remove_app' app.name %}"><i class="icon-remove icon-white"></i> Delete app</a>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
 {% endblock content %}
+
+{% block extra_js %}
+<script src="{{ STATIC_URL}}js/jquery.min.js"></script>
+<script src="{{ STATIC_URL }}js/jquery-ui.custom.js"></script>
+<script>
+	// Horizontal Slider
+	$('#h-slider').slider({
+		orientation: "horizontal",
+		value: 0,
+		max: 9
+	});
+</script>
+{% endblock %}
