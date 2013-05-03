@@ -5,10 +5,17 @@
 <style>
 	#h-slider {
 		width: 300px;
-		margin: 15px;
+		margin: 46px 0 0 131px;
 	}
-	#h-slider.ui-slider-range { background: #ef2929; }
-	#h-slider.ui-slider-handle { border-color: #ef2929; }
+	#content .units-box {
+		height: 95px;
+	}
+	#content .stat-boxes {
+		float: left;
+	}
+	#content .stat-boxes .right {
+		padding: 9px 2px 7px 0;
+	}
 </style>
 {% endblock %}
 
@@ -31,7 +38,15 @@
 					</span>
 					<h5>Units</h5>
 				</div>
-				<div class="widget-content">
+				<div class="widget-content units-box">
+					<ul class="stat-boxes">
+						<li class="popover-tickets" data-original-title="" title="">
+						<div class="right">
+							<strong id="units">{{ app.units|length }}</strong>
+							Instances
+						</div>
+						</li>
+					</ul>
 					<div id="h-slider"></div>
 				</div>
 			</div>
@@ -81,8 +96,13 @@
 	// Horizontal Slider
 	$('#h-slider').slider({
 		orientation: "horizontal",
-		value: 0,
-		max: 9
+		value: {{ app.units|length }},
+		range: "min",
+		min: 1,
+		max: 10,
+		slide:  function( event, ui ) {
+			$( "#units" ).html( ui.value );
+		}
 	});
 </script>
 {% endblock %}
