@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
+{% block sidebar %}
+	{% include "sidebar.html" with active="services" %}
+{% endblock %}
+
 {% block content %}
 <div id="content-header">
 	<h1>Services</h1>

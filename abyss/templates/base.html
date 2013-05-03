@@ -18,7 +18,9 @@
 			<h1><a href="/">Abyss</a></h1>
 		</div>
 		{% include "navbar.html" %}
-		{% include "sidebar.html" %}
+		{% block sidebar %}
+			{% include "sidebar.html" with active="apps" %}
+		{% endblock %}
 		<div id="content">
 
 			{% block content %}
