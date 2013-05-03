@@ -11,29 +11,27 @@
 	<a href="#" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a>
 </div>
 <div class="container-fluid">
-	<div class="app-list">
-		<div class="row-fluid">
-			<div class="span12 app-item">
-				{% for app in apps %}
-				<div class="row-fluid">
-					<div class="span8 app-name">
-						<a href="{% url 'detail-app' app.name %}" rel="tooltip" class="tooltips" data-placement="left" data-original-title="App Details"> {{ app.name }} </a>
-					</div>
-					<div class="span1 option app-services">
-						<a href="#" rel="tooltip" class="tooltips" data-placement="top" data-original-title="Services"> <i class="icon-tag"></i> </a>
-					</div>
-					<div class="span1 option app-log">
-						<a href="{% url 'app_log' app.name %}" rel="tooltip" class="tooltips" data-placement="top" data-original-title="Log"> <i class="icon-tasks"></i> </a>
-					</div>
-					<div class="span1 option app-collaborators">
-						<a href="{% url 'app-teams' app.name %}" rel="tooltip" class="tooltips" data-placement="top" data-original-title="Collaborators"> <i class="icon-user"></i> </a>
-					</div>
-					<div class="span1 option app-settings">
-						<a href="#" rel="tooltip" class="tooltips" data-placement="top" data-original-title="Settings"> <i class="icon-wrench"></i> </a>
-					</div>
+	<div class="row-fluid">
+		<div class="span12 app-item">
+			{% for app in apps %}
+			<div class="row-fluid">
+				<div class="span8 app-name">
+					<a href="{% url 'detail-app' app.name %}" rel="tooltip" class="tooltips" data-placement="left" data-original-title="App Details"> {{ app.name }} </a>
 				</div>
-				{% endfor %}
+				<div class="span1 option app-services">
+					<a href="#" rel="tooltip" class="tooltips" data-placement="top" data-original-title="Services"> <i class="icon-tag"></i> </a>
+				</div>
+				<div class="span1 option app-log">
+					<a href="{% url 'app_log' app.name %}" rel="tooltip" class="tooltips" data-placement="top" data-original-title="Log"> <i class="icon-tasks"></i> </a>
+				</div>
+				<div class="span1 option app-collaborators">
+					<a href="{% url 'app-teams' app.name %}" rel="tooltip" class="tooltips" data-placement="top" data-original-title="Collaborators"> <i class="icon-user"></i> </a>
+				</div>
+				<div class="span1 option app-settings">
+					<a href="#" rel="tooltip" class="tooltips" data-placement="top" data-original-title="Settings"> <i class="icon-wrench"></i> </a>
+				</div>
 			</div>
+			{% endfor %}
 		</div>
 	</div>
 </div>
