@@ -12,9 +12,11 @@
 <div class="container-fluid">
 	<div class="row-fluid">
 		<div class="span12">
-			<p><strong>Repository:</strong> {{app.repository}}</p>
-			<p><strong>Teams:</strong> {{app.teams|join:", "}}</p>
-			<p><strong>Framework:</strong> {{app.framework}}</p>
+			<p><strong>App url:</strong> <a href="http://{{ app.ip }}" target="_blank">http://{{ app.ip }}</a></p>
+			<p><strong>Git clone url:</strong> {{ app.repository }}</p>
+			<p><strong>Domain:</strong> {{ app.cname }}</p>
+			<p><strong>Teams:</strong> {{ app.teams|join:", " }}</p>
+			<p><strong>Framework:</strong> {{ app.framework }}</p>
 		</div>
 	</div>
 </div>
