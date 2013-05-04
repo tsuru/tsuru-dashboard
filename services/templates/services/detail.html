@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block sidebar %}
+	{% include "sidebar.html" with active="services" %}
+{% endblock %}
+
+{% block content %}
+<div id="content-header">
+	<h1>{{ service.name }}</h1>
+</div>
+<div id="breadcrumb">
+	<a href="#" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a>
+	<a href="{% url 'service-list' %}" class="tip-bottom"><i class="icon-home"></i> Services</a>
+</div>
+{% endblock %}
