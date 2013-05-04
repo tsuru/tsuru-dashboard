@@ -1,8 +1,12 @@
 from django.template.response import TemplateResponse
 from django.conf import settings
+from django.http import HttpResponseRedirect
+
 from auth.views import LoginRequiredView
 
 from pluct import resource
+
+import requests
 
 
 class ListService(LoginRequiredView):
@@ -23,3 +27,13 @@ class ServiceDetail(LoginRequiredView):
         service_name = kwargs["service_name"]
         return TemplateResponse(request, "services/detail.html",
                                 {'service': {"name": service_name}})
+
+
+class ServiceAdd(LoginRequiredView):
+    def post(self, request, *args, **kwargs):
+        authorization = {'authorization': request.session.get('tsuru_token')}
+        tsuru_url = '{0}/services/instances'.format(settings.TSURU_HOST)
+        requests.post(tsuru_url,
+                      data={"name": request.POST["name"]},
+                      headers=authorization)
+        return HttpResponseRedirect("/")
