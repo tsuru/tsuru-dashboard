@@ -16,3 +16,10 @@ class ListService(LoginRequiredView):
         services = resource.get(url, auth).data
         return TemplateResponse(request, "services/list.html",
                                 {'services': services})
+
+
+class ServiceDetail(LoginRequiredView):
+    def get(self, request, *args, **kwargs):
+        service_name = kwargs["service_name"]
+        return TemplateResponse(request, "services/detail.html",
+                                {'service': {"name": service_name}})
