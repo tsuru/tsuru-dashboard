@@ -34,55 +34,51 @@ class LoginViewTest(TestCase):
         self.assertIsInstance(form, LoginForm)
         self.assertEqual('invalid name', form.data['username'])
 
-    def test_should_return_200_when_user_does_not_exist(self):
+    @patch('requests.post')
+    def test_should_return_200_when_user_does_not_exist(self, post):
         data = {'username': 'invalid@email.com', 'password': '123456'}
         request = RequestFactory().post('/', data)
+        response_mock = Mock()
+        response_mock.status_code = 500
+        post.side_effect = Mock(return_value=response_mock)
+        response = Login().post(request)
+        self.assertEqual(200, response.status_code)
+        self.assertEqual('auth/login.html', response.template_name)
+        error_msg = response.context_data['msg']
+        self.assertEqual('User not found', error_msg)
 
-        with patch('requests.post') as post:
-            response_mock = Mock()
-            response_mock.status_code = 500
-            post.side_effect = Mock(return_value=response_mock)
-            response = Login().post(request)
-            self.assertEqual(200, response.status_code)
-            self.assertEqual('auth/login.html', response.template_name)
-            error_msg = response.context_data['msg']
-            self.assertEqual('User not found', error_msg)
-
-    def test_should_send_request_post_to_tsuru_with_args_expected(self):
+    @patch('requests.post')
+    def test_should_send_request_post_to_tsuru_with_args_expected(self, post):
         data = {'username': 'valid@email.com', 'password': '123456'}
         request = RequestFactory().post('/', data)
         expected_url = '%s/users/valid@email.com/tokens' % settings.TSURU_HOST
+        Login().post(request)
+        self.assertEqual(1, post.call_count)
+        post.assert_called_with(expected_url,
+                                data='{"password": "123456"}')
 
-        with patch('requests.post') as post:
-            Login().post(request)
-            self.assertEqual(1, post.call_count)
-            post.assert_called_with(expected_url,
-                                    data='{"password": "123456"}')
-
-    def test_should_set_token_in_the_session(self):
+    @patch('requests.post')
+    def test_should_set_token_in_the_session(self, post):
         data = {'username': 'valid@email.com', 'password': '123456'}
         request = RequestFactory().post('/', data)
         request.session = {}
+        response_mock = Mock()
+        response_mock.status_code = 200
+        response_mock.text = '{"token": "my beautiful token"}'
+        post.side_effect = Mock(return_value=response_mock)
+        Login().post(request)
+        self.assertEqual('type my beautiful token',
+                         request.session["tsuru_token"])
 
-        with patch('requests.post') as post:
-            response_mock = Mock()
-            response_mock.status_code = 200
-            response_mock.text = '{"token": "my beautiful token"}'
-            post.side_effect = Mock(return_value=response_mock)
-            Login().post(request)
-            self.assertEqual('type my beautiful token',
-                             request.session["tsuru_token"])
-
-    def test_redirect_to_team_creation_page_when_login_is_successful(self):
+    @patch('requests.post')
+    def test_redirect_to_team_creation_when_login_is_successful(self, post):
         data = {'username': 'valid@email.com', 'password': '123456'}
         request = RequestFactory().post('/', data)
         request.session = {}
-
-        with patch('requests.post') as post:
-            response_mock = Mock()
-            response_mock.status_code = 200
-            response_mock.text = '{"token": "my beautiful token"}'
-            post.side_effect = Mock(return_value=response_mock)
-            response = Login().post(request)
-            self.assertIsInstance(response, HttpResponseRedirect)
-            self.assertEqual('/apps', response['Location'])
+        response_mock = Mock()
+        response_mock.status_code = 200
+        response_mock.text = '{"token": "my beautiful token"}'
+        post.side_effect = Mock(return_value=response_mock)
+        response = Login().post(request)
+        self.assertIsInstance(response, HttpResponseRedirect)
+        self.assertEqual('/apps', response['Location'])
