@@ -12,6 +12,18 @@ from auth.views import LoginRequiredView
 from pluct import resource
 
 
+class UnitAdd(LoginRequiredView):
+    def post(self, request, *args, **kwargs):
+        app_name = kwargs['app_name']
+        authorization = {'authorization': request.session.get('tsuru_token')}
+        requests.put(
+            "{0}/apps/app_name/units".format(settings.TSURU_HOST, app_name),
+            headers=authorization,
+            data=request.POST['units']
+        )
+        return HttpResponse('', status=200)
+
+
 class AppDetail(LoginRequiredView):
     def get(self, request, *args, **kwargs):
         app_name = kwargs["app_name"]
