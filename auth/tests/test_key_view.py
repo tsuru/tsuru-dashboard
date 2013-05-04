@@ -38,66 +38,66 @@ class KeyViewTest(TestCase):
         except Http404:
             assert False
 
-    def test_post_with_name_should_ssend_request_post_to_tsuru(self):
+    @patch('requests.post')
+    def test_post_with_name_should_ssend_request_post_to_tsuru(self, post):
         self.request_post.session = {'tsuru_token': 'tokentest'}
-        with patch('requests.post') as post:
-            Key().post(self.request_post)
-            self.assertEqual(1, post.call_count)
-            post.assert_called_with(
-                '%s/users/keys' % settings.TSURU_HOST,
-                data='{"key": "test-key-qq"}',
-                headers={'authorization':
-                         self.request_post.session['tsuru_token']})
+        Key().post(self.request_post)
+        self.assertEqual(1, post.call_count)
+        post.assert_called_with(
+            '%s/users/keys' % settings.TSURU_HOST,
+            data='{"key": "test-key-qq"}',
+            headers={'authorization':
+                     self.request_post.session['tsuru_token']})
 
-    def test_valid_postshould_return_message_expected(self):
-        with patch('requests.post') as post:
-            self.response_mock.status_code = 200
-            post.side_effect = Mock(return_value=self.response_mock)
-            response = Key().post(self.request_post)
-            self.assertEqual("The Key was successfully added",
-                             response.context_data.get('message'))
+    @patch('requests.post')
+    def test_valid_postshould_return_message_expected(self, post):
+        self.response_mock.status_code = 200
+        post.side_effect = Mock(return_value=self.response_mock)
+        response = Key().post(self.request_post)
+        self.assertEqual("The Key was successfully added",
+                         response.context_data.get('message'))
 
-    def test_invalid_post_should_return_error_message(self):
-        with patch('requests.post') as post:
-            self.response_mock.status_code = 500
-            self.response_mock.content = 'Error'
-            post.side_effect = Mock(return_value=self.response_mock)
-            response = Key().post(self.request_post)
-            self.assertEqual('Error', response.context_data.get('errors'))
+    @patch('requests.post')
+    def test_invalid_post_should_return_error_message(self, post):
+        self.response_mock.status_code = 500
+        self.response_mock.content = 'Error'
+        post.side_effect = Mock(return_value=self.response_mock)
+        response = Key().post(self.request_post)
+        self.assertEqual('Error', response.context_data.get('errors'))
 
-    def test_post_with_valid_key_should_return_context_with_form(self):
-        with patch('requests.post') as post:
-            self.response_mock.status_code = 200
-            post.side_effect = Mock(return_value=self.response_mock)
-            response = Key().post(self.request_post)
-            self.assertIn('form', response.context_data.keys())
-            self.assertTrue(isinstance(response.context_data.get('form'),
-                                       KeyForm))
+    @patch('requests.post')
+    def test_post_with_valid_key_should_return_context_with_form(self, post):
+        self.response_mock.status_code = 200
+        post.side_effect = Mock(return_value=self.response_mock)
+        response = Key().post(self.request_post)
+        self.assertIn('form', response.context_data.keys())
+        self.assertTrue(isinstance(response.context_data.get('form'),
+                                   KeyForm))
 
-    def test_post_with_invalid_key_should_return_context_with_form(self):
-        with patch('requests.post') as post:
-            self.response_mock.status_code = 500
-            self.response_mock.content = 'Error'
-            post.side_effect = Mock(return_value=self.response_mock)
-            response = Key().post(self.request_post)
-            self.assertIn('form', response.context_data.keys())
-            self.assertTrue(isinstance(response.context_data.get('form'),
-                                       KeyForm))
+    @patch('requests.post')
+    def test_post_with_invalid_key_should_return_context_with_form(self, post):
+        self.response_mock.status_code = 500
+        self.response_mock.content = 'Error'
+        post.side_effect = Mock(return_value=self.response_mock)
+        response = Key().post(self.request_post)
+        self.assertIn('form', response.context_data.keys())
+        self.assertTrue(isinstance(response.context_data.get('form'),
+                                   KeyForm))
 
-    def test_post_without_key_should_not_send_request_to_tsuru(self):
-        with patch('requests.post') as post:
-            request = self.factory.post('/team/', {'key': ''})
-            request.session = {}
-            Key().post(request)
-            self.assertEqual(0, post.call_count)
+    @patch('requests.post')
+    def test_post_without_key_should_not_send_request_to_tsuru(self, post):
+        request = self.factory.post('/team/', {'key': ''})
+        request.session = {}
+        Key().post(request)
+        self.assertEqual(0, post.call_count)
 
-    def test_post_without_key_should_return_form_with_errors(self):
-        with patch('requests.post'):
-            request = self.factory.post('/team/', {'key': ''})
-            request.session = {}
-            response = Key().post(request)
-            self.assertIn('form', response.context_data.keys())
-            form = response.context_data.get('form')
-            self.assertTrue(isinstance(form, KeyForm))
-            self.assertEqual(u'This field is required.',
-                             form.errors.get('key')[0])
+    @patch('requests.post')
+    def test_post_without_key_should_return_form_with_errors(self, post):
+        request = self.factory.post('/team/', {'key': ''})
+        request.session = {}
+        response = Key().post(request)
+        self.assertIn('form', response.context_data.keys())
+        form = response.context_data.get('form')
+        self.assertTrue(isinstance(form, KeyForm))
+        self.assertEqual(u'This field is required.',
+                         form.errors.get('key')[0])
