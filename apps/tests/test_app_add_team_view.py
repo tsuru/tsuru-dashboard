@@ -39,65 +39,65 @@ class AppAddTeamTestCas(TestCase):
         except Http404:
             assert False
 
-    def test_should_send_request_post_to_tsuru_with_args_expected(self):
+    @patch('requests.put')
+    def test_should_send_request_post_to_tsuru_with_args_expected(self, put):
         self.request_post.session = {'tsuru_token': 'tokentest'}
-        with patch('requests.put') as put:
-            AppAddTeam().post(self.request_post, self.app_name)
-            self.assertEqual(1, put.call_count)
-            put.assert_called_with(
-                '%s/apps/app-test/team-test' % settings.TSURU_HOST,
-                headers={'authorization':
-                         self.request_post.session['tsuru_token']})
+        AppAddTeam().post(self.request_post, self.app_name)
+        self.assertEqual(1, put.call_count)
+        put.assert_called_with(
+            '%s/apps/app-test/team-test' % settings.TSURU_HOST,
+            headers={'authorization':
+                     self.request_post.session['tsuru_token']})
 
-    def test_post_with_valid_and_team(self):
-        with patch('requests.put') as put:
-            self.response_mock.status_code = 200
-            put.side_effect = Mock(return_value=self.response_mock)
-            response = AppAddTeam().post(self.request_post, self.app_name)
-            self.assertEqual("The Team was successfully added",
-                             response.context_data.get('message'))
+    @patch('requests.put')
+    def test_post_with_valid_and_team(self, put):
+        self.response_mock.status_code = 200
+        put.side_effect = Mock(return_value=self.response_mock)
+        response = AppAddTeam().post(self.request_post, self.app_name)
+        self.assertEqual("The Team was successfully added",
+                         response.context_data.get('message'))
 
-    def test_post_with_invalid_app_or_team(self):
-        with patch('requests.put') as put:
-            self.response_mock.status_code = 500
-            self.response_mock.content = 'Error'
-            put.side_effect = Mock(return_value=self.response_mock)
-            response = AppAddTeam().post(self.request_post, self.app_name)
-            self.assertEqual('Error', response.context_data.get('errors'))
+    @patch('requests.put')
+    def test_post_with_invalid_app_or_team(self, put):
+        self.response_mock.status_code = 500
+        self.response_mock.content = 'Error'
+        put.side_effect = Mock(return_value=self.response_mock)
+        response = AppAddTeam().post(self.request_post, self.app_name)
+        self.assertEqual('Error', response.context_data.get('errors'))
 
-    def test_post_with_valid_data_should_return_context_with_form(self):
-        with patch('requests.put') as put:
-            self.response_mock.status_code = 200
-            put.side_effect = Mock(return_value=self.response_mock)
-            response = AppAddTeam().post(self.request_post, self.app_name)
-            self.assertIn('form', response.context_data.keys())
-            self.assertTrue(isinstance(response.context_data.get('form'),
-                                       AppAddTeamForm))
+    @patch('requests.put')
+    def test_post_with_valid_data_should_return_context_with_form(self, put):
+        self.response_mock.status_code = 200
+        put.side_effect = Mock(return_value=self.response_mock)
+        response = AppAddTeam().post(self.request_post, self.app_name)
+        self.assertIn('form', response.context_data.keys())
+        self.assertTrue(isinstance(response.context_data.get('form'),
+                                   AppAddTeamForm))
 
-    def test_post_with_invalid_data_should_return_context_with_form(self):
-        with patch('requests.put') as put:
-            self.response_mock.status_code = 500
-            self.response_mock.content = 'Error'
-            put.side_effect = Mock(return_value=self.response_mock)
-            response = AppAddTeam().post(self.request_post, self.app_name)
-            self.assertIn('form', response.context_data.keys())
-            self.assertTrue(isinstance(response.context_data.get('form'),
-                                       AppAddTeamForm))
+    @patch('requests.put')
+    def test_post_with_invalid_data_should_return_context_with_form(self, put):
+        self.response_mock.status_code = 500
+        self.response_mock.content = 'Error'
+        put.side_effect = Mock(return_value=self.response_mock)
+        response = AppAddTeam().post(self.request_post, self.app_name)
+        self.assertIn('form', response.context_data.keys())
+        self.assertTrue(isinstance(response.context_data.get('form'),
+                                   AppAddTeamForm))
 
-    def test_post_with_invalid_form_should_not_send_request_to_tsuru(self):
-        with patch('requests.put') as put:
-            request = self.factory.post('/', {'team': ''})
-            request.session = {}
-            AppAddTeam().post(request, self.app_name)
-            self.assertEqual(0, put.call_count)
+    @patch('requests.put')
+    def test_invalid_post_should_not_send_request_to_tsuru(self, put):
+        request = self.factory.post('/', {'team': ''})
+        request.session = {}
+        AppAddTeam().post(request, self.app_name)
+        self.assertEqual(0, put.call_count)
 
-    def test_post_with_invalid_form_should_return_form_with_errors(self):
-        with patch('requests.put'):
-            request = self.factory.post('/', {'team': ''})
-            request.session = {}
-            response = AppAddTeam().post(request, self.app_name)
-            self.assertIn('form', response.context_data.keys())
-            form = response.context_data.get('form')
-            self.assertTrue(isinstance(form, AppAddTeamForm))
-            self.assertEqual(u'This field is required.',
-                             form.errors.get('team')[0])
+    @patch('requests.put')
+    def test_post_with_invalid_form_should_return_form_with_errors(self, put):
+        request = self.factory.post('/', {'team': ''})
+        request.session = {}
+        response = AppAddTeam().post(request, self.app_name)
+        self.assertIn('form', response.context_data.keys())
+        form = response.context_data.get('form')
+        self.assertTrue(isinstance(form, AppAddTeamForm))
+        self.assertEqual(u'This field is required.',
+                         form.errors.get('team')[0])
