@@ -7,7 +7,7 @@ from django.conf import settings
 from services.views import Bind
 
 
-class ServiceAddViewTest(TestCase):
+class BindViewTest(TestCase):
     @patch("requests.put")
     def test_view(self, put):
         request = RequestFactory().post("/")
