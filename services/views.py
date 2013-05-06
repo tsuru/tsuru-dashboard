@@ -59,3 +59,14 @@ class Unbind(LoginRequiredView):
             settings.TSURU_HOST, service_name, app_name)
         requests.delete(tsuru_url, headers=authorization)
         return HttpResponseRedirect("/")
+
+
+class ServiceRemove(LoginRequiredView):
+    def post(self, request, *args, **kwargs):
+        service_name = kwargs["service_name"]
+        authorization = {'authorization': request.session.get('tsuru_token')}
+        tsuru_url = '{0}/services/c/instances/{1}'.format(
+            settings.TSURU_HOST, service_name)
+        requests.delete(tsuru_url,
+                        headers=authorization)
+        return HttpResponseRedirect("/")
