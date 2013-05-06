@@ -3,6 +3,7 @@ from mock import patch, Mock
 from django.conf import settings
 from django.test import TestCase
 from django.test.client import RequestFactory
+from django.core.urlresolvers import reverse
 
 from auth.views import LoginRequiredView
 from apps.views import Run
@@ -35,7 +36,7 @@ class RunViewTest(TestCase):
         self.assertTrue(isinstance(form, RunForm))
 
     def test_get_request_run_url_should_return_404(self):
-        response = self.client.get('/app/run/')
+        response = self.client.get(reverse('run'))
         self.assertNotEqual(404, response.status_code)
 
     @patch('requests.post')

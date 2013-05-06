@@ -3,6 +3,7 @@ from mock import patch, Mock
 from django.conf import settings
 from django.test import TestCase
 from django.test.client import RequestFactory
+from django.core.urlresolvers import reverse
 
 from auth.views import LoginRequiredView
 from apps.views import AppTeams
@@ -68,5 +69,5 @@ class AppTeamsViewTest(TestCase):
                          response.context_data['errors'])
 
     def test_get_request_run_url_should_not_return_404(self):
-        response = self.client.get('/app/{0}/teams/'.format(self.app_name))
+        response = self.client.get(reverse('app-teams', args=[self.app_name]))
         self.assertNotEqual(404, response.status_code)

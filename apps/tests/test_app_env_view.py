@@ -4,6 +4,7 @@ from mock import patch, Mock
 from django.conf import settings
 from django.test import TestCase
 from django.test.client import RequestFactory
+from django.core.urlresolvers import reverse
 
 from auth.views import LoginRequiredView
 from apps.views import AppEnv
@@ -72,7 +73,7 @@ class AppEnvViewTest(TestCase):
                          response.context_data['errors'])
 
     def test_get_request_to_url_should_not_return_404(self):
-        response = self.client.get('/app/{0}/env/'.format(self.app_name))
+        response = self.client.get(reverse('get-env', args=[self.app_name]))
         self.assertNotEqual(404, response.status_code)
 
     def test_context_should_contain_form(self):
@@ -144,6 +145,6 @@ class AppEnvViewTest(TestCase):
         self.assertEqual(expected_response, response.context_data['envs'])
 
     def test_post_request_to_url_should_not_return_404(self):
-        response = self.client.post('/app/{0}/env/'.format(
-            self.app_name, self.request_post.POST))
+        response = self.client.post(reverse('get-env', args=[self.app_name]),
+                                    self.request_post.POST)
         self.assertNotEqual(404, response.status_code)

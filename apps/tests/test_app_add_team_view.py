@@ -3,6 +3,7 @@ from mock import patch, Mock
 from django.test import TestCase
 from django.test.client import RequestFactory
 from django.conf import settings
+from django.core.urlresolvers import reverse
 
 from apps.views import AppAddTeam
 from auth.views import LoginRequiredView
@@ -33,7 +34,8 @@ class AppAddTeamTestCas(TestCase):
         self.assertTrue(isinstance(form, AppAddTeamForm))
 
     def test_get_request_team_url_should_not_return_404(self):
-        response = self.client.get('/app/%s/team/add' % self.app_name)
+        response = self.client.get(reverse('app-add-team',
+                                   args=[self.app_name]))
         self.assertNotEqual(404, response.status_code)
 
     @patch('requests.put')
