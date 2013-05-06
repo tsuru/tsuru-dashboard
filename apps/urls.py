@@ -20,4 +20,6 @@ urlpatterns = patterns(
         views.AppTeams.as_view(), name='app-teams'),
     url(r'^(?P<app_name>[\w-]+)/team/add/$',
         views.AppAddTeam.as_view(), name='app-add-team'),
+    url(r'^(?P<app_name>[\w-]+)/units/$',
+        views.ChangeUnit.as_view(), name='change-units'),
 )
