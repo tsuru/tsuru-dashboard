@@ -12,6 +12,34 @@ from auth.views import LoginRequiredView
 from pluct import resource
 
 
+class ChangeUnit(LoginRequiredView):
+    def post(self, request, *args, **kwargs):
+        authorization = {'authorization': request.session.get('tsuru_token')}
+        app_name = kwargs['app_name']
+        token = authorization["authorization"].replace('type ', '')
+        auth = {
+            'type': 'type',
+            'credentials': token,
+        }
+        url = '{0}/apps/{1}'.format(settings.TSURU_HOST, app_name)
+        app = resource.get(url, auth)
+        if len(app.data["units"]) < int(request.POST['units']):
+            requests.put(
+                "{0}/apps/app_name/units".format(settings.TSURU_HOST,
+                                                 app_name),
+                headers=authorization,
+                data=int(request.POST['units']) - len(app.data["units"])
+            )
+        if len(app.data["units"]) > int(request.POST['units']):
+            requests.delete(
+                "{0}/apps/app_name/units".format(settings.TSURU_HOST,
+                                                 app_name),
+                headers=authorization,
+                data=len(app.data["units"]) - int(request.POST['units'])
+            )
+        return HttpResponse('', status=200)
+
+
 class UnitAdd(LoginRequiredView):
     def post(self, request, *args, **kwargs):
         app_name = kwargs['app_name']
