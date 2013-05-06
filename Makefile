@@ -4,7 +4,8 @@ clean:
 deps:
 	@pip install -r test-requirements.txt
 
-test: clean deps
+# test: clean deps
+test: clean
 	@coverage run manage.py test
 	@coverage report
 	@flake8 .

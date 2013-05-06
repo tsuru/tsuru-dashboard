@@ -1,8 +1,6 @@
 language: python
-install:
-  - pip install -qr test-requirements.txt
 script:
-  - python manage.py test
+  - make test
 notifications:
   irc:
     channels:
