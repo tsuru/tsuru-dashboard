@@ -34,7 +34,7 @@ class ChangeUnitViewTest(TestCase):
         self.assertEqual(200, response.status_code)
         delete.assert_called_with(
             '{0}/apps/app_name/units'.format(settings.TSURU_HOST),
-            data=3,
+            data='3',
             headers={'authorization': 'admin'}
         )
 
@@ -60,6 +60,6 @@ class ChangeUnitViewTest(TestCase):
         self.assertEqual(200, response.status_code)
         put.assert_called_with(
             '{0}/apps/app_name/units'.format(settings.TSURU_HOST),
-            data=8,
+            data='8',
             headers={'authorization': 'admin'}
         )

@@ -15,18 +15,18 @@ from pluct import resource
 class ChangeUnit(LoginRequiredView):
     def add_unit(self, units, app_name):
         requests.put(
-            "{0}/apps/app_name/units".format(settings.TSURU_HOST,
-                                             app_name),
+            "{0}/apps/{1}/units".format(settings.TSURU_HOST,
+                                        app_name),
             headers=self.authorization,
-            data=units
+            data=str(units)
         )
 
     def remove_units(self, units, app_name):
         requests.delete(
-            "{0}/apps/app_name/units".format(settings.TSURU_HOST,
-                                             app_name),
+            "{0}/apps/{1}/units".format(settings.TSURU_HOST,
+                                        app_name),
             headers=self.authorization,
-            data=units
+            data=str(units)
         )
 
     @property

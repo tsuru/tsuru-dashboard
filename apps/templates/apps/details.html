@@ -2,21 +2,7 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{{ STATIC_URL }}css/jquery-ui.css" />
-<style>
-	#h-slider {
-		width: 300px;
-		margin: 46px 0 0 131px;
-	}
-	#content .units-box {
-		height: 95px;
-	}
-	#content .stat-boxes {
-		float: left;
-	}
-	#content .stat-boxes .right {
-		padding: 9px 2px 7px 0;
-	}
-</style>
+<link rel="stylesheet" href="{{ STATIC_URL }}css/detail.css" />
 {% endblock %}
 
 {% block content %}
@@ -48,6 +34,13 @@
 						</li>
 					</ul>
 					<div id="h-slider"></div>
+					<form method="post" action="{% url 'change-units' app.name %}">
+						{% csrf_token %}
+						<input type="hidden" name="units" value={{ app.units|length }}>
+						<button href="#" class="apply-btn btn btn-primary btn-mini">
+							apply changes
+						</button>
+					</form>
 				</div>
 			</div>
 		</div>
@@ -92,17 +85,8 @@
 {% block extra_js %}
 <script src="{{ STATIC_URL}}js/jquery.min.js"></script>
 <script src="{{ STATIC_URL }}js/jquery-ui.custom.js"></script>
-<script>
-	// Horizontal Slider
-	$('#h-slider').slider({
-		orientation: "horizontal",
-		value: {{ app.units|length }},
-		range: "min",
-		min: 1,
-		max: 10,
-		slide:  function( event, ui ) {
-			$( "#units" ).html( ui.value );
-		}
-	});
+<script src="{{ STATIC_URL }}js/apps/units.js"></script>
+<script type="text/javascript">
+	new $.Slider({{ app.units|length }});
 </script>
 {% endblock %}

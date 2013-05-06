@@ -1,0 +1,17 @@
+.apply-btn {
+	display: none;
+}
+
+#h-slider {
+	width: 300px;
+	margin: 46px 0 0 131px;
+}
+#content .units-box {
+	height: 95px;
+}
+#content .stat-boxes {
+	float: left;
+}
+#content .stat-boxes .right {
+	padding: 9px 2px 7px 0;
+}
