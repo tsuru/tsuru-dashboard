@@ -3,7 +3,6 @@ from mock import patch, Mock
 from django.test import TestCase
 from django.test.client import RequestFactory
 from django.conf import settings
-from django.http import Http404
 
 from apps.views import AppAddTeam
 from auth.views import LoginRequiredView
@@ -33,11 +32,9 @@ class AppAddTeamTestCas(TestCase):
         form = self.response.context_data.get('form')
         self.assertTrue(isinstance(form, AppAddTeamForm))
 
-    def test_get_request_team_url_should_return_200(self):
-        try:
-            self.client.get('/app/%s/team/add' % self.app_name)
-        except Http404:
-            assert False
+    def test_get_request_team_url_should_not_return_404(self):
+        response = self.client.get('/app/%s/team/add' % self.app_name)
+        self.assertNotEqual(404, response.status_code)
 
     @patch('requests.put')
     def test_should_send_request_post_to_tsuru_with_args_expected(self, put):

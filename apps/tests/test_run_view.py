@@ -3,7 +3,6 @@ from mock import patch, Mock
 from django.conf import settings
 from django.test import TestCase
 from django.test.client import RequestFactory
-from django.http import Http404
 
 from auth.views import LoginRequiredView
 from apps.views import Run
@@ -35,11 +34,9 @@ class RunViewTest(TestCase):
         form = self.response.context_data.get('form')
         self.assertTrue(isinstance(form, RunForm))
 
-    def test_get_request_run_url_should_return_200(self):
-        try:
-            self.client.get('/app/run/')
-        except Http404:
-            assert False
+    def test_get_request_run_url_should_return_404(self):
+        response = self.client.get('/app/run/')
+        self.assertNotEqual(404, response.status_code)
 
     @patch('requests.post')
     def test_post_with_app_and_command_sends_post(self, post):

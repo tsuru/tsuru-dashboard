@@ -3,7 +3,6 @@ from mock import patch, Mock
 from django.conf import settings
 from django.test import TestCase
 from django.test.client import RequestFactory
-from django.http import Http404
 
 from auth.views import LoginRequiredView
 from apps.views import AppTeams
@@ -68,8 +67,6 @@ class AppTeamsViewTest(TestCase):
         self.assertEqual(self.response_mock.content,
                          response.context_data['errors'])
 
-    def test_get_request_run_url_should_return_200(self):
-        try:
-            self.client.get('/app/%s/teams/' % self.app_name)
-        except Http404:
-            assert False
+    def test_get_request_run_url_should_not_return_404(self):
+        response = self.client.get('/app/{0}/teams/'.format(self.app_name))
+        self.assertNotEqual(404, response.status_code)

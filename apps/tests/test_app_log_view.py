@@ -2,14 +2,12 @@ from mock import patch, Mock
 
 from django.test import TestCase
 from django.test.client import RequestFactory
-from django.http import Http404
 
 from auth.views import LoginRequiredView
 from apps.views import AppLog
 
 
 class AppLogViewTest(TestCase):
-
     @patch("pluct.resource.get")
     def setUp(self, get):
         self.factory = RequestFactory()
@@ -54,8 +52,6 @@ class AppLogViewTest(TestCase):
         response = AppLog().get(self.request, self.app_name)
         self.assertListEqual(expected, response.context_data['logs'])
 
-    def test_get_request_run_url_should_return_200(self):
-        try:
-            self.client.get('/app/%s/log/' % self.app_name)
-        except Http404:
-            assert False
+    def test_get_request_run_url_should_not_return_404(self):
+        response = self.client.get('/app/{0}/log/'.format(self.app_name))
+        self.assertNotEqual(404, response.status_code)
