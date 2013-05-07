@@ -10,6 +10,74 @@
 </div>
 <div id="breadcrumb">
 	<a href="#" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a>
-	<a href="{% url 'service-list' %}" class="tip-bottom"><i class="icon-home"></i> Services</a>
+	<a href="{% url 'service-list' %}" class="tip-bottom"> Services</a>
+</div>
+<div class="container-fluid">
+	<div class="row-fluid">
+	</div>
+	<div class="row-fluid">
+		<div class="span12">
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon">
+						<i class="icon-signal"></i>
+					</span>
+					<h5>Apps binded</h5>
+				</div>
+				<div class="widget-content">
+					<ul class="recent-posts">
+						<li>
+						<div class="row-fluid">
+							<div class="span3">
+								Appname
+							</div>
+							<div class="span8">
+								<a class="btn btn-primary" href="#">Unbind</a>
+							</div>
+						</div>
+						</li>
+						<li>
+						<div class="row-fluid">
+							<div class="span3">
+								Appname
+							</div>
+							<div class="span8">
+								<a class="btn btn-primary" href="#">Unbind</a>
+							</div>
+						</div>
+						</li>
+						<li>
+						<div class="row-fluid">
+							<div class="span3">
+								<select>
+									<option>Select an app...</option>
+									<option>App name</option>
+								</select>
+							</div>
+							<div class="span8">
+								<a class="btn btn-primary" href="#" disabled="disabled">Bind</a>
+							</div>
+						</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row-fluid">
+		<div class="span12">
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon">
+						<i class="icon-signal"></i>
+					</span>
+					<h5>Dangerous!</h5>
+				</div>
+				<div class="widget-content">
+					<a class="btn btn-danger" href="#"><i class="icon-remove icon-white"></i> Delete app</a>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 {% endblock %}
