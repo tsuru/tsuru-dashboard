@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block sidebar %}
-	{% include "sidebar.html" with active="services" %}
+{% include "sidebar.html" with active="services" %}
 {% endblock %}
 
 {% block content %}
@@ -16,8 +16,27 @@
 		<div class="span12">
 			{% for service in services %}
 			<div class="row-fluid">
-				<div class="span12">
-					<a href="" data-placement="left"> {{ service.service }} </a>
+				<div class="span6">
+					<div class="widget-box">
+						<div class="widget-title">
+							<span class="icon">
+								<i class="icon-file"></i>
+							</span>
+							<h5>{{ service.service }}</h5>
+						</div>
+						<div class="widget-content nopadding">
+							<ul class="recent-posts">
+								{% for instance in service.instances %}
+								<li>
+									<a href="">{{ instance }}</a>
+								</li>
+								{% endfor %}
+								<li>
+								<a class="btn btn-primary btn-mini" href="#">Add new instance</a>
+								</li>
+							</ul>
+						</div>
+					</div>
 				</div>
 			</div>
 			{% endfor %}
@@ -25,3 +44,4 @@
 	</div>
 </div>
 {% endblock %}
+
