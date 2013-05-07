@@ -29,10 +29,10 @@
 						<input type="text" class="input-xlarge" name="{{ app_form.name.name }}">
 						<span class="help-inline">{{ app_form.errors.name }}</span>
 					</div>
-					<div class="clearfix control-group{% if app_form.errors.framework %} error{% endif %}">
+					<div class="clearfix control-group{% if app_form.errors.platform %} error{% endif %}">
 						<label>Framework</label>
-						<input type="text" class="input-xlarge" name="{{ app_form.framework.name }}">
-						<span class="help-inline">{{ app_form.errors.framework }}</span>
+						<input type="text" class="input-xlarge" name="{{ app_form.platform.name }}">
+						<span class="help-inline">{{ app_form.errors.platform }}</span>
 					</div>
 					<button class="btn primary" type="submit">Add</button>
 				</fieldset>

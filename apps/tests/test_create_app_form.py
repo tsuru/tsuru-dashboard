@@ -11,5 +11,5 @@ class AppFormTest(TestCase):
     def test_AppForm_should_have_name_field(self):
         self.assertIn("name", forms.AppForm.base_fields)
 
-    def test_AppForm_should_have_framework_field(self):
-        self.assertIn("framework", forms.AppForm.base_fields)
+    def test_AppForm_should_have_platform_field(self):
+        self.assertIn("platform", forms.AppForm.base_fields)

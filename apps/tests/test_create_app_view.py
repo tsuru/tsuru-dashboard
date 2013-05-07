@@ -25,7 +25,7 @@ class CreateAppViewTest(TestCase):
     def test_post_with_invalid_name_should_return_500(self, post):
         request = RequestFactory().post(
             "/",
-            {"name": "myepe", "framework": "python"})
+            {"name": "myepe", "platform": "python"})
         request.session = {}
         response_mock = Mock()
         response_mock.status_code = 500
@@ -46,13 +46,13 @@ class CreateAppViewTest(TestCase):
     def test_post_should_send_to_tsuru_with_args_expected(self, post):
         request = RequestFactory().post(
             "/",
-            {"name": "myepe", "framework": "django"})
+            {"name": "myepe", "platform": "django"})
         request.session = {'tsuru_token': 'tokentest'}
         CreateApp().post(request)
         self.assertEqual(1, post.call_count)
         post.assert_called_with(
             '%s/apps' % settings.TSURU_HOST,
-            data='{"framework": "django", "name": "myepe"}',
+            data='{"platform": "django", "name": "myepe"}',
             headers={'authorization': request.session['tsuru_token']}
         )
 
@@ -60,7 +60,7 @@ class CreateAppViewTest(TestCase):
     def test_invalid_post_returns_context_with_message_expected(self, post):
         request = RequestFactory().post(
             "/",
-            {"name": "myepe", "framework": "python"})
+            {"name": "myepe", "platform": "python"})
         request.session = {}
         response_mock = Mock()
         response_mock.status_code = 200
