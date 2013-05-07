@@ -30,8 +30,7 @@ class ChangeUnitViewTest(TestCase):
         data = {"units": '1'}
         request = RequestFactory().post("/", data)
         request.session = {"tsuru_token": "admin"}
-        response = ChangeUnit.as_view()(request, app_name="app_name")
-        self.assertEqual(200, response.status_code)
+        ChangeUnit.as_view()(request, app_name="app_name")
         delete.assert_called_with(
             '{0}/apps/app_name/units'.format(settings.TSURU_HOST),
             data='3',
@@ -56,10 +55,30 @@ class ChangeUnitViewTest(TestCase):
         data = {"units": '10'}
         request = RequestFactory().post("/", data)
         request.session = {"tsuru_token": "admin"}
-        response = ChangeUnit.as_view()(request, app_name="app_name")
-        self.assertEqual(200, response.status_code)
+        ChangeUnit.as_view()(request, app_name="app_name")
         put.assert_called_with(
             '{0}/apps/app_name/units'.format(settings.TSURU_HOST),
             data='8',
             headers={'authorization': 'admin'}
         )
+
+    @patch('pluct.resource.get')
+    def test_redirect_to_the_app_detail_page(self, get):
+        resource_data = {
+            "name": "app1",
+            "units": [
+                {"Ip": "10.10.10.10"},
+                {"Ip": "9.9.9.9"},
+            ],
+        }
+        resource = Resource(
+            url="url.com",
+            data=resource_data,
+        )
+        get.return_value = resource
+        data = {"units": '2'}
+        request = RequestFactory().post("/", data)
+        request.session = {"tsuru_token": "admin"}
+        response = ChangeUnit.as_view()(request, app_name="app_name")
+        self.assertEqual(302, response.status_code)
+        self.assertEqual("/apps/app_name/", response.items()[1][1])
