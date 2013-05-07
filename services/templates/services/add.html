@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block sidebar %}
+{% include "sidebar.html" with active="services" %}
+{% endblock %}
+
+{% block content %}
+<div id="content-header">
+	<h1>Add service instance for {{ service.name }}</h1>
+</div>
+<div id="breadcrumb">
+	<a href="#" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a>
+	<a href="{% url 'service-list' %}" class="tip-bottom"> Services</a>
+</div>
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span12">
+			<form action="" method="post">
+				{% csrf_token %}
+				<fieldset>
+					<div class="control-group">
+						<label>Name</label>
+						<input type="text" class="input-xlarge" name="name">
+					</div>
+					<button class="btn primary" type="submit">Add</button>
+				</fieldset>
+			</form>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
