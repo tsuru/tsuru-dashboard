@@ -6,6 +6,8 @@ from django.conf import settings
 
 from services.views import ServiceAdd
 
+import json
+
 
 class ServiceAddViewTest(TestCase):
     @patch("requests.post")
@@ -18,7 +20,7 @@ class ServiceAddViewTest(TestCase):
         post.assert_called_with(
             '{0}/services/instances'.format(settings.TSURU_HOST),
             headers={'authorization': 'admin'},
-            data={"name": "name"})
+            data=json.dumps({"name": "name", "service_name": "service"}))
 
     def test_get(self):
         request = RequestFactory().get("/")

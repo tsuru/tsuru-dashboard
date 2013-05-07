@@ -7,6 +7,7 @@ from auth.views import LoginRequiredView
 from pluct import resource
 
 import requests
+import json
 
 
 class ListService(LoginRequiredView):
@@ -31,10 +32,13 @@ class ServiceDetail(LoginRequiredView):
 
 class ServiceAdd(LoginRequiredView):
     def post(self, request, *args, **kwargs):
+        service_name = kwargs["service_name"]
         authorization = {'authorization': request.session.get('tsuru_token')}
         tsuru_url = '{0}/services/instances'.format(settings.TSURU_HOST)
+        data = {"name": request.POST["name"],
+                "service_name": service_name}
         requests.post(tsuru_url,
-                      data={"name": request.POST["name"]},
+                      data=json.dumps(data),
                       headers=authorization)
         return HttpResponseRedirect("/")
 
