@@ -54,8 +54,7 @@ class ChangeUnit(LoginRequiredView):
             self.add_unit(units - app_units, app_name)
         if len(app.data["units"]) > int(request.POST['units']):
             self.remove_units(app_units - units, app_name)
-        return HttpResponseRedirect(reverse('detail-app', args=[app_name]),
-                                    status=302)
+        return HttpResponseRedirect(reverse('detail-app', args=[app_name]))
 
 
 class AppDetail(LoginRequiredView):
