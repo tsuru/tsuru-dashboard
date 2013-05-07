@@ -25,22 +25,28 @@
 					<h5>Units</h5>
 				</div>
 				<div class="widget-content units-box">
-					<ul class="stat-boxes">
-						<li class="popover-tickets" data-original-title="" title="">
-						<div class="right">
-							<strong id="units">{{ app.units|length }}</strong>
-							Instances
-						</div>
-						</li>
-					</ul>
-					<div id="h-slider"></div>
-					<form method="post" action="{% url 'change-units' app.name %}">
-						{% csrf_token %}
-						<input type="hidden" name="units" value={{ app.units|length }}>
-						<button href="#" class="apply-btn btn btn-primary btn-mini">
-							apply changes
-						</button>
-					</form>
+					<div class="span2">
+						<ul class="stat-boxes">
+							<li class="popover-tickets" data-original-title="" title="">
+							<div class="right">
+								<strong id="units">{{ app.units|length }}</strong>
+								Instances
+							</div>
+							</li>
+						</ul>
+					</div>
+					<div class="span4">
+						<div id="h-slider"></div>
+					</div>
+					<div class="span4">
+						<form method="post" action="{% url 'change-units' app.name %}">
+							{% csrf_token %}
+							<input type="hidden" name="units" value={{ app.units|length }}>
+							<button href="#" class="apply-btn btn btn-primary btn-mini">
+								apply changes
+							</button>
+						</form>
+					</div>
 				</div>
 			</div>
 		</div>
