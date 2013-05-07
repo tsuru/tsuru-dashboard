@@ -38,6 +38,11 @@ class ServiceAdd(LoginRequiredView):
                       headers=authorization)
         return HttpResponseRedirect("/")
 
+    def get(self, request, *args, **kwargs):
+        service_name = kwargs["service_name"]
+        return TemplateResponse(request, "services/add.html",
+                                {'service': {"name": service_name}})
+
 
 class Bind(LoginRequiredView):
     def post(self, request, *args, **kwargs):

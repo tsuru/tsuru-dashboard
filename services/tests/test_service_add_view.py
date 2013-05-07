@@ -9,7 +9,7 @@ from services.views import ServiceAdd
 
 class ServiceAddViewTest(TestCase):
     @patch("requests.post")
-    def test_view(self, post):
+    def test_post(self, post):
         data = {"name": "name"}
         request = RequestFactory().post("/", data)
         request.session = {"tsuru_token": "admin"}
@@ -19,3 +19,9 @@ class ServiceAddViewTest(TestCase):
             '{0}/services/instances'.format(settings.TSURU_HOST),
             headers={'authorization': 'admin'},
             data={"name": "name"})
+
+    def test_get(self):
+        request = RequestFactory().get("/")
+        request.session = {"tsuru_token": "admin"}
+        response = ServiceAdd.as_view()(request, service_name="service")
+        self.assertEqual(200, response.status_code)
