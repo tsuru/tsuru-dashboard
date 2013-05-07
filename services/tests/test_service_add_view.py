@@ -3,6 +3,7 @@ from mock import patch
 from django.test import TestCase
 from django.test.client import RequestFactory
 from django.conf import settings
+from django.core.urlresolvers import reverse
 
 from services.views import ServiceAdd
 
@@ -17,6 +18,7 @@ class ServiceAddViewTest(TestCase):
         request.session = {"tsuru_token": "admin"}
         response = ServiceAdd.as_view()(request, service_name="service")
         self.assertEqual(302, response.status_code)
+        self.assertEqual(reverse('service-list'), response.items()[1][1])
         post.assert_called_with(
             '{0}/services/instances'.format(settings.TSURU_HOST),
             headers={'authorization': 'admin'},

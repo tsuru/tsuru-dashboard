@@ -1,6 +1,7 @@
 from django.template.response import TemplateResponse
 from django.conf import settings
 from django.http import HttpResponseRedirect
+from django.core.urlresolvers import reverse
 
 from auth.views import LoginRequiredView
 
@@ -40,7 +41,7 @@ class ServiceAdd(LoginRequiredView):
         requests.post(tsuru_url,
                       data=json.dumps(data),
                       headers=authorization)
-        return HttpResponseRedirect("/")
+        return HttpResponseRedirect(reverse('service-list'))
 
     def get(self, request, *args, **kwargs):
         service_name = kwargs["service_name"]
