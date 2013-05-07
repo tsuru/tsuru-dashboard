@@ -28,7 +28,7 @@
 							<ul class="recent-posts">
 								{% for instance in service.instances %}
 								<li>
-									<a href="">{{ instance }}</a>
+								<a href="{% url 'service-detail' instance %}">{{ instance }}</a>
 								</li>
 								{% endfor %}
 								<li>
