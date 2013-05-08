@@ -1,15 +1,20 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div id="content-header">
-	<h1>Log</h1>
-	{# {% include "apps/navbar.html" %} #}
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span12">
+			<div class="page-header">
+				<h1>Log</h1>
+			</div>
+		</div>
+	</div>
 </div>
-<div id="breadcrumb">
-	<a href="#" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a>
-	<a href="{% url 'list-app' %}" class="tip-bottom"> Apps</a>
-	<a href="{% url 'detail-app' app %}" class="tip-bottom"> {{ app }}</a>
-</div>
+<ul class="breadcrumb">
+	<li><a href="#"><i class="icon-home"></i> Home</a><span class="divider">/</span></li>
+	<li><a href="{% url 'list-app' %}"> Apps</a><span class="divider">/</span></li>
+	<li class="active"><a href="{% url 'detail-app' app %}"> {{ app }}</a></li>
+</ul>
 <div class="container-fluid">
 	<div class="row-fluid">
 		<div class="span12">
