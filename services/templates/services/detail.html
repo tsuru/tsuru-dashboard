@@ -35,26 +35,18 @@
 				</div>
 				<div class="content">
 					<ul class="no-style">
+						{% for app in instance.Apps %}
 						<li>
 						<div class="row-fluid">
 							<div class="span3">
-								Appname
+								{{ app }}
 							</div>
 							<div class="span8">
 								<a class="btn btn-primary" href="#">Unbind</a>
 							</div>
 						</div>
 						</li>
-						<li>
-						<div class="row-fluid">
-							<div class="span3">
-								Appname
-							</div>
-							<div class="span8">
-								<a class="btn btn-primary" href="#">Unbind</a>
-							</div>
-						</div>
-						</li>
+						{% endfor %}
 						<li>
 						<div class="row-fluid">
 							<div class="span3">
