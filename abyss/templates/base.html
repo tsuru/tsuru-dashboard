@@ -12,14 +12,11 @@
 		{% endblock extra_css %}
 	</head>
 	<body>
-		<!-- <div id="header"> -->
-		<!-- 	<h1><a href="/">Abyss</a></h1> -->
-		<!-- </div> -->
 		{% include "navbar.html" %}
 
-		<!-- {% block sidebar %} -->
-		<!-- 	{% include "sidebar.html" with active="apps" %} -->
-		<!-- {% endblock %} -->
+		{% block sidebar %}
+			{% include "sidebar.html" with active="apps" %}
+		{% endblock %}
 
 		{% block extra_js %}
 		{% endblock extra_js %}

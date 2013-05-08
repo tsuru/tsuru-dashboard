@@ -3,3 +3,44 @@ body {
 	padding-bottom: 40px;
 	background-color: #171717;
 }
+
+.sidebar .nav {
+	border-left: 1px solid #292929;
+	border-right: 1px solid #4A4A4A;
+	display: inline-block;
+	height: 50px;
+	margin: 0;
+	padding: 0;
+}
+.sidebar .nav > li {
+	border-left: 1px solid #4A4A4A;
+	border-right: 1px solid #292929;
+	float: left;
+	height: 50px;
+	list-style: none outside none;
+	margin: 0;
+	min-width: 90px;
+	padding: 0;
+	text-align: center;
+}
+.sidebar .nav > li.active > a {
+	background: none repeat scroll 0 0 #333333;
+	color: #fff;
+}
+.sidebar .nav > li > a {
+	color: #636363;
+	display: block;
+	font-size: 13px;
+	font-weight: bold;
+	height: 100%;
+	padding: 0 15px;
+	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+	line-height: 50px;
+}
+.sidebar .inner {
+	background-color: #3B3B3B;
+	background-image: linear-gradient(to bottom, #414141, #323232);
+	background-repeat: repeat-x;
+	border-bottom: 1px solid #000000;
+	height: 50px;
+}
