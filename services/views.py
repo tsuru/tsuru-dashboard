@@ -24,7 +24,7 @@ class ListService(LoginRequiredView):
                                 {'services': services})
 
 
-class ServiceDetail(LoginRequiredView):
+class ServiceInstanceDetail(LoginRequiredView):
     def get(self, request, *args, **kwargs):
         service_name = kwargs["service_name"]
         return TemplateResponse(request, "services/detail.html",
