@@ -1,10 +1,50 @@
-<div class="navbar">
+<!-- <div class="navbar"> -->
+	<!-- 	<div class="navbar-inner"> -->
+		<!-- 		<a class="brand" href="{% url 'list-app' %}">Abyss</a> -->
+		<!-- 		<div class="nav-collapse"> -->
+			<!-- 			<ul class="nav pull-right"> -->
+				<!-- 				<li><a href="{% url 'logout' %}">logout</a></li> -->
+				<!-- 			</ul> -->
+			<!-- 		</div> -->
+		<!-- 	</div> -->
+	<!-- </div> -->
+
+<div class="navbar navbar-inverse navbar-fixed-top">
+
 	<div class="navbar-inner">
-			<a class="brand" href="{% url 'list-app' %}">Abyss</a>
-			<div class="nav-collapse">
+
+		<div class="container">
+
+			<a href="/" class="brand">
+				Abyss
+			</a>
+
+			<div class="nav-collapse collapse">
 				<ul class="nav pull-right">
-					<li><a href="{% url 'logout' %}">logout</a></li>
+					<li class="dropdown">
+					<a href="{% url 'logout' %}">logout</a>
+
+					<!-- <li class="dropdown"> -->
+
+					<!-- <a data-toggle="dropdown" class="dropdown-toggle" href="#"> -->
+					<!-- 	<i class="icon-user"></i> -->
+					<!-- 	Rod Howard -->
+					<!-- 	<b class="caret"></b> -->
+					<!-- </a> -->
+
+					<!-- <ul class="dropdown-menu"> -->
+					<!-- 	<li><a href="javascript:;">My Profile</a></li> -->
+					<!-- 	<li><a href="javascript:;">My Groups</a></li> -->
+					<!-- 	<li class="divider"></li> -->
+					<!-- 	<li><a href="javascript:;">Logout</a></li> -->
+					<!-- </ul> -->
+
+					</li>
 				</ul>
-			</div>
-	</div>
+			</div><!--/.nav-collapse -->
+
+		</div> <!-- /container -->
+
+	</div> <!-- /navbar-inner -->
+
 </div>
