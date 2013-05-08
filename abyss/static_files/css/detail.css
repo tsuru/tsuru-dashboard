@@ -12,7 +12,27 @@
 	height: 95px;
 }
 
-/* .stat-boxes .right { */
-/* 	padding: 9px 2px 7px 0; */
-/* } */
+.stats {
+	width: 80px;
+	height: 80px;
+	display: inline-block;
+	padding: 12px 0;
+	margin: 8px 5px 1em;
+	vertical-align: top;
+	text-decoration: none;
+	background: #F3F3F3;
+	background-color: #f8f8f8;
+	background-image: -moz-linear-gradient(top, #ffffff, #eeeeee);
+	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#eeeeee));
+	background-image: -webkit-linear-gradient(top, #ffffff, #eeeeee);
+	background-image: linear-gradient(to bottom, #ffffff, #eeeeee);
+	border: 1px solid #ddd;
+	box-sizing: border-box;
+	border-radius: 5px;
+	text-align: center;
+}
 
+.stats strong {
+	font-weight: bold;
+	font-size: 40px;
+}
