@@ -2,6 +2,7 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{{ STATIC_URL }}css/abyss.widget.css" />
+<link rel="stylesheet" href="{{ STATIC_URL }}css/abyss.services.css" />
 {% endblock %}
 
 {% block sidebar %}
@@ -35,7 +36,7 @@
 							<h5>{{ service.service }}</h5>
 						</div>
 						<div class="content">
-							<ul class="recent-posts">
+							<ul class="no-style">
 								{% for instance in service.instances %}
 								<li>
 								<a href="{% url 'service-detail' instance %}">{{ instance }}</a>
