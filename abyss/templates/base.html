@@ -8,31 +8,22 @@
 		<link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap.min.css" />
 		<link rel="stylesheet" href="{{ STATIC_URL}}css/bootstrap-responsive.min.css" />
 		<link rel="stylesheet" href="{{ STATIC_URL}}css/fullcalendar.css" />
-		<link rel="stylesheet" href="{{ STATIC_URL}}css/unicorn.main.css" />
-		<link rel="stylesheet" href="{{ STATIC_URL}}css/unicorn.grey.css" class="skin-color" />
 		{% block extra_css %}
 		{% endblock extra_css %}
 	</head>
 	<body>
-		<div id="header">
-			<h1><a href="/">Abyss</a></h1>
-		</div>
+		<!-- <div id="header"> -->
+		<!-- 	<h1><a href="/">Abyss</a></h1> -->
+		<!-- </div> -->
 		{% include "navbar.html" %}
 		{% block sidebar %}
 			{% include "sidebar.html" with active="apps" %}
 		{% endblock %}
-		<div id="content">
+		<!-- <div id="content"> -->
 
-			{% block content %}
-			{% endblock content %}
-		</div>
-		<!-- <script src="{{ STATIC_URL }}js/jquery-1.7.2.min.js"></script> -->
-		<!-- <script src ="{{ STATIC_URL }}js/bootstrap-tooltip.js"></script> -->
-
-		<!-- <script type="text/javascript"> -->
-			<!-- 	$('.tooltips').tooltip(); -->
-			<!-- 	</script> -->
-
+		<!-- 	{% block content %} -->
+		<!-- 	{% endblock content %} -->
+		<!-- </div> -->
 		{% block extra_js %}
 		{% endblock extra_js %}
 	</body>
