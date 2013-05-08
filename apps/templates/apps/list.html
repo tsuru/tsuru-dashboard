@@ -1,26 +1,29 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div id="content-header">
-	<h1>Apps</h1>
-	<div class="btn-group">
-		<a class="btn btn-large tip-bottom" title="Create App" href="{% url 'create-app' %}"><i class="icon-plus"></i></a>
-	</div>
-</div>
-<div id="breadcrumb">
-	<a href="#" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a>
-</div>
 <div class="container-fluid">
 	<div class="row-fluid">
-		<div class="span12 app-item">
+		<div class="span12">
+			<div class="page-header">
+				<div class="btn-group pull-right">
+					<a class="btn" title="Create App" href="{% url 'create-app' %}"><i class="icon-plus"></i></a>
+				</div>
+			 	<h1>Apps</h1>
+			</div>
+		</div>
+	</div>
+</div>
+<ul class="breadcrumb">
+	<li class="active"><a href="#"><i class="icon-home"></i> Home</a></li>
+</ul>
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span12">
 			{% for app in apps %}
 			<div class="row-fluid">
 				<div class="span9 app-name">
 					<a href="{% url 'detail-app' app.name %}" rel="tooltip" class="tooltips" data-placement="left" data-original-title="App Details"> {{ app.name }} </a>
 				</div>
-				{# <div class="span1 option app-services"> #}
-				{# 	<a href="#" rel="tooltip" class="tooltips" data-placement="top" data-original-title="Services"> <i class="icon-tag"></i> </a> #}
-				{# </div> #}
 				<div class="span1 option app-log">
 					<a href="{% url 'app_log' app.name %}" rel="tooltip" class="tooltips" data-placement="top" data-original-title="Log"> <i class="icon-tasks"></i> </a>
 				</div>
@@ -36,10 +39,3 @@
 	</div>
 </div>
 {% endblock content %}
-
-{% block extra_js %}
-<script>
-	$(".nav li").removeClass("active");
-	$(".nav #apps").addClass("active");
-</script>
-{% endblock %}
