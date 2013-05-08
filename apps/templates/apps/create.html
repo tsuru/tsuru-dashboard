@@ -1,13 +1,19 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div id="content-header">
-	<h1>Create App</h1>
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span12">
+			<div class="page-header">
+				<h1>Create App</h1>
+			</div>
+		</div>
+	</div>
 </div>
-<div id="breadcrumb">
-	<a href="#" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a>
-	<a href="{% url 'list-app' %}" class="tip-bottom"> Apps</a>
-</div>
+<ul class="breadcrumb">
+	<li><a href="#"><i class="icon-home"></i> Home</a><span class="divider">/</span></li>
+	<li class="active"><a href="{% url 'list-app' %}"> Apps</a></li>
+</ul>
 <div class="container-fluid">
 	<div class="row-fluid">
 		<div class="span12">
@@ -40,4 +46,4 @@
 		</div>
 	</div>
 </div>
-{% endblock content %}
+{% endblock %}
