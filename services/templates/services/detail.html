@@ -14,7 +14,7 @@
 	<div class="row-fluid">
 		<div class="span12">
 			<div class="page-header">
-				<h1>{{ service.name }}</h1>
+				<h1>{{ instance.Name }}</h1>
 			</div>
 		</div>
 	</div>
@@ -77,7 +77,7 @@
 					<h5>Dangerous!</h5>
 				</div>
 				<div class="content">
-					<a class="btn btn-danger" href="#"><i class="icon-remove icon-white"></i> Delete app</a>
+					<a class="btn btn-danger" href="{% url 'service-remove' instance.Name %}"><i class="icon-remove icon-white"></i> Delete app</a>
 				</div>
 			</div>
 		</div>
