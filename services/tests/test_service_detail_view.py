@@ -30,10 +30,6 @@ class ServiceInstanceDetailViewTest(TestCase):
     @patch("services.views.ServiceInstanceDetail.get_instance")
     @patch("requests.get")
     def test_get_apps(self, get, get_instance):
-        data = {u'Name': u'instance'}
-        response_mock = Mock()
-        response_mock.json.return_value = data
-        get.return_value = response_mock
         request = RequestFactory().get("/")
         request.session = {"tsuru_token": "admin"}
         response = ServiceInstanceDetail.as_view()(request,
