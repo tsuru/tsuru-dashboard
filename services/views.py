@@ -25,6 +25,11 @@ class ListService(LoginRequiredView):
 
 
 class ServiceInstanceDetail(LoginRequiredView):
+    def apps(self):
+        url = "{0}/apps".format(settings.TSURU_HOST)
+        response = requests.get(url, headers=self.authorization)
+        return response.json()
+
     @property
     def authorization(self):
         return {'authorization': self.request.session.get('tsuru_token')}
@@ -39,7 +44,7 @@ class ServiceInstanceDetail(LoginRequiredView):
         instance_name = kwargs["instance"]
         instance = self.get_instance(instance_name)
         return TemplateResponse(request, "services/detail.html",
-                                {'instance': instance})
+                                {'instance': instance, 'apps': self.apps()})
 
 
 class ServiceAdd(LoginRequiredView):

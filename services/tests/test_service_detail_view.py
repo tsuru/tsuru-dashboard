@@ -8,8 +8,9 @@ from services.views import ServiceInstanceDetail
 
 
 class ServiceInstanceDetailViewTest(TestCase):
+    @patch("services.views.ServiceInstanceDetail.apps")
     @patch("requests.get")
-    def test_view(self, get):
+    def test_get_instance_data(self, get, apps):
         data = {u'Name': u'instance'}
         response_mock = Mock()
         response_mock.json.return_value = data
@@ -25,3 +26,19 @@ class ServiceInstanceDetailViewTest(TestCase):
             '{0}/services/instances/{1}'.format(settings.TSURU_HOST,
                                                 "instance"),
             headers={'authorization': 'admin'})
+
+    @patch("services.views.ServiceInstanceDetail.get_instance")
+    @patch("requests.get")
+    def test_get_apps(self, get, get_instance):
+        data = {u'Name': u'instance'}
+        response_mock = Mock()
+        response_mock.json.return_value = data
+        get.return_value = response_mock
+        request = RequestFactory().get("/")
+        request.session = {"tsuru_token": "admin"}
+        response = ServiceInstanceDetail.as_view()(request,
+                                                   instance="instance")
+        self.assertEqual("services/detail.html", response.template_name)
+        self.assertIn("apps", response.context_data)
+        get.assert_called_with('{0}/apps'.format(settings.TSURU_HOST),
+                               headers={'authorization': 'admin'})
