@@ -73,12 +73,12 @@ class ServiceAdd(LoginRequiredView):
 class Bind(LoginRequiredView):
     def post(self, request, *args, **kwargs):
         app_name = kwargs["app_name"]
-        service_name = kwargs["service_name"]
+        instance = kwargs["instance"]
         authorization = {'authorization': request.session.get('tsuru_token')}
         tsuru_url = '{0}/services/instances/{1}/{2}'.format(
-            settings.TSURU_HOST, service_name, app_name)
+            settings.TSURU_HOST, instance, app_name)
         requests.put(tsuru_url, headers=authorization)
-        return HttpResponseRedirect("/")
+        return HttpResponseRedirect(reverse('service-detail', args=[instance]))
 
 
 class Unbind(LoginRequiredView):
