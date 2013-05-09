@@ -3,6 +3,7 @@ from mock import patch
 from django.test import TestCase
 from django.test.client import RequestFactory
 from django.conf import settings
+from django.core.urlresolvers import reverse
 
 from services.views import ServiceRemove
 
@@ -15,6 +16,7 @@ class ServiceRemoveViewTest(TestCase):
         service_name = "service"
         response = ServiceRemove.as_view()(request, service_name=service_name)
         self.assertEqual(302, response.status_code)
+        self.assertEqual(reverse("service-list"), response.items()[1][1])
         delete.assert_called_with(
             '{0}/services/c/instances/{1}'.format(
                 settings.TSURU_HOST,

@@ -100,4 +100,4 @@ class ServiceRemove(LoginRequiredView):
             settings.TSURU_HOST, service_name)
         requests.delete(tsuru_url,
                         headers=authorization)
-        return HttpResponseRedirect("/")
+        return HttpResponseRedirect(reverse('service-list'))
