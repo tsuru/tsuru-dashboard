@@ -3,6 +3,7 @@ from mock import patch, Mock
 from django.conf import settings
 from django.test import TestCase
 from django.test.client import RequestFactory
+from django.core.urlresolvers import reverse
 
 from auth.views import LoginRequiredView, Team
 from auth.forms import TeamForm
@@ -32,7 +33,7 @@ class TeamViewTest(TestCase):
         self.assertTrue(isinstance(form, TeamForm))
 
     def test_get_request_team_url_should_not_return_404(self):
-        response = self.client.get('/team/')
+        response = self.client.get(reverse('team'))
         self.assertNotEqual(404, response.status_code)
 
     @patch('requests.post')

@@ -3,6 +3,7 @@ from mock import patch, Mock
 from django.conf import settings
 from django.test import TestCase
 from django.test.client import RequestFactory
+from django.core.urlresolvers import reverse
 
 from auth.views import LoginRequiredView, Key
 from auth.forms import KeyForm
@@ -32,7 +33,7 @@ class KeyViewTest(TestCase):
         self.assertTrue(isinstance(form, KeyForm))
 
     def test_get_request_key_url_should_not_return_404(self):
-        response = self.client.get('/key/')
+        response = self.client.get(reverse('key'))
         self.assertNotEqual(404, response.status_code)
 
     @patch('requests.post')
