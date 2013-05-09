@@ -11,14 +11,14 @@ from services.views import ServiceRemove
 class ServiceRemoveViewTest(TestCase):
     @patch("requests.delete")
     def test_view(self, delete):
-        request = RequestFactory().post("/")
+        request = RequestFactory().get("/")
         request.session = {"tsuru_token": "admin"}
         service_name = "service"
         response = ServiceRemove.as_view()(request, instance=service_name)
         self.assertEqual(302, response.status_code)
         self.assertEqual(reverse("service-list"), response.items()[1][1])
         delete.assert_called_with(
-            '{0}/services/c/instances/{1}'.format(
+            '{0}/services/instances/{1}'.format(
                 settings.TSURU_HOST,
                 service_name),
             headers={'authorization': 'admin'})
