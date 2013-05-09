@@ -49,6 +49,7 @@
 						{% endfor %}
 						<li>
 						<div class="row-fluid">
+							<form action="{% url '' %}" method="post">
 							<div class="span3">
 								<select>
 									<option>Select an app...</option>
@@ -58,8 +59,10 @@
 								</select>
 							</div>
 							<div class="span8">
-								<a class="btn btn-primary" href="#" disabled="disabled">Bind</a>
+								{# <a class="btn btn-primary" href="#" disabled="disabled">Bind</a> #}
+								<a class="btn btn-primary" href="#">Bind</a>
 							</div>
+							</form>
 						</div>
 						</li>
 					</ul>

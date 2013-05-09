@@ -11,13 +11,12 @@ from services.views import Bind
 class BindViewTest(TestCase):
     @patch("requests.put")
     def test_view(self, put):
-        request = RequestFactory().post("/")
+        app = "app"
+        request = RequestFactory().post("/", {"app": app})
         request.session = {"tsuru_token": "admin"}
         instance = "service"
-        app_name = "app"
         response = Bind.as_view()(request,
-                                  instance=instance,
-                                  app_name=app_name)
+                                  instance=instance)
         self.assertEqual(302, response.status_code)
         url = reverse('service-detail', args=[instance])
         self.assertEqual(url, response.items()[1][1])
@@ -25,6 +24,6 @@ class BindViewTest(TestCase):
             '{0}/services/instances/{1}/{2}'.format(
                 settings.TSURU_HOST,
                 instance,
-                app_name
+                app
             ),
             headers={'authorization': 'admin'})
