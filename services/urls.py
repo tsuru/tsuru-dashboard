@@ -10,4 +10,6 @@ urlpatterns = patterns(
         name='service-detail'),
     url(r'^(?P<service_name>[\w-]+)/add/$', views.ServiceAdd.as_view(),
         name='service-add'),
+    url(r'^(?P<instance>[\w-]+)/remove/$', views.ServiceRemove.as_view(),
+        name='service-remove'),
 )

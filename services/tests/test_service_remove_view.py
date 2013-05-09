@@ -14,7 +14,7 @@ class ServiceRemoveViewTest(TestCase):
         request = RequestFactory().post("/")
         request.session = {"tsuru_token": "admin"}
         service_name = "service"
-        response = ServiceRemove.as_view()(request, service_name=service_name)
+        response = ServiceRemove.as_view()(request, instance=service_name)
         self.assertEqual(302, response.status_code)
         self.assertEqual(reverse("service-list"), response.items()[1][1])
         delete.assert_called_with(

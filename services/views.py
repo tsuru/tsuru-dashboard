@@ -94,10 +94,10 @@ class Unbind(LoginRequiredView):
 
 class ServiceRemove(LoginRequiredView):
     def post(self, request, *args, **kwargs):
-        service_name = kwargs["service_name"]
+        instance = kwargs["instance"]
         authorization = {'authorization': request.session.get('tsuru_token')}
         tsuru_url = '{0}/services/c/instances/{1}'.format(
-            settings.TSURU_HOST, service_name)
+            settings.TSURU_HOST, instance)
         requests.delete(tsuru_url,
                         headers=authorization)
         return HttpResponseRedirect(reverse('service-list'))
