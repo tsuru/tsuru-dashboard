@@ -49,9 +49,10 @@
 						{% endfor %}
 						<li>
 						<div class="row-fluid">
-							<form action="{% url '' %}" method="post">
+							<form action="{% url 'bind' instance.Name %}" method="post">
 							<div class="span3">
-								<select>
+								{% csrf_token %}
+								<select name="app">
 									<option>Select an app...</option>
 									{% for app in apps %}
 									<option value="{{ app }}">{{ app }}</option>
@@ -59,8 +60,7 @@
 								</select>
 							</div>
 							<div class="span8">
-								{# <a class="btn btn-primary" href="#" disabled="disabled">Bind</a> #}
-								<a class="btn btn-primary" href="#">Bind</a>
+								<button class="btn btn-primary" href="#">Bind</button>
 							</div>
 							</form>
 						</div>
