@@ -8,6 +8,10 @@ from services.views import ServiceInstanceDetail
 
 
 class ServiceInstanceDetailViewTest(TestCase):
+    def setUp(self):
+        self.request = RequestFactory().get("/")
+        self.request.session = {"tsuru_token": "admin"}
+
     @patch("services.views.ServiceInstanceDetail.apps")
     @patch("requests.get")
     def test_get_instance_data(self, get, apps):
@@ -15,9 +19,7 @@ class ServiceInstanceDetailViewTest(TestCase):
         response_mock = Mock()
         response_mock.json.return_value = data
         get.return_value = response_mock
-        request = RequestFactory().get("/")
-        request.session = {"tsuru_token": "admin"}
-        response = ServiceInstanceDetail.as_view()(request,
+        response = ServiceInstanceDetail.as_view()(self.request,
                                                    instance="instance")
         self.assertEqual("services/detail.html", response.template_name)
         self.assertDictEqual({u"Name": "instance"},
@@ -30,11 +32,18 @@ class ServiceInstanceDetailViewTest(TestCase):
     @patch("services.views.ServiceInstanceDetail.get_instance")
     @patch("requests.get")
     def test_get_apps(self, get, get_instance):
-        request = RequestFactory().get("/")
-        request.session = {"tsuru_token": "admin"}
-        response = ServiceInstanceDetail.as_view()(request,
+        instance_mock = {'Apps': ["ble"]}
+        get_instance.return_value = instance_mock
+        response_mock = Mock()
+        response_mock.json.return_value = [{u'name': u'app1'},
+                                           {u'name': u'ble'},
+                                           {u'name': u'app2'}]
+        get.return_value = response_mock
+        response = ServiceInstanceDetail.as_view()(self.request,
                                                    instance="instance")
         self.assertEqual("services/detail.html", response.template_name)
         self.assertIn("apps", response.context_data)
+        expected = ["app1", "app2"]
+        self.assertListEqual(expected, response.context_data["apps"])
         get.assert_called_with('{0}/apps'.format(settings.TSURU_HOST),
                                headers={'authorization': 'admin'})
