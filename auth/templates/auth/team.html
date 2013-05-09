@@ -1,30 +1,43 @@
 {% extends "base.html" %}
 
 {% block content %}
-          <div class="row">
-              <div class="team-form">
-                  <h2>Team</h2>
-                  <form action="" method="post">
-                     {% csrf_token %}
-                     {% if message %}
-                        <div class="alert alert-success">
-                           {{ message }}
-                        </div>
-                     {% endif %}
-                     {% if errors %}
-                        <div class="alert alert-error">
-                           {{ errors }}
-                        </div>
-                     {% endif %}
-                     <fieldset>
-                        <div class="clearfix control-group{% if form.errors.name %} error{% endif %}">
-                            <label>name</label>
-                            <input type="text" name="{{ form.name.name }}" placeholder="Type a name for your team...">
-                            <span class="help-inline">{{ form.errors.name }}</span>
-                        </div>
-                        <button class="btn primary" type="submit">Create</button>
-                     </fieldset>
-                  </form>
-              </div>
-          </div>
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span12">
+			<div class="page-header">
+				<h1>Team add</h1>
+			</div>
+		</div>
+	</div>
+</div>
+<ul class="breadcrumb">
+	<li class="active"><a href="#"><i class="icon-home"></i> Home</a></li>
+</ul>
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span12">
+			<form action="" method="post">
+				{% csrf_token %}
+				{% if message %}
+				<div class="alert alert-success">
+					{{ message }}
+				</div>
+				{% endif %}
+				{% if errors %}
+				<div class="alert alert-error">
+					{{ errors }}
+				</div>
+				{% endif %}
+				<fieldset>
+					<div class="clearfix control-group{% if form.errors.name %} error{% endif %}">
+						<label>name</label>
+						<input type="text" name="{{ form.name.name }}" placeholder="Type a name for your team...">
+						<span class="help-inline">{{ form.errors.name }}</span>
+					</div>
+					<button class="btn primary" type="submit">Create</button>
+				</fieldset>
+			</form>
+		</div>
+	</div>
+</div>
 {% endblock content %}
