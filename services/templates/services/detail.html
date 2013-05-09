@@ -52,7 +52,9 @@
 							<div class="span3">
 								<select>
 									<option>Select an app...</option>
-									<option>App name</option>
+									{% for app in apps %}
+									<option value="{{ app }}">{{ app }}</option>
+									{% endfor %}
 								</select>
 							</div>
 							<div class="span8">
