@@ -11,22 +11,22 @@
 			<div class="nav-collapse collapse">
 				<ul class="nav pull-right">
 					<li class="dropdown">
-					<a href="{% url 'logout' %}">logout</a>
+					<!-- <a href="{% url 'logout' %}">logout</a> -->
 
-					<!-- <li class="dropdown"> -->
+					<li class="dropdown">
 
-					<!-- <a data-toggle="dropdown" class="dropdown-toggle" href="#"> -->
-					<!-- 	<i class="icon-user"></i> -->
-					<!-- 	Rod Howard -->
-					<!-- 	<b class="caret"></b> -->
-					<!-- </a> -->
+					<a data-toggle="dropdown" class="dropdown-toggle" href="#">
+						<i class="icon-user"></i>
+						{{ request.session.username }}
+						<b class="caret"></b>
+					</a>
 
-					<!-- <ul class="dropdown-menu"> -->
-					<!-- 	<li><a href="javascript:;">My Profile</a></li> -->
-					<!-- 	<li><a href="javascript:;">My Groups</a></li> -->
-					<!-- 	<li class="divider"></li> -->
-					<!-- 	<li><a href="javascript:;">Logout</a></li> -->
-					<!-- </ul> -->
+					<ul class="dropdown-menu">
+						<li><a href="javascript:;">My Profile</a></li>
+						<li><a href="javascript:;">My Groups</a></li>
+						<li class="divider"></li>
+						<li><a href="javascript:;">Logout</a></li>
+					</ul>
 
 					</li>
 				</ul>
