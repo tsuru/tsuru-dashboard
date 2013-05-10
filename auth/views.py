@@ -65,6 +65,7 @@ class Login(View):
             response = requests.post(url, data=json.dumps(data))
             if response.status_code == 200:
                 result = json.loads(response.text)
+                request.session['username'] = username
                 request.session['tsuru_token'] = "type {0}".format(
                     result['token'])
                 return HttpResponseRedirect("/apps")

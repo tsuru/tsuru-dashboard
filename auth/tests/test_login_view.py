@@ -71,6 +71,16 @@ class LoginViewTest(TestCase):
                          request.session["tsuru_token"])
 
     @patch('requests.post')
+    def test_should_set_username_in_the_session(self, post):
+        post.return_value = Mock(status_code=200,
+                                 text='{"token": "t"}')
+        data = {'username': 'valid@email.com', 'password': '123456'}
+        request = RequestFactory().post('/', data)
+        request.session = {}
+        Login.as_view()(request)
+        self.assertEqual(data["username"], request.session["username"])
+
+    @patch('requests.post')
     def test_redirect_to_team_creation_when_login_is_successful(self, post):
         data = {'username': 'valid@email.com', 'password': '123456'}
         request = RequestFactory().post('/', data)
