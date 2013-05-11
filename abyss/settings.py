@@ -85,6 +85,7 @@ INSTALLED_APPS = (
     'auth',
     'apps',
     'services',
+    'teams',
 )
 
 TEST_RUNNER = 'abyss.runner.DiscoveryRunner'
