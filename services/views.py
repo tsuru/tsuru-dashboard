@@ -1,6 +1,6 @@
 from django.template.response import TemplateResponse
 from django.conf import settings
-from django.http import HttpResponseRedirect
+from django.shortcuts import redirect
 from django.core.urlresolvers import reverse
 
 from auth.views import LoginRequiredView
@@ -62,7 +62,7 @@ class ServiceAdd(LoginRequiredView):
         requests.post(tsuru_url,
                       data=json.dumps(data),
                       headers=authorization)
-        return HttpResponseRedirect(reverse('service-list'))
+        return redirect(reverse('service-list'))
 
     def get(self, request, *args, **kwargs):
         service_name = kwargs["service_name"]
@@ -78,7 +78,7 @@ class Bind(LoginRequiredView):
         tsuru_url = '{0}/services/instances/{1}/{2}'.format(
             settings.TSURU_HOST, instance, app)
         requests.put(tsuru_url, headers=authorization)
-        return HttpResponseRedirect(reverse('service-detail', args=[instance]))
+        return redirect(reverse('service-detail', args=[instance]))
 
 
 class Unbind(LoginRequiredView):
@@ -89,7 +89,7 @@ class Unbind(LoginRequiredView):
         tsuru_url = '{0}/services/instances/{1}/{2}'.format(
             settings.TSURU_HOST, instance, app)
         requests.delete(tsuru_url, headers=authorization)
-        return HttpResponseRedirect(reverse('service-detail', args=[instance]))
+        return redirect(reverse('service-detail', args=[instance]))
 
 
 class ServiceRemove(LoginRequiredView):
@@ -100,4 +100,4 @@ class ServiceRemove(LoginRequiredView):
             settings.TSURU_HOST, instance)
         requests.delete(tsuru_url,
                         headers=authorization)
-        return HttpResponseRedirect(reverse('service-list'))
+        return redirect(reverse('service-list'))

@@ -3,7 +3,7 @@ import requests
 
 from django.conf import settings
 from django.template.response import TemplateResponse
-from django.http import HttpResponseRedirect
+from django.shortcuts import redirect
 from django.views.generic.base import View
 
 from auth.forms import TeamForm, LoginForm, SignupForm, KeyForm
@@ -13,7 +13,7 @@ class LoginRequiredView(View):
     def dispatch(self, request, *args, **kwargs):
         token = request.session.get('tsuru_token')
         if not token:
-            return HttpResponseRedirect('/')
+            return redirect('/')
         return super(LoginRequiredView, self).dispatch(
             request, *args, **kwargs)
 
@@ -68,7 +68,7 @@ class Login(View):
                 request.session['username'] = username
                 request.session['tsuru_token'] = "type {0}".format(
                     result['token'])
-                return HttpResponseRedirect("/apps")
+                return redirect("/apps")
             context['msg'] = 'User not found'
         return TemplateResponse(request, 'auth/login.html',
                                 context=context)
@@ -79,7 +79,7 @@ class Logout(View):
     def get(self, request):
         if 'tsuru_token' in request.session:
             del request.session['tsuru_token']
-        return HttpResponseRedirect('/')
+        return redirect('/')
 
 
 class Signup(View):

@@ -3,7 +3,8 @@ import requests
 
 from django.template.response import TemplateResponse
 from django.conf import settings
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
+from django.shortcuts import redirect
 from django.core.urlresolvers import reverse
 
 from apps.forms import AppForm, AppAddTeamForm, RunForm, SetEnvForm
@@ -54,7 +55,7 @@ class ChangeUnit(LoginRequiredView):
             self.add_unit(units - app_units, app_name)
         if len(app.data["units"]) > int(request.POST['units']):
             self.remove_units(app_units - units, app_name)
-        return HttpResponseRedirect(reverse('detail-app', args=[app_name]))
+        return redirect(reverse('detail-app', args=[app_name]))
 
 
 class AppDetail(LoginRequiredView):
@@ -81,7 +82,7 @@ class RemoveApp(LoginRequiredView):
         )
         if response.status_code > 399:
             return HttpResponse(response.text, status=response.status_code)
-        return HttpResponseRedirect(reverse('list-app'))
+        return redirect(reverse('list-app'))
 
 
 class CreateApp(LoginRequiredView):
