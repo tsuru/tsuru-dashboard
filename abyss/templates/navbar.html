@@ -1,20 +1,12 @@
 <div class="navbar navbar-inverse navbar-fixed-top">
-
 	<div class="navbar-inner">
-
 		<div class="container">
-
 			<a href="/" class="brand">
 				Abyss
 			</a>
-
 			<div class="nav-collapse collapse">
 				<ul class="nav pull-right">
 					<li class="dropdown">
-					<!-- <a href="{% url 'logout' %}">logout</a> -->
-
-					<li class="dropdown">
-
 					<a data-toggle="dropdown" class="dropdown-toggle" href="#">
 						<i class="icon-user"></i>
 						{{ request.session.username }}
@@ -22,18 +14,13 @@
 					</a>
 
 					<ul class="dropdown-menu">
-						<li><a href="javascript:;">My Profile</a></li>
-						<li><a href="javascript:;">My Groups</a></li>
+						<li><a href="javascript:;">Manage keys</a></li>
 						<li class="divider"></li>
-						<li><a href="javascript:;">Logout</a></li>
+						<li><a href="{% url 'logout' %}">Logout</a></li>
 					</ul>
-
 					</li>
 				</ul>
 			</div><!--/.nav-collapse -->
-
 		</div> <!-- /container -->
-
 	</div> <!-- /navbar-inner -->
-
 </div>
