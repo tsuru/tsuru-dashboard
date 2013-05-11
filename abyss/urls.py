@@ -11,6 +11,7 @@ urlpatterns = patterns(
     (r'^auth/', include('auth.urls')),
     (r'^apps/', include('apps.urls')),
     (r'^services/', include('services.urls')),
+    (r'^teams/', include('teams.urls')),
 )
 
 urlpatterns += staticfiles_urlpatterns()
