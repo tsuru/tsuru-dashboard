@@ -33,7 +33,7 @@ class TeamViewTest(TestCase):
         self.assertTrue(isinstance(form, TeamForm))
 
     def test_get_request_team_url_should_not_return_404(self):
-        response = self.client.get(reverse('team'))
+        response = self.client.get(reverse('team-add'))
         self.assertNotEqual(404, response.status_code)
 
     @patch('requests.post')

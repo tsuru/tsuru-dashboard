@@ -7,10 +7,6 @@ class LoginForm(forms.Form):
     password = forms.CharField(widget=widgets.PasswordInput, min_length=6)
 
 
-class TeamForm(forms.Form):
-    name = forms.CharField(max_length=60)
-
-
 class AddUserToTeamForm(forms.Form):
 
     def __init__(self, teams=None, *args, **kwargs):
