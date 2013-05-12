@@ -8,7 +8,7 @@
 				<div class="btn-group pull-right">
 					<a class="btn" title="Create Team" href="{% url 'team' %}"><i class="icon-plus"></i></a>
 				</div>
-			 	<h1>Teams</h1>
+				<h1>Teams</h1>
 			</div>
 		</div>
 	</div>
@@ -21,8 +21,11 @@
 		<div class="span12">
 			{% for team in teams %}
 			<div class="row-fluid">
-				<div class="span12">
+				<div class="span11">
 					<p>{{ team.name }}</p>
+				</div>
+				<div class="span1">
+					<a href="{% url 'team-remove' team.name %}"> <i class="icon-remove"></i> </a>
 				</div>
 			</div>
 			{% endfor %}
