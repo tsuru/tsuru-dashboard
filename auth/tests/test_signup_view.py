@@ -32,6 +32,16 @@ class SignupViewTest(TestCase):
                       form.errors['same_password_again'])
 
     @patch('requests.post')
+    def test_return_msg_on_success(self, post):
+        data = {'email': 'test@test.com', 'password': 'abc123',
+                'same_password_again': 'abc123'}
+        request = self.factory.post('/signup', data)
+        post.return_value = Mock(status_code=201)
+        response = Signup.as_view()(request)
+        expected = 'User "{0}" successfully created!'.format(data["email"])
+        self.assertEqual(expected, response.context_data["message"])
+
+    @patch('requests.post')
     def test_post_sends_to_tsuru_with_args_expected(self, post):
         data = {'email': 'test@test.com', 'password': 'abc123',
                 'same_password_again': 'abc123'}
