@@ -17,7 +17,6 @@ class KeyViewTest(TestCase):
         self.response = Key().get(self.request)
         self.request_post = self.factory.post('/team/', {'key': 'test-key-qq'})
         self.request_post.session = {}
-        self.response_mock = Mock()
 
     def test_should_require_login_to_create_team(self):
         assert issubclass(Key, LoginRequiredView)
@@ -49,24 +48,20 @@ class KeyViewTest(TestCase):
 
     @patch('requests.post')
     def test_valid_postshould_return_message_expected(self, post):
-        self.response_mock.status_code = 200
-        post.side_effect = Mock(return_value=self.response_mock)
+        post.return_value = Mock(status_code=200)
         response = Key().post(self.request_post)
         self.assertEqual("The Key was successfully added",
                          response.context_data.get('message'))
 
     @patch('requests.post')
     def test_invalid_post_should_return_error_message(self, post):
-        self.response_mock.status_code = 500
-        self.response_mock.content = 'Error'
-        post.side_effect = Mock(return_value=self.response_mock)
+        post.return_value = Mock(status_code=500, content='Error')
         response = Key().post(self.request_post)
         self.assertEqual('Error', response.context_data.get('errors'))
 
     @patch('requests.post')
     def test_post_with_valid_key_should_return_context_with_form(self, post):
-        self.response_mock.status_code = 200
-        post.side_effect = Mock(return_value=self.response_mock)
+        post.return_value = Mock(status_code=200)
         response = Key().post(self.request_post)
         self.assertIn('form', response.context_data.keys())
         self.assertTrue(isinstance(response.context_data.get('form'),
@@ -74,9 +69,7 @@ class KeyViewTest(TestCase):
 
     @patch('requests.post')
     def test_post_with_invalid_key_should_return_context_with_form(self, post):
-        self.response_mock.status_code = 500
-        self.response_mock.content = 'Error'
-        post.side_effect = Mock(return_value=self.response_mock)
+        post.return_value = Mock(status_code=500, content='Error')
         response = Key().post(self.request_post)
         self.assertIn('form', response.context_data.keys())
         self.assertTrue(isinstance(response.context_data.get('form'),

@@ -38,9 +38,7 @@ class LoginViewTest(TestCase):
     def test_should_return_200_when_user_does_not_exist(self, post):
         data = {'username': 'invalid@email.com', 'password': '123456'}
         request = RequestFactory().post('/', data)
-        response_mock = Mock()
-        response_mock.status_code = 500
-        post.side_effect = Mock(return_value=response_mock)
+        post.return_value = Mock(status_code=500)
         response = Login().post(request)
         self.assertEqual(200, response.status_code)
         self.assertEqual('auth/login.html', response.template_name)
@@ -62,10 +60,8 @@ class LoginViewTest(TestCase):
         data = {'username': 'valid@email.com', 'password': '123456'}
         request = RequestFactory().post('/', data)
         request.session = {}
-        response_mock = Mock()
-        response_mock.status_code = 200
-        response_mock.text = '{"token": "my beautiful token"}'
-        post.side_effect = Mock(return_value=response_mock)
+        text = '{"token": "my beautiful token"}'
+        post.return_value = Mock(status_code=200, text=text)
         Login().post(request)
         self.assertEqual('type my beautiful token',
                          request.session["tsuru_token"])
@@ -85,10 +81,8 @@ class LoginViewTest(TestCase):
         data = {'username': 'valid@email.com', 'password': '123456'}
         request = RequestFactory().post('/', data)
         request.session = {}
-        response_mock = Mock()
-        response_mock.status_code = 200
-        response_mock.text = '{"token": "my beautiful token"}'
-        post.side_effect = Mock(return_value=response_mock)
+        text = '{"token": "my beautiful token"}'
+        post.return_value = Mock(status_code=200, text=text)
         response = Login().post(request)
         self.assertIsInstance(response, HttpResponseRedirect)
         self.assertEqual('/apps', response['Location'])

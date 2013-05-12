@@ -27,10 +27,7 @@ class CreateAppViewTest(TestCase):
             "/",
             {"name": "myepe", "platform": "python"})
         request.session = {}
-        response_mock = Mock()
-        response_mock.status_code = 500
-        response_mock.content = 'Error'
-        post.side_effect = Mock(return_value=response_mock)
+        post.return_value = Mock(status_code=500, content='Error')
         response = CreateApp().post(request)
         self.assertEqual('Error', response.context_data.get("errors"))
 
@@ -62,9 +59,7 @@ class CreateAppViewTest(TestCase):
             "/",
             {"name": "myepe", "platform": "python"})
         request.session = {}
-        response_mock = Mock()
-        response_mock.status_code = 200
-        post.side_effect = Mock(return_value=response_mock)
+        post.return_value = Mock(status_code=200)
         response = CreateApp().post(request)
         self.assertEqual("App was successfully created",
                          response.context_data.get('message'))

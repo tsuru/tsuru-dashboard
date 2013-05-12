@@ -52,9 +52,8 @@ class RunViewTest(TestCase):
 
     @patch('requests.post')
     def test_post_with_valid_app_and_command(self, post):
-        self.response_mock.status_code = 200
-        self.response_mock.content = "command runned"
-        post.side_effect = Mock(return_value=self.response_mock)
+        content = "command runned"
+        post.return_value = Mock(status_code=200, content=content)
         response = Run().post(self.request_post)
         self.assertEqual("command runned",
                          response.context_data.get('message'))
@@ -64,17 +63,13 @@ class RunViewTest(TestCase):
 
     @patch('requests.post')
     def test_post_with_invalid_app_or_command_error_in_context(self, post):
-        self.response_mock.status_code = 500
-        self.response_mock.content = 'Error'
-        post.side_effect = Mock(return_value=self.response_mock)
+        post.return_value = Mock(status_code=500, content='Error')
         response = Run().post(self.request_post)
         self.assertEqual('Error', response.context_data.get('errors'))
 
     @patch('requests.post')
     def test_post_with_invalid_app_or_command(self, post):
-        self.response_mock.status_code = 500
-        self.response_mock.content = 'Error'
-        post.side_effect = Mock(return_value=self.response_mock)
+        post.return_value = Mock(status_code=500, content='Error')
         response = Run().post(self.request_post)
         self.assertIn('form', response.context_data.keys())
         self.assertTrue(isinstance(response.context_data.get('form'),

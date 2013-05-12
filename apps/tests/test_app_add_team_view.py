@@ -50,24 +50,20 @@ class AppAddTeamTestCas(TestCase):
 
     @patch('requests.put')
     def test_post_with_valid_and_team(self, put):
-        self.response_mock.status_code = 200
-        put.side_effect = Mock(return_value=self.response_mock)
+        put.return_value = Mock(status_code=200)
         response = AppAddTeam().post(self.request_post, self.app_name)
         self.assertEqual("The Team was successfully added",
                          response.context_data.get('message'))
 
     @patch('requests.put')
     def test_post_with_invalid_app_or_team(self, put):
-        self.response_mock.status_code = 500
-        self.response_mock.content = 'Error'
-        put.side_effect = Mock(return_value=self.response_mock)
+        put.return_value = Mock(content='Error', status_code=500)
         response = AppAddTeam().post(self.request_post, self.app_name)
         self.assertEqual('Error', response.context_data.get('errors'))
 
     @patch('requests.put')
     def test_post_with_valid_data_should_return_context_with_form(self, put):
-        self.response_mock.status_code = 200
-        put.side_effect = Mock(return_value=self.response_mock)
+        put.return_value = Mock(status_code=200)
         response = AppAddTeam().post(self.request_post, self.app_name)
         self.assertIn('form', response.context_data.keys())
         self.assertTrue(isinstance(response.context_data.get('form'),
@@ -75,9 +71,7 @@ class AppAddTeamTestCas(TestCase):
 
     @patch('requests.put')
     def test_post_with_invalid_data_should_return_context_with_form(self, put):
-        self.response_mock.status_code = 500
-        self.response_mock.content = 'Error'
-        put.side_effect = Mock(return_value=self.response_mock)
+        put.return_value = Mock(content='Error', status_code=500)
         response = AppAddTeam().post(self.request_post, self.app_name)
         self.assertIn('form', response.context_data.keys())
         self.assertTrue(isinstance(response.context_data.get('form'),
