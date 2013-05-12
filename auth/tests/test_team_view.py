@@ -16,7 +16,7 @@ class TeamViewTest(TestCase):
         self.request = self.factory.get('/')
         self.response = Team().get(self.request)
         self.request_post = self.factory.post('/team/', {'name': 'test-team'})
-        self.request_post.session = {}
+        self.request_post.session = {"tsuru_token": "admin"}
 
     def test_should_require_login_to_create_team(self):
         assert issubclass(Team, LoginRequiredView)
@@ -47,11 +47,11 @@ class TeamViewTest(TestCase):
                      self.request_post.session['tsuru_token']})
 
     @patch('requests.post')
-    def test_invalid_post_returns_message_in_context(self, post):
+    def test_valid_post_redirect_to_team_list(self, post):
         post.return_value = Mock(status_code=200)
-        response = Team().post(self.request_post)
-        self.assertEqual("Team was successfully created",
-                         response.context_data.get('message'))
+        response = Team.as_view()(self.request_post)
+        self.assertEqual(302, response.status_code)
+        self.assertEqual(reverse('team-list'), response.items()[1][1])
 
     @patch('requests.post')
     def test_post_with_invalid_name_should_return_500(self, post):

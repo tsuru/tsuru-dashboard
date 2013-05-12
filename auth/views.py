@@ -5,6 +5,7 @@ from django.conf import settings
 from django.template.response import TemplateResponse
 from django.shortcuts import redirect
 from django.views.generic.base import View
+from django.core.urlresolvers import reverse
 
 from auth.forms import TeamForm, LoginForm, SignupForm, KeyForm
 
@@ -27,22 +28,18 @@ class Team(LoginRequiredView):
 
     def post(self, request):
         form = TeamForm(request.POST)
+        errors = ''
         if form.is_valid():
             authorization = {'authorization':
                              request.session.get('tsuru_token')}
-            response = requests.post('%s/teams' % settings.TSURU_HOST,
+            response = requests.post('{0}/teams'.format(settings.TSURU_HOST),
                                      data=json.dumps(form.data),
                                      headers=authorization)
             if response.status_code == 200:
-                message = "Team was successfully created"
-                return TemplateResponse(request, 'auth/team.html',
-                                        {'form': form,
-                                         'message': message})
-            else:
-                return TemplateResponse(request, 'auth/team.html',
-                                        {'form': form,
-                                         'errors': response.content})
-        return TemplateResponse(request, 'auth/team.html', {'form': form})
+                return redirect(reverse("team-list"))
+            errors = response.content
+        return TemplateResponse(request, 'auth/team.html',
+                                {'form': form, 'errors': errors})
 
 
 class AddUserToTeam(LoginRequiredView):
