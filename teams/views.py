@@ -10,6 +10,11 @@ import requests
 import json
 
 
+class Info(LoginRequiredView):
+    def get(self, request, *args, **kwargs):
+        return TemplateResponse(request, "teams/info.html", {})
+
+
 class List(LoginRequiredView):
     def get(self, request):
         auth = {'authorization': request.session.get('tsuru_token')}
