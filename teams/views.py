@@ -10,6 +10,12 @@ import requests
 import json
 
 
+class AddUser(LoginRequiredView):
+    def post(self, request, *args, **kwargs):
+        team_name = kwargs["team"]
+        return redirect(reverse('team-info', args=[team_name]))
+
+
 class Info(LoginRequiredView):
     def get(self, request, *args, **kwargs):
         context = {"team_name": kwargs["team"]}
