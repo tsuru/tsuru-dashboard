@@ -13,6 +13,10 @@ import json
 class AddUser(LoginRequiredView):
     def post(self, request, *args, **kwargs):
         team_name = kwargs["team"]
+        headers = {'authorization': request.session.get('tsuru_token')}
+        url = "{0}/teams/{1}/{2}".format(settings.TSURU_HOST, team_name,
+                                         request.POST["user"])
+        requests.put(url, headers=headers)
         return redirect(reverse('team-info', args=[team_name]))
 
 
