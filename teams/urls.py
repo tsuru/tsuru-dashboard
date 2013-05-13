@@ -11,4 +11,6 @@ urlpatterns = patterns(
         name='team-remove'),
     url(r'^add/$', views.Add.as_view(),
         name='team-add'),
+    url(r'^(?P<team>[\w-]+)/user/add/$', views.AddUser.as_view(),
+        name='team-user-add'),
 )
