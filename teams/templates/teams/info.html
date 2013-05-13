@@ -17,6 +17,16 @@
 <div class="container-fluid">
 	<div class="row-fluid">
 		<div class="span12">
+			<form action="{% url 'team-user-add' team_name %}" method="post">
+				{% csrf_token %}
+				<fieldset>
+					<div class="control-group">
+						<label>Username</label>
+						<input type="text" class="input-xlarge" name="user">
+					</div>
+					<button class="btn primary" type="submit">Add</button>
+				</fieldset>
+			</form>
 		</div>
 	</div>
 </div>
