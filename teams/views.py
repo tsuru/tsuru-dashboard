@@ -12,7 +12,8 @@ import json
 
 class Info(LoginRequiredView):
     def get(self, request, *args, **kwargs):
-        return TemplateResponse(request, "teams/info.html", {})
+        context = {"team_name": kwargs["team"]}
+        return TemplateResponse(request, "teams/info.html", context)
 
 
 class List(LoginRequiredView):

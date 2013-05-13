@@ -10,5 +10,6 @@ class InfoViewTest(TestCase):
         self.request.session = {"tsuru_token": "admin"}
 
     def test_view(self):
-        response = Info.as_view()(self.request, name="avengers")
+        response = Info.as_view()(self.request, team="avengers")
         self.assertEqual("teams/info.html", response.template_name)
+        self.assertEqual("avengers", response.context_data["team_name"])
