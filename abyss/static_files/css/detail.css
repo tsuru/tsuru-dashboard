@@ -35,4 +35,6 @@
 .stats strong {
 	font-weight: bold;
 	font-size: 40px;
+	display: block;
+	padding: 10px 0;
 }

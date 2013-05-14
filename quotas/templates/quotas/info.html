@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{{ STATIC_URL }}css/abyss.widget.css" />
+<link rel="stylesheet" href="{{ STATIC_URL }}css/detail.css" />
+{% endblock %}
+
 {% block content %}
 <div class="container-fluid">
 	<div class="row-fluid">
@@ -27,13 +32,13 @@
 				<div class="content units-box">
 					<div class="span1">
 						<div class="stats right">
-							<strong id="units">{{ quota.items|length }}</strong>
+							<strong id="units">{{ quota.items|default:""|length }}</strong>
 							<span>used</span>
 						</div>
 					</div>
 					<div class="span1">
 						<div class="stats right">
-							<strong id="units">{{ quota.availabe }}</strong>
+							<strong id="units">{{ quota.available }}</strong>
 							<span>availabe</span>
 						</div>
 					</div>
