@@ -1,6 +1,7 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.test import TestCase
 from django.test.client import RequestFactory
+from django.core.urlresolvers import reverse
 
 from auth.views import LoginRequiredView
 
@@ -12,7 +13,7 @@ class LoginRequiredViewTest(TestCase):
         request.session = {}
         response = StubView.as_view()(request)
         self.assertIsInstance(response, HttpResponseRedirect)
-        expected_url = '/'
+        expected_url = reverse('login')
         self.assertEqual(expected_url, response['Location'])
 
     def test_should_invoke_view_dispatch_when_user_is_authenticated(self):

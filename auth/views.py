@@ -5,6 +5,7 @@ from django.conf import settings
 from django.template.response import TemplateResponse
 from django.shortcuts import redirect
 from django.views.generic.base import View
+from django.core.urlresolvers import reverse
 
 from auth.forms import LoginForm, SignupForm, KeyForm
 
@@ -13,7 +14,7 @@ class LoginRequiredView(View):
     def dispatch(self, request, *args, **kwargs):
         token = request.session.get('tsuru_token')
         if not token:
-            return redirect('/')
+            return redirect(reverse('login'))
         return super(LoginRequiredView, self).dispatch(
             request, *args, **kwargs)
 
