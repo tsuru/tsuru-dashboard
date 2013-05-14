@@ -22,7 +22,11 @@ class AddUser(LoginRequiredView):
 
 class Info(LoginRequiredView):
     def get(self, request, *args, **kwargs):
-        context = {"team_name": kwargs["team"]}
+        team_name = kwargs["team"]
+        headers = {'authorization': request.session.get('tsuru_token')}
+        url = "{0}/teams/{1}".format(settings.TSURU_HOST, team_name)
+        response = requests.get(url, headers=headers)
+        context = {"team": response.json()}
         return TemplateResponse(request, "teams/info.html", context)
 
 
