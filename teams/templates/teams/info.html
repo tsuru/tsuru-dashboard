@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load i18n %}
+
 {% block extra_css %}
 <link rel="stylesheet" href="{{ STATIC_URL }}css/abyss.widget.css" />
 <link rel="stylesheet" href="{{ STATIC_URL }}css/abyss.services.css" />
@@ -16,8 +18,8 @@
 	</div>
 </div>
 <ul class="breadcrumb">
-	<li><a href="#"><i class="icon-home"></i> Home</a><span class="divider">/</span></li>
-	<li class="active"><a href="{% url 'team-list' %}"> Teams</a></li>
+	<li><a href="#"><i class="icon-home"></i> {% trans 'Home' %}</a><span class="divider">/</span></li>
+	<li class="active"><a href="{% url 'team-list' %}"> {% trans 'Teams' %}</a></li>
 </ul>
 <div class="container-fluid">
 	<div class="row-fluid">
@@ -27,17 +29,17 @@
 					<span class="icon">
 						<i class="icon-signal"></i>
 					</span>
-					<h5>Add user to team</h5>
+					<h5>{% trans 'Add user to team' %}</h5>
 				</div>
 				<div class="content">
 					<form action="{% url 'team-user-add' team.name %}" method="post">
 						{% csrf_token %}
 						<fieldset>
 							<div class="control-group">
-								<label>Username</label>
+								<label>{% trans 'Username' %}</label>
 								<input type="text" class="input-xlarge" name="user">
 							</div>
-							<button class="btn primary" type="submit">Add</button>
+							<button class="btn primary" type="submit">{% trans 'Add' %}</button>
 						</fieldset>
 					</form>
 				</div>
@@ -51,7 +53,7 @@
 					<span class="icon">
 						<i class="icon-signal"></i>
 					</span>
-					<h5>Users</h5>
+					<h5>{% trans 'Users' %}</h5>
 				</div>
 				<div class="content">
 					<ul class="no-style">
@@ -62,7 +64,7 @@
 								{{ user }}
 							</div>
 							<div class="span8">
-								<a class="btn btn-danger" href="{% url 'team-user-remove' team.name user %}">remove</a>
+								<a class="btn btn-danger" href="{% url 'team-user-remove' team.name user %}">{% trans 'remove' %}</a>
 							</div>
 						</div>
 						</li>
@@ -79,10 +81,10 @@
 					<span class="icon">
 						<i class="icon-signal"></i>
 					</span>
-					<h5>Dangerous!</h5>
+					<h5>{% trans 'Dangerous!' %}</h5>
 				</div>
 				<div class="content">
-					<a class="btn btn-danger" href="{% url 'team-remove' team.name %}"><i class="icon-remove icon-white"></i> Delete team</a>
+					<a class="btn btn-danger" href="{% url 'team-remove' team.name %}"><i class="icon-remove icon-white"></i> {% trans 'Delete team' %}</a>
 				</div>
 			</div>
 		</div>
