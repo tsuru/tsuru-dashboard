@@ -19,4 +19,4 @@ class Info(LoginRequiredView):
         context = {
             'quota': data
         }
-        return TemplateResponse(request, "quota/info.html", context)
+        return TemplateResponse(request, "quotas/info.html", context)

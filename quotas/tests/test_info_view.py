@@ -23,7 +23,7 @@ class InfoViewTest(TestCase):
         response_mock.json.return_value = data
         get.return_value = response_mock
         response = Info.as_view()(self.request)
-        self.assertEqual("quota/info.html", response.template_name)
+        self.assertEqual("quotas/info.html", response.template_name)
         get.assert_called_with(
             '{0}/quota/{1}'.format(settings.TSURU_HOST,
                                    self.request.session["username"]),
@@ -35,7 +35,6 @@ class InfoViewTest(TestCase):
     def test_view_on_quota_not_found(self, get):
         get.return_value = Mock(status_code=404)
         response = Info.as_view()(self.request)
-        self.assertEqual("quota/info.html", response.template_name)
         get.assert_called_with(
             '{0}/quota/{1}'.format(settings.TSURU_HOST,
                                    self.request.session["username"]),
