@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load i18n %}
+
 {% block extra_css %}
 <link rel="stylesheet" href="{{ STATIC_URL }}css/abyss.widget.css" />
 <link rel="stylesheet" href="{{ STATIC_URL }}css/detail.css" />
@@ -10,13 +12,13 @@
 	<div class="row-fluid">
 		<div class="span12">
 			<div class="page-header">
-				<h1>Dashboard</h1>
+				<h1>{% 'trans' Dashboard %}</h1>
 			</div>
 		</div>
 	</div>
 </div>
 <ul class="breadcrumb">
-	<li class="active"><a href="#"><i class="icon-home"></i> Home</a></li>
+	<li class="active"><a href="#"><i class="icon-home"></i> {% trans 'Home' %}</a></li>
 </ul>
 <div class="container-fluid">
 	<div class="row-fluid">
@@ -27,19 +29,19 @@
 					<span class="icon">
 						<i class="icon-signal"></i>
 					</span>
-					<h5>Quota</h5>
+					<h5>{% trans 'Quota' %}</h5>
 				</div>
 				<div class="content units-box">
 					<div class="span1">
 						<div class="stats right">
 							<strong id="units">{{ quota.items|default:""|length }}</strong>
-							<span>used</span>
+							<span>{% trans 'used' %}</span>
 						</div>
 					</div>
 					<div class="span1">
 						<div class="stats right">
 							<strong id="units">{{ quota.available }}</strong>
-							<span>availabe</span>
+							<span>{% trans 'availabe' %}</span>
 						</div>
 					</div>
 				</div>
