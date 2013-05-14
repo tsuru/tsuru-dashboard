@@ -1,20 +1,22 @@
+{% load i18n %}
+
 <div class="sidebar">
 	<div class="inner">
 		<div class="container">
 			<ul class="nav">
 				<li class="active">
 				<a href="{% url 'list-app' %}">
-					<span>Apps</span>
+					<span>{% trans "Apps" %}</span>
 				</a>
 				</li>
 				<li>
 				<a href="{% url 'service-list' %}">
-					<span>Services</span>
+					<span>{% trans "Services" %}</span>
 				</a>
 				</li>
 				<li>
 				<a href="{% url 'team-list' %}">
-					<span>Teams</span>
+					<span>{% trans "Teams" %}</span>
 				</a>
 				</li>
 			</ul>
