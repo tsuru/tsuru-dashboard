@@ -10,6 +10,16 @@ import requests
 import json
 
 
+class RemoveUser(LoginRequiredView):
+    def get(self, request, *args, **kwargs):
+        team_name = kwargs["team"]
+        user = kwargs["user"]
+        headers = {'authorization': request.session.get('tsuru_token')}
+        url = "{0}/teams/{1}/{2}".format(settings.TSURU_HOST, team_name, user)
+        requests.delete(url, headers=headers)
+        return redirect(reverse('team-info', args=[team_name]))
+
+
 class AddUser(LoginRequiredView):
     def post(self, request, *args, **kwargs):
         team_name = kwargs["team"]
