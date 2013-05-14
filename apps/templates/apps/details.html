@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load i18n %}
+
 {% block extra_css %}
 <link rel="stylesheet" href="{{ STATIC_URL }}css/jquery-ui.css" />
 <link rel="stylesheet" href="{{ STATIC_URL }}css/abyss.widget.css" />
@@ -19,7 +21,7 @@
 </div>
 <ul class="breadcrumb">
 	<li><a href="#"><i class="icon-home"></i> Home</a><span class="divider">/</span></li>
-	<li class="active"><a href="{% url 'list-app' %}"> Apps</a></li>
+	<li class="active"><a href="{% url 'list-app' %}"> {% trans 'Apps' %}</a></li>
 </ul>
 <div class="container-fluid">
 	<div class="row-fluid">
@@ -29,13 +31,13 @@
 					<span class="icon">
 						<i class="icon-signal"></i>
 					</span>
-					<h5>Units</h5>
+					<h5>{% trans 'Units' %}</h5>
 				</div>
 				<div class="content units-box">
 					<div class="span1">
 						<div class="stats right">
 							<strong id="units">{{ app.units|length }}</strong>
-							<span>Instances</span>
+							<span>{% trans 'Instances' %}</span>
 						</div>
 					</div>
 					<div class="span3">
@@ -46,7 +48,7 @@
 							{% csrf_token %}
 							<input type="hidden" name="units" value={{ app.units|length }}>
 							<button href="#" class="apply-btn btn btn-primary btn-mini">
-								apply changes
+								{% trans 'apply changes' %}
 							</button>
 						</form>
 					</div>
