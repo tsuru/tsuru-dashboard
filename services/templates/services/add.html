@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load i18n %}
+
 {% block sidebar %}
 {% include "sidebar.html" with active="services" %}
 {% endblock %}
@@ -9,14 +11,14 @@
 	<div class="row-fluid">
 		<div class="span12">
 			<div class="page-header">
-				<h1>Add service instance for {{ service.name }}</h1>
+				<h1>{% trans 'Add service instance for' %} {{ service.name }}</h1>
 			</div>
 		</div>
 	</div>
 </div>
 <ul class="breadcrumb">
-	<li><a href="#"><i class="icon-home"></i> Home</a><span class="divider">/</span></li>
-	<li class="active"><a href="{% url 'service-list' %}"> Services</a></li>
+	<li><a href="#"><i class="icon-home"></i> {% trans 'Home' %}</a><span class="divider">/</span></li>
+	<li class="active"><a href="{% url 'service-list' %}"> {% trans 'Services' %}</a></li>
 </ul>
 <div class="container-fluid">
 	<div class="row-fluid">
@@ -25,10 +27,10 @@
 				{% csrf_token %}
 				<fieldset>
 					<div class="control-group">
-						<label>Name</label>
+						<label>{% trans 'Name' %}</label>
 						<input type="text" class="input-xlarge" name="name">
 					</div>
-					<button class="btn primary" type="submit">Add</button>
+					<button class="btn primary" type="submit">{% trans 'Add' %}</button>
 				</fieldset>
 			</form>
 		</div>
