@@ -1,8 +1,19 @@
 from django.template.response import TemplateResponse
+from django.conf import settings
 
 from auth.views import LoginRequiredView
+
+import requests
 
 
 class Info(LoginRequiredView):
     def get(self, request, *args, **kwargs):
-        return TemplateResponse(request, "quota/info.html", {})
+        headers = {'authorization': self.request.session.get('tsuru_token')}
+        url = "{0}/quota/{1}".format(settings.TSURU_HOST,
+                                     request.session["username"])
+        data = requests.get(url, headers=headers).json()
+        context = {
+            'available': data['available'],
+            'items': data['items'],
+        }
+        return TemplateResponse(request, "quota/info.html", context)
