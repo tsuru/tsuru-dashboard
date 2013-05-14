@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load i18n %}
+
 {% block content %}
 <div class="container-fluid">
 	<div class="row-fluid">
@@ -8,13 +10,13 @@
 				<div class="btn-group pull-right">
 					<a class="btn" title="Create Team" href="{% url 'team-add' %}"><i class="icon-plus"></i></a>
 				</div>
-				<h1>Teams</h1>
+				<h1>{% trans 'Teams' %}</h1>
 			</div>
 		</div>
 	</div>
 </div>
 <ul class="breadcrumb">
-	<li class="active"><a href="#"><i class="icon-home"></i> Home</a></li>
+	<li class="active"><a href="#"><i class="icon-home"></i> {% trans 'Home' %}</a></li>
 </ul>
 <div class="container-fluid">
 	<div class="row-fluid">
