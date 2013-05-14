@@ -11,9 +11,12 @@ class Info(LoginRequiredView):
         headers = {'authorization': self.request.session.get('tsuru_token')}
         url = "{0}/quota/{1}".format(settings.TSURU_HOST,
                                      request.session["username"])
-        data = requests.get(url, headers=headers).json()
+        response = requests.get(url, headers=headers)
+        if response.status_code > 399:
+            data = None
+        else:
+            data = response.json()
         context = {
-            'available': data['available'],
-            'items': data['items'],
+            'quota': data
         }
         return TemplateResponse(request, "quota/info.html", context)
