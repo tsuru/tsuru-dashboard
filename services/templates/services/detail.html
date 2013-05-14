@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load i18n %}
+
 {% block extra_css %}
 <link rel="stylesheet" href="{{ STATIC_URL }}css/abyss.widget.css" />
 <link rel="stylesheet" href="{{ STATIC_URL }}css/abyss.services.css" />
@@ -20,8 +22,8 @@
 	</div>
 </div>
 <ul class="breadcrumb">
-	<li><a href="#"><i class="icon-home"></i> Home</a><span class="divider">/</span></li>
-	<li class="active"><a href="{% url 'service-list' %}"> Services</a></li>
+	<li><a href="#"><i class="icon-home"></i> {% trans 'Home' %}</a><span class="divider">/</span></li>
+	<li class="active"><a href="{% url 'service-list' %}"> {% trans 'Services' %}</a></li>
 </ul>
 <div class="container-fluid">
 	<div class="row-fluid">
@@ -31,7 +33,7 @@
 					<span class="icon">
 						<i class="icon-signal"></i>
 					</span>
-					<h5>Apps binded</h5>
+					<h5>{% trans 'Apps binded' %}</h5>
 				</div>
 				<div class="content">
 					<ul class="no-style">
@@ -42,7 +44,7 @@
 								{{ app }}
 							</div>
 							<div class="span8">
-								<a class="btn btn-primary" href="{% url 'unbind' instance.Name app %}">Unbind</a>
+								<a class="btn btn-primary" href="{% url 'unbind' instance.Name app %}">{% trans 'Unbind' %}</a>
 							</div>
 						</div>
 						</li>
@@ -53,14 +55,14 @@
 							<div class="span3">
 								{% csrf_token %}
 								<select name="app">
-									<option>Select an app...</option>
+									<option>{% trans 'Select an app...' %}</option>
 									{% for app in apps %}
 									<option value="{{ app }}">{{ app }}</option>
 									{% endfor %}
 								</select>
 							</div>
 							<div class="span8">
-								<button class="btn btn-primary" href="#">Bind</button>
+								<button class="btn btn-primary" href="#">{% trans 'Bind' %}</button>
 							</div>
 							</form>
 						</div>
@@ -77,10 +79,10 @@
 					<span class="icon">
 						<i class="icon-signal"></i>
 					</span>
-					<h5>Dangerous!</h5>
+					<h5>{% trans 'Dangerous!' %}</h5>
 				</div>
 				<div class="content">
-					<a class="btn btn-danger" href="{% url 'service-remove' instance.Name %}"><i class="icon-remove icon-white"></i> Delete app</a>
+					<a class="btn btn-danger" href="{% url 'service-remove' instance.Name %}"><i class="icon-remove icon-white"></i> {% trans 'Delete app' %}</a>
 				</div>
 			</div>
 		</div>
