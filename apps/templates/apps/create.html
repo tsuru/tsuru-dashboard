@@ -1,18 +1,20 @@
 {% extends "base.html" %}
 
+{% load i18n %}
+
 {% block content %}
 <div class="container-fluid">
 	<div class="row-fluid">
 		<div class="span12">
 			<div class="page-header">
-				<h1>Create App</h1>
+				<h1>{% trans 'Create App' %}</h1>
 			</div>
 		</div>
 	</div>
 </div>
 <ul class="breadcrumb">
-	<li><a href="#"><i class="icon-home"></i> Home</a><span class="divider">/</span></li>
-	<li class="active"><a href="{% url 'list-app' %}"> Apps</a></li>
+	<li><a href="#"><i class="icon-home"></i> {% trans 'Home' %}</a><span class="divider">/</span></li>
+	<li class="active"><a href="{% url 'list-app' %}"> {% trans 'Apps' %}</a></li>
 </ul>
 <div class="container-fluid">
 	<div class="row-fluid">
@@ -31,16 +33,16 @@
 				{% endif %}
 				<fieldset>
 					<div class="clearfix control-group{% if app_form.errors.name %} error{% endif %}">
-						<label>Name</label>
+						<label>{% trans 'Name' %}</label>
 						<input type="text" class="input-xlarge" name="{{ app_form.name.name }}">
 						<span class="help-inline">{{ app_form.errors.name }}</span>
 					</div>
 					<div class="clearfix control-group{% if app_form.errors.platform %} error{% endif %}">
-						<label>Framework</label>
+						<label>{% trans 'Framework' %}</label>
 						<input type="text" class="input-xlarge" name="{{ app_form.platform.name }}">
 						<span class="help-inline">{{ app_form.errors.platform }}</span>
 					</div>
-					<button class="btn primary" type="submit">Add</button>
+					<button class="btn primary" type="submit">{% trans 'Add' %}</button>
 				</fieldset>
 			</form>
 		</div>
