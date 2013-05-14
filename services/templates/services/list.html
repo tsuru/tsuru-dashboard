@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load i18n %}
+
 {% block extra_css %}
 <link rel="stylesheet" href="{{ STATIC_URL }}css/abyss.widget.css" />
 <link rel="stylesheet" href="{{ STATIC_URL }}css/abyss.services.css" />
@@ -14,13 +16,13 @@
 	<div class="row-fluid">
 		<div class="span12">
 			<div class="page-header">
-			 	<h1>Services</h1>
+				<h1>{% trans 'Services' %}</h1>
 			</div>
 		</div>
 	</div>
 </div>
 <ul class="breadcrumb">
-	<li class="active"><a href="#"><i class="icon-home"></i> Home</a></li>
+	<li class="active"><a href="#"><i class="icon-home"></i> {% trans 'Home' %}</a></li>
 </ul>
 <div class="container-fluid">
 	<div class="row-fluid">
@@ -43,7 +45,7 @@
 								</li>
 								{% endfor %}
 								<li>
-								<a class="btn btn-primary btn-mini" href="{% url 'service-add' service.service %}">Add new instance</a>
+								<a class="btn btn-primary btn-mini" href="{% url 'service-add' service.service %}">{% trans 'Add new instance' %}</a>
 								</li>
 							</ul>
 						</div>
@@ -55,4 +57,3 @@
 	</div>
 </div>
 {% endblock %}
-
