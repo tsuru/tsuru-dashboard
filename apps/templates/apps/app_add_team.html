@@ -1,20 +1,22 @@
 {% extends "base.html" %}
 
+{% load i18n %}
+
 {% block content %}
 <div class="container-fluid">
 	<div class="row-fluid">
 		<div class="span12">
 			<div class="page-header">
-				<h1>Add Team</h1>
+				<h1>{% trans 'Add Team' %}</h1>
 			</div>
 		</div>
 	</div>
 </div>
 <ul class="breadcrumb">
-	<li><a href="#"><i class="icon-home"></i> Home</a><span class="divider">/</span></li>
+	<li><a href="#"><i class="icon-home"></i> {% trans 'Home' %}</a><span class="divider">/</span></li>
 	<li><a href="{% url 'list-app' %}"> Apps</a><span class="divider">/</span></li>
 	<li><a href="{% url 'detail-app' app_name %}"> {{ app_name }}</a><span class="divider">/</span></li>
-	<li class="active"><a href="{% url 'app-teams' app_name %}"> Teams</a></li>
+	<li class="active"><a href="{% url 'app-teams' app_name %}"> {% trans 'Teams' %}</a></li>
 </ul>
 <div class="container-fluid">
 	<div class="row-fluid">
@@ -33,11 +35,11 @@
 				{% endif %}
 				<fieldset>
 					<div class="clearfix control-group{% if form.errors.team %} error{% endif %}">
-						<label>Team name</label>
+						<label>{% trans 'Team name' %}</label>
 						<input type="text" class="input-xlarge" name="{{ form.team.name }}">
 						<span class="help-inline">{{ form.errors.team }}</span>
 					</div>
-					<button class="btn primary" type="submit">Add</button>
+					<button class="btn primary" type="submit">{% trans 'Add' %}</button>
 				</fieldset>
 			</form>
 		</div>
