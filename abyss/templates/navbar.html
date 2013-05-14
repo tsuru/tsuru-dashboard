@@ -1,3 +1,5 @@
+{% load i18n %}
+
 <div class="navbar navbar-inverse navbar-fixed-top">
 	<div class="navbar-inner">
 		<div class="container">
@@ -14,9 +16,9 @@
 					</a>
 
 					<ul class="dropdown-menu">
-						<li><a href="{% url 'key'  %}">Manage keys</a></li>
+						<li><a href="{% url 'key'  %}">{% trans "Manage keys" %}</a></li>
 						<li class="divider"></li>
-						<li><a href="{% url 'logout' %}">Logout</a></li>
+						<li><a href="{% url 'logout' %}">{% trans "Logout" %}</a></li>
 					</ul>
 					</li>
 				</ul>
