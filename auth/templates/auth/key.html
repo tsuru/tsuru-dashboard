@@ -1,17 +1,19 @@
 {% extends "base.html" %}
 
+{% load i18n %}
+
 {% block content %}
 <div class="container-fluid">
 	<div class="row-fluid">
 		<div class="span12">
 			<div class="page-header">
-				<h1>Key add</h1>
+				<h1>{% trans 'Key add' %}</h1>
 			</div>
 		</div>
 	</div>
 </div>
 <ul class="breadcrumb">
-	<li class="active"><a href="#"><i class="icon-home"></i> Home</a></li>
+	<li class="active"><a href="#"><i class="icon-home"></i> {% trans 'Home' %}</a></li>
 </ul>
 <div class="container-fluid">
 	<div class="row-fluid">
@@ -30,11 +32,11 @@
 				{% endif %}
 				<fieldset>
 					<div class="clearfix control-group{% if form.errors.key %} error{% endif %}">
-						<label>key</label>
+						<label>{% trans 'key' %}</label>
 						<textarea class="input-xlarge" name="{{ form.key.name }}" rows=8></textarea>
 						<span class="help-inline">{{ form.errors.key }}</span>
 					</div>
-					<button class="btn primary" type="submit">Add</button>
+					<button class="btn primary" type="submit">{% trans 'Add' %}</button>
 				</fieldset>
 			</form>
 		</div>
