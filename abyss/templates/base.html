@@ -17,14 +17,10 @@
 		{% block sidebar %}
 		{% include "sidebar.html" with active="apps" %}
 		{% endblock %}
-		<div class="language-select">
-			<a href="en-us">Eng</a>
-			&middot;
-			<a href="pt-br">Port</a>
-		</div>
 
 		{% block content %}
 		{% endblock %}
+
 
 		<script src="{{ STATIC_URL}}js/jquery.min.js"></script>
 		<script src="{{ STATIC_URL }}js/bootstrap.min.js"></script>

@@ -48,3 +48,17 @@ ul.no-style {
 select {
 	margin: 0;
 }
+
+.language-select {
+	color: #fff;
+	float: right;
+	padding: 10px 0;
+}
+
+.language-select a {
+	color: #cfcfcf;
+}
+
+.language-select a.active {
+	color: #fff;
+}

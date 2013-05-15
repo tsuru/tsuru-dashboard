@@ -3,6 +3,11 @@
 <div class="sidebar">
 	<div class="inner">
 		<div class="container">
+			<div class="language-select">
+				<a href="en-us"{% if request.LANGUAGE_CODE == "en-us" %} class="active"{% endif %}>Eng</a>
+				&middot;
+				<a href="pt-br"{% if request.LANGUAGE_CODE == "pt-br" %} class="active"{% endif %}>Port</a>
+			</div>
 			<ul class="nav">
 				<li class="active">
 				<a href="{% url 'list-app' %}">
@@ -22,5 +27,4 @@
 			</ul>
 		</div> <!-- /container -->
 	</div> <!-- /subnavbar-inner -->
-
 </div>
