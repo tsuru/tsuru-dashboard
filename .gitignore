@@ -1,6 +1,7 @@
 *.sw[p-z]
 *.pyc
 *.db
+*.mo
 /abyss/static
 /abyss/media
 /abyss/local
