@@ -24,7 +24,7 @@
 			{% for team in teams %}
 			<div class="row-fluid">
 				<div class="span11">
-					<p>{{ team.name }}</p>
+					<p><a href="{% url 'team-info' team.name %}">{{ team.name }}</a></p>
 				</div>
 			</div>
 			{% endfor %}
