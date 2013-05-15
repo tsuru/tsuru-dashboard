@@ -15,8 +15,13 @@
 		{% include "navbar.html" %}
 
 		{% block sidebar %}
-			{% include "sidebar.html" with active="apps" %}
+		{% include "sidebar.html" with active="apps" %}
 		{% endblock %}
+		<div class="language-select">
+			<a href="en">Eng</a>
+			&middot;
+			<a href="pt-br">Port</a>
+		</div>
 
 		{% block content %}
 		{% endblock %}
@@ -25,5 +30,15 @@
 		<script src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
 		{% block extra_js %}
 		{% endblock %}
+		<script>
+			$(".language-select a").on('click', function() {
+				//var href = this.get('href');
+				//event.preventDefault();
+				window.document.cookie = "django_language=pt-br";// + $(this).attr('href');
+				//window.location.reload();
+				console.log(window.document.cookie);
+				return false;
+			});
+		</script>
 	</body>
 </html>

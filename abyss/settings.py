@@ -1,3 +1,5 @@
+# coding: utf-8
+
 import os
 
 BASE_PATH = os.path.abspath(os.path.dirname(__file__))
@@ -30,6 +32,11 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
+LANGUAGES = (
+        ('en-us', 'English'),
+        ('pt-br', u'Português'),
+)
+
 MEDIA_ROOT = os.path.join(BASE_PATH, 'media')
 MEDIA_URL = '/media/'
 STATIC_ROOT = os.path.join(BASE_PATH, 'static')
@@ -61,12 +68,12 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.locale.LocaleMiddleware',
 )
 
 ROOT_URLCONF = 'abyss.urls'
