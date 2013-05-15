@@ -1,0 +1,203 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-05-15 12:03-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: abyss/templates/navbar.html:19
+msgid "Manage keys"
+msgstr ""
+
+#: abyss/templates/navbar.html:21
+msgid "Logout"
+msgstr ""
+
+#: abyss/templates/sidebar.html:9 apps/templates/apps/app_log.html:17
+#: apps/templates/apps/app_team.html:18 apps/templates/apps/create.html:17
+#: apps/templates/apps/details.html:24 apps/templates/apps/list.html:13
+msgid "Apps"
+msgstr ""
+
+#: abyss/templates/sidebar.html:14 services/templates/services/add.html:21
+#: services/templates/services/detail.html:26
+#: services/templates/services/list.html:19
+msgid "Services"
+msgstr ""
+
+#: abyss/templates/sidebar.html:19 apps/templates/apps/app_add_team.html:19
+#: apps/templates/apps/app_team.html:11 teams/templates/teams/info.html:22
+#: teams/templates/teams/list.html:13
+msgid "Teams"
+msgstr ""
+
+#: apps/templates/apps/app_add_team.html:10
+#: apps/templates/apps/app_team.html:35
+msgid "Add Team"
+msgstr ""
+
+#: apps/templates/apps/app_add_team.html:16
+#: apps/templates/apps/app_log.html:16 apps/templates/apps/app_team.html:17
+#: apps/templates/apps/create.html:16 apps/templates/apps/details.html:23
+#: apps/templates/apps/list.html:19 auth/templates/auth/key.html:16
+#: auth/templates/auth/team.html:16 quotas/templates/quotas/info.html:21
+#: services/templates/services/add.html:20
+#: services/templates/services/detail.html:25
+#: services/templates/services/list.html:25 teams/templates/teams/info.html:21
+#: teams/templates/teams/list.html:19
+msgid "Home"
+msgstr ""
+
+#: apps/templates/apps/app_add_team.html:38
+msgid "Team name"
+msgstr ""
+
+#: apps/templates/apps/app_add_team.html:42 apps/templates/apps/create.html:45
+#: auth/templates/auth/key.html:39 services/templates/services/add.html:33
+#: teams/templates/teams/info.html:42
+msgid "Add"
+msgstr ""
+
+#: apps/templates/apps/app_log.html:10
+msgid "Log"
+msgstr ""
+
+#: apps/templates/apps/create.html:10 apps/templates/apps/list.html:11
+msgid "Create App"
+msgstr ""
+
+#: apps/templates/apps/create.html:36 services/templates/services/add.html:30
+msgid "Name"
+msgstr ""
+
+#: apps/templates/apps/create.html:41
+msgid "Framework"
+msgstr ""
+
+#: apps/templates/apps/details.html:34
+msgid "Units"
+msgstr ""
+
+#: apps/templates/apps/details.html:40
+msgid "Instances"
+msgstr ""
+
+#: apps/templates/apps/details.html:51
+msgid "apply changes"
+msgstr ""
+
+#: auth/templates/auth/key.html:10
+msgid "Key add"
+msgstr ""
+
+#: auth/templates/auth/key.html:35
+msgid "key"
+msgstr ""
+
+#: auth/templates/auth/login.html:23
+msgid "Enter username and password to continue."
+msgstr ""
+
+#: auth/templates/auth/login.html:24
+msgid "username"
+msgstr ""
+
+#: auth/templates/auth/login.html:25
+msgid "password"
+msgstr ""
+
+#: auth/templates/auth/login.html:27
+msgid "Lost password?"
+msgstr ""
+
+#: auth/templates/auth/login.html:28
+msgid "Login"
+msgstr ""
+
+#: auth/templates/auth/team.html:10
+msgid "Team add"
+msgstr ""
+
+#: auth/templates/auth/team.html:35
+msgid "name"
+msgstr ""
+
+#: auth/templates/auth/team.html:39
+msgid "Create"
+msgstr ""
+
+#: quotas/templates/quotas/info.html:32
+msgid "Quota"
+msgstr ""
+
+#: quotas/templates/quotas/info.html:38
+msgid "used"
+msgstr ""
+
+#: quotas/templates/quotas/info.html:44
+msgid "availabe"
+msgstr ""
+
+#: services/templates/services/add.html:14
+msgid "Add service instance for"
+msgstr ""
+
+#: services/templates/services/detail.html:36
+msgid "Apps binded"
+msgstr ""
+
+#: services/templates/services/detail.html:47
+msgid "Unbind"
+msgstr ""
+
+#: services/templates/services/detail.html:58
+msgid "Select an app..."
+msgstr ""
+
+#: services/templates/services/detail.html:65
+msgid "Bind"
+msgstr ""
+
+#: services/templates/services/detail.html:82
+#: teams/templates/teams/info.html:84
+msgid "Dangerous!"
+msgstr ""
+
+#: services/templates/services/detail.html:85
+msgid "Delete app"
+msgstr ""
+
+#: services/templates/services/list.html:48
+msgid "Add new instance"
+msgstr ""
+
+#: teams/templates/teams/info.html:32
+msgid "Add user to team"
+msgstr ""
+
+#: teams/templates/teams/info.html:39
+msgid "Username"
+msgstr ""
+
+#: teams/templates/teams/info.html:56
+msgid "Users"
+msgstr ""
+
+#: teams/templates/teams/info.html:67
+msgid "remove"
+msgstr ""
+
+#: teams/templates/teams/info.html:87
+msgid "Delete team"
+msgstr ""
