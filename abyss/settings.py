@@ -25,8 +25,6 @@ DATABASES = {
 TIME_ZONE = 'America/Sao_Paulo'
 
 LANGUAGE_CODE = 'en-us'
-LANGUAGE_CODE = 'pt-br'
-
 
 SITE_ID = 1
 
@@ -35,8 +33,8 @@ USE_L10N = True
 USE_TZ = True
 
 LANGUAGES = (
-        ('en-us', 'English'),
-        ('pt-br', u'Português'),
+    ('en-us', 'English'),
+    ('pt-br', u'Português'),
 )
 
 MEDIA_ROOT = os.path.join(BASE_PATH, 'media')
@@ -130,5 +128,5 @@ LOGGING = {
 }
 
 LOCALE_PATHS = (
-        os.path.join(BASE_PATH, 'locale'),
+    os.path.join(BASE_PATH, 'locale'),
 )
