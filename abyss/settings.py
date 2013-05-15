@@ -25,6 +25,8 @@ DATABASES = {
 TIME_ZONE = 'America/Sao_Paulo'
 
 LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'pt-br'
+
 
 SITE_ID = 1
 
@@ -126,3 +128,7 @@ LOGGING = {
         },
     }
 }
+
+LOCALE_PATHS = (
+        os.path.join(BASE_PATH, 'locale'),
+)
