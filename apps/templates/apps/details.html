@@ -9,6 +9,7 @@
 {% endblock %}
 
 {% block content %}
+
 <div class="container-fluid">
 	<div class="row-fluid">
 		<div class="span12">
@@ -85,10 +86,27 @@
 					<h5>Dangerous!</h5>
 				</div>
 				<div class="content">
-					<a class="btn btn-danger" href="{% url 'remove_app' app.name %}"><i class="icon-remove icon-white"></i> Delete app</a>
+					{# <a class="btn btn-danger" ><i class="icon-remove icon-white"></i> Delete app</a> #}
+					<a class="btn btn-danger" href="#confirmation" data-toggle="modal"><i class="icon-remove icon-white"></i> Delete app</a>
 				</div>
 			</div>
 		</div>
+	</div>
+</div>
+<div id="confirmation" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+		<h3 id="myModalLabel">Are you sure?</h3>
+	</div>
+	<div class="modal-body">
+		<p>This action CANNOT be undone. This will delete the <strong>{{ app.name }}</strong></p>
+
+		<p>Please type in the name of the repository to confirm.</p>
+		<input type="text" name="remove-confirmation" />
+	</div>
+	<div class="modal-footer">
+		<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+		<a class="btn btn-danger" href="{% url 'remove_app' app.name %}" disabled="disabled">Delete app</a>
 	</div>
 </div>
 {% endblock content %}
