@@ -15,4 +15,7 @@ urlpatterns = patterns(
         name='token-request-success'),
     url(r'^password-recovery/$', views.PasswordRecovery.as_view(),
         name='password-recovery'),
+    url(r'^password-recovery-recovery/$',
+        views.PasswordRecoverySuccess.as_view(),
+        name='password-recovery-success'),
 )
