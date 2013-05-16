@@ -9,7 +9,8 @@ from django.views.generic.edit import FormView
 
 from django.core.urlresolvers import reverse
 
-from auth.forms import LoginForm, SignupForm, KeyForm, TokenRequestForm
+from auth.forms import (LoginForm, SignupForm, KeyForm, TokenRequestForm,
+                        PasswordRecoveryForm)
 
 
 class LoginRequiredView(View):
@@ -33,6 +34,12 @@ class TokenRequest(FormView):
 
 class TokenRequestSuccess(TemplateView):
     template_name = 'auth/token_request_success.html'
+
+
+class PasswordRecovery(FormView):
+    template_name = 'auth/password_recovery.html'
+    form_class = PasswordRecoveryForm
+    success_url = '/'
 
 
 class Login(View):
