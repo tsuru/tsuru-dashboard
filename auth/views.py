@@ -4,7 +4,7 @@ import requests
 from django.conf import settings
 from django.template.response import TemplateResponse
 from django.shortcuts import redirect
-from django.views.generic.base import View
+from django.views.generic.base import View, TemplateView
 from django.views.generic.edit import FormView
 
 from django.core.urlresolvers import reverse
@@ -29,6 +29,10 @@ class TokenRequest(FormView):
     def form_valid(self, form):
         form.send()
         return super(TokenRequest, self).form_valid(form)
+
+
+class TokenRequestSuccess(TemplateView):
+    template_name = 'auth/token_request_success.html'
 
 
 class Login(View):
