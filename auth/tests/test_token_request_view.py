@@ -18,7 +18,7 @@ class TokeRequestViewTest(TestCase):
     def test_send_when_form_is_valid(self, post):
         response = self.client.post(reverse('token-request'),
                                     {"email": "some@email.com"})
-        self.assertEqual(302, response.status_code)
+        self.assertRedirects(response, reverse('token-request-success'))
         url = "{0}/users/{1}/password".format(settings.TSURU_HOST,
                                               "some@email.com")
         post.assert_called_with(url)
