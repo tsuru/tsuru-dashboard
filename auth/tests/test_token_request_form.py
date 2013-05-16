@@ -1,5 +1,9 @@
 from django.test import TestCase
+from django.conf import settings
+
 from auth.forms import TokenRequestForm
+
+from mock import patch
 
 
 class TokenRequestFormTest(TestCase):
@@ -20,3 +24,12 @@ class TokenRequestFormTest(TestCase):
         for email in invalid_emails:
             form = TokenRequestForm({"email": email})
             self.assertFalse(form.is_valid())
+
+    @patch("requests.post")
+    def test_send_request(self, post):
+        form = TokenRequestForm({"email": "a@a.com"})
+        form.is_valid()
+        form.send()
+        url = "{0}/users/{1}/password".format(settings.TSURU_HOST,
+                                              form.cleaned_data["email"])
+        post.assert_called_with(url)

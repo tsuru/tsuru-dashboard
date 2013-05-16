@@ -1,9 +1,17 @@
 from django import forms
 from django.forms import widgets
+from django.conf import settings
+
+import requests
 
 
 class TokenRequestForm(forms.Form):
     email = forms.EmailField()
+
+    def send(self):
+        url = "{0}/users/{1}/password".format(settings.TSURU_HOST,
+                                              self.cleaned_data['email'])
+        requests.post(url)
 
 
 class LoginForm(forms.Form):
