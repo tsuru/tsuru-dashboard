@@ -16,9 +16,9 @@ class PasswordRecoveryViewTest(TestCase):
 
     @patch("requests.post")
     def test_send_when_form_is_valid(self, post):
-        self.client.post(reverse('password-recovery'),
-                         {"email": "some@email.com", "token": "tt"})
-        # self.assertRedirects(response, "/")
+        response = self.client.post(reverse('password-recovery'),
+                                    {"email": "some@email.com", "token": "tt"})
+        self.assertRedirects(response, reverse('password-recovery-success'))
         url = "{0}/users/{1}/password?token={2}".format(
             settings.TSURU_HOST,
             "some@email.com",

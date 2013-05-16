@@ -43,7 +43,7 @@ class PasswordRecoverySuccess(TemplateView):
 class PasswordRecovery(FormView):
     template_name = 'auth/password_recovery.html'
     form_class = PasswordRecoveryForm
-    success_url = '/'
+    success_url = '/auth/password-recovery/success/'
 
     def form_valid(self, form):
         form.send()
