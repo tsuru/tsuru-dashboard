@@ -4,10 +4,12 @@ import requests
 from django.conf import settings
 from django.template.response import TemplateResponse
 from django.shortcuts import redirect
-from django.views.generic.base import View, TemplateView
+from django.views.generic.base import View
+from django.views.generic.edit import FormView
+
 from django.core.urlresolvers import reverse
 
-from auth.forms import LoginForm, SignupForm, KeyForm
+from auth.forms import LoginForm, SignupForm, KeyForm, TokenRequestForm
 
 
 class LoginRequiredView(View):
@@ -19,8 +21,9 @@ class LoginRequiredView(View):
             request, *args, **kwargs)
 
 
-class TokenRequest(TemplateView):
+class TokenRequest(FormView):
     template_name = 'auth/token_request.html'
+    form_class = TokenRequestForm
 
 
 class Login(View):
