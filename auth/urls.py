@@ -11,4 +11,6 @@ urlpatterns = patterns(
     url(r'^signup/$', views.Signup.as_view(), name='signup'),
     url(r'^token-request/$', views.TokenRequest.as_view(),
         name='token-request'),
+    url(r'^token-request/success/$', views.TokenRequestSuccess.as_view(),
+        name='token-request-success'),
 )
