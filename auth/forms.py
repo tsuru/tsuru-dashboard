@@ -5,6 +5,11 @@ from django.conf import settings
 import requests
 
 
+class PasswordRecoveryForm(forms.Form):
+    email = forms.EmailField()
+    token = forms.CharField()
+
+
 class TokenRequestForm(forms.Form):
     email = forms.EmailField()
 
