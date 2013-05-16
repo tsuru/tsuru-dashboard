@@ -13,4 +13,6 @@ urlpatterns = patterns(
         name='token-request'),
     url(r'^token-request/success/$', views.TokenRequestSuccess.as_view(),
         name='token-request-success'),
+    url(r'^password-recovery/$', views.PasswordRecovery.as_view(),
+        name='password-recovery'),
 )
