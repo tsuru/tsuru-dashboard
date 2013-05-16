@@ -36,6 +36,10 @@ class TokenRequestSuccess(TemplateView):
     template_name = 'auth/token_request_success.html'
 
 
+class PasswordRecoverySuccess(TemplateView):
+    template_name = 'auth/password_recovery_success.html'
+
+
 class PasswordRecovery(FormView):
     template_name = 'auth/password_recovery.html'
     form_class = PasswordRecoveryForm
