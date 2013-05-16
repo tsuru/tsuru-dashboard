@@ -1,6 +1,9 @@
 from django.test import TestCase
+from django.conf import settings
 
 from auth.forms import PasswordRecoveryForm
+
+from mock import patch
 
 
 class PasswordRecoveryFormTest(TestCase):
@@ -22,3 +25,15 @@ class PasswordRecoveryFormTest(TestCase):
     def test_valid(self):
         form = PasswordRecoveryForm({"email": "a@a.com", "token": "token"})
         self.assertTrue(form.is_valid())
+
+    @patch("requests.post")
+    def test_send(self, post):
+        form = PasswordRecoveryForm({"email": "a@a.com", "token": "token"})
+        form.is_valid()
+        form.send()
+        url = "{0}/users/{1}/password?token={2}".format(
+            settings.TSURU_HOST,
+            form.cleaned_data["email"],
+            form.cleaned_data["token"]
+        )
+        post.assert_called_with(url)

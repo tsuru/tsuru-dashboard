@@ -9,6 +9,14 @@ class PasswordRecoveryForm(forms.Form):
     email = forms.EmailField()
     token = forms.CharField()
 
+    def send(self):
+        url = "{0}/users/{1}/password?token={2}".format(
+            settings.TSURU_HOST,
+            self.cleaned_data['email'],
+            self.cleaned_data['token']
+        )
+        requests.post(url)
+
 
 class TokenRequestForm(forms.Form):
     email = forms.EmailField()
