@@ -24,6 +24,11 @@ class LoginRequiredView(View):
 class TokenRequest(FormView):
     template_name = 'auth/token_request.html'
     form_class = TokenRequestForm
+    success_url = '/'
+
+    def form_valid(self, form):
+        form.send()
+        return super(TokenRequest, self).form_valid(form)
 
 
 class Login(View):
