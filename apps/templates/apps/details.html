@@ -8,18 +8,14 @@
 <link rel="stylesheet" href="{{ STATIC_URL }}css/detail.css" />
 {% endblock %}
 
-{% block content %}
-
-<div class="container-fluid">
-	<div class="row-fluid">
-		<div class="span12">
-			<div class="page-header">
-				{% include "apps/navbar.html" %}
-				<h1>{{ app.name }}</h1>
-			</div>
-		</div>
-	</div>
+{% block header %}
+<div class="page-header">
+	{% include "apps/navbar.html" %}
+	<h1>{{ app.name }}</h1>
 </div>
+{% endblock %}
+
+{% block content %}
 <ul class="breadcrumb">
 	<li><a href="#"><i class="icon-home"></i> {% trans 'Home' %}</a><span class="divider">/</span></li>
 	<li class="active"><a href="{% url 'list-app' %}"> {% trans 'Apps' %}</a></li>
@@ -105,7 +101,7 @@
 	</div>
 	<div class="modal-footer">
 		<form method="get" action="{% url 'remove_app' app.name %}">
-		<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 			<button class="btn btn-danger btn-remove" disabled="disabled">Delete app</button>
 		</form>
 	</div>
