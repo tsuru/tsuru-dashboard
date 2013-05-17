@@ -2,6 +2,8 @@ from django.conf import settings
 from django.http import HttpResponseRedirect
 from django.test import TestCase
 from django.test.client import RequestFactory
+from django.core.urlresolvers import reverse
+
 from mock import Mock, patch
 
 from auth.forms import LoginForm
@@ -9,48 +11,35 @@ from auth.views import Login
 
 
 class LoginViewTest(TestCase):
-    def test_root_should_show_login_template(self):
+    def test_login_get(self):
         request = RequestFactory().get('/')
-        response = Login().get(request)
-        self.assertEqual('auth/login.html', response.template_name)
-
-    def test_login_should_show_template(self):
-        request = RequestFactory().get('/login')
-        response = Login().get(request)
-        self.assertEqual('auth/login.html', response.template_name)
-
-    def test_login_form_should_be_in_the_view_context(self):
-        request = RequestFactory().get('/')
-        response = Login().get(request)
-        form = response.context_data['login_form']
+        response = Login.as_view()(request)
+        self.assertIn('auth/login.html', response.template_name)
+        form = response.context_data['form']
         self.assertIsInstance(form, LoginForm)
 
     def test_should_validate_data_from_post(self):
         data = {'username': 'invalid name', 'password': ''}
         request = RequestFactory().post('/', data)
-        response = Login().post(request)
-        form = response.context_data['login_form']
-        self.assertEqual('auth/login.html', response.template_name)
+        response = Login.as_view()(request)
+        form = response.context_data['form']
+        self.assertIn('auth/login.html', response.template_name)
         self.assertIsInstance(form, LoginForm)
         self.assertEqual('invalid name', form.data['username'])
 
     @patch('requests.post')
     def test_should_return_200_when_user_does_not_exist(self, post):
         data = {'username': 'invalid@email.com', 'password': '123456'}
-        request = RequestFactory().post('/', data)
         post.return_value = Mock(status_code=500)
-        response = Login().post(request)
-        self.assertEqual(200, response.status_code)
-        self.assertEqual('auth/login.html', response.template_name)
-        error_msg = response.context_data['msg']
-        self.assertEqual('User not found', error_msg)
+        response = self.client.post(reverse('login'), data, follow=True)
+        self.assertRedirects(response, reverse('login'))
 
     @patch('requests.post')
     def test_should_send_request_post_to_tsuru_with_args_expected(self, post):
         data = {'username': 'valid@email.com', 'password': '123456'}
         request = RequestFactory().post('/', data)
         expected_url = '%s/users/valid@email.com/tokens' % settings.TSURU_HOST
-        Login().post(request)
+        Login.as_view()(request)
         self.assertEqual(1, post.call_count)
         post.assert_called_with(expected_url,
                                 data='{"password": "123456"}')
@@ -62,7 +51,7 @@ class LoginViewTest(TestCase):
         request.session = {}
         text = '{"token": "my beautiful token"}'
         post.return_value = Mock(status_code=200, text=text)
-        Login().post(request)
+        Login.as_view()(request)
         self.assertEqual('type my beautiful token',
                          request.session["tsuru_token"])
 
@@ -83,6 +72,6 @@ class LoginViewTest(TestCase):
         request.session = {}
         text = '{"token": "my beautiful token"}'
         post.return_value = Mock(status_code=200, text=text)
-        response = Login().post(request)
+        response = Login.as_view()(request)
         self.assertIsInstance(response, HttpResponseRedirect)
         self.assertEqual('/apps', response['Location'])

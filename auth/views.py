@@ -6,7 +6,6 @@ from django.template.response import TemplateResponse
 from django.shortcuts import redirect
 from django.views.generic.base import View, TemplateView
 from django.views.generic.edit import FormView
-
 from django.core.urlresolvers import reverse
 
 from auth.forms import (LoginForm, SignupForm, KeyForm, TokenRequestForm,
@@ -50,29 +49,23 @@ class PasswordRecovery(FormView):
         return super(PasswordRecovery, self).form_valid(form)
 
 
-class Login(View):
+class Login(FormView):
+    template_name = 'auth/login.html'
+    form_class = LoginForm
+    success_url = '/apps'
 
-    def get(self, request):
-        return TemplateResponse(request, 'auth/login.html',
-                                context={'login_form': LoginForm()})
-
-    def post(self, request):
-        form = LoginForm(request.POST)
-        context = {'login_form': form}
-        if form.is_valid():
-            username = form.data.get('username')
-            data = {"password": form.data.get('password')}
-            url = '%s/users/%s/tokens' % (settings.TSURU_HOST, username)
-            response = requests.post(url, data=json.dumps(data))
-            if response.status_code == 200:
-                result = json.loads(response.text)
-                request.session['username'] = username
-                request.session['tsuru_token'] = "type {0}".format(
-                    result['token'])
-                return redirect("/apps")
-            context['msg'] = 'User not found'
-        return TemplateResponse(request, 'auth/login.html',
-                                context=context)
+    def form_valid(self, form):
+        username = form.cleaned_data['username']
+        data = {"password": form.cleaned_data['password']}
+        url = '{0}/users/{1}/tokens'.format(settings.TSURU_HOST, username)
+        response = requests.post(url, data=json.dumps(data))
+        if response.status_code == 200:
+            result = json.loads(response.text)
+            self.request.session['username'] = username
+            self.request.session['tsuru_token'] = "type {0}".format(
+                result['token'])
+            return super(Login, self).form_valid(form)
+        return redirect('/auth/login')
 
 
 class Logout(View):
