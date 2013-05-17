@@ -8,19 +8,16 @@
 {% endblock %}
 
 {% block sidebar %}
-	{% include "sidebar.html" with active="services" %}
+{% include "sidebar.html" with active="services" %}
+{% endblock %}
+
+{% block header %}
+<div class="page-header">
+	<h1>{{ instance.Name }}</h1>
+</div>
 {% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-	<div class="row-fluid">
-		<div class="span12">
-			<div class="page-header">
-				<h1>{{ instance.Name }}</h1>
-			</div>
-		</div>
-	</div>
-</div>
 <ul class="breadcrumb">
 	<li><a href="#"><i class="icon-home"></i> {% trans 'Home' %}</a><span class="divider">/</span></li>
 	<li class="active"><a href="{% url 'service-list' %}"> {% trans 'Services' %}</a></li>
@@ -52,18 +49,18 @@
 						<li>
 						<div class="row-fluid">
 							<form action="{% url 'bind' instance.Name %}" method="post">
-							<div class="span3">
-								{% csrf_token %}
-								<select name="app">
-									<option>{% trans 'Select an app...' %}</option>
-									{% for app in apps %}
-									<option value="{{ app }}">{{ app }}</option>
-									{% endfor %}
-								</select>
-							</div>
-							<div class="span8">
-								<button class="btn btn-primary" href="#">{% trans 'Bind' %}</button>
-							</div>
+								<div class="span3">
+									{% csrf_token %}
+									<select name="app">
+										<option>{% trans 'Select an app...' %}</option>
+										{% for app in apps %}
+										<option value="{{ app }}">{{ app }}</option>
+										{% endfor %}
+									</select>
+								</div>
+								<div class="span8">
+									<button class="btn btn-primary" href="#">{% trans 'Bind' %}</button>
+								</div>
 							</form>
 						</div>
 						</li>
@@ -101,7 +98,7 @@
 	</div>
 	<div class="modal-footer">
 		<form method="get" action="{% url 'service-remove' instance.Name %}">
-		<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 			<button class="btn btn-danger btn-remove" disabled="disabled">Delete app</button>
 		</form>
 	</div>
