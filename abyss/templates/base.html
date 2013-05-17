@@ -26,13 +26,16 @@
 				<div class="span12">
 					<div class="page-header">
 						{% block header %}{% endblock %}
-						<div class="btn-group pull-right">
-							<a class="btn" title="{% trans 'Create App' %}" href="{% url 'create-app' %}"><i class="icon-plus"></i></a>
-						</div>
-						<h1>{% trans 'Apps' %}</h1>
 					</div>
 				</div>
 			</div>
+		</div>
+
+		<div class="container-fluid">
+			<ul class="breadcrumb">
+				<li class="active"><a href="#"><i class="icon-home"></i> {% trans 'Home' %}</a></li>
+				{% block breadcrumb %}{% endblock %}
+			</ul>
 		</div>
 
 		{% block content %}
