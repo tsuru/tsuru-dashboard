@@ -2,16 +2,13 @@
 
 {% load i18n %}
 
-{% block content %}
-<div class="container-fluid">
-	<div class="row-fluid">
-		<div class="span12">
-			<div class="page-header">
-				<h1>{% trans 'Log' %}</h1>
-			</div>
-		</div>
-	</div>
+{% block header %}
+<div class="page-header">
+	<h1>{% trans 'Log' %}</h1>
 </div>
+{% endblock %}
+
+{% block content %}
 <ul class="breadcrumb">
 	<li><a href="#"><i class="icon-home"></i> {% trans 'Home' %}</a><span class="divider">/</span></li>
 	<li><a href="{% url 'list-app' %}"> {% trans 'Apps' %}</a><span class="divider">/</span></li>
