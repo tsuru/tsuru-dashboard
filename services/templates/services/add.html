@@ -7,13 +7,10 @@
 {% endblock %}
 
 {% block header %}
-<div class="page-header">
-	<h1>{% trans 'Add service instance for' %} {{ service.name }}</h1>
-</div>
+<h1>{% trans 'Add service instance for' %} {{ service.name }}</h1>
 {% endblock %}
 
 {% block breadcrumb %}
-<li><a href="#"><i class="icon-home"></i> {% trans 'Home' %}</a><span class="divider">/</span></li>
 <li class="active"><a href="{% url 'service-list' %}"> {% trans 'Services' %}</a></li>
 {% endblock %}
 

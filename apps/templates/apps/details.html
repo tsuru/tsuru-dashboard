@@ -9,10 +9,8 @@
 {% endblock %}
 
 {% block header %}
-<div class="page-header">
-	{% include "apps/navbar.html" %}
-	<h1>{{ app.name }}</h1>
-</div>
+{% include "apps/navbar.html" %}
+<h1>{{ app.name }}</h1>
 {% endblock %}
 
 {% block breadcrumb %}
