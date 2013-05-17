@@ -44,7 +44,11 @@ class List(LoginRequiredView):
     def get(self, request):
         auth = {'authorization': request.session.get('tsuru_token')}
         url = "{0}/teams".format(settings.TSURU_HOST)
-        teams = requests.get(url, headers=auth).json()
+        response = requests.get(url, headers=auth)
+        if response.status_code == 204:
+            teams = []
+        else:
+            teams = response.json()
         return TemplateResponse(request, "teams/list.html", {'teams': teams})
 
 
