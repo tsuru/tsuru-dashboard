@@ -7,7 +7,7 @@
 <h1>{% trans 'Teams' %}</h1>
 {% endblock %}
 
-{% block header %}
+{% block breadcrumb %}
 <li><a href="{% url 'list-app' %}"> {% trans 'Apps' %}</a><span class="divider">/</span></li>
 <li class="active"><a href="{% url 'detail-app' app.name %}"> {{ app.name }}</a></li>
 {% endblock %}
