@@ -62,3 +62,12 @@ select {
 .language-select a.active {
 	color: #fff;
 }
+
+.breadcrumb {
+	background-color: #fff;
+	padding: 10px 0;
+}
+
+.navbar .nav > li > a {
+	padding: 10px 0;
+}
