@@ -21,8 +21,8 @@
 				{% csrf_token %}
 				{% if msg %}<div class="alert alert-error">{{ msg }}</div>{% endif %}
 				<p>{% trans 'Enter username and password to continue.' %}</p>
-				<input type="text" class="input-block-level" placeholder="username" name="{% trans 'username' %}">
-				<input type="password" class="input-block-level" name="{% trans 'password' %}">
+				<input type="text" class="input-block-level" placeholder="{% trans 'username' %}" name="username">
+				<input type="password" class="input-block-level" name="password">
 				<div class="form-actions">
 					<span class="pull-left"><a href="#" class="flip-link" id="to-recover">{% trans 'Lost password?' %}</a></span>
 					<span class="pull-right"><input type="submit" class="btn btn-inverse" value="{% trans 'Login' %}" /></span>
