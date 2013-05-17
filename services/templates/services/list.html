@@ -11,16 +11,13 @@
 {% include "sidebar.html" with active="services" %}
 {% endblock %}
 
-{% block content %}
-<div class="container-fluid">
-	<div class="row-fluid">
-		<div class="span12">
-			<div class="page-header">
-				<h1>{% trans 'Services' %}</h1>
-			</div>
-		</div>
-	</div>
+{% block header %}
+<div class="page-header">
+	<h1>{% trans 'Services' %}</h1>
 </div>
+{% endblock %}
+
+{% block content %}
 <ul class="breadcrumb">
 	<li class="active"><a href="#"><i class="icon-home"></i> {% trans 'Home' %}</a></li>
 </ul>
