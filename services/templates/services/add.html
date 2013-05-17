@@ -6,16 +6,13 @@
 {% include "sidebar.html" with active="services" %}
 {% endblock %}
 
-{% block content %}
-<div class="container-fluid">
-	<div class="row-fluid">
-		<div class="span12">
-			<div class="page-header">
-				<h1>{% trans 'Add service instance for' %} {{ service.name }}</h1>
-			</div>
-		</div>
-	</div>
+{% block header %}
+<div class="page-header">
+	<h1>{% trans 'Add service instance for' %} {{ service.name }}</h1>
 </div>
+{% endblock %}
+
+{% block content %}
 <ul class="breadcrumb">
 	<li><a href="#"><i class="icon-home"></i> {% trans 'Home' %}</a><span class="divider">/</span></li>
 	<li class="active"><a href="{% url 'service-list' %}"> {% trans 'Services' %}</a></li>
