@@ -7,16 +7,13 @@
 <link rel="stylesheet" href="{{ STATIC_URL }}css/abyss.services.css" />
 {% endblock %}
 
-{% block content %}
-<div class="container-fluid">
-	<div class="row-fluid">
-		<div class="span12">
-			<div class="page-header">
-				<h1>{{ team.name }}</h1>
-			</div>
-		</div>
-	</div>
+{% block header %}
+<div class="page-header">
+	<h1>{{ team.name }}</h1>
 </div>
+{% endblock %}
+
+{% block content %}
 <ul class="breadcrumb">
 	<li><a href="#"><i class="icon-home"></i> {% trans 'Home' %}</a><span class="divider">/</span></li>
 	<li class="active"><a href="{% url 'team-list' %}"> {% trans 'Teams' %}</a></li>
@@ -103,7 +100,7 @@
 	</div>
 	<div class="modal-footer">
 		<form method="get" action="{% url 'team-remove' team.name %}">
-		<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 			<button class="btn btn-danger btn-remove" disabled="disabled">Delete app</button>
 		</form>
 	</div>
