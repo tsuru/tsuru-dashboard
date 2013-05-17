@@ -1,3 +1,5 @@
+{% load i18n %}
+
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -17,6 +19,21 @@
 		{% block sidebar %}
 		{% include "sidebar.html" with active="apps" %}
 		{% endblock %}
+
+
+		<div class="container-fluid">
+			<div class="row-fluid">
+				<div class="span12">
+					<div class="page-header">
+						{% block header %}{% endblock %}
+						<div class="btn-group pull-right">
+							<a class="btn" title="{% trans 'Create App' %}" href="{% url 'create-app' %}"><i class="icon-plus"></i></a>
+						</div>
+						<h1>{% trans 'Apps' %}</h1>
+					</div>
+				</div>
+			</div>
+		</div>
 
 		{% block content %}
 		{% endblock %}
