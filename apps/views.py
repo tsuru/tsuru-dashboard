@@ -114,7 +114,10 @@ class ListApp(LoginRequiredView):
         authorization = {'authorization': request.session.get('tsuru_token')}
         response = requests.get('%s/apps' % settings.TSURU_HOST,
                                 headers=authorization)
-        apps = response.json
+        if response.status_code == 204:
+            apps = []
+        else:
+            apps = response.json()
         return TemplateResponse(request, "apps/list.html", {'apps': apps})
 
 

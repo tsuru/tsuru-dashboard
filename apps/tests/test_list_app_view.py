@@ -14,17 +14,20 @@ class ListAppViewTest(TestCase):
     @patch('requests.get')
     def test_should_use_list_template(self, get):
         get.return_value = Mock(status_code=204)
-        response = ListApp().get(self.request)
+        response = ListApp.as_view()(self.request)
         self.assertEqual("apps/list.html", response.template_name)
+        self.assertListEqual([], response.context_data['apps'])
 
     @patch('requests.get')
     def teste_should_get_list_of_apps_from_tsuru(self, get):
         expected = [{"framework": "python", "name": "pacote",
                      "repository": "git@tsuru.com:pacote.git",
                      "state": "creating"}]
-        get.return_value = Mock(status_code=200, json=expected)
-        response = ListApp().get(self.request)
-        self.assertEqual([{"framework": "python", "name": "pacote",
-                           "repository": "git@tsuru.com:pacote.git",
-                           "state": "creating"}],
-                         response.context_data.get("apps"))
+        response_mock = Mock(status_code=200)
+        response_mock.json.return_value = expected
+        get.return_value = response_mock
+        response = ListApp.as_view()(self.request)
+        self.assertListEqual([{"framework": "python", "name": "pacote",
+                               "repository": "git@tsuru.com:pacote.git",
+                               "state": "creating"}],
+                             response.context_data["apps"])
