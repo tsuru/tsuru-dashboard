@@ -7,6 +7,10 @@
 <link rel="stylesheet" href="{{ STATIC_URL }}css/abyss.services.css" />
 {% endblock %}
 
+{% block sidebar %}
+{% include "sidebar.html" with active="teams" %}
+{% endblock %}
+
 {% block header %}
 <h1>{{ team.name }}</h1>
 {% endblock %}

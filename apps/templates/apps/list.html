@@ -2,6 +2,10 @@
 
 {% load i18n %}
 
+{% block sidebar %}
+{% include "sidebar.html" with active="apps" %}
+{% endblock %}
+
 {% block header %}
 <div class="btn-group pull-right">
 	<a class="btn" title="{% trans 'Create App' %}" href="{% url 'create-app' %}"><i class="icon-plus"></i></a>

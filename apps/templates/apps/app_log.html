@@ -2,6 +2,10 @@
 
 {% load i18n %}
 
+{% block sidebar %}
+{% include "sidebar.html" with active="apps" %}
+{% endblock %}
+
 {% block header %}
 <h1>{% trans 'Log' %}</h1>
 {% endblock %}

@@ -9,17 +9,17 @@
 				<a href="pt-br"{% if request.LANGUAGE_CODE == "pt-br" %} class="active"{% endif %}>Port</a>
 			</div>
 			<ul class="nav">
-				<li class="active">
+				<li{% if active == "apps" %} class="active"{% endif %}>
 				<a href="{% url 'list-app' %}">
 					<span>{% trans "Apps" %}</span>
 				</a>
 				</li>
-				<li>
+				<li{% if active == "services" %} class="active"{% endif %}>
 				<a href="{% url 'service-list' %}">
 					<span>{% trans "Services" %}</span>
 				</a>
 				</li>
-				<li>
+				<li{% if active == "teams" %} class="active"{% endif %}>
 				<a href="{% url 'team-list' %}">
 					<span>{% trans "Teams" %}</span>
 				</a>

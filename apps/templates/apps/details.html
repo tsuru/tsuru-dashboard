@@ -8,6 +8,10 @@
 <link rel="stylesheet" href="{{ STATIC_URL }}css/detail.css" />
 {% endblock %}
 
+{% block sidebar %}
+{% include "sidebar.html" with active="apps" %}
+{% endblock %}
+
 {% block header %}
 {% include "apps/navbar.html" %}
 <h1>{{ app.name }}</h1>
