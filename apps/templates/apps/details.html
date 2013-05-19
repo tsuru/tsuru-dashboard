@@ -65,9 +65,15 @@
 					<h5>Info</h5>
 				</div>
 				<div class="content">
-					<p><strong>App url:</strong> <a href="http://{{ app.ip }}" target="_blank">http://{{ app.ip }}</a></p>
+					<p>
+					<strong>App url:</strong> 
+					{% if app.cname %}
+					<a href="http://{{ app.cname }}" target="_blank">http://{{ app.cname }}</a>
+					{% else %}
+					<a href="http://{{ app.ip }}" target="_blank">http://{{ app.ip }}</a>
+					{% endif %}
+					</p>
 					<p><strong>Git clone url:</strong> {{ app.repository }}</p>
-					<p><strong>Domain:</strong> {{ app.cname }}</p>
 					<p><strong>Teams:</strong> {{ app.teams|join:", " }}</p>
 					<p><strong>Framework:</strong> {{ app.framework }}</p>
 				</div>
