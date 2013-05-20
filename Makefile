@@ -9,5 +9,8 @@ test: clean deps
 	@coverage report
 	@flake8 .
 
-locale:
+makemessages:
 	@django-admin.py makemessages -a
+
+compilemessages:
+	@django-admin.py compilemessages
