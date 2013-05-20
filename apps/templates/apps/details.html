@@ -66,11 +66,13 @@
 				</div>
 				<div class="content">
 					<p>
-					<strong>{% trans 'App url' %}:</strong> 
-					{% if app.cname %}
-					<a href="http://{{ app.cname }}" target="_blank">http://{{ app.cname }}</a>
-					{% else %}
-					<a href="http://{{ app.ip }}" target="_blank">http://{{ app.ip }}</a>
+					{% if app.cname or app.ip %}
+						<strong>{% trans 'App url' %}:</strong> 
+						{% if app.cname %}
+							<a href="http://{{ app.cname }}" target="_blank">http://{{ app.cname }}</a>
+						{% else %}
+							<a href="http://{{ app.ip }}" target="_blank">http://{{ app.ip }}</a>
+						{% endif %}
 					{% endif %}
 					</p>
 					<p><strong>{% trans 'Git clone url' %}:</strong> {{ app.repository }}</p>
