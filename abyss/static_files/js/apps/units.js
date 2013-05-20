@@ -9,7 +9,7 @@
 			value: this.units,
 			range: "min",
 			min: 1,
-			max: 10,
+			max: 2,
 			slide:  function( event, ui ) {
 				$( "#units" ).html( ui.value );
 				$( "input[name='units']" ).val( ui.value );
