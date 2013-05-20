@@ -1,0 +1,313 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-05-20 16:44-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: abyss/templates/base.html:35
+msgid "Home"
+msgstr "Página inicial"
+
+#: abyss/templates/navbar.html:19
+#, fuzzy
+msgid "Add keys"
+msgstr "Adicionar equipe"
+
+#: abyss/templates/navbar.html:20 quotas/templates/quotas/info.html:11
+#, fuzzy
+msgid "Quota info"
+msgstr "Cota"
+
+#: abyss/templates/navbar.html:22
+msgid "Logout"
+msgstr "Sair"
+
+#: abyss/templates/sidebar.html:14 apps/templates/apps/app_log.html:14
+#: apps/templates/apps/app_team.html:15 apps/templates/apps/create.html:14
+#: apps/templates/apps/details.html:21 apps/templates/apps/list.html:13
+msgid "Apps"
+msgstr "Aplicações"
+
+#: abyss/templates/sidebar.html:19 services/templates/services/add.html:14
+#: services/templates/services/detail.html:19
+#: services/templates/services/list.html:15
+msgid "Services"
+msgstr "Serviços"
+
+#: abyss/templates/sidebar.html:24 apps/templates/apps/app_add_team.html:16
+#: apps/templates/apps/app_team.html:11 apps/templates/apps/details.html:79
+#: apps/templates/apps/navbar.html:5 teams/templates/teams/info.html:19
+#: teams/templates/teams/list.html:13
+msgid "Teams"
+msgstr "Equipes"
+
+#: apps/templates/apps/app_add_team.html:10
+#: apps/templates/apps/app_team.html:34
+msgid "Add Team"
+msgstr "Adicionar equipe"
+
+#: apps/templates/apps/app_add_team.html:37
+msgid "Team name"
+msgstr "Nome da equipe"
+
+#: apps/templates/apps/app_add_team.html:41 apps/templates/apps/create.html:44
+#: auth/templates/auth/key.html:31 services/templates/services/add.html:28
+#: teams/templates/teams/info.html:41
+msgid "Add"
+msgstr "Adicionar"
+
+#: apps/templates/apps/app_log.html:10 apps/templates/apps/list.html:26
+#: apps/templates/apps/navbar.html:4
+msgid "Log"
+msgstr "Log"
+
+#: apps/templates/apps/create.html:10 apps/templates/apps/list.html:11
+msgid "Create App"
+msgstr "Criar App"
+
+#: apps/templates/apps/create.html:35 services/templates/services/add.html:25
+msgid "Name"
+msgstr "Nome"
+
+#: apps/templates/apps/create.html:40 apps/templates/apps/details.html:80
+msgid "Platform"
+msgstr "Plataforma"
+
+#: apps/templates/apps/details.html:33
+msgid "Units"
+msgstr "Units"
+
+#: apps/templates/apps/details.html:39
+msgid "Instances"
+msgstr "Instances"
+
+#: apps/templates/apps/details.html:50
+msgid "apply changes"
+msgstr "aplicar mudanças"
+
+#: apps/templates/apps/details.html:65
+msgid "Info"
+msgstr "Informações"
+
+#: apps/templates/apps/details.html:70
+msgid "App url"
+msgstr "Url da aplicação"
+
+#: apps/templates/apps/details.html:78
+msgid "Git clone url"
+msgstr "Git clone url"
+
+#: apps/templates/apps/details.html:92
+#: services/templates/services/detail.html:77
+#: teams/templates/teams/info.html:83
+msgid "Dangerous!"
+msgstr "Perigo!"
+
+#: apps/templates/apps/details.html:95 apps/templates/apps/details.html:115
+#: services/templates/services/detail.html:100
+#: teams/templates/teams/info.html:106
+msgid "Delete app"
+msgstr "Apagar app"
+
+#: apps/templates/apps/details.html:104
+#: services/templates/services/detail.html:89
+#: teams/templates/teams/info.html:95
+msgid "Are you sure?"
+msgstr "Você tem certeza?"
+
+#: apps/templates/apps/details.html:107
+#, python-format
+msgid ""
+"This action CANNOT be undone. This will delete the <strong>%(app)s</strong>"
+msgstr ""
+"Esta ação NÃO pode ser desfeita. Isso irá apagar o <strong>%(app)s</strong>"
+
+#: apps/templates/apps/details.html:109
+msgid "Please type in the name of your application to confirm."
+msgstr "Por favor digite o nome da sua aplicação para confirmar."
+
+#: apps/templates/apps/details.html:114
+#: services/templates/services/detail.html:99
+#: teams/templates/teams/info.html:105
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: apps/templates/apps/list.html:23
+msgid "App Details"
+msgstr "Detalhes sobre a app"
+
+#: apps/templates/apps/list.html:29
+msgid "Collaborators"
+msgstr "Colaboradores"
+
+#: apps/templates/apps/list.html:32 apps/templates/apps/navbar.html:6
+msgid "Settings"
+msgstr "Configurações"
+
+#: auth/templates/auth/key.html:6
+msgid "Key add"
+msgstr "Adicionar chave"
+
+#: auth/templates/auth/key.html:27
+msgid "key"
+msgstr "chave"
+
+#: auth/templates/auth/login.html:23
+msgid "Enter username and password to continue."
+msgstr "Digise seu username e senha para continuar."
+
+#: auth/templates/auth/login.html:24
+msgid "username"
+msgstr "username"
+
+#: auth/templates/auth/login.html:27
+msgid "Lost password?"
+msgstr "Esqueceu sua senha?"
+
+#: auth/templates/auth/login.html:28
+msgid "Login"
+msgstr "Login"
+
+#: auth/templates/auth/password_recovery.html:22
+#, fuzzy
+msgid "Password reset"
+msgstr "senha"
+
+#: auth/templates/auth/password_recovery.html:25
+#: auth/templates/auth/token_request.html:25
+msgid "Submit"
+msgstr "Enviar"
+
+#: auth/templates/auth/password_recovery_success.html:20
+msgid "Your password has been redefined and mailed to you."
+msgstr "Seu password será redefinido e enviado via email para você."
+
+#: auth/templates/auth/password_recovery_success.html:21
+#: auth/templates/auth/token_request_success.html:21
+msgid "Please check your email."
+msgstr "Por favor verifique seu email."
+
+#: auth/templates/auth/team.html:6
+msgid "Team add"
+msgstr "Adicionar equipe"
+
+#: auth/templates/auth/team.html:27
+msgid "name"
+msgstr "nome"
+
+#: auth/templates/auth/team.html:31
+msgid "Create"
+msgstr "Criar"
+
+#: auth/templates/auth/token_request.html:22
+#, fuzzy
+msgid "Forgot password"
+msgstr "Esqueceu sua senha?"
+
+#: auth/templates/auth/token_request_success.html:20
+msgid "You've successfully started the password reset process."
+msgstr "Você iniciou com sucesso o processo de redefinição de sua senha."
+
+#: quotas/templates/quotas/info.html:24
+msgid "Quota"
+msgstr "Cota"
+
+#: quotas/templates/quotas/info.html:30
+msgid "used"
+msgstr "usado"
+
+#: quotas/templates/quotas/info.html:36
+msgid "availabe"
+msgstr "disponivel"
+
+#: services/templates/services/add.html:10
+msgid "Add service instance for"
+msgstr "Adcionar uma instância de serviço para"
+
+#: services/templates/services/detail.html:31
+msgid "Apps binded"
+msgstr "Aplicações relacionadas"
+
+#: services/templates/services/detail.html:42
+msgid "Unbind"
+msgstr "Remover relação"
+
+#: services/templates/services/detail.html:53
+msgid "Select an app..."
+msgstr "Selecionar uma app..."
+
+#: services/templates/services/detail.html:60
+msgid "Bind"
+msgstr "Relacionar"
+
+#: services/templates/services/detail.html:92
+#, python-format
+msgid ""
+"This action CANNOT be undone. This will delete the <strong>%(instance)s</"
+"strong>"
+msgstr ""
+"Está ação NÃO será desfeita. Isto irá apagar o <strong>%(instance)s</"
+"strong>"
+
+#: services/templates/services/detail.html:94
+msgid "Please type in the name of your service instance to confirm."
+msgstr "Por favor digite o nome da instância de serviço para confirmar."
+
+#: services/templates/services/list.html:40
+msgid "Add new instance"
+msgstr "Adicionar nova instancia"
+
+#: teams/templates/teams/info.html:31
+msgid "Add user to team"
+msgstr "Adicionar usuário a um time"
+
+#: teams/templates/teams/info.html:38
+msgid "Username"
+msgstr "Username"
+
+#: teams/templates/teams/info.html:55
+msgid "Users"
+msgstr "Usuários"
+
+#: teams/templates/teams/info.html:66
+#, python-format
+msgid "remove %(user)s from %(team)s"
+msgstr "remover %(user)s do time %(team)s"
+
+#: teams/templates/teams/info.html:66
+msgid "remove"
+msgstr "remover"
+
+#: teams/templates/teams/info.html:86
+msgid "Delete team"
+msgstr "Apagar equipe"
+
+#: teams/templates/teams/info.html:98
+#, python-format
+msgid ""
+"This action CANNOT be undone. This will delete the <strong>%(team.name)s</"
+"strong>"
+msgstr ""
+"Essa ação NÃO pode ser desfeita. Isot ira apagar o <strong>%(team.name)s</strong>"
+
+#: teams/templates/teams/info.html:100
+msgid "Please type in the name of your team to confirm."
+msgstr "Por favor digite o nome do seu time para confirmar."
+
+#~ msgid "Manage keys"
+#~ msgstr "Gerenciar chaves"
+
+#~ msgid "Framework"
+#~ msgstr "Framework"
