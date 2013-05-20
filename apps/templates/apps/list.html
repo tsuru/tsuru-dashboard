@@ -19,17 +19,17 @@
 		<div class="span12">
 			{% for app in apps %}
 			<div class="row-fluid">
-				<div class="span9 app-name">
-					<a href="{% url 'detail-app' app.name %}" rel="tooltip" class="tooltips" data-placement="left" data-original-title="App Details"> {{ app.name }} </a>
+				<div class="span9">
+					<a href="{% url 'detail-app' app.name %}" title="{% trans 'App Details' %}"> {{ app.name }} </a>
 				</div>
-				<div class="span1 option app-log">
-					<a href="{% url 'app_log' app.name %}" rel="tooltip" class="tooltips" data-placement="top" data-original-title="Log"> <i class="icon-tasks"></i> </a>
+				<div class="span1">
+					<a href="{% url 'app_log' app.name %}" title="{% trans 'Log' %}"> <i class="icon-tasks"></i> </a>
 				</div>
-				<div class="span1 option app-collaborators">
-					<a href="{% url 'app-teams' app.name %}" rel="tooltip" class="tooltips" data-placement="top" data-original-title="Collaborators"> <i class="icon-user"></i> </a>
+				<div class="span1">
+					<a href="{% url 'app-teams' app.name %}" title="{% trans 'Collaborators' %}"> <i class="icon-user"></i> </a>
 				</div>
-				<div class="span1 option app-settings">
-					<a href="{% url 'detail-app' app.name %}" rel="tooltip" class="tooltips" data-placement="top" data-original-title="Settings"> <i class="icon-wrench"></i> </a>
+				<div class="span1">
+					<a href="{% url 'detail-app' app.name %}" title="{% trans 'Settings' %}"> <i class="icon-wrench"></i> </a>
 				</div>
 			</div>
 			{% endfor %}
