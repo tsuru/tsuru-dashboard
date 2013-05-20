@@ -7,7 +7,7 @@
 		var options = this.options.constructor();
 		options.key = this.options.key;
 		options.duration = -1;
-		new Cookie(options).write();
+		new Cookie(options).write('');
 	}
 
 	Cookie.prototype.write = function(value) {
