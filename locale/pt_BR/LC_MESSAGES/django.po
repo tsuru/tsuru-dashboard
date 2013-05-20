@@ -21,12 +21,10 @@ msgid "Home"
 msgstr "Página inicial"
 
 #: abyss/templates/navbar.html:19
-#, fuzzy
 msgid "Add keys"
 msgstr "Adicionar equipe"
 
 #: abyss/templates/navbar.html:20 quotas/templates/quotas/info.html:11
-#, fuzzy
 msgid "Quota info"
 msgstr "Cota"
 
@@ -181,9 +179,8 @@ msgid "Login"
 msgstr "Login"
 
 #: auth/templates/auth/password_recovery.html:22
-#, fuzzy
 msgid "Password reset"
-msgstr "senha"
+msgstr "redefinir senha"
 
 #: auth/templates/auth/password_recovery.html:25
 #: auth/templates/auth/token_request.html:25
@@ -212,7 +209,6 @@ msgid "Create"
 msgstr "Criar"
 
 #: auth/templates/auth/token_request.html:22
-#, fuzzy
 msgid "Forgot password"
 msgstr "Esqueceu sua senha?"
 
