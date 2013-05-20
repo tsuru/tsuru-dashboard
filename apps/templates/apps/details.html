@@ -104,7 +104,7 @@
 		<h3 id="myModalLabel">{% trans 'Are you sure?' %}</h3>
 	</div>
 	<div class="modal-body">
-		<p>This action CANNOT be undone. This will delete the <strong>{{ app.name }}</strong></p>
+		<p>{% blocktrans with app=app.name %}This action CANNOT be undone. This will delete the <strong>{{ app }}</strong>{% enblocktrans %}</p>
 
 		<p>{% trans 'Please type in the name of your application to confirm.' %}</p>
 		<input type="text" class="remove-confirmation" />
