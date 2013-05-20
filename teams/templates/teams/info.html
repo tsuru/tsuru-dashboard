@@ -63,7 +63,7 @@
 								{{ user }}
 							</div>
 							<div class="span8">
-								<a class="btn btn-danger" href="{% url 'team-user-remove' team.name user %}">{% trans 'remove' %}</a>
+								<a class="btn btn-danger" href="{% url 'team-user-remove' team.name user %}" title="{% blocktrans with team=team.name %}remove {{ user }} from {{ team }}{% endblocktrans %}">{% trans 'remove' %}</a>
 							</div>
 						</div>
 						</li>
