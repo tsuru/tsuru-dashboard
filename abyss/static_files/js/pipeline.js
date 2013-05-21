@@ -17,7 +17,7 @@
 		}
 	}
 
-	var actions = [next, next];
+	var actions = [next, next, next, next, next, next, next, next];
 
 	var pipeline = new Pipeline(actions);
 
