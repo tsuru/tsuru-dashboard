@@ -10,22 +10,32 @@
 		<link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap.min.css" />
 		<link rel="stylesheet" href="{{ STATIC_URL}}css/bootstrap-responsive.min.css" />
 		<link rel="stylesheet" href="{{ STATIC_URL}}css/abyss.css" />
+		<link rel="stylesheet" href="{{ STATIC_URL }}css/jquery-ui.css" />
+		<link rel="stylesheet" href="{{ STATIC_URL }}css/abyss.widget.css" />
+		<link rel="stylesheet" href="{{ STATIC_URL }}css/detail.css" />
 		{% block extra_css %}
 		{% endblock extra_css %}
 		<style type="text/css" media="screen">
+			.step {
+				display: none;
+			}
+			.active {
+				display: block;
+			}
 			.page-header {
 				font-size: 25px;
 			}
 			iframe {
 				height: 312px;
 				width: 489px;
+				border: none;
 			}
 		</style>
 	</head>
 	<body>
 		{% include "navbar.html" %}
 
-		<div class="step">
+		<div class="step active">
 			<div class="container-fluid">
 				<div class="row-fluid">
 					<div class="span12">
@@ -116,7 +126,7 @@
 									<label>{% trans 'Platform' %}</label>
 									<input type="text" class="input-xlarge" name="{{ app_form.platform.name }}">
 								</div>
-								<button class="btn primary" type="submit">{% trans 'Add' %}</button>
+								<button class="btn" type="submit">{% trans 'Add' %}</button>
 							</fieldset>
 						</form>
 					</div>
@@ -150,7 +160,7 @@
 				</div>
 				<div class="row-fluid">
 					<div class="span12">
-						<button class="btn">Continue</button>
+						<button class="btn btn-primary">Continue</button>
 					</div>
 				</div>
 			</div>
@@ -174,7 +184,7 @@
 				</div>
 				<div class="row-fluid">
 					<div class="span12">
-						<button class="btn">Continue</button>
+						<button class="btn btn-primary">Continue</button>
 					</div>
 				</div>
 			</div>
@@ -198,7 +208,7 @@
 				</div>
 				<div class="row-fluid">
 					<div class="span12">
-						<button class="btn">Continue</button>
+						<button class="btn btn-primary">Continue</button>
 					</div>
 				</div>
 			</div>
@@ -216,7 +226,7 @@
 							<div class="content units-box">
 								<div class="span1">
 									<div class="stats right">
-										<strong id="units">{{ app.units|length }}</strong>
+										<strong id="units">1</strong>
 										<span>{% trans 'Instances' %}</span>
 									</div>
 								</div>
@@ -241,6 +251,12 @@
 		<script src="{{ STATIC_URL}}js/jquery.min.js"></script>
 		<script src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
 		<script src="{{ STATIC_URL }}js/language.js"></script>
+
+<script src="{{ STATIC_URL }}js/jquery-ui.custom.js"></script>
+<script src="{{ STATIC_URL }}js/apps/units.js"></script>
+<script type="text/javascript">
+	new $.Slider(1);
+</script>
 		{% block extra_js %}
 		{% endblock %}
 	</body>
