@@ -58,7 +58,7 @@
 				</div>
 				<div class="row-fluid">
 					<div class="span12">
-						<button class="btn btn-primary">Continue</button>
+						<button class="btn btn-primary next">Continue</button>
 					</div>
 				</div>
 			</div>
@@ -85,7 +85,7 @@
 				</div>
 				<div class="row-fluid">
 					<div class="span12">
-						<button class="btn btn-primary">Continue</button>
+						<button class="btn btn-primary next">Continue</button>
 					</div>
 				</div>
 			</div>
@@ -135,7 +135,7 @@
 			<div class="container-fluid">
 				<div class="row-fluid">
 					<div class="span12">
-						<button class="btn btn-primary">Continue</button>
+						<button class="btn btn-primary next">Continue</button>
 					</div>
 				</div>
 			</div>
@@ -160,7 +160,7 @@
 				</div>
 				<div class="row-fluid">
 					<div class="span12">
-						<button class="btn btn-primary">Continue</button>
+						<button class="btn btn-primary next">Continue</button>
 					</div>
 				</div>
 			</div>
@@ -184,7 +184,7 @@
 				</div>
 				<div class="row-fluid">
 					<div class="span12">
-						<button class="btn btn-primary">Continue</button>
+						<button class="btn btn-primary next">Continue</button>
 					</div>
 				</div>
 			</div>
@@ -208,7 +208,7 @@
 				</div>
 				<div class="row-fluid">
 					<div class="span12">
-						<button class="btn btn-primary">Continue</button>
+						<button class="btn btn-primary next">Continue</button>
 					</div>
 				</div>
 			</div>
@@ -256,6 +256,26 @@
 <script src="{{ STATIC_URL }}js/apps/units.js"></script>
 <script type="text/javascript">
 	new $.Slider(1);
+	function next() {
+		var $container = $(".active");
+		$container.removeClass("active");
+		$container.next().addClass("active");
+	}
+	function Pipeline(actions) {
+		this.actions = actions;
+	}
+	Pipeline.prototype.next = function() {
+		if (this.actions.length > 0) {
+			var action = this.actions.pop();
+			action.call()
+		}
+	}
+	var actions = [next, next];
+	var pipeline = new Pipeline(actions);
+	$(".next").on("click", function(event) {
+		pipeline.next();
+		return false;
+	});
 </script>
 		{% block extra_js %}
 		{% endblock %}
