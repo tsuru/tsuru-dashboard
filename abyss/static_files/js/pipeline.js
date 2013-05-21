@@ -1,6 +1,6 @@
 (function(window, $) {
 
-	function next() {
+	function nextStep() {
 		var $container = $(".active");
 		$container.removeClass("active");
 		$container.next().addClass("active");
@@ -17,7 +17,19 @@
 		}
 	}
 
-	var actions = [next, next, next, next, next, next, next, next];
+	function appList() {
+		window.location = "/";
+	}
+
+	function createApp() {
+		nextStep();
+		$('.create-app').popover('show');
+	}
+
+	var actions = [appList, nextStep, nextStep, nextStep, nextStep, createApp];
+
+	/* var actions = [appList, nextStep, nextStep, nextStep, nextStep, nextStep, nextStep, createApp]; */
+
 
 	var pipeline = new Pipeline(actions);
 
