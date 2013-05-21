@@ -95,6 +95,7 @@ INSTALLED_APPS = (
     'services',
     'teams',
     'quotas',
+    'intro',
 )
 
 TEST_RUNNER = 'abyss.runner.DiscoveryRunner'
