@@ -26,7 +26,12 @@
 		$('.create-app').popover('show');
 	}
 
-	var actions = [appList, nextStep, nextStep, nextStep, nextStep, createApp];
+	function deploy() {
+		nextStep();
+		$('iframe').attr("src", "http://ascii.io/a/3226/raw");
+	}
+
+	var actions = [appList, nextStep, nextStep, deploy, nextStep, createApp];
 
 	/* var actions = [appList, nextStep, nextStep, nextStep, nextStep, nextStep, nextStep, createApp]; */
 
