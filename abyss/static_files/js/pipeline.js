@@ -31,7 +31,7 @@
 		$('iframe').attr("src", "http://ascii.io/a/3226/raw");
 	}
 
-	var actions = [appList, nextStep, nextStep, deploy, nextStep, nextStep, createApp];
+	var actions = [appList, nextStep, deploy, nextStep, nextStep, createApp];
 
 	/* var actions = [appList, nextStep, nextStep, nextStep, nextStep, nextStep, nextStep, createApp]; */
 
