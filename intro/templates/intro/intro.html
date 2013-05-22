@@ -13,31 +13,16 @@
 		<link rel="stylesheet" href="{{ STATIC_URL }}css/jquery-ui.css" />
 		<link rel="stylesheet" href="{{ STATIC_URL }}css/abyss.widget.css" />
 		<link rel="stylesheet" href="{{ STATIC_URL }}css/detail.css" />
+		<link rel="stylesheet" href="{{ STATIC_URL }}css/intro.css" />
 		{% block extra_css %}
 		{% endblock extra_css %}
-		<style type="text/css" media="screen">
-			.step {
-				display: none;
-			}
-			.active {
-				display: block;
-			}
-			.page-header {
-				font-size: 25px;
-			}
-			iframe {
-				height: 312px;
-				width: 489px;
-				border: none;
-			}
-		</style>
 	</head>
 	<body>
 		{% include "navbar.html" %}
 
 		<div class="step active">
-			<div class="container-fluid">
-				<div class="row-fluid">
+			<div class="container">
+				<div class="row">
 					<div class="span12">
 						<div class="page-header">
 							{% trans 'Seja bem vindo!' %}
@@ -45,28 +30,30 @@
 					</div>
 				</div>
 			</div>
-			<div class="container-fluid">
-				<div class="row-fluid">
+			<div class="container intro-content">
+				<div class="row">
 					<div class="span12">
 						<p>Com o tsuru você não precisa preocupar-se com a infra, podendo concentrar-se no mais importante para você: <strong>sua aplicação</strong></p>
 					</div>
 				</div>
-				<div class="row-fluid">
+				<div class="row">
 					<div class="span12">
 						<p>Mas antes de você começar a usar o tsuru para subir suas aplicações, clique no botão abaixo para ver como ele funciona</p>
 					</div>
 				</div>
-				<div class="row-fluid">
+			</div>
+			<div class="container intro-footer">
+				<div class="row">
 					<div class="span12">
-						<button class="btn btn-primary next">Continue</button>
+						<button class="btn btn-primary next pull-right">Continue</button>
 					</div>
 				</div>
 			</div>
 		</div>
 
 		<div class="step">
-			<div class="container-fluid">
-				<div class="row-fluid">
+			<div class="container">
+				<div class="row">
 					<div class="span12">
 						<div class="page-header">
 							<div class="pull-right">
@@ -77,8 +64,8 @@
 					</div>
 				</div>
 			</div>
-			<div class="container-fluid">
-				<div class="row-fluid">
+			<div class="container">
+				<div class="row">
 					<div class="span12">
 						<p>A primeira coisa a fazer é clicar no botão '+' na 'pagina de listagem de apps' para criar sua aplicação.</p>
 					</div>
@@ -87,8 +74,8 @@
 		</div>
 
 		<div class="step">
-			<div class="container-fluid">
-				<div class="row-fluid">
+			<div class="container">
+				<div class="row">
 					<div class="span12">
 						<div class="page-header">
 							{% trans 'Crie sua app' %}
@@ -96,20 +83,20 @@
 					</div>
 				</div>
 			</div>
-			<div class="container-fluid">
-				<div class="row-fluid">
+			<div class="container">
+				<div class="row">
 					<div class="span12">
 						<p>No formulário de criação, digite o nome de sua app</p>
 					</div>
 				</div>
-				<div class="row-fluid">
+				<div class="row">
 					<div class="span12">
 						<p>E escolha qual plataforma deseja utilizar.</p>
 					</div>
 				</div>
 			</div>
-			<div class="container-fluid">
-				<div class="row-fluid">
+			<div class="container">
+				<div class="row">
 					<div class="span12">
 							<fieldset>
 								<div class="clearfix control-group">
@@ -128,8 +115,8 @@
 		</div>
 
 		<div class="step">
-			<div class="container-fluid">
-				<div class="row-fluid">
+			<div class="container">
+				<div class="row">
 					<div class="span12">
 						<div class="page-header">
 							{% trans 'Faça o deploy' %}
@@ -137,24 +124,26 @@
 					</div>
 				</div>
 			</div>
-			<div class="container-fluid">
-				<div class="row-fluid">
+			<div class="container intro-content">
+				<div class="row">
 					<div class="span12">
 						<iframe src="http://ascii.io/a/3226/raw"></iframe>
 						<p>Após a criação da sua aplicação você pode fazer o deploy para ela usando o git.</p>
 					</div>
 				</div>
-				<div class="row-fluid">
+			</div>
+			<div class="container intro-footer">
+				<div class="row">
 					<div class="span12">
-						<button class="btn btn-primary next">Continue</button>
+						<button class="btn btn-primary next pull-right">Continue</button>
 					</div>
 				</div>
 			</div>
 		</div>
 
 		<div class="step">
-			<div class="container-fluid">
-				<div class="row-fluid">
+			<div class="container">
+				<div class="row">
 					<div class="span12">
 						<div class="page-header">
 							{% trans 'Pronto!' %}
@@ -162,23 +151,25 @@
 					</div>
 				</div>
 			</div>
-			<div class="container-fluid">
-				<div class="row-fluid">
+			<div class="container intro-content">
+				<div class="row">
 					<div class="span12">
 						<p>Com isso você já terá sua aplicação pronta para uso. :)</p>
 					</div>
 				</div>
-				<div class="row-fluid">
+			</div>
+			<div class="container intro-footer">
+				<div class="row">
 					<div class="span12">
-						<button class="btn btn-primary next">Continue</button>
+						<button class="btn btn-primary next pull-right">Continue</button>
 					</div>
 				</div>
 			</div>
 		</div>
 
 		<div class="step">
-			<div class="container-fluid">
-				<div class="row-fluid">
+			<div class="container">
+				<div class="row">
 					<div class="span12">
 						<div class="page-header">
 							{% trans 'Escale' %}
@@ -186,16 +177,13 @@
 					</div>
 				</div>
 			</div>
-			<div class="container-fluid">
-				<div class="row-fluid">
+			<div class="container intro-content">
+				<div class="row">
 					<div class="span12">
 						<p>Com sua aplicação deployada e funcionando, você pode 'escalá-la' aumentando o número de instancias dela.</p>
 					</div>
 				</div>
-			</div>
-
-			<div class="container-fluid">
-				<div class="row-fluid">
+				<div class="row">
 					<div class="span12">
 						<div class="widget">
 							<div class="title">
@@ -225,10 +213,10 @@
 					</div>
 				</div>
 			</div>
-			<div class="container-fluid">
-				<div class="row-fluid">
+			<div class="container intro-footer">
+				<div class="row">
 					<div class="span12">
-						<button class="btn btn-primary next">Continue</button>
+						<button class="btn btn-primary next pull-right">Continue</button>
 					</div>
 				</div>
 			</div>

@@ -1,0 +1,23 @@
+.step {
+	display: none;
+}
+.active {
+	display: block;
+}
+.page-header {
+	font-size: 25px;
+}
+iframe {
+	height: 312px;
+	width: 489px;
+	border: none;
+}
+
+.intro-content {
+	min-height: 250px;
+}
+
+.intro-footer {
+	padding-top: 10px;
+  	border-top: 1px solid #eeeeee;
+}
