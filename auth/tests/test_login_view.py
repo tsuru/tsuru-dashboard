@@ -3,6 +3,7 @@ from django.http import HttpResponseRedirect
 from django.test import TestCase
 from django.test.client import RequestFactory
 from django.core.urlresolvers import reverse
+from django.test.utils import override_settings
 
 from mock import Mock, patch
 
@@ -75,3 +76,27 @@ class LoginViewTest(TestCase):
         response = Login.as_view()(request)
         self.assertIsInstance(response, HttpResponseRedirect)
         self.assertEqual('/apps', response['Location'])
+
+    @patch('requests.post')
+    @override_settings(INTRO_ENABLED=False)
+    def test_redirect_to_team_creation_settings_false(self, post):
+        data = {'username': 'valid@email.com', 'password': '123456'}
+        request = RequestFactory().post('/', data)
+        request.session = {}
+        text = '{"token": "my beautiful token"}'
+        post.return_value = Mock(status_code=200, text=text)
+        response = Login.as_view()(request)
+        self.assertIsInstance(response, HttpResponseRedirect)
+        self.assertEqual('/apps', response['Location'])
+
+    @patch('requests.post')
+    @override_settings(INTRO_ENABLED=True)
+    def test_redirect_to_team_creation_settings_true(self, post):
+        data = {'username': 'valid@email.com', 'password': '123456'}
+        request = RequestFactory().post('/', data)
+        request.session = {}
+        text = '{"token": "my beautiful token"}'
+        post.return_value = Mock(status_code=200, text=text)
+        response = Login.as_view()(request)
+        self.assertIsInstance(response, HttpResponseRedirect)
+        self.assertEqual('/intro', response['Location'])

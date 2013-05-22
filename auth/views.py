@@ -52,7 +52,12 @@ class PasswordRecovery(FormView):
 class Login(FormView):
     template_name = 'auth/login.html'
     form_class = LoginForm
-    success_url = '/apps'
+
+    @property
+    def success_url(self):
+        if hasattr(settings, "INTRO_ENABLED") and settings.INTRO_ENABLED:
+            return '/intro'
+        return '/apps'
 
     def form_valid(self, form):
         username = form.cleaned_data['username']
