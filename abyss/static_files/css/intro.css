@@ -21,3 +21,7 @@ iframe {
 	padding-top: 10px;
   	border-top: 1px solid #eeeeee;
 }
+
+.page-header .popover-content {
+	font-size: 16px;
+}
