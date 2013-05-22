@@ -229,12 +229,12 @@
 		<script src="{{ STATIC_URL }}js/apps/units.js"></script>
 		<script type="text/javascript">
 			new $.Slider(1);
-			$('input[name="name"]').popover();
-			$('input[name="platform"]').popover();
-			$('input[name="platform"]').on("click", function() {
+			$('input[name="name"]').popover({'trigger': 'focus'});
+			$('input[name="platform"]').popover({'trigger': 'focus'});
+			$('input[name="platform"]').on("focus", function() {
 				$('input[name="name"]').popover('hide');
 			});
-			$('input[name="name"]').on("click", function() {
+			$('input[name="name"]').on("focus", function() {
 				$('input[name="platform"]').popover('hide');
 			});
 		</script>
