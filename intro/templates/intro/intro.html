@@ -231,6 +231,12 @@
 			new $.Slider(1);
 			$('input[name="name"]').popover();
 			$('input[name="platform"]').popover();
+			$('input[name="platform"]').on("click", function() {
+				$('input[name="name"]').popover('hide');
+			});
+			$('input[name="name"]').on("click", function() {
+				$('input[name="platform"]').popover('hide');
+			});
 		</script>
 			{% block extra_js %}
 			{% endblock %}
