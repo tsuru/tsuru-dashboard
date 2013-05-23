@@ -37,8 +37,13 @@
 						<span class="help-inline">{{ app_form.errors.name }}</span>
 					</div>
 					<div class="clearfix control-group{% if app_form.errors.platform %} error{% endif %}">
-						<label>{% trans 'Platform' %}</label>
-						<input type="text" class="input-xlarge" name="{{ app_form.platform.name }}">
+						<label for="{{ app_form.platform.name }}">{% trans 'Platform' %}</label>
+						<select name="{{ app_form.platform.name }}" id="{{ app_form.platform.name }}">
+							<option>{% trans 'Select' %}</option>
+							{% for platform in platforms %}
+							<option value="{{ platform }}">{{ platform }}</option>
+							{% endfor %}
+						</select>
 						<span class="help-inline">{{ app_form.errors.platform }}</span>
 					</div>
 					<button class="btn primary" type="submit">{% trans 'Add' %}</button>
