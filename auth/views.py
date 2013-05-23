@@ -55,12 +55,11 @@ class Login(FormView):
     template_name = 'auth/login.html'
     form_class = LoginForm
 
-    @property
-    def success_url(self):
+    def get_success_url(self):
         if hasattr(settings, "INTRO_ENABLED") and settings.INTRO_ENABLED:
-            try:
-                Intro.objects.get(email=self.request.session['username'])
-            except Intro.DoesNotExist:
+            _, created = Intro.objects.get_or_create(
+                email=self.request.session['username'])
+            if created:
                 return '/intro'
         return '/apps'
 
