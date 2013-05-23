@@ -32,8 +32,8 @@
 				{% endif %}
 				<fieldset>
 					<div class="clearfix control-group{% if app_form.errors.name %} error{% endif %}">
-						<label>{% trans 'Name' %}</label>
-						<input type="text" class="input-xlarge" name="{{ app_form.name.name }}">
+						<label for="{{ app_form.name.name }}">{% trans 'Name' %}</label>
+						<input type="text" class="input-xlarge" name="{{ app_form.name.name }}" id="{{ app_form.name.name }}">
 						<span class="help-inline">{{ app_form.errors.name }}</span>
 					</div>
 					<div class="clearfix control-group{% if app_form.errors.platform %} error{% endif %}">
