@@ -1,3 +1,5 @@
+import json
+
 from mock import patch, Mock
 
 from django.test import TestCase
@@ -10,16 +12,40 @@ from apps import forms
 
 class CreateAppViewTest(TestCase):
 
-    def test_should_use_create_template(self):
+    @patch('requests.get')
+    def test_should_use_create_template(self, get):
+        content = u"""[{"Name":"python"},{"Name":"ruby"},{"Name":"static"}]"""
+        m = Mock(status_code=200, content=content)
+        m.json.return_value = json.loads(content)
+        get.return_value = m
         request = RequestFactory().get("/")
+        request.session = {}
         response = CreateApp().get(request)
         self.assertEqual("apps/create.html", response.template_name)
 
-    def test_AppForm_should_be_in_context(self):
+    @patch('requests.get')
+    def test_AppForm_should_be_in_context(self, get):
+        content = u"""[{"Name":"python"},{"Name":"ruby"},{"Name":"static"}]"""
+        m = Mock(status_code=200, content=content)
+        m.json.return_value = json.loads(content)
+        get.return_value = m
         request = RequestFactory().get("/")
+        request.session = {}
         response = CreateApp().get(request)
         app_form = response.context_data['app_form']
         self.assertIsInstance(app_form, forms.AppForm)
+
+    @patch('requests.get')
+    def test_platform_list_should_be_in_context(self, get):
+        content = u"""[{"Name":"python"},{"Name":"ruby"},{"Name":"static"}]"""
+        m = Mock(status_code=200, content=content)
+        m.json.return_value = json.loads(content)
+        get.return_value = m
+        request = RequestFactory().get("/")
+        request.session = {}
+        response = CreateApp().get(request)
+        platforms = response.context_data["platforms"]
+        self.assertEqual(["python", "ruby", "static"], platforms)
 
     @patch('requests.post')
     def test_post_with_invalid_name_should_return_500(self, post):

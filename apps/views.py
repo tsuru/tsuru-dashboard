@@ -87,8 +87,13 @@ class RemoveApp(LoginRequiredView):
 
 class CreateApp(LoginRequiredView):
     def get(self, request):
-        return TemplateResponse(request, "apps/create.html",
-                                {"app_form": AppForm()})
+        context = {"app_form": AppForm()}
+        authorization = {"authorization": request.session.get("tsuru_token")}
+        response = requests.get("%s/platforms" % settings.TSURU_HOST,
+                                headers=authorization)
+        platforms = response.json()
+        context["platforms"] = [p["Name"] for p in platforms]
+        return TemplateResponse(request, "apps/create.html", context)
 
     def post(self, request):
         context = {}
