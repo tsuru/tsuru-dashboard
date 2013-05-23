@@ -131,3 +131,5 @@ LOGGING = {
 LOCALE_PATHS = (
     os.path.join(BASE_PATH, 'locale'),
 )
+
+INTRO_ENABLED = os.environ.get("INTRO_ENABLED", "True") == "True"
