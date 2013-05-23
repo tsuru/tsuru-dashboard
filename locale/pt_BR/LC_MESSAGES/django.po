@@ -8,10 +8,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-20 16:44-0300\n"
+"POT-Creation-Date: 2013-05-23 17:28-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -61,8 +62,8 @@ msgid "Team name"
 msgstr "Nome da equipe"
 
 #: apps/templates/apps/app_add_team.html:41 apps/templates/apps/create.html:44
-#: auth/templates/auth/key.html:31 services/templates/services/add.html:28
-#: teams/templates/teams/info.html:41
+#: auth/templates/auth/key.html:31 intro/templates/intro/intro.html:117
+#: services/templates/services/add.html:28 teams/templates/teams/info.html:41
 msgid "Add"
 msgstr "Adicionar"
 
@@ -75,35 +76,37 @@ msgstr "Log"
 msgid "Create App"
 msgstr "Criar App"
 
-#: apps/templates/apps/create.html:35 services/templates/services/add.html:25
+#: apps/templates/apps/create.html:35 intro/templates/intro/intro.html:110
+#: services/templates/services/add.html:25
 msgid "Name"
 msgstr "Nome"
 
 #: apps/templates/apps/create.html:40 apps/templates/apps/details.html:80
+#: intro/templates/intro/intro.html:114 intro/templates/intro/intro.html:162
 msgid "Platform"
 msgstr "Plataforma"
 
-#: apps/templates/apps/details.html:33
+#: apps/templates/apps/details.html:33 intro/templates/intro/intro.html:234
 msgid "Units"
-msgstr "Units"
+msgstr "Unidades"
 
-#: apps/templates/apps/details.html:39
+#: apps/templates/apps/details.html:39 intro/templates/intro/intro.html:240
 msgid "Instances"
-msgstr "Instances"
+msgstr "Instâncias"
 
 #: apps/templates/apps/details.html:50
 msgid "apply changes"
 msgstr "aplicar mudanças"
 
-#: apps/templates/apps/details.html:65
+#: apps/templates/apps/details.html:65 intro/templates/intro/intro.html:154
 msgid "Info"
 msgstr "Informações"
 
-#: apps/templates/apps/details.html:70
+#: apps/templates/apps/details.html:70 intro/templates/intro/intro.html:158
 msgid "App url"
 msgstr "Url da aplicação"
 
-#: apps/templates/apps/details.html:78
+#: apps/templates/apps/details.html:78 intro/templates/intro/intro.html:161
 msgid "Git clone url"
 msgstr "Git clone url"
 
@@ -164,7 +167,7 @@ msgstr "chave"
 
 #: auth/templates/auth/login.html:23
 msgid "Enter username and password to continue."
-msgstr "Digise seu username e senha para continuar."
+msgstr "Digite seu usuário e senha para continuar."
 
 #: auth/templates/auth/login.html:24
 msgid "username"
@@ -180,7 +183,7 @@ msgstr "Login"
 
 #: auth/templates/auth/password_recovery.html:22
 msgid "Password reset"
-msgstr "redefinir senha"
+msgstr "Redefinir senha"
 
 #: auth/templates/auth/password_recovery.html:25
 #: auth/templates/auth/token_request.html:25
@@ -189,12 +192,12 @@ msgstr "Enviar"
 
 #: auth/templates/auth/password_recovery_success.html:20
 msgid "Your password has been redefined and mailed to you."
-msgstr "Seu password será redefinido e enviado via email para você."
+msgstr "Sua senha será redefinida e enviada via email para você."
 
 #: auth/templates/auth/password_recovery_success.html:21
 #: auth/templates/auth/token_request_success.html:21
 msgid "Please check your email."
-msgstr "Por favor verifique seu email."
+msgstr "Por favor, verifique seu email."
 
 #: auth/templates/auth/team.html:6
 msgid "Team add"
@@ -216,6 +219,106 @@ msgstr "Esqueceu sua senha?"
 msgid "You've successfully started the password reset process."
 msgstr "Você iniciou com sucesso o processo de redefinição de sua senha."
 
+#: intro/templates/intro/intro.html:28
+msgid "Welcome!"
+msgstr "Seja bem-vindo!"
+
+#: intro/templates/intro/intro.html:36
+msgid ""
+"With Tsuru, you don’t need to think about infrastucture. You can focus on "
+"the most important thing for you: <strong>your application</strong>."
+msgstr ""
+"Com o tsuru você não precisa se preocupar com infra-estrutura, podendo se "
+"concentrar no mais importante para você: <strong>sua aplicação</strong>."
+
+#: intro/templates/intro/intro.html:41
+msgid ""
+"Before you start using tsuru to deploy your applications, click on the "
+"button bellow and see how it works."
+msgstr ""
+"Mas antes de você começar a usar o tsuru para subir suas aplicações, clique "
+"no botão abaixo e veja como ele funciona."
+
+#: intro/templates/intro/intro.html:48 intro/templates/intro/intro.html:62
+msgid "How to create an application"
+msgstr "Como criar uma aplicação"
+
+#: intro/templates/intro/intro.html:60
+msgid "Click here to create applications"
+msgstr "Clique aqui para criar aplicações"
+
+#: intro/templates/intro/intro.html:70
+msgid ""
+"The first thing to do in order to create your application is to click on the "
+"button '+' on the right top corner of your apps list page."
+msgstr ""
+"A primeira coisa a fazer para criar sua aplicação, é clicar no botão '+' na "
+"'página de listagem de apps'."
+
+#: intro/templates/intro/intro.html:77 intro/templates/intro/intro.html:88
+msgid "Creating an application"
+msgstr "Criando uma aplicação"
+
+#: intro/templates/intro/intro.html:96
+msgid "Then type a name for your app."
+msgstr "No formulário de criação, digite o nome da sua app."
+
+#: intro/templates/intro/intro.html:101
+msgid "And select which platform it will use."
+msgstr "E escolha qual plataforma deseja utilizar."
+
+#: intro/templates/intro/intro.html:111
+msgid ""
+"In this field, you define your application name. You can use any "
+"alphanumeric characters and dashes (-)."
+msgstr ""
+"Neste campo, você define o nome da sua aplicação. Você pode usar qualquer "
+"caractere alfanumérico e traços (-)."
+
+#: intro/templates/intro/intro.html:115
+msgid ""
+"Here, you select in which platform your application is written. Available "
+"platforms are: python, ruby, php, node.js e html."
+msgstr ""
+"Aqui você diz em qual plataforma sua aplicação está escrita. As plataformas "
+"disponíveis são: python, ruby, php, node.js e html."
+
+#: intro/templates/intro/intro.html:125 intro/templates/intro/intro.html:136
+msgid "Before deploy"
+msgstr "Antes do deploy"
+
+#: intro/templates/intro/intro.html:144
+msgid "After creating your application, you will receive a git url for deploy."
+msgstr "Após criar sua aplicação, você terá uma url git para fazer o deploy."
+
+#: intro/templates/intro/intro.html:171 intro/templates/intro/intro.html:182
+msgid "How to deploy"
+msgstr "Como fazer deploy"
+
+#: intro/templates/intro/intro.html:190
+msgid "Add your application git url as a remote target in your git."
+msgstr "Adicione a url git da sua aplicação como target remoto do seu git."
+
+#: intro/templates/intro/intro.html:192
+msgid "See how simple it is to deploy:"
+msgstr "Veja como fica simples um deploy:"
+
+#: intro/templates/intro/intro.html:200 intro/templates/intro/intro.html:211
+msgid "Scaling an application"
+msgstr "Escalando uma aplicação"
+
+#: intro/templates/intro/intro.html:219
+msgid "From this point, your application is ready to use :)"
+msgstr "A partir deste ponto, você já terá sua aplicação pronta para uso :)"
+
+#: intro/templates/intro/intro.html:224
+msgid "You can also scale it, by increasing the number of its instances."
+msgstr "Você também pode escalá-la, aumentando a quantidade de instâncias."
+
+#: intro/templates/intro/intro.html:254
+msgid "Start now!"
+msgstr "Comece agora!"
+
 #: quotas/templates/quotas/info.html:24
 msgid "Quota"
 msgstr "Cota"
@@ -226,7 +329,7 @@ msgstr "usado"
 
 #: quotas/templates/quotas/info.html:36
 msgid "availabe"
-msgstr "disponivel"
+msgstr "disponível"
 
 #: services/templates/services/add.html:10
 msgid "Add service instance for"
@@ -254,16 +357,15 @@ msgid ""
 "This action CANNOT be undone. This will delete the <strong>%(instance)s</"
 "strong>"
 msgstr ""
-"Está ação NÃO será desfeita. Isto irá apagar o <strong>%(instance)s</"
-"strong>"
+"Esta ação NÃO será desfeita. Isto irá apagar o <strong>%(instance)s</strong>"
 
 #: services/templates/services/detail.html:94
 msgid "Please type in the name of your service instance to confirm."
-msgstr "Por favor digite o nome da instância de serviço para confirmar."
+msgstr "Por favor, digite o nome da instância de serviço para confirmar."
 
 #: services/templates/services/list.html:40
 msgid "Add new instance"
-msgstr "Adicionar nova instancia"
+msgstr "Adicionar nova instância"
 
 #: teams/templates/teams/info.html:31
 msgid "Add user to team"
@@ -296,7 +398,8 @@ msgid ""
 "This action CANNOT be undone. This will delete the <strong>%(team.name)s</"
 "strong>"
 msgstr ""
-"Essa ação NÃO pode ser desfeita. Isot ira apagar o <strong>%(team.name)s</strong>"
+"Essa ação NÃO pode ser desfeita. Isto irá apagar o <strong>%(team.name)s</"
+"strong>"
 
 #: teams/templates/teams/info.html:100
 msgid "Please type in the name of your team to confirm."
