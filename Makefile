@@ -14,3 +14,6 @@ makemessages:
 
 compilemessages:
 	@django-admin.py compilemessages
+
+movemessages:
+	@cp -r locale/ abyss/locale/
