@@ -10,6 +10,8 @@ from mock import Mock, patch
 from auth.forms import LoginForm
 from auth.views import Login
 
+from intro.models import Intro
+
 
 class LoginViewTest(TestCase):
     def test_login_get(self):
@@ -100,3 +102,16 @@ class LoginViewTest(TestCase):
         response = Login.as_view()(request)
         self.assertIsInstance(response, HttpResponseRedirect)
         self.assertEqual('/intro', response['Location'])
+
+    @patch('requests.post')
+    @override_settings(INTRO_ENABLED=True)
+    def test_redirect_to_apps_when_the_intro_alread_exist(self, post):
+        data = {'username': 'valid@email.com', 'password': '123456'}
+        Intro.objects.create(email=data['username'])
+        request = RequestFactory().post('/', data)
+        request.session = {}
+        text = '{"token": "my beautiful token"}'
+        post.return_value = Mock(status_code=200, text=text)
+        response = Login.as_view()(request)
+        self.assertIsInstance(response, HttpResponseRedirect)
+        self.assertEqual('/apps', response['Location'])

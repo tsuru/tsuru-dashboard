@@ -11,6 +11,8 @@ from django.core.urlresolvers import reverse
 from auth.forms import (LoginForm, SignupForm, KeyForm, TokenRequestForm,
                         PasswordRecoveryForm)
 
+from intro.models import Intro
+
 
 class LoginRequiredView(View):
     def dispatch(self, request, *args, **kwargs):
@@ -56,7 +58,10 @@ class Login(FormView):
     @property
     def success_url(self):
         if hasattr(settings, "INTRO_ENABLED") and settings.INTRO_ENABLED:
-            return '/intro'
+            try:
+                Intro.objects.get(email=self.request.session['username'])
+            except Intro.DoesNotExist:
+                return '/intro'
         return '/apps'
 
     def form_valid(self, form):
