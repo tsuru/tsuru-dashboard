@@ -25,7 +25,7 @@
 				<fieldset>
 					<div class="clearfix control-group{% if form.errors.name %} error{% endif %}">
 						<label>{% trans 'name' %}</label>
-						<input type="text" name="{{ form.name.name }}" placeholder="Type a name for your team...">
+						<input type="text" name="{{ form.name.name }}">
 						<span class="help-inline">{{ form.errors.name }}</span>
 					</div>
 					<button class="btn primary" type="submit">{% trans 'Create' %}</button>
