@@ -14,6 +14,10 @@ from auth.forms import (LoginForm, SignupForm, KeyForm, TokenRequestForm,
 from intro.models import Intro
 
 
+class ChangePassword(TemplateView):
+    template_name = 'auth/change_password.html'
+
+
 class LoginRequiredView(View):
     def dispatch(self, request, *args, **kwargs):
         token = request.session.get('tsuru_token')
