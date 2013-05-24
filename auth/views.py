@@ -9,13 +9,15 @@ from django.views.generic.edit import FormView
 from django.core.urlresolvers import reverse
 
 from auth.forms import (LoginForm, SignupForm, KeyForm, TokenRequestForm,
-                        PasswordRecoveryForm)
+                        PasswordRecoveryForm, ChangePasswordForm)
 
 from intro.models import Intro
 
 
-class ChangePassword(TemplateView):
+class ChangePassword(FormView):
     template_name = 'auth/change_password.html'
+    form_class = ChangePasswordForm
+    success_url = '/'
 
 
 class LoginRequiredView(View):
