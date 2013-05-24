@@ -18,4 +18,6 @@ urlpatterns = patterns(
     url(r'^password-recovery/success/$',
         views.PasswordRecoverySuccess.as_view(),
         name='password-recovery-success'),
+    url(r'^change-password/$', views.ChangePassword.as_view(),
+        name='change-password'),
 )
