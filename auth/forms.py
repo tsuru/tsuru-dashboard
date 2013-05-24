@@ -5,6 +5,12 @@ from django.conf import settings
 import requests
 
 
+class ChangePasswordForm(forms.Form):
+    old = forms.CharField()
+    new = forms.CharField()
+    confirm = forms.CharField()
+
+
 class PasswordRecoveryForm(forms.Form):
     email = forms.EmailField()
     token = forms.CharField()
