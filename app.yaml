@@ -1,0 +1,3 @@
+hooks:
+  pre-restart:
+  - python manage.py syncdb --noinput
