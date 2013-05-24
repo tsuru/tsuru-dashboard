@@ -17,7 +17,7 @@ from intro.models import Intro
 class ChangePassword(FormView):
     template_name = 'auth/change_password.html'
     form_class = ChangePasswordForm
-    success_url = '/'
+    success_url = '/auth/change-password/'
 
     def form_valid(self, form):
         data = form.cleaned_data
