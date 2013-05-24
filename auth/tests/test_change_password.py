@@ -1,8 +1,11 @@
 from django.test import TestCase
 from django.test.client import RequestFactory
+from django.conf import settings
 
 from auth.views import ChangePassword
 from auth.forms import ChangePasswordForm
+
+from mock import patch
 
 
 class TestResetPasswordView(TestCase):
@@ -13,3 +16,16 @@ class TestResetPasswordView(TestCase):
                       response.template_name)
         self.assertIsInstance(response.context_data['form'],
                               ChangePasswordForm)
+
+    @patch("requests.put")
+    def test_post(self, put):
+        data = {
+            "old": "old",
+            "new": "new",
+            "confirm": "new",
+        }
+        request = RequestFactory().post("/", data)
+        ChangePassword.as_view()(request)
+        headers = {}
+        url = "{0}/users/password".format(settings.TSURU_HOST)
+        put.assert_called_with(url, data=data, headers=headers)

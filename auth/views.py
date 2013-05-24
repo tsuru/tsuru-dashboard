@@ -19,6 +19,13 @@ class ChangePassword(FormView):
     form_class = ChangePasswordForm
     success_url = '/'
 
+    def form_valid(self, form):
+        data = form.cleaned_data
+        headers = {}
+        url = "{0}/users/password".format(settings.TSURU_HOST)
+        requests.put(url, data=data, headers=headers)
+        return super(ChangePassword, self).form_valid(form)
+
 
 class LoginRequiredView(View):
     def dispatch(self, request, *args, **kwargs):
