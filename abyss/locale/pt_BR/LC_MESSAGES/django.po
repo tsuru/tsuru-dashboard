@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-23 17:28-0300\n"
+"POT-Creation-Date: 2013-05-24 14:39-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -61,7 +61,7 @@ msgstr "Adicionar equipe"
 msgid "Team name"
 msgstr "Nome da equipe"
 
-#: apps/templates/apps/app_add_team.html:41 apps/templates/apps/create.html:44
+#: apps/templates/apps/app_add_team.html:41 apps/templates/apps/create.html:49
 #: auth/templates/auth/key.html:31 intro/templates/intro/intro.html:117
 #: services/templates/services/add.html:28 teams/templates/teams/info.html:41
 msgid "Add"
@@ -85,6 +85,10 @@ msgstr "Nome"
 #: intro/templates/intro/intro.html:114 intro/templates/intro/intro.html:162
 msgid "Platform"
 msgstr "Plataforma"
+
+#: apps/templates/apps/create.html:42
+msgid "Select"
+msgstr "Selecione"
 
 #: apps/templates/apps/details.html:33 intro/templates/intro/intro.html:234
 msgid "Units"
@@ -156,6 +160,14 @@ msgstr "Colaboradores"
 #: apps/templates/apps/list.html:32 apps/templates/apps/navbar.html:6
 msgid "Settings"
 msgstr "Configurações"
+
+#: auth/templates/auth/change_password.html:6
+msgid "Change Password"
+msgstr "Alterar senha"
+
+#: auth/templates/auth/change_password.html:16
+msgid "Apply"
+msgstr "Aplicar"
 
 #: auth/templates/auth/key.html:6
 msgid "Key add"
