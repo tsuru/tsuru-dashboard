@@ -25,8 +25,9 @@ class TestResetPasswordView(TestCase):
             "confirm": "new",
         }
         request = RequestFactory().post("/", data)
+        request.session = {'tsuru_token': 'tokentest'}
         response = ChangePassword.as_view()(request)
-        headers = {}
+        headers = {'authorization': 'tokentest'}
         url = "{0}/users/password".format(settings.TSURU_HOST)
         put.assert_called_with(url, data=data, headers=headers)
         self.assertEqual(302, response.status_code)

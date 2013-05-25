@@ -30,7 +30,7 @@ class ChangePassword(FormView):
 
     def form_valid(self, form):
         data = form.cleaned_data
-        headers = {}
+        headers = {'authorization': self.request.session.get('tsuru_token')}
         url = "{0}/users/password".format(settings.TSURU_HOST)
         requests.put(url, data=data, headers=headers)
         return super(ChangePassword, self).form_valid(form)
