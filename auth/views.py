@@ -36,13 +36,8 @@ class ChangePassword(FormView):
         return super(ChangePassword, self).form_valid(form)
 
 
-class LoginRequiredView(View):
-    def dispatch(self, request, *args, **kwargs):
-        token = request.session.get('tsuru_token')
-        if not token:
-            return redirect(reverse('login'))
-        return super(LoginRequiredView, self).dispatch(
-            request, *args, **kwargs)
+class LoginRequiredView(LoginRequiredMixin, View):
+    pass
 
 
 class TokenRequest(FormView):
