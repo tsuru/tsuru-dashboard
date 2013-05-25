@@ -14,6 +14,15 @@ from auth.forms import (LoginForm, SignupForm, KeyForm, TokenRequestForm,
 from intro.models import Intro
 
 
+class LoginRequiredMixin(object):
+    def dispatch(self, request, *args, **kwargs):
+        token = request.session.get('tsuru_token')
+        if not token:
+            return redirect(reverse('login'))
+        return super(LoginRequiredMixin, self).dispatch(
+            request, *args, **kwargs)
+
+
 class ChangePassword(FormView):
     template_name = 'auth/change_password.html'
     form_class = ChangePasswordForm
