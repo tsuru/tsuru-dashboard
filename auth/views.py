@@ -7,6 +7,7 @@ from django.shortcuts import redirect
 from django.views.generic.base import View, TemplateView
 from django.views.generic.edit import FormView
 from django.core.urlresolvers import reverse
+from django.contrib import messages
 
 from auth.forms import (LoginForm, SignupForm, KeyForm, TokenRequestForm,
                         PasswordRecoveryForm, ChangePasswordForm)
@@ -32,7 +33,9 @@ class ChangePassword(FormView):
         data = form.cleaned_data
         headers = {'authorization': self.request.session.get('tsuru_token')}
         url = "{0}/users/password".format(settings.TSURU_HOST)
-        requests.put(url, data=json.dumps(data), headers=headers)
+        response = requests.put(url, data=json.dumps(data), headers=headers)
+        if response.status_code < 399:
+            messages.success(self.request, u'Password successfully updated!')
         return super(ChangePassword, self).form_valid(form)
 
 
