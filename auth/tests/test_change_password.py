@@ -5,6 +5,8 @@ from django.conf import settings
 from auth.views import ChangePassword
 from auth.forms import ChangePasswordForm
 
+import json
+
 from mock import patch
 
 
@@ -29,6 +31,6 @@ class TestResetPasswordView(TestCase):
         response = ChangePassword.as_view()(request)
         headers = {'authorization': 'tokentest'}
         url = "{0}/users/password".format(settings.TSURU_HOST)
-        put.assert_called_with(url, data=data, headers=headers)
+        put.assert_called_with(url, data=json.dumps(data), headers=headers)
         self.assertEqual(302, response.status_code)
         self.assertEqual('/auth/change-password/', response.items()[1][1])
