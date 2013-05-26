@@ -6,9 +6,10 @@ from django.conf import settings
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.core.urlresolvers import reverse
+from django.views.generic import TemplateView
 
 from apps.forms import AppForm, AppAddTeamForm, RunForm, SetEnvForm
-from auth.views import LoginRequiredView
+from auth.views import LoginRequiredView, LoginRequiredMixin
 
 from pluct import resource
 
@@ -58,18 +59,20 @@ class ChangeUnit(LoginRequiredView):
         return redirect(reverse('detail-app', args=[app_name]))
 
 
-class AppDetail(LoginRequiredView):
-    def get(self, request, *args, **kwargs):
+class AppDetail(LoginRequiredMixin, TemplateView):
+    template_name = 'apps/details.html'
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(AppDetail, self).get_context_data(*args, **kwargs)
         app_name = kwargs["app_name"]
-        token = request.session.get('tsuru_token').replace('type ', '')
+        token = self.request.session.get('tsuru_token').replace('type ', '')
         auth = {
             'type': 'type',
             'credentials': token,
         }
         url = '{0}/apps/{1}'.format(settings.TSURU_HOST, app_name)
-        app = resource.get(url, auth)
-        return TemplateResponse(request, "apps/details.html",
-                                {"app": app.data})
+        context['app'] = resource.get(url, auth)
+        return context
 
 
 class RemoveApp(LoginRequiredView):

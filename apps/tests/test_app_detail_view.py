@@ -32,7 +32,8 @@ class AppDetailTestCase(TestCase):
         self.response = AppDetail.as_view()(request, app_name="app1")
 
     def test_should_use_detail_template(self):
-        self.assertEqual("apps/details.html", self.response.template_name)
+        self.assertIn("apps/details.html", self.response.template_name)
 
     def test_should_get_the_app_info_from_tsuru(self):
-        self.assertDictEqual(self.expected, self.response.context_data["app"])
+        self.assertDictEqual(self.expected,
+                             self.response.context_data["app"].data)
