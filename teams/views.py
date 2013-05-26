@@ -2,6 +2,7 @@ from django.template.response import TemplateResponse
 from django.conf import settings
 from django.shortcuts import redirect
 from django.core.urlresolvers import reverse
+from django.contrib import messages
 
 from auth.views import LoginRequiredView
 from teams.forms import TeamForm
@@ -16,7 +17,11 @@ class RemoveUser(LoginRequiredView):
         user = kwargs["user"]
         headers = {'authorization': request.session.get('tsuru_token')}
         url = "{0}/teams/{1}/{2}".format(settings.TSURU_HOST, team_name, user)
-        requests.delete(url, headers=headers)
+        response = requests.delete(url, headers=headers)
+        if response.status_code < 399:
+            messages.success(self.request, u'User successfully removed!')
+        else:
+            messages.error(self.request, response.text)
         return redirect(reverse('team-info', args=[team_name]))
 
 
