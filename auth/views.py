@@ -36,6 +36,8 @@ class ChangePassword(FormView):
         response = requests.put(url, data=json.dumps(data), headers=headers)
         if response.status_code < 399:
             messages.success(self.request, u'Password successfully updated!')
+        else:
+            messages.error(self.request, response.text)
         return super(ChangePassword, self).form_valid(form)
 
 

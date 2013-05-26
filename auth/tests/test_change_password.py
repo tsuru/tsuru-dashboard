@@ -19,8 +19,9 @@ class TestResetPasswordView(TestCase):
         self.assertIsInstance(response.context_data['form'],
                               ChangePasswordForm)
 
+    @patch("django.contrib.messages.error")
     @patch("requests.put")
-    def test_post(self, put):
+    def test_post(self, put, error):
         data = {
             "old": "old",
             "new": "new",
@@ -37,7 +38,7 @@ class TestResetPasswordView(TestCase):
 
     @patch("django.contrib.messages.success")
     @patch("requests.put")
-    def test_post_sends_sucess_message(self, put, success):
+    def test_post_sends_success_message(self, put, success):
         put.return_value = Mock(status_code=200)
         data = {
             "old": "old",
@@ -48,3 +49,17 @@ class TestResetPasswordView(TestCase):
         request.session = {'tsuru_token': 'tokentest'}
         ChangePassword.as_view()(request)
         success.assert_called_with(request, u'Password successfully updated!')
+
+    @patch("django.contrib.messages.error")
+    @patch("requests.put")
+    def test_post_sends_error_message(self, put, error):
+        put.return_value = Mock(status_code=403, text=u'error')
+        data = {
+            "old": "old",
+            "new": "new",
+            "confirm": "new",
+        }
+        request = RequestFactory().post("/", data)
+        request.session = {'tsuru_token': 'tokentest'}
+        ChangePassword.as_view()(request)
+        error.assert_called_with(request, u'error')
