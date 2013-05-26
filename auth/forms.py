@@ -6,9 +6,9 @@ import requests
 
 
 class ChangePasswordForm(forms.Form):
-    old = forms.CharField()
-    new = forms.CharField()
-    confirm = forms.CharField()
+    old = forms.CharField(widget=forms.PasswordInput())
+    new = forms.CharField(widget=forms.PasswordInput())
+    confirm = forms.CharField(widget=forms.PasswordInput())
 
 
 class PasswordRecoveryForm(forms.Form):

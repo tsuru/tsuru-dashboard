@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.forms import PasswordInput
 
 from auth.forms import ChangePasswordForm
 
@@ -36,3 +37,15 @@ class ChangePasswordFormTest(TestCase):
         }
         form = ChangePasswordForm(data)
         self.assertFalse(form.is_valid())
+
+    def test_old_use_password_input(self):
+        old_field = ChangePasswordForm.base_fields['old']
+        self.assertIsInstance(old_field.widget, PasswordInput)
+
+    def test_new_use_password_input(self):
+        new_field = ChangePasswordForm.base_fields['new']
+        self.assertIsInstance(new_field.widget, PasswordInput)
+
+    def test_confirm_use_password_input(self):
+        confirm_field = ChangePasswordForm.base_fields['confirm']
+        self.assertIsInstance(confirm_field.widget, PasswordInput)
