@@ -5,7 +5,7 @@ from django.test import TestCase
 from django.test.client import RequestFactory
 from django.core.urlresolvers import reverse
 
-from auth.views import LoginRequiredView, Key
+from auth.views import LoginRequiredMixin, Key
 from auth.forms import KeyForm
 
 
@@ -14,15 +14,16 @@ class KeyViewTest(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
         self.request = self.factory.get('/')
-        self.response = Key().get(self.request)
+        self.request.session = {"tsuru_token": "admin"}
+        self.response = Key.as_view()(self.request)
         self.request_post = self.factory.post('/team/', {'key': 'test-key-qq'})
-        self.request_post.session = {}
+        self.request_post.session = {"tsuru_token": "admin"}
 
     def test_should_require_login_to_create_team(self):
-        assert issubclass(Key, LoginRequiredView)
+        assert issubclass(Key, LoginRequiredMixin)
 
     def test_key_should_render_expected_template(self):
-        self.assertEqual('auth/key.html', self.response.template_name)
+        self.assertIn('auth/key.html', self.response.template_name)
 
     def test_context_should_contain_form(self):
         self.assertIn('form', self.response.context_data.keys())
@@ -35,10 +36,11 @@ class KeyViewTest(TestCase):
         response = self.client.get(reverse('key'))
         self.assertNotEqual(404, response.status_code)
 
+    @patch("django.contrib.messages.error")
     @patch('requests.post')
-    def test_post_with_name_should_ssend_request_post_to_tsuru(self, post):
+    def test_post_with_name_should_send_request_post_to_tsuru(self, post, er):
         self.request_post.session = {'tsuru_token': 'tokentest'}
-        Key().post(self.request_post)
+        Key.as_view()(self.request_post)
         self.assertEqual(1, post.call_count)
         post.assert_called_with(
             '%s/users/keys' % settings.TSURU_HOST,
@@ -46,47 +48,49 @@ class KeyViewTest(TestCase):
             headers={'authorization':
                      self.request_post.session['tsuru_token']})
 
+    @patch("django.contrib.messages.success")
     @patch('requests.post')
-    def test_valid_postshould_return_message_expected(self, post):
+    def test_valid_postshould_return_message_expected(self, post, success):
         post.return_value = Mock(status_code=200)
-        response = Key().post(self.request_post)
-        self.assertEqual("The Key was successfully added",
-                         response.context_data.get('message'))
+        Key.as_view()(self.request_post)
+        success.assert_called_with(self.request_post,
+                                   "The key was successfully added")
 
+    @patch("django.contrib.messages.error")
     @patch('requests.post')
-    def test_invalid_post_should_return_error_message(self, post):
-        post.return_value = Mock(status_code=500, content='Error')
-        response = Key().post(self.request_post)
-        self.assertEqual('Error', response.context_data.get('errors'))
+    def test_invalid_post_should_return_error_message(self, post, error):
+        post.return_value = Mock(status_code=500, text='Error')
+        Key.as_view()(self.request_post)
+        error.assert_called_with(self.request_post, 'Error')
 
+    @patch("django.contrib.messages.success")
     @patch('requests.post')
-    def test_post_with_valid_key_should_return_context_with_form(self, post):
+    def test_successfully_post_should_redirects(self, post, m):
         post.return_value = Mock(status_code=200)
-        response = Key().post(self.request_post)
-        self.assertIn('form', response.context_data.keys())
-        self.assertTrue(isinstance(response.context_data.get('form'),
-                                   KeyForm))
+        response = Key.as_view()(self.request_post)
+        self.assertEqual(302, response.status_code)
+        self.assertEqual(reverse('key'), response.items()[1][1])
 
+    @patch("django.contrib.messages.error")
     @patch('requests.post')
-    def test_post_with_invalid_key_should_return_context_with_form(self, post):
+    def test_post_with_error_should_redirects(self, post, er):
         post.return_value = Mock(status_code=500, content='Error')
-        response = Key().post(self.request_post)
-        self.assertIn('form', response.context_data.keys())
-        self.assertTrue(isinstance(response.context_data.get('form'),
-                                   KeyForm))
+        response = Key.as_view()(self.request_post)
+        self.assertEqual(302, response.status_code)
+        self.assertEqual(reverse('key'), response.items()[1][1])
 
     @patch('requests.post')
     def test_post_without_key_should_not_send_request_to_tsuru(self, post):
         request = self.factory.post('/team/', {'key': ''})
         request.session = {}
-        Key().post(request)
+        Key.as_view()(request)
         self.assertEqual(0, post.call_count)
 
     @patch('requests.post')
     def test_post_without_key_should_return_form_with_errors(self, post):
         request = self.factory.post('/team/', {'key': ''})
-        request.session = {}
-        response = Key().post(request)
+        request.session = {"tsuru_token": "admin"}
+        response = Key.as_view()(request)
         self.assertIn('form', response.context_data.keys())
         form = response.context_data.get('form')
         self.assertTrue(isinstance(form, KeyForm))

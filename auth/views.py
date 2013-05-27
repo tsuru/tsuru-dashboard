@@ -138,29 +138,19 @@ class Signup(View):
                                     status=response.status_code)
 
 
-class Key(LoginRequiredView):
-    def get(self, request):
-        context = {}
-        context['form'] = KeyForm()
-        return TemplateResponse(request, 'auth/key.html', context=context)
+class Key(LoginRequiredMixin, FormView):
+    form_class = KeyForm
+    template_name = 'auth/key.html'
+    success_url = '/auth/key/'
 
-    def post(self, request):
-        form = KeyForm(request.POST)
-        if not form.is_valid():
-            return TemplateResponse(request, 'auth/key.html',
-                                    context={"form": form})
-
-        authorization = {'authorization': request.session.get('tsuru_token')}
+    def form_valid(self, form):
+        authorization = {'authorization':
+                         self.request.session.get('tsuru_token')}
         response = requests.post('%s/users/keys' % settings.TSURU_HOST,
-                                 data=json.dumps(request.POST),
+                                 data=json.dumps(form.cleaned_data),
                                  headers=authorization)
-
-        if response.status_code == 200:
-            message = "The Key was successfully added"
-            return TemplateResponse(request, 'auth/key.html',
-                                    context={"form": form,
-                                             "message": message})
+        if response.status_code < 399:
+            messages.success(self.request, "The key was successfully added")
         else:
-            return TemplateResponse(request, 'auth/key.html',
-                                    context={"form": form,
-                                             "errors": response.content})
+            messages.error(self.request, response.text)
+        return super(Key, self).form_valid(form)
