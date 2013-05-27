@@ -24,7 +24,7 @@ class LoginRequiredMixin(object):
             request, *args, **kwargs)
 
 
-class ChangePassword(FormView):
+class ChangePassword(LoginRequiredMixin, FormView):
     template_name = 'auth/change_password.html'
     form_class = ChangePasswordForm
     success_url = '/auth/change-password/'

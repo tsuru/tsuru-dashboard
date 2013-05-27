@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.test.client import RequestFactory
 from django.conf import settings
+from django.core.urlresolvers import reverse
 
 from auth.views import ChangePassword
 from auth.forms import ChangePasswordForm
@@ -13,6 +14,7 @@ from mock import patch, Mock
 class TestResetPasswordView(TestCase):
     def test_get(self):
         request = RequestFactory().get("/")
+        request.session = {"tsuru_token": "ble"}
         response = ChangePassword.as_view()(request)
         self.assertIn('auth/change_password.html',
                       response.template_name)
@@ -63,3 +65,10 @@ class TestResetPasswordView(TestCase):
         request.session = {'tsuru_token': 'tokentest'}
         ChangePassword.as_view()(request)
         error.assert_called_with(request, u'error')
+
+    def test_login_required(self):
+        request = RequestFactory().get("/")
+        request.session = {}
+        response = ChangePassword.as_view()(request)
+        self.assertEqual(302, response.status_code)
+        self.assertEqual(reverse('login'), response.items()[1][1])
