@@ -1,4 +1,4 @@
-*.sw[p-z]
+*.sw[a-z]
 *.pyc
 *.db
 /abyss/static
