@@ -71,7 +71,7 @@ class AppDetail(LoginRequiredMixin, TemplateView):
             'credentials': token,
         }
         url = '{0}/apps/{1}'.format(settings.TSURU_HOST, app_name)
-        context['app'] = resource.get(url, auth)
+        context['app'] = resource.get(url, auth).data
         return context
 
 

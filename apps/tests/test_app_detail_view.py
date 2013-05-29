@@ -36,4 +36,4 @@ class AppDetailTestCase(TestCase):
 
     def test_should_get_the_app_info_from_tsuru(self):
         self.assertDictEqual(self.expected,
-                             self.response.context_data["app"].data)
+                             self.response.context_data["app"])
