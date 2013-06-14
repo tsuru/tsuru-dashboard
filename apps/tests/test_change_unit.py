@@ -17,7 +17,8 @@ class ChangeUnitViewTest(TestCase):
         schema = Schema(
             "",
             type="object",
-            properties={"units":
+            properties={
+                "units":
                 {
                     "type": "array",
                     "items": {},
@@ -62,7 +63,8 @@ class ChangeUnitViewTest(TestCase):
         schema = Schema(
             "",
             type="object",
-            properties={"units":
+            properties={
+                "units":
                 {
                     "type": "array",
                     "items": {},
@@ -97,7 +99,8 @@ class ChangeUnitViewTest(TestCase):
         schema = Schema(
             "",
             type="object",
-            properties={"units":
+            properties={
+                "units":
                 {
                     "type": "array",
                     "items": {},

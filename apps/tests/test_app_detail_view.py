@@ -4,6 +4,7 @@ from django.test.client import RequestFactory
 from apps.views import AppDetail
 
 from pluct.resource import Resource
+from pluct.schema import Schema
 
 import mock
 
@@ -24,9 +25,26 @@ class AppDetailTestCase(TestCase):
             ],
             "teams": ["tsuruteam", "crane"]
         }
+        schema = Schema(
+            "",
+            type="object",
+            properties={
+                "units":
+                {
+                    "type": "array",
+                    "items": {},
+                },
+                "teams":
+                {
+                    "type": "array",
+                    "items": {},
+                }
+            }
+        )
         resource = Resource(
             url="url.com",
             data=self.expected,
+            schema=schema
         )
         get.return_value = resource
         self.response = AppDetail.as_view()(request, app_name="app1")
