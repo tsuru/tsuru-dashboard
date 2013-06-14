@@ -7,12 +7,23 @@ from django.test.client import RequestFactory
 from apps.views import ChangeUnit
 
 from pluct.resource import Resource
+from pluct.schema import Schema
 
 
 class ChangeUnitViewTest(TestCase):
     @patch('pluct.resource.get')
     @patch('requests.delete')
     def test_remove_unit(self, delete, get):
+        schema = Schema(
+            "",
+            type="object",
+            properties={"units":
+                {
+                    "type": "array",
+                    "items": {},
+                }
+            }
+        )
         resource_data = {
             "name": "app1",
             "units": [
@@ -25,6 +36,7 @@ class ChangeUnitViewTest(TestCase):
         resource = Resource(
             url="url.com",
             data=resource_data,
+            schema=schema,
         )
         get.return_value = resource
         data = {"units": '1'}
@@ -47,9 +59,20 @@ class ChangeUnitViewTest(TestCase):
                 {"Ip": "9.9.9.9"},
             ],
         }
+        schema = Schema(
+            "",
+            type="object",
+            properties={"units":
+                {
+                    "type": "array",
+                    "items": {},
+                }
+            }
+        )
         resource = Resource(
             url="url.com",
             data=resource_data,
+            schema=schema
         )
         get.return_value = resource
         data = {"units": '10'}
@@ -71,9 +94,20 @@ class ChangeUnitViewTest(TestCase):
                 {"Ip": "9.9.9.9"},
             ],
         }
+        schema = Schema(
+            "",
+            type="object",
+            properties={"units":
+                {
+                    "type": "array",
+                    "items": {},
+                }
+            }
+        )
         resource = Resource(
             url="url.com",
             data=resource_data,
+            schema=schema
         )
         get.return_value = resource
         data = {"units": '2'}
