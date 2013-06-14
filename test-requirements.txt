@@ -1,4 +1,4 @@
 -r requirements.txt
 mock==1.0.1
 flake8==2.0
-coverage
+coverage==3.6
