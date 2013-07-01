@@ -13,7 +13,6 @@ urlpatterns = patterns(
     (r'^teams/', include('teams.urls')),
     (r'^quotas/', include('quotas.urls')),
     (r'^intro/', include('intro.urls')),
-    (r'^policy/', include('policy.urls')),
 )
 
 urlpatterns += staticfiles_urlpatterns()

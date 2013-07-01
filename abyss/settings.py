@@ -96,7 +96,6 @@ INSTALLED_APPS = (
     'teams',
     'quotas',
     'intro',
-    'policy',
 )
 
 TEST_RUNNER = 'abyss.runner.DiscoveryRunner'
