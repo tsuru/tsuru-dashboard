@@ -3,20 +3,19 @@ from django.test.client import RequestFactory
 
 from apps.views import AppDetail
 
-from pluct.resource import Resource
-from pluct.schema import Schema
+from collections import namedtuple
 
 import mock
 
 
 class AppDetailTestCase(TestCase):
-    @mock.patch("pluct.resource.get")
+    @mock.patch("requests.get")
     def setUp(self, get):
         request = RequestFactory().get("/")
         request.session = {"tsuru_token": "admin"}
         self.expected = {
             "name": "app1",
-            "framework": "php",
+            "platform": "php",
             "repository": "git@git.com:php.git",
             "state": "dead",
             "units": [
@@ -25,28 +24,8 @@ class AppDetailTestCase(TestCase):
             ],
             "teams": ["tsuruteam", "crane"]
         }
-        schema = Schema(
-            "",
-            type="object",
-            properties={
-                "units":
-                {
-                    "type": "array",
-                    "items": {},
-                },
-                "teams":
-                {
-                    "type": "array",
-                    "items": {},
-                }
-            }
-        )
-        resource = Resource(
-            url="url.com",
-            data=self.expected,
-            schema=schema
-        )
-        get.return_value = resource
+        response = namedtuple("Response", ["json"])(json=lambda: self.expected)
+        get.return_value = response
         self.response = AppDetail.as_view()(request, app_name="app1")
 
     def test_should_use_detail_template(self):
