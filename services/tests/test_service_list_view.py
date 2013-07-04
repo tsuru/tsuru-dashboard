@@ -1,12 +1,10 @@
-from mock import patch
+from mock import patch, Mock
 
 from django.conf import settings
 from django.test import TestCase
 from django.test.client import RequestFactory
 
 from services.views import ListService
-
-from pluct.resource import Resource
 
 
 class ListServiceViewTest(TestCase):
@@ -15,7 +13,7 @@ class ListServiceViewTest(TestCase):
         request = RequestFactory().get("/")
         request.session = {"tsuru_token": "admin"}
         expected = {"teste": "teste"}
-        resource = Resource(url="url", data=expected)
+        resource = Mock(url="url", data=expected)
         get.return_value = resource
         response = ListService.as_view()(request)
         self.assertEqual("services/list.html", response.template_name)
