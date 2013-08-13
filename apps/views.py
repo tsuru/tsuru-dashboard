@@ -197,7 +197,7 @@ class AppLog(LoginRequiredView):
         app = resource.get(url, auth)
         response = app.log(lines=10)
         return TemplateResponse(request, self.template,
-                                {'logs': response.json(), 'app': app_name})
+                                {'logs': response, 'app': app_name})
 
 
 class AppTeams(LoginRequiredView):

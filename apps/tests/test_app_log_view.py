@@ -45,8 +45,7 @@ class AppLogViewTest(TestCase):
     @patch('pluct.resource.get')
     def test_should_return_expected_context(self, get):
         expected = [{"logs": "teste"}]
-        log_mock = Mock()
-        log_mock.json.return_value = expected
+        log_mock = expected
         resource_mock = Mock()
         resource_mock.log.return_value = log_mock
         get.return_value = resource_mock
