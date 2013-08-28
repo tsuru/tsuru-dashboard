@@ -18,3 +18,16 @@ class TeamFormTest(TestCase):
     def test_name_should_have_at_most_60_characters(self):
         field = forms.TeamForm.base_fields['name']
         self.assertEqual(60, field.max_length)
+
+    def test_validate_name(self):
+        invalid_names = [" ", "", "1 my team", "   myteam", "a"]
+        valid_names = ["ab", "cd", "team123", "me@myteam.com",
+                       "team-1", "team_2", "me+tsuru@me.com"]
+        for name in invalid_names:
+            form = forms.TeamForm({"name": name})
+            self.assertFalse(form.is_valid(),
+                             "{} should be invalid".format(name))
+        for name in valid_names:
+            form = forms.TeamForm({"name": name})
+            self.assertTrue(form.is_valid(),
+                            "{} should be valid".format(name))
