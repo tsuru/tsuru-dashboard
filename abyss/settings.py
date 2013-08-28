@@ -133,3 +133,5 @@ LOCALE_PATHS = (
 )
 
 INTRO_ENABLED = os.environ.get("INTRO_ENABLED", "True") == "True"
+
+ALLOWED_HOSTS = ["*"]
