@@ -47,8 +47,13 @@ class CreateAppViewTest(TestCase):
         platforms = response.context_data["platforms"]
         self.assertEqual(["python", "ruby", "static"], platforms)
 
+    @patch('requests.get')
     @patch('requests.post')
-    def test_post_with_invalid_name_should_return_500(self, post):
+    def test_post_with_invalid_name_should_return_500(self, post, get):
+        content = u"""[{"Name":"python"},{"Name":"ruby"},{"Name":"static"}]"""
+        m = Mock(status_code=200, content=content)
+        m.json.return_value = json.loads(content)
+        get.return_value = m
         request = RequestFactory().post(
             "/",
             {"name": "myepe", "platform": "python"})
@@ -57,7 +62,12 @@ class CreateAppViewTest(TestCase):
         response = CreateApp().post(request)
         self.assertEqual('Error', response.context_data.get("errors"))
 
-    def test_post_without_name_should_return_form_with_errors(self):
+    @patch('requests.get')
+    def test_post_without_name_should_return_form_with_errors(self, get):
+        content = u"""[{"Name":"python"},{"Name":"ruby"},{"Name":"static"}]"""
+        m = Mock(status_code=200, content=content)
+        m.json.return_value = json.loads(content)
+        get.return_value = m
         request = RequestFactory().post("/", {"name": ""})
         request.session = {}
         response = CreateApp().post(request)
@@ -65,8 +75,21 @@ class CreateAppViewTest(TestCase):
         self.assertIn('name', form.errors)
         self.assertIn(u'This field is required.', form.errors.get('name'))
 
+    @patch('requests.get')
+    def test_post_failure_should_include_platforms(self, get):
+        content = u"""[{"Name":"python"},{"Name":"ruby"},{"Name":"static"}]"""
+        m = Mock(status_code=200, content=content)
+        m.json.return_value = json.loads(content)
+        get.return_value = m
+        request = RequestFactory().post("/", {"name": ""})
+        request.session = {}
+        response = CreateApp().post(request)
+        platforms = response.context_data.get('platforms')
+        self.assertEqual(["python", "ruby", "static"], platforms)
+
     @patch('requests.post')
     def test_post_should_send_to_tsuru_with_args_expected(self, post):
+        post.return_value = Mock(status_code=200)
         request = RequestFactory().post(
             "/",
             {"name": "myepe", "platform": "django"})

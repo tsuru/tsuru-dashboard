@@ -90,12 +90,10 @@ class RemoveApp(LoginRequiredView):
 
 class CreateApp(LoginRequiredView):
     def get(self, request):
-        context = {"app_form": AppForm()}
-        authorization = {"authorization": request.session.get("tsuru_token")}
-        response = requests.get("%s/platforms" % settings.TSURU_HOST,
-                                headers=authorization)
-        platforms = response.json()
-        context["platforms"] = [p["Name"] for p in platforms]
+        context = {
+            "app_form": AppForm(),
+            "platforms": self._get_platforms(request),
+        }
         return TemplateResponse(request, "apps/create.html", context)
 
     def post(self, request):
@@ -110,11 +108,21 @@ class CreateApp(LoginRequiredView):
                 headers=authorization
             )
             if response.status_code == 200:
-                context.update({'message': "App was successfully created"})
+                context['message'] = "App was successfully created"
             else:
-                context.update({'errors': response.content})
-        context.update({'app_form': form})
+                context['errors'] = response.content
+                context['platforms'] = self._get_platforms(request)
+        else:
+            context['platforms'] = self._get_platforms(request)
+        context['app_form'] = form
         return TemplateResponse(request, 'apps/create.html', context)
+
+    def _get_platforms(self, request):
+        authorization = {"authorization": request.session.get("tsuru_token")}
+        response = requests.get("%s/platforms" % settings.TSURU_HOST,
+                                headers=authorization)
+        platforms = response.json()
+        return [p["Name"] for p in platforms]
 
 
 class ListApp(LoginRequiredView):
