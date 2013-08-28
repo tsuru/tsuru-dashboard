@@ -3,6 +3,8 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 from django.views.generic.base import RedirectView
 
+import os
+
 
 urlpatterns = patterns(
     '',
@@ -15,4 +17,7 @@ urlpatterns = patterns(
     (r'^intro/', include('intro.urls')),
 )
 
-urlpatterns += staticfiles_urlpatterns()
+
+urlpatterns += patterns('',
+    (r'^static/(?P<path>.*)$', 'django.views.static.serve',
+     {'document_root': os.path.join(os.path.dirname(__file__), 'static')}))
