@@ -340,7 +340,7 @@ msgid "used"
 msgstr "usado"
 
 #: quotas/templates/quotas/info.html:36
-msgid "availabe"
+msgid "available"
 msgstr "disponível"
 
 #: services/templates/services/add.html:10
