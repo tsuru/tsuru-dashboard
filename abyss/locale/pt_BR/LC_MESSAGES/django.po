@@ -23,7 +23,7 @@ msgstr "Página inicial"
 
 #: abyss/templates/navbar.html:19
 msgid "Add keys"
-msgstr "Adicionar equipe"
+msgstr "Adicionar chaves"
 
 #: abyss/templates/navbar.html:20 quotas/templates/quotas/info.html:11
 msgid "Quota info"
