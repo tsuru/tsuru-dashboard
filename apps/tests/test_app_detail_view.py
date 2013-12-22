@@ -10,8 +10,9 @@ import mock
 
 
 class AppDetailTestCase(TestCase):
+    @mock.patch("requests.get")
     @mock.patch("pluct.resource.get")
-    def setUp(self, get):
+    def setUp(self, get, requests_mock):
         request = RequestFactory().get("/")
         request.session = {"tsuru_token": "admin"}
         self.expected = {
@@ -47,6 +48,9 @@ class AppDetailTestCase(TestCase):
             schema=schema
         )
         get.return_value = resource
+        json_mock = mock.Mock()
+        json_mock.json.return_value = self.expected
+        requests_mock.return_value = json_mock
         self.response = AppDetail.as_view()(request, app_name="app1")
 
     def test_should_use_detail_template(self):
