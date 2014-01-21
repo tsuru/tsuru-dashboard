@@ -62,6 +62,21 @@ class ChangeUnit(LoginRequiredView):
 class AppDetail(LoginRequiredMixin, TemplateView):
     template_name = 'apps/details.html'
 
+    @property
+    def authorization(self):
+        return {'authorization': self.request.session.get('tsuru_token')}
+
+    def service_list(self):
+        tsuru_url = '{0}/services'.format(settings.TSURU_HOST)
+        return requests.get(tsuru_url, headers=self.authorization).json()
+
+    def service_info(self, instance_name):
+        tsuru_url = '{0}/services/instances/{1}'.format(settings.TSURU_HOST, instance_name)
+        response = requests.get(tsuru_url, headers=self.authorization)
+        if response.status_code != 200:
+            return {}
+        return response.json()
+
     def get_context_data(self, *args, **kwargs):
         context = super(AppDetail, self).get_context_data(*args, **kwargs)
         app_name = kwargs["app_name"]
@@ -72,6 +87,16 @@ class AppDetail(LoginRequiredMixin, TemplateView):
             'Authorization': '{} {}'.format('type', token)
         }
         context['app'] = requests.get(url, headers=headers).json()
+        service_instances = []
+        for service in self.service_list():
+            instances = service.get("instances", None)
+            instances = instances or []
+            for instance in instances:
+                instance_data = self.service_info(instance)
+                if instance_data != {}:
+                    if context['app']['name'] in instance_data['Apps']:
+                        service_instances.append({"name": instance_data["Name"], "servicename": instance_data["ServiceName"]})
+        context['app']["service_instances"] = service_instances
         return context
 
 
@@ -205,7 +230,7 @@ class AppLog(LoginRequiredView):
         app = resource.get(url, auth)
         response = app.log(lines=10)
         return TemplateResponse(request, self.template,
-                                {'logs': response, 'app': app_name})
+                                {'logs': response, 'app': app})
 
 
 class AppTeams(LoginRequiredView):
@@ -274,3 +299,43 @@ class AppEnv(LoginRequiredView):
         tsuru_url = '%s/apps/%s/env' % (settings.TSURU_HOST, app_name)
         return requests.post(tsuru_url, data=form.data.get('env'),
                              headers=authorization)
+
+class ListService(LoginRequiredView):
+    def get(self, request):
+        token = request.session.get('tsuru_token').replace('type ', '')
+        auth = {
+            'type': 'type',
+            'credentials': token,
+        }
+        url = "{0}/services".format(settings.TSURU_HOST)
+        services = resource.get(url, auth).data
+        return TemplateResponse(request, "services/list.html",
+                                {'services': services})
+
+class ServiceInstanceDetail(LoginRequiredView):
+    def apps(self, instance):
+        url = "{0}/apps".format(settings.TSURU_HOST)
+        response = requests.get(url, headers=self.authorization)
+        app_list = []
+        for app in response.json():
+            if app['name'] not in instance['Apps']:
+                app_list.append(app['name'])
+        return app_list
+
+    @property
+    def authorization(self):
+        return {'authorization': self.request.session.get('tsuru_token')}
+
+    def get_instance(self, instance_name):
+        url = "{0}/services/instances/{1}".format(settings.TSURU_HOST,
+                                                  instance_name)
+        response = requests.get(url, headers=self.authorization)
+        return response.json()
+
+    def get(self, request, *args, **kwargs):
+        instance_name = kwargs["instance"]
+        instance = self.get_instance(instance_name)
+        apps = self.apps(instance)
+        return TemplateResponse(request, "services/detail.html",
+                                {'instance': instance, 'apps': apps})
+

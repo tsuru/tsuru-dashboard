@@ -62,9 +62,11 @@ class Remove(LoginRequiredView):
         team_name = kwargs["team"]
         auth = {'authorization': request.session.get('tsuru_token')}
         url = "{0}/teams/{1}".format(settings.TSURU_HOST, team_name)
-        requests.delete(url, headers=auth)
-        return redirect(reverse('team-list'))
+        response = requests.delete(url, headers=auth)
 
+        if response.status_code > 399:
+            messages.error(self.request, u'Can not delete this team!')
+        return redirect(reverse('team-list'))
 
 class Add(LoginRequiredView):
 

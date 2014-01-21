@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-24 14:39-0300\n"
+"POT-Creation-Date: 2014-01-21 17:55-0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,6 +16,690 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:11
+msgid "Null character in input stream, replaced with U+FFFD."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:13
+msgid "Invalid codepoint in stream."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:15
+msgid "Solidus (/) incorrectly placed in tag."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:17
+msgid "Incorrect CR newline entity, replaced with LF."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:19
+msgid "Entity used with illegal number (windows-1252 reference)."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:21
+#, python-format
+msgid ""
+"Numeric entity couldn't be converted to character (codepoint U+"
+"%(charAsInt)08x)."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:24
+#, python-format
+msgid "Numeric entity represents an illegal codepoint: U+%(charAsInt)08x."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:27
+msgid "Numeric entity didn't end with ';'."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:29
+msgid "Numeric entity expected. Got end of file instead."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:31
+msgid "Numeric entity expected but none found."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:33
+msgid "Named entity didn't end with ';'."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:35
+msgid "Named entity expected. Got none."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:37
+msgid "End tag contains unexpected attributes."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:39
+msgid "End tag contains unexpected self-closing flag."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:41
+msgid "Expected tag name. Got '>' instead."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:43
+msgid ""
+"Expected tag name. Got '?' instead. (HTML doesn't support processing "
+"instructions.)"
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:46
+msgid "Expected tag name. Got something else instead"
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:48
+msgid "Expected closing tag. Got '>' instead. Ignoring '</>'."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:50
+msgid "Expected closing tag. Unexpected end of file."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:52
+#, python-format
+msgid "Expected closing tag. Unexpected character '%(data)s' found."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:54
+msgid "Unexpected end of file in the tag name."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:56
+msgid "Unexpected end of file. Expected attribute name instead."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:58
+msgid "Unexpected end of file in attribute name."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:60
+msgid "Invalid character in attribute name"
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:62
+msgid "Dropped duplicate attribute on tag."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:64
+msgid "Unexpected end of file. Expected = or end of tag."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:66
+msgid "Unexpected end of file. Expected attribute value."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:68
+msgid "Expected attribute value. Got '>' instead."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:70
+msgid "Unexpected = in unquoted attribute"
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:72
+msgid "Unexpected character in unquoted attribute"
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:74
+msgid "Unexpected character after attribute name."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:76
+msgid "Unexpected character after attribute value."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:78
+msgid "Unexpected end of file in attribute value (\")."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:80
+msgid "Unexpected end of file in attribute value (')."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:82
+msgid "Unexpected end of file in attribute value."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:84
+msgid "Unexpected end of file in tag. Expected >"
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:86
+msgid "Unexpected character after / in tag. Expected >"
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:88
+msgid "Expected '--' or 'DOCTYPE'. Not found."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:90
+msgid "Unexpected ! after -- in comment"
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:92
+msgid "Unexpected space after -- in comment"
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:94
+msgid "Incorrect comment."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:96
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:104
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:106
+msgid "Unexpected end of file in comment."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:98
+msgid "Unexpected end of file in comment (-)"
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:100
+msgid "Unexpected '-' after '--' found in comment."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:102
+msgid "Unexpected end of file in comment (--)."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:108
+msgid "Unexpected character in comment found."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:110
+msgid "No space after literal string 'DOCTYPE'."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:112
+msgid "Unexpected > character. Expected DOCTYPE name."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:114
+msgid "Unexpected end of file. Expected DOCTYPE name."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:116
+msgid "Unexpected end of file in DOCTYPE name."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:118
+msgid "Unexpected end of file in DOCTYPE."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:120
+#, python-format
+msgid "Expected space or '>'. Got '%(data)s'"
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:122
+msgid "Unexpected end of DOCTYPE."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:124
+msgid "Unexpected character in DOCTYPE."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:126
+msgid "XXX innerHTML EOF"
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:128
+msgid "Unexpected DOCTYPE. Ignored."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:130
+msgid "html needs to be the first start tag."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:132
+msgid "Unexpected End of file. Expected DOCTYPE."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:134
+msgid "Erroneous DOCTYPE."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:136
+msgid "Unexpected non-space characters. Expected DOCTYPE."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:138
+#, python-format
+msgid "Unexpected start tag (%(name)s). Expected DOCTYPE."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:140
+#, python-format
+msgid "Unexpected end tag (%(name)s). Expected DOCTYPE."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:142
+#, python-format
+msgid "Unexpected end tag (%(name)s) after the (implied) root element."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:144
+#, python-format
+msgid "Unexpected end of file. Expected end tag (%(name)s)."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:146
+msgid "Unexpected start tag head in existing head. Ignored."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:148
+#, python-format
+msgid "Unexpected end tag (%(name)s). Ignored."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:150
+#, python-format
+msgid "Unexpected start tag (%(name)s) that can be in head. Moved."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:152
+#, python-format
+msgid "Unexpected start tag (%(name)s)."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:154
+#, python-format
+msgid "Missing end tag (%(name)s)."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:156
+#, python-format
+msgid "Missing end tags (%(name)s)."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:158
+#, python-format
+msgid "Unexpected start tag (%(startName)s) implies end tag (%(endName)s)."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:161
+#, python-format
+msgid "Unexpected start tag (%(originalName)s). Treated as %(newName)s."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:163
+#, python-format
+msgid "Unexpected start tag %(name)s. Don't use it!"
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:165
+#, python-format
+msgid "Unexpected start tag %(name)s. Ignored."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:167
+#, python-format
+msgid "Unexpected end tag (%(gotName)s). Missing end tag (%(expectedName)s)."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:170
+#, python-format
+msgid "End tag (%(name)s) seen too early. Expected other end tag."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:172
+#, python-format
+msgid "Unexpected end tag (%(gotName)s). Expected end tag (%(expectedName)s)."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:174
+#, python-format
+msgid "End tag (%(name)s) seen too early. Ignored."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:176
+#, python-format
+msgid ""
+"End tag (%(name)s) violates step 1, paragraph 1 of the adoption agency "
+"algorithm."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:179
+#, python-format
+msgid ""
+"End tag (%(name)s) violates step 1, paragraph 2 of the adoption agency "
+"algorithm."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:182
+#, python-format
+msgid ""
+"End tag (%(name)s) violates step 1, paragraph 3 of the adoption agency "
+"algorithm."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:185
+#, python-format
+msgid ""
+"End tag (%(name)s) violates step 4, paragraph 4 of the adoption agency "
+"algorithm."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:188
+#, python-format
+msgid "Unexpected end tag (%(originalName)s). Treated as %(newName)s."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:190
+#, python-format
+msgid "This element (%(name)s) has no end tag."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:192
+#, python-format
+msgid "Unexpected implied end tag (%(name)s) in the table phase."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:194
+#, python-format
+msgid "Unexpected implied end tag (%(name)s) in the table body phase."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:196
+msgid "Unexpected non-space characters in table context caused voodoo mode."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:199
+msgid "Unexpected input with type hidden in table context."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:201
+msgid "Unexpected form in table context."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:203
+#, python-format
+msgid "Unexpected start tag (%(name)s) in table context caused voodoo mode."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:206
+#, python-format
+msgid "Unexpected end tag (%(name)s) in table context caused voodoo mode."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:209
+#, python-format
+msgid "Unexpected table cell start tag (%(name)s) in the table body phase."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:212
+#, python-format
+msgid "Got table cell end tag (%(name)s) while required end tags are missing."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:215
+#, python-format
+msgid "Unexpected end tag (%(name)s) in the table body phase. Ignored."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:217
+#, python-format
+msgid "Unexpected implied end tag (%(name)s) in the table row phase."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:219
+#, python-format
+msgid "Unexpected end tag (%(name)s) in the table row phase. Ignored."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:221
+msgid ""
+"Unexpected select start tag in the select phase treated as select end tag."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:224
+msgid "Unexpected input start tag in the select phase."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:226
+#, python-format
+msgid "Unexpected start tag token (%(name)s in the select phase. Ignored."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:229
+#, python-format
+msgid "Unexpected end tag (%(name)s) in the select phase. Ignored."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:231
+#, python-format
+msgid ""
+"Unexpected table element start tag (%(name)s) in the select in table phase."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:233
+#, python-format
+msgid ""
+"Unexpected table element end tag (%(name)s) in the select in table phase."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:235
+msgid "Unexpected non-space characters in the after body phase."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:237
+#, python-format
+msgid "Unexpected start tag token (%(name)s) in the after body phase."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:240
+#, python-format
+msgid "Unexpected end tag token (%(name)s) in the after body phase."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:243
+msgid "Unexpected characters in the frameset phase. Characters ignored."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:245
+#, python-format
+msgid "Unexpected start tag token (%(name)s) in the frameset phase. Ignored."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:248
+msgid "Unexpected end tag token (frameset) in the frameset phase (innerHTML)."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:251
+#, python-format
+msgid "Unexpected end tag token (%(name)s) in the frameset phase. Ignored."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:254
+msgid "Unexpected non-space characters in the after frameset phase. Ignored."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:257
+#, python-format
+msgid "Unexpected start tag (%(name)s) in the after frameset phase. Ignored."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:260
+#, python-format
+msgid "Unexpected end tag (%(name)s) in the after frameset phase. Ignored."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:263
+msgid "Unexpected end tag after body(innerHtml)"
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:265
+msgid "Unexpected non-space characters. Expected end of file."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:267
+#, python-format
+msgid "Unexpected start tag (%(name)s). Expected end of file."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:270
+#, python-format
+msgid "Unexpected end tag (%(name)s). Expected end of file."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:273
+msgid "Unexpected end of file. Expected table content."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:275
+msgid "Unexpected end of file. Expected select content."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:277
+msgid "Unexpected end of file. Expected frameset content."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:279
+msgid "Unexpected end of file. Expected script content."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:281
+msgid "Unexpected end of file. Expected foreign content"
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:283
+#, python-format
+msgid "Trailing solidus not allowed on element %(name)s"
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:285
+#, python-format
+msgid "Element %(name)s not allowed in a non-html context"
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:287
+#, python-format
+msgid "Unexpected end tag (%(name)s) before html."
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/constants.py:289
+msgid "Undefined error (this sucks and should be fixed)"
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/filters/lint.py:26
+#, python-format
+msgid "StartTag not in PCDATA content model flag: %s"
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/filters/lint.py:28
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/filters/lint.py:54
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/filters/lint.py:84
+#, python-format
+msgid "Tag name is not a string: %r"
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/filters/lint.py:30
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/filters/lint.py:56
+msgid "Empty tag name"
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/filters/lint.py:32
+#, python-format
+msgid "Void element reported as StartTag token: %s"
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/filters/lint.py:34
+#, python-format
+msgid "Non-void element reported as EmptyTag token: %s"
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/filters/lint.py:39
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/filters/lint.py:71
+#, python-format
+msgid "Attribute name is not a string: %r"
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/filters/lint.py:41
+msgid "Empty attribute name"
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/filters/lint.py:43
+#, python-format
+msgid "Attribute value is not a string: %r"
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/filters/lint.py:58
+#, python-format
+msgid "Void element reported as EndTag token: %s"
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/filters/lint.py:61
+#, python-format
+msgid "EndTag (%s) does not match StartTag (%s)"
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/filters/lint.py:66
+msgid "Comment not in PCDATA content model flag"
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/filters/lint.py:73
+#, python-format
+msgid "%s token with empty data"
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/filters/lint.py:77
+msgid "Non-space character(s) found in SpaceCharacters token: "
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/filters/lint.py:82
+#, python-format
+msgid "Doctype not in PCDATA content model flag: %s"
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/filters/lint.py:91
+#, python-format
+msgid "Unknown token type: %s"
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/serializer/htmlserializer.py:200
+msgid "System identifer contains both single and double quote characters"
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/serializer/htmlserializer.py:212
+msgid "Unexpected </ in CDATA"
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/serializer/htmlserializer.py:223
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/serializer/htmlserializer.py:271
+msgid "Unexpected child element of a CDATA element"
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/serializer/htmlserializer.py:277
+msgid "Comment contains --"
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/serializer/htmlserializer.py:284
+#, python-format
+msgid "Entity %s not recognized"
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/treewalkers/_base.py:33
+msgid "Void element has children"
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/treewalkers/_base.py:95
+msgid "Unknown node type: "
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/treewalkers/lxmletree.py:137
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/treewalkers/lxmletree.py:187
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/treewalkers/lxmletree.py:203
+#, python-format
+msgid "Text nodes are text or tail, found %s"
+msgstr ""
+
+#: abyss/lib/python2.7/site-packages/pip/_vendor/html5lib/treewalkers/lxmletree.py:176
+msgid "Text nodes have no children"
+msgstr ""
 
 #: abyss/templates/base.html:35
 msgid "Home"
@@ -30,10 +714,15 @@ msgid "Quota info"
 msgstr "Cota"
 
 #: abyss/templates/navbar.html:22
+#, fuzzy
+msgid "Change password"
+msgstr "Alterar senha"
+
+#: abyss/templates/navbar.html:23
 msgid "Logout"
 msgstr "Sair"
 
-#: abyss/templates/sidebar.html:14 apps/templates/apps/app_log.html:14
+#: abyss/templates/sidebar.html:14 apps/templates/apps/app_log.html:15
 #: apps/templates/apps/app_team.html:15 apps/templates/apps/create.html:14
 #: apps/templates/apps/details.html:21 apps/templates/apps/list.html:13
 msgid "Apps"
@@ -67,7 +756,7 @@ msgstr "Nome da equipe"
 msgid "Add"
 msgstr "Adicionar"
 
-#: apps/templates/apps/app_log.html:10 apps/templates/apps/list.html:26
+#: apps/templates/apps/app_log.html:11 apps/templates/apps/list.html:26
 #: apps/templates/apps/navbar.html:4
 msgid "Log"
 msgstr "Log"
@@ -94,10 +783,6 @@ msgstr "Selecione"
 msgid "Units"
 msgstr "Unidades"
 
-#: apps/templates/apps/details.html:39 intro/templates/intro/intro.html:240
-msgid "Instances"
-msgstr "Instâncias"
-
 #: apps/templates/apps/details.html:50
 msgid "apply changes"
 msgstr "aplicar mudanças"
@@ -115,35 +800,38 @@ msgid "Git clone url"
 msgstr "Git clone url"
 
 #: apps/templates/apps/details.html:92
+msgid "Service Instances"
+msgstr "Instâncias"
+
+#: apps/templates/apps/details.html:116
 #: services/templates/services/detail.html:77
 #: teams/templates/teams/info.html:83
 msgid "Dangerous!"
 msgstr "Perigo!"
 
-#: apps/templates/apps/details.html:95 apps/templates/apps/details.html:115
+#: apps/templates/apps/details.html:119 apps/templates/apps/details.html:139
 #: services/templates/services/detail.html:100
-#: teams/templates/teams/info.html:106
 msgid "Delete app"
 msgstr "Apagar app"
 
-#: apps/templates/apps/details.html:104
+#: apps/templates/apps/details.html:128
 #: services/templates/services/detail.html:89
 #: teams/templates/teams/info.html:95
 msgid "Are you sure?"
 msgstr "Você tem certeza?"
 
-#: apps/templates/apps/details.html:107
+#: apps/templates/apps/details.html:131
 #, python-format
 msgid ""
 "This action CANNOT be undone. This will delete the <strong>%(app)s</strong>"
 msgstr ""
 "Esta ação NÃO pode ser desfeita. Isso irá apagar o <strong>%(app)s</strong>"
 
-#: apps/templates/apps/details.html:109
+#: apps/templates/apps/details.html:133
 msgid "Please type in the name of your application to confirm."
 msgstr "Por favor digite o nome da sua aplicação para confirmar."
 
-#: apps/templates/apps/details.html:114
+#: apps/templates/apps/details.html:138
 #: services/templates/services/detail.html:99
 #: teams/templates/teams/info.html:105
 msgid "Cancel"
@@ -327,6 +1015,10 @@ msgstr "A partir deste ponto, você já terá sua aplicação pronta para uso :)
 msgid "You can also scale it, by increasing the number of its instances."
 msgstr "Você também pode escalá-la, aumentando a quantidade de instâncias."
 
+#: intro/templates/intro/intro.html:240
+msgid "Instances"
+msgstr "Instâncias"
+
 #: intro/templates/intro/intro.html:254
 msgid "Start now!"
 msgstr "Comece agora!"
@@ -400,7 +1092,7 @@ msgstr "remover %(user)s do time %(team)s"
 msgid "remove"
 msgstr "remover"
 
-#: teams/templates/teams/info.html:86
+#: teams/templates/teams/info.html:86 teams/templates/teams/info.html:106
 msgid "Delete team"
 msgstr "Apagar equipe"
 

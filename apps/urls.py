@@ -22,4 +22,7 @@ urlpatterns = patterns(
         views.AppAddTeam.as_view(), name='app-add-team'),
     url(r'^(?P<app_name>[\w-]+)/units/$',
         views.ChangeUnit.as_view(), name='change-units'),
+    url(r'^$', views.ListService.as_view(), name='service-list'),
+    url(r'^(?P<instance>[\w-]+)/$', views.ServiceInstanceDetail.as_view(),
+        name='service-detail'),
 )

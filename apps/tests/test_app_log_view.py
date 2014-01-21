@@ -32,9 +32,6 @@ class AppLogViewTest(TestCase):
     def test_context_should_contain_app(self):
         self.assertIn('app', self.response.context_data.keys())
 
-    def test_app_on_context_should_contain_app_name(self):
-        self.assertEqual(self.app_name, self.response.context_data['app'])
-
     @patch('pluct.resource.get')
     def test_request_get_to_tsuru_with_args_expected(self, get):
         resource_mock = Mock()

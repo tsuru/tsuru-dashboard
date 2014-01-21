@@ -6,7 +6,7 @@ deps:
 
 test: clean deps
 	@coverage run manage.py test
-	@coverage report
+	@coverage report -m
 	@flake8 .
 
 makemessages:

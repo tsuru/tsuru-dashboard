@@ -7,12 +7,13 @@
 {% endblock %}
 
 {% block header %}
+{% include "apps/navbar.html" %}
 <h1>{% trans 'Log' %}</h1>
 {% endblock %}
 
 {% block breadcrumb %}
 <li><a href="{% url 'list-app' %}"> {% trans 'Apps' %}</a><span class="divider">/</span></li>
-<li class="active"><a href="{% url 'detail-app' app %}"> {{ app }}</a></li>
+<li class="active"><a href="{% url 'detail-app' app.name %}"> {{ app.name }}</a></li>
 {% endblock %}
 
 {% block content %}
