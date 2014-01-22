@@ -53,9 +53,12 @@ class AppDetailTestCase(TestCase):
         json_mock.json.return_value = self.expected
         requests_mock.return_value = json_mock
         service_list_mock = mock.Mock()
-        service_list_mock.return_value = [{"service": "mongodb", "instances": ["mymongo"]}]
+        service_list_mock.return_value = [{"service": "mongodb",
+                                           "instances": ["mymongo"]}]
         service_info_mock = mock.Mock()
-        service_info_mock.return_value = {"Name": "mymongo", "ServiceName": "mongodb", "Apps": ["app1"]}
+        service_info_mock.return_value = {"Name": "mymongo",
+                                          "ServiceName": "mongodb",
+                                          "Apps": ["app1"]}
         self.old_service_list = AppDetail.service_list
         AppDetail.service_list = service_list_mock
         self.old_service_info = AppDetail.service_info
@@ -75,8 +78,10 @@ class AppDetailTestCase(TestCase):
                              self.response.context_data["app"])
 
     def test_service_instances(self):
-        service_instances = self.response.context_data["app"]["service_instances"]
-        self.assertListEqual(service_instances, [{"name": "mymongo", "servicename": "mongodb"}])
+        context = self.response.context_data
+        service_instances = context["app"]["service_instances"]
+        self.assertListEqual(service_instances, [{"name": "mymongo",
+                                                  "servicename": "mongodb"}])
 
     @mock.patch('requests.get')
     def test_service_list(self, get):
@@ -96,5 +101,6 @@ class AppDetailTestCase(TestCase):
         instance_name = "shubiduba"
         app_detail.service_info(instance_name)
         get.assert_called_with(
-            '{0}/services/instances/{1}'.format(settings.TSURU_HOST, instance_name),
+            '{0}/services/instances/{1}'.format(settings.TSURU_HOST,
+                                                instance_name),
             headers={'authorization': self.request.session.get('tsuru_token')})

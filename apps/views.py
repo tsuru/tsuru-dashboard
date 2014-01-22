@@ -71,7 +71,8 @@ class AppDetail(LoginRequiredMixin, TemplateView):
         return requests.get(tsuru_url, headers=self.authorization).json()
 
     def service_info(self, instance_name):
-        tsuru_url = '{0}/services/instances/{1}'.format(settings.TSURU_HOST, instance_name)
+        tsuru_url = '{0}/services/instances/{1}'.format(settings.TSURU_HOST,
+                                                        instance_name)
         response = requests.get(tsuru_url, headers=self.authorization)
         if response.status_code != 200:
             return {}
@@ -94,8 +95,12 @@ class AppDetail(LoginRequiredMixin, TemplateView):
             for instance in instances:
                 instance_data = self.service_info(instance)
                 if instance_data != {}:
-                    if context['app']['name'] in instance_data['Apps']:
-                        service_instances.append({"name": instance_data["Name"], "servicename": instance_data["ServiceName"]})
+                    app_name = context['app']['name']
+                    if app_name in instance_data['Apps']:
+                        service_instances.append(
+                            {"name": instance_data["Name"],
+                             "servicename": instance_data["ServiceName"]}
+                        )
         context['app']["service_instances"] = service_instances
         return context
 
@@ -300,6 +305,7 @@ class AppEnv(LoginRequiredView):
         return requests.post(tsuru_url, data=form.data.get('env'),
                              headers=authorization)
 
+
 class ListService(LoginRequiredView):
     def get(self, request):
         token = request.session.get('tsuru_token').replace('type ', '')
@@ -311,6 +317,7 @@ class ListService(LoginRequiredView):
         services = resource.get(url, auth).data
         return TemplateResponse(request, "services/list.html",
                                 {'services': services})
+
 
 class ServiceInstanceDetail(LoginRequiredView):
     def apps(self, instance):
@@ -338,4 +345,3 @@ class ServiceInstanceDetail(LoginRequiredView):
         apps = self.apps(instance)
         return TemplateResponse(request, "services/detail.html",
                                 {'instance': instance, 'apps': apps})
-

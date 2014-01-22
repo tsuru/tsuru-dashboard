@@ -68,6 +68,7 @@ class Remove(LoginRequiredView):
             messages.error(self.request, u'Can not delete this team!')
         return redirect(reverse('team-list'))
 
+
 class Add(LoginRequiredView):
 
     def get(self, request):
