@@ -163,7 +163,7 @@ class ListApp(LoginRequiredView):
         if response.status_code == 204:
             apps = []
         else:
-            apps = response.json()
+            apps = sorted(response.json(), key=lambda item: item["name"])
         return TemplateResponse(request, "apps/list.html", {'apps': apps})
 
 
@@ -304,44 +304,3 @@ class AppEnv(LoginRequiredView):
         tsuru_url = '%s/apps/%s/env' % (settings.TSURU_HOST, app_name)
         return requests.post(tsuru_url, data=form.data.get('env'),
                              headers=authorization)
-
-
-class ListService(LoginRequiredView):
-    def get(self, request):
-        token = request.session.get('tsuru_token').replace('type ', '')
-        auth = {
-            'type': 'type',
-            'credentials': token,
-        }
-        url = "{0}/services".format(settings.TSURU_HOST)
-        services = resource.get(url, auth).data
-        return TemplateResponse(request, "services/list.html",
-                                {'services': services})
-
-
-class ServiceInstanceDetail(LoginRequiredView):
-    def apps(self, instance):
-        url = "{0}/apps".format(settings.TSURU_HOST)
-        response = requests.get(url, headers=self.authorization)
-        app_list = []
-        for app in response.json():
-            if app['name'] not in instance['Apps']:
-                app_list.append(app['name'])
-        return app_list
-
-    @property
-    def authorization(self):
-        return {'authorization': self.request.session.get('tsuru_token')}
-
-    def get_instance(self, instance_name):
-        url = "{0}/services/instances/{1}".format(settings.TSURU_HOST,
-                                                  instance_name)
-        response = requests.get(url, headers=self.authorization)
-        return response.json()
-
-    def get(self, request, *args, **kwargs):
-        instance_name = kwargs["instance"]
-        instance = self.get_instance(instance_name)
-        apps = self.apps(instance)
-        return TemplateResponse(request, "services/detail.html",
-                                {'instance': instance, 'apps': apps})
