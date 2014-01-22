@@ -75,7 +75,7 @@ class AppDetailTestCase(TestCase):
                              self.response.context_data["app"])
 
     def test_service_instances(self):
-        service_instances = self.response.context_data["app"]["service-instances"]
+        service_instances = self.response.context_data["app"]["service_instances"]
         self.assertListEqual(service_instances, [{"name": "mymongo", "servicename": "mongodb"}])
 
     @mock.patch('requests.get')
