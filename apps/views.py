@@ -139,6 +139,7 @@ class CreateApp(LoginRequiredView):
             )
             if response.status_code == 200:
                 context['message'] = "App was successfully created"
+                context['platforms'] = self._get_platforms(request)
             else:
                 context['errors'] = response.content
                 context['platforms'] = self._get_platforms(request)

@@ -87,8 +87,13 @@ class CreateAppViewTest(TestCase):
         platforms = response.context_data.get('platforms')
         self.assertEqual(["python", "ruby", "static"], platforms)
 
+    @patch('requests.get')
     @patch('requests.post')
-    def test_post_should_send_to_tsuru_with_args_expected(self, post):
+    def test_post_should_send_to_tsuru_with_args_expected(self, post, get):
+        content = u"""[{"Name":"python"},{"Name":"ruby"},{"Name":"static"}]"""
+        m = Mock(status_code=200, content=content)
+        m.json.return_value = json.loads(content)
+        get.return_value = m
         post.return_value = Mock(status_code=200)
         request = RequestFactory().post(
             "/",
@@ -102,8 +107,13 @@ class CreateAppViewTest(TestCase):
             headers={'authorization': request.session['tsuru_token']}
         )
 
+    @patch('requests.get')
     @patch('requests.post')
-    def test_invalid_post_returns_context_with_message_expected(self, post):
+    def test_invalid_post_includes_expected_message_in_ctx(self, post, get):
+        content = u"""[{"Name":"python"},{"Name":"ruby"},{"Name":"static"}]"""
+        m = Mock(status_code=200, content=content)
+        m.json.return_value = json.loads(content)
+        get.return_value = m
         request = RequestFactory().post(
             "/",
             {"name": "myepe", "platform": "python"})
