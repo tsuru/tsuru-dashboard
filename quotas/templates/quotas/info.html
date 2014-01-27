@@ -1,14 +1,12 @@
 {% extends "base.html" %}
 
-{% load i18n %}
-
 {% block extra_css %}
 <link rel="stylesheet" href="{{ STATIC_URL }}css/abyss.widget.css" />
 <link rel="stylesheet" href="{{ STATIC_URL }}css/detail.css" />
 {% endblock %}
 
 {% block header %}
-<h1>{% trans 'Quota info' %}</h1>
+<h1>Quota info</h1>
 {% endblock %}
 
 {% block content %}
@@ -21,19 +19,19 @@
 					<span class="icon">
 						<i class="icon-signal"></i>
 					</span>
-					<h5>{% trans 'Quota' %}</h5>
+					<h5>Quota</h5>
 				</div>
 				<div class="content units-box">
 					<div class="span1">
 						<div class="stats right">
 							<strong id="units">{{ quota.items|default:""|length }}</strong>
-							<span>{% trans 'used' %}</span>
+							<span>used</span>
 						</div>
 					</div>
 					<div class="span1">
 						<div class="stats right">
 							<strong id="units">{{ quota.available }}</strong>
-							<span>{% trans 'available' %}</span>
+							<span>available</span>
 						</div>
 					</div>
 				</div>

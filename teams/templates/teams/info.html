@@ -1,7 +1,5 @@
 {% extends "base.html" %}
 
-{% load i18n %}
-
 {% block extra_css %}
 <link rel="stylesheet" href="{{ STATIC_URL }}css/abyss.widget.css" />
 <link rel="stylesheet" href="{{ STATIC_URL }}css/abyss.services.css" />
@@ -16,7 +14,7 @@
 {% endblock %}
 
 {% block breadcrumb %}
-<li class="active"><a href="{% url 'team-list' %}"> {% trans 'Teams' %}</a></li>
+<li class="active"><a href="{% url 'team-list' %}">Teams</a></li>
 {% endblock %}
 
 {% block content %}
@@ -28,17 +26,17 @@
 					<span class="icon">
 						<i class="icon-signal"></i>
 					</span>
-					<h5>{% trans 'Add user to team' %}</h5>
+					<h5>Add user to team</h5>
 				</div>
 				<div class="content">
 					<form action="{% url 'team-user-add' team.name %}" method="post">
 						{% csrf_token %}
 						<fieldset>
 							<div class="control-group">
-								<label>{% trans 'Username' %}</label>
+								<label>Username</label>
 								<input type="text" class="input-xlarge" name="user">
 							</div>
-							<button class="btn primary" type="submit">{% trans 'Add' %}</button>
+							<button class="btn primary" type="submit">Add</button>
 						</fieldset>
 					</form>
 				</div>
@@ -52,7 +50,7 @@
 					<span class="icon">
 						<i class="icon-signal"></i>
 					</span>
-					<h5>{% trans 'Users' %}</h5>
+					<h5>Users</h5>
 				</div>
 				<div class="content">
 					<ul class="no-style">
@@ -63,7 +61,7 @@
 								{{ user }}
 							</div>
 							<div class="span8">
-								<a class="btn btn-danger" href="{% url 'team-user-remove' team.name user %}" title="{% blocktrans with team=team.name %}remove {{ user }} from {{ team }}{% endblocktrans %}">{% trans 'remove' %}</a>
+								<a class="btn btn-danger" href="{% url 'team-user-remove' team.name user %}" title="with team=team.name %}remove {{ user }} from {{ team }}">remove</a>
 							</div>
 						</div>
 						</li>
@@ -80,10 +78,10 @@
 					<span class="icon">
 						<i class="icon-signal"></i>
 					</span>
-					<h5>{% trans 'Dangerous!' %}</h5>
+					<h5>Dangerous!</h5>
 				</div>
 				<div class="content">
-					<a class="btn btn-danger" href="#confirmation" data-toggle="modal"><i class="icon-remove icon-white"></i> {% trans 'Delete team' %}</a>
+					<a class="btn btn-danger" href="#confirmation" data-toggle="modal"><i class="icon-remove icon-white"></i>Delete team</a>
 				</div>
 			</div>
 		</div>
@@ -92,18 +90,18 @@
 <div id="confirmation" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-		<h3 id="myModalLabel">{% trans 'Are you sure?' %}</h3>
+		<h3 id="myModalLabel">Are you sure?</h3>
 	</div>
 	<div class="modal-body">
-		<p>{% blocktrans with team=team.name %}This action CANNOT be undone. This will delete the <strong>{{ team.name }}</strong>{% endblocktrans %}</p>
+		<p>with team=team.name %}This action CANNOT be undone. This will delete the <strong>{{ team.name }}</strong></p>
 
-		<p>{% trans 'Please type in the name of your team to confirm.' %}</p>
+		<p>Please type in the name of your team to confirm.</p>
 		<input type="text" class="remove-confirmation" />
 	</div>
 	<div class="modal-footer">
 		<form method="get" action="{% url 'team-remove' team.name %}">
-			<button class="btn" data-dismiss="modal" aria-hidden="true">{% trans 'Cancel' %}</button>
-			<button class="btn btn-danger btn-remove" disabled="disabled">{% trans 'Delete team' %}</button>
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+			<button class="btn btn-danger btn-remove" disabled="disabled">Delete team</button>
 		</form>
 	</div>
 </div>

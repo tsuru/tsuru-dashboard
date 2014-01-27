@@ -1,17 +1,15 @@
 {% extends "base.html" %}
 
-{% load i18n %}
-
 {% block sidebar %}
 {% include "sidebar.html" with active="apps" %}
 {% endblock %}
 
 {% block header %}
-<h1>{% trans 'Create App' %}</h1>
+<h1>Create App</h1>
 {% endblock %}
 
 {% block breadcrumb %}
-<li class="active"><a href="{% url 'list-app' %}"> {% trans 'Apps' %}</a></li>
+<li class="active"><a href="{% url 'list-app' %}">Apps</a></li>
 {% endblock %}
 
 {% block content %}
@@ -32,21 +30,21 @@
 				{% endif %}
 				<fieldset>
 					<div class="clearfix control-group{% if app_form.errors.name %} error{% endif %}">
-						<label for="{{ app_form.name.name }}">{% trans 'Name' %}</label>
+						<label for="{{ app_form.name.name }}">Name</label>
 						<input type="text" class="input-xlarge" name="{{ app_form.name.name }}" id="{{ app_form.name.name }}">
 						<span class="help-inline">{{ app_form.errors.name }}</span>
 					</div>
 					<div class="clearfix control-group{% if app_form.errors.platform %} error{% endif %}">
-						<label for="{{ app_form.platform.name }}">{% trans 'Platform' %}</label>
+						<label for="{{ app_form.platform.name }}">Platform}</label>
 						<select name="{{ app_form.platform.name }}" id="{{ app_form.platform.name }}">
-							<option>{% trans 'Select' %}</option>
+							<option>Select</option>
 							{% for platform in platforms %}
 							<option value="{{ platform }}">{{ platform }}</option>
 							{% endfor %}
 						</select>
 						<span class="help-inline">{{ app_form.errors.platform }}</span>
 					</div>
-					<button class="btn primary" type="submit">{% trans 'Add' %}</button>
+					<button class="btn primary" type="submit">Add</button>
 				</fieldset>
 			</form>
 		</div>

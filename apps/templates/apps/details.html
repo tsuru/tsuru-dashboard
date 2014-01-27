@@ -1,7 +1,5 @@
 {% extends "base.html" %}
 
-{% load i18n %}
-
 {% block extra_css %}
 <link rel="stylesheet" href="{{ STATIC_URL }}css/jquery-ui.css" />
 <link rel="stylesheet" href="{{ STATIC_URL }}css/abyss.widget.css" />
@@ -18,7 +16,7 @@
 {% endblock %}
 
 {% block breadcrumb %}
-<li class="active"><a href="{% url 'list-app' %}"> {% trans 'Apps' %}</a></li>
+<li class="active"><a href="{% url 'list-app' %}">Apps</a></li>
 {% endblock %}
 
 {% block content %}
@@ -30,13 +28,13 @@
 					<span class="icon">
 						<i class="icon-signal"></i>
 					</span>
-					<h5>{% trans 'Units' %}</h5>
+					<h5>Units</h5>
 				</div>
 				<div class="content units-box">
 					<div class="span1">
 						<div class="stats right">
 							<strong id="units">{{ app.units|length }}</strong>
-							<span>{% trans "Instances" %}</span>
+							<span>Instances</span>
 						</div>
 					</div>
 					<div class="span3">
@@ -47,7 +45,7 @@
 							{% csrf_token %}
 							<input type="hidden" name="units" value={{ app.units|length }}>
 							<button href="#" class="apply-btn btn btn-primary btn-mini">
-								{% trans 'apply changes' %}
+								apply changes
 							</button>
 						</form>
 					</div>
@@ -62,12 +60,12 @@
 					<span class="icon">
 						<i class="icon-signal"></i>
 					</span>
-					<h5>{% trans 'Info' %}</h5>
+					<h5>Info</h5>
 				</div>
 				<div class="content">
 					<p>
 					{% if app.cname or app.ip %}
-						<strong>{% trans 'App url' %}:</strong> 
+						<strong>App url:</strong> 
 						{% if app.cname %}
 							<a href="http://{{ app.cname }}" target="_blank">http://{{ app.cname }}</a>
 						{% else %}
@@ -75,9 +73,9 @@
 						{% endif %}
 					{% endif %}
 					</p>
-					<p><strong>{% trans 'Git clone url' %}:</strong> {{ app.repository }}</p>
-					<p><strong>{% trans 'Teams' %}:</strong> {{ app.teams|join:", " }}</p>
-					<p><strong>{% trans 'Platform' %}:</strong> {{ app.platform }}</p>
+					<p><strong>Git clone url:</strong> {{ app.repository }}</p>
+					<p><strong>Teams:</strong> {{ app.teams|join:", " }}</p>
+					<p><strong>Platform:</strong> {{ app.platform }}</p>
 				</div>
 			</div>
 		</div>
@@ -89,7 +87,7 @@
 					<spam class="icon">
 						<i class="icon-signal"></i>
 					</spam>
-					<h5>{% trans 'Service Instances' %}</h5>
+					<h5>Service Instances</h5>
 				</div>
 				<div class="content">
 					<ul class="no-style">
@@ -113,10 +111,11 @@
 					<span class="icon">
 						<i class="icon-signal"></i>
 					</span>
-					<h5>{% trans 'Dangerous!' %}</h5>
+					<h5>Dangerous!</h5>
 				</div>
 				<div class="content">
-					<a class="btn btn-danger" href="#confirmation" data-toggle="modal"><i class="icon-remove icon-white"></i> {% trans 'Delete app' %}</a>
+					<a class="btn btn-danger" href="#confirmation" data-toggle="modal"><i class="icon-remove icon-white"></i>
+						Delete app</a>
 				</div>
 			</div>
 		</div>
@@ -125,18 +124,18 @@
 <div id="confirmation" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-		<h3 id="myModalLabel">{% trans 'Are you sure?' %}</h3>
+		<h3 id="myModalLabel">Are you sure?</h3>
 	</div>
 	<div class="modal-body">
-		<p>{% blocktrans with app=app.name %}This action CANNOT be undone. This will delete the <strong>{{ app }}</strong>{% endblocktrans %}</p>
+		<p>with app=app.name This action CANNOT be undone. This will delete the <strong>{{ app }}</strong></p>
 
-		<p>{% trans 'Please type in the name of your application to confirm.' %}</p>
+		<p>Please type in the name of your application to confirm.</p>
 		<input type="text" class="remove-confirmation" />
 	</div>
 	<div class="modal-footer">
 		<form method="get" action="{% url 'remove_app' app.name %}">
-			<button class="btn" data-dismiss="modal" aria-hidden="true">{% trans 'Cancel' %}</button>
-			<button class="btn btn-danger btn-remove" disabled="disabled">{% trans 'Delete app' %}</button>
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+			<button class="btn btn-danger btn-remove" disabled="disabled">Delete app</button>
 		</form>
 	</div>
 </div>

@@ -1,17 +1,15 @@
 {% extends "base.html" %}
 
-{% load i18n %}
-
 {% block sidebar %}
 {% include "sidebar.html" with active="services" %}
 {% endblock %}
 
 {% block header %}
-<h1>{% trans 'Add service instance for' %} {{ service.name }}</h1>
+<h1>Add service instance for {{ service.name }}</h1>
 {% endblock %}
 
 {% block breadcrumb %}
-<li class="active"><a href="{% url 'service-list' %}"> {% trans 'Services' %}</a></li>
+<li class="active"><a href="{% url 'service-list' %}">Services</a></li>
 {% endblock %}
 
 {% block content %}
@@ -22,10 +20,10 @@
 				{% csrf_token %}
 				<fieldset>
 					<div class="control-group">
-						<label>{% trans 'Name' %}</label>
+						<label>Name</label>
 						<input type="text" class="input-xlarge" name="name">
 					</div>
-					<button class="btn primary" type="submit">{% trans 'Add' %}</button>
+					<button class="btn primary" type="submit">Add</button>
 				</fieldset>
 			</form>
 		</div>

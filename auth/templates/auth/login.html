@@ -1,5 +1,3 @@
-{% load i18n %}
-
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -20,12 +18,12 @@
 			<form class="form-signin" action="" method="post">
 				{% csrf_token %}
 				{% if msg %}<div class="alert alert-error">{{ msg }}</div>{% endif %}
-				<p>{% trans 'Enter username and password to continue.' %}</p>
-				<input type="text" class="input-block-level" placeholder="{% trans 'username' %}" name="username">
+				<p>Enter username and password to continue.</p>
+				<input type="text" class="input-block-level" placeholder="username" name="username">
 				<input type="password" class="input-block-level" name="password">
 				<div class="form-actions">
-					<span class="pull-left"><a href="#" class="flip-link" id="to-recover">{% trans 'Lost password?' %}</a></span>
-					<span class="pull-right"><input type="submit" class="btn btn-inverse" value="{% trans 'Login' %}" /></span>
+					<span class="pull-left"><a href="#" class="flip-link" id="to-recover">Lost password?</a></span>
+					<span class="pull-right"><input type="submit" class="btn btn-inverse" value="Login" /></span>
 				</div>
 			</form>
 

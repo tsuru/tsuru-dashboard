@@ -1,16 +1,14 @@
 {% extends "base.html" %}
 
-{% load i18n %}
-
 {% block sidebar %}
 {% include "sidebar.html" with active="apps" %}
 {% endblock %}
 
 {% block header %}
 <div class="btn-group pull-right">
-	<a class="btn" title="{% trans 'Create App' %}" href="{% url 'create-app' %}"><i class="icon-plus"></i></a>
+	<a class="btn" title="Create App" href="{% url 'create-app' %}"><i class="icon-plus"></i></a>
 </div>
-<h1>{% trans 'Apps' %}</h1>
+<h1>Apps</h1>
 {% endblock %}
 
 {% block content %}
@@ -20,16 +18,16 @@
 			{% for app in apps %}
 			<div class="row-fluid">
 				<div class="span9">
-					<a href="{% url 'detail-app' app.name %}" title="{% trans 'App Details' %}"> {{ app.name }} </a>
+					<a href="{% url 'detail-app' app.name %}" title="App Details"> {{ app.name }} </a>
 				</div>
 				<div class="span1">
-					<a href="{% url 'app_log' app.name %}" title="{% trans 'Log' %}"> <i class="icon-tasks"></i> </a>
+					<a href="{% url 'app_log' app.name %}" title="Log"> <i class="icon-tasks"></i> </a>
 				</div>
 				<div class="span1">
-					<a href="{% url 'app-teams' app.name %}" title="{% trans 'Collaborators' %}"> <i class="icon-user"></i> </a>
+					<a href="{% url 'app-teams' app.name %}" title="Collaborators"> <i class="icon-user"></i> </a>
 				</div>
 				<div class="span1">
-					<a href="{% url 'detail-app' app.name %}" title="{% trans 'Settings' %}"> <i class="icon-wrench"></i> </a>
+					<a href="{% url 'detail-app' app.name %}" title="Settings"> <i class="icon-wrench"></i> </a>
 				</div>
 			</div>
 			{% endfor %}

@@ -1,27 +1,21 @@
-{% load i18n %}
 
 <div class="sidebar">
 	<div class="inner">
 		<div class="container-fluid">
-			<div class="language-select">
-				<a href="en-us"{% if request.LANGUAGE_CODE == "en-us" %} class="active"{% endif %}>Eng</a>
-				&middot;
-				<a href="pt-br"{% if request.LANGUAGE_CODE == "pt-br" %} class="active"{% endif %}>Port</a>
-			</div>
 			<ul class="nav">
 				<li{% if active == "apps" %} class="active"{% endif %}>
 				<a href="{% url 'list-app' %}">
-					<span>{% trans "Apps" %}</span>
+					<span>Apps</span>
 				</a>
 				</li>
 				<li{% if active == "services" %} class="active"{% endif %}>
 				<a href="{% url 'service-list' %}">
-					<span>{% trans "Services" %}</span>
+					<span>Services</span>
 				</a>
 				</li>
 				<li{% if active == "teams" %} class="active"{% endif %}>
 				<a href="{% url 'team-list' %}">
-					<span>{% trans "Teams" %}</span>
+					<span>Teams</span>
 				</a>
 				</li>
 			</ul>

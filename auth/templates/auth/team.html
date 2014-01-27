@@ -1,9 +1,7 @@
 {% extends "base.html" %}
 
-{% load i18n %}
-
 {% block header %}
-<h1>{% trans 'Team add' %}</h1>
+<h1>Team add</h1>
 {% endblock %}
 
 {% block content %}
@@ -24,11 +22,11 @@
 				{% endif %}
 				<fieldset>
 					<div class="clearfix control-group{% if form.errors.name %} error{% endif %}">
-						<label>{% trans 'name' %}</label>
+						<label>name</label>
 						<input type="text" name="{{ form.name.name }}">
 						<span class="help-inline">{{ form.errors.name }}</span>
 					</div>
-					<button class="btn primary" type="submit">{% trans 'Create' %}</button>
+					<button class="btn primary" type="submit">Create</button>
 				</fieldset>
 			</form>
 		</div>

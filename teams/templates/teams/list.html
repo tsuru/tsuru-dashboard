@@ -1,7 +1,5 @@
 {% extends "base.html" %}
 
-{% load i18n %}
-
 {% block sidebar %}
 {% include "sidebar.html" with active="teams" %}
 {% endblock %}
@@ -10,7 +8,7 @@
 <div class="btn-group pull-right">
 	<a class="btn" title="Create Team" href="{% url 'team-add' %}"><i class="icon-plus"></i></a>
 </div>
-<h1>{% trans 'Teams' %}</h1>
+<h1>Teams</h1>
 {% endblock %}
 
 {% block content %}

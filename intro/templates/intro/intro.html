@@ -1,5 +1,3 @@
-{% load i18n %}
-
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -25,7 +23,7 @@
 				<div class="row">
 					<div class="span12">
 						<div class="page-header">
-							{% trans 'Welcome!' %}
+							Welcome!
 						</div>
 					</div>
 				</div>
@@ -33,19 +31,19 @@
 			<div class="container intro-content">
 				<div class="row">
 					<div class="span12">
-						<p>{% trans 'With Tsuru, you don’t need to think about infrastucture. You can focus on the most important thing for you: <strong>your application</strong>.' %}</p>
+						<p>With Tsuru, you don’t need to think about infrastucture. You can focus on the most important thing for you: <strong>your application</strong>.</p>
 					</div>
 				</div>
 				<div class="row">
 					<div class="span12">
-						<p>{% trans 'Before you start using tsuru to deploy your applications, click on the button bellow and see how it works.' %}</p>
+						<p>Before you start using tsuru to deploy your applications, click on the button bellow and see how it works.</p>
 					</div>
 				</div>
 			</div>
 			<div class="container intro-footer">
 				<div class="row">
 					<div class="span12">
-						<button class="btn btn-primary next pull-right">{% trans 'How to create an application' %}</button>
+						<button class="btn btn-primary next pull-right">How to create an application</button>
 					</div>
 				</div>
 			</div>
@@ -57,9 +55,9 @@
 					<div class="span12">
 						<div class="page-header">
 							<div class="pull-right">
-								<a class="btn create-app" href="#" data-content="{% trans 'Click here to create applications' %}" data-placement="left"><i class="icon-plus"></i></a>
+								<a class="btn create-app" href="#" data-content="Click here to create applications" data-placement="left"><i class="icon-plus"></i></a>
 							</div>
-							{% trans 'How to create an application' %}
+							How to create an application
 						</div>
 					</div>
 				</div>
@@ -67,14 +65,14 @@
 			<div class="container intro-content">
 				<div class="row">
 					<div class="span12">
-						<p>{% trans "The first thing to do in order to create your application is to click on the button '+' on the right top corner of your apps list page." %}</p>
+						<p>The first thing to do in order to create your application is to click on the button '+' on the right top corner of your apps list page.</p>
 					</div>
 				</div>
 			</div>
 			<div class="container intro-footer">
 				<div class="row">
 					<div class="span12">
-						<button class="btn btn-primary next pull-right">{% trans 'Creating an application' %}</button>
+						<button class="btn btn-primary next pull-right">Creating an application</button>
 					</div>
 				</div>
 			</div>
@@ -85,7 +83,7 @@
 				<div class="row">
 					<div class="span12">
 						<div class="page-header">
-							{% trans 'Creating an application' %}
+							Creating an application
 						</div>
 					</div>
 				</div>
@@ -93,12 +91,12 @@
 			<div class="container">
 				<div class="row">
 					<div class="span12">
-						<p>{% trans 'Then type a name for your app.' %}</p>
+						<p>Then type a name for your app.</p>
 					</div>
 				</div>
 				<div class="row">
 					<div class="span12">
-						<p>{% trans 'And select which platform it will use.' %}</p>
+						<p>And select which platform it will use.</p>
 					</div>
 				</div>
 			</div>
@@ -107,14 +105,14 @@
 					<div class="span12">
 							<fieldset>
 								<div class="clearfix control-group">
-									<label>{% trans 'Name' %}</label>
-									<input type="text" class="input-xlarge" name="name" data-content="{% trans 'In this field, you define your application name. You can use any alphanumeric characters and dashes (-).' %}">
+									<label>Name</label>
+									<input type="text" class="input-xlarge" name="name" data-content="In this field, you define your application name. You can use any alphanumeric characters and dashes (-).">
 								</div>
 								<div class="clearfix control-group">
-									<label>{% trans 'Platform' %}</label>
-									<input type="text" class="input-xlarge" name="platform" data-content="{% trans 'Here, you select in which platform your application is written. Available platforms are: python, ruby, php, node.js e html.' %}">
+									<label>Platform</label>
+									<input type="text" class="input-xlarge" name="platform" data-content="Here, you select in which platform your application is written. Available platforms are: python, ruby, php, node.js e html.">
 								</div>
-								<button class="btn next" type="submit">{% trans 'Add' %}</button>
+								<button class="btn next" type="submit">Add</button>
 							</fieldset>
 					</div>
 				</div>
@@ -122,7 +120,7 @@
 			<div class="container intro-footer">
 				<div class="row">
 					<div class="span12">
-						<button class="btn btn-primary next pull-right">{% trans 'Before deploy' %}</button>
+						<button class="btn btn-primary next pull-right">Before deploy</button>
 					</div>
 				</div>
 			</div>
@@ -133,7 +131,7 @@
 				<div class="row">
 					<div class="span12">
 						<div class="page-header">
-							{% trans 'Before deploy' %}
+							Before deploy
 						</div>
 					</div>
 				</div>
@@ -141,7 +139,7 @@
 			<div class="container">
 				<div class="row">
 					<div class="span12">
-						<p>{% trans 'After creating your application, you will receive a git url for deploy.' %}</p>
+						<p>After creating your application, you will receive a git url for deploy.</p>
 					</div>
 				</div>
 				<div class="row">
@@ -151,15 +149,15 @@
 								<span class="icon">
 									<i class="icon-signal"></i>
 								</span>
-								<h5>{% trans 'Info' %}</h5>
+								<h5>Info</h5>
 							</div>
 							<div class="content">
 								<p>
-									<strong>{% trans 'App url' %}:</strong> 
+									<strong>App url:</strong> 
 									<a href="#" target="_blank">http://appname.cloud.tsuru.io</a>
 								</p>
-								<p><strong>{% trans 'Git clone url' %}:</strong> git@cloud.tsuru.io:appname.git</p>
-								<p><strong>{% trans 'Platform' %}:</strong> python</p>
+								<p><strong>Git clone url:</strong> git@cloud.tsuru.io:appname.git</p>
+								<p><strong>Platform:</strong> python</p>
 							</div>
 						</div>
 					</div>
@@ -168,7 +166,7 @@
 			<div class="container intro-footer">
 				<div class="row">
 					<div class="span12">
-						<button class="btn btn-primary next pull-right">{% trans 'How to deploy' %}</button>
+						<button class="btn btn-primary next pull-right">How to deploy</button>
 					</div>
 				</div>
 			</div>
@@ -179,7 +177,7 @@
 				<div class="row">
 					<div class="span12">
 						<div class="page-header">
-							{% trans 'How to deploy' %}
+							How to deploy
 						</div>
 					</div>
 				</div>
@@ -187,9 +185,9 @@
 			<div class="container intro-content">
 				<div class="row">
 					<div class="span12">
-						<p>{% trans 'Add your application git url as a remote target in your git.' %}</p>
+						<p>Add your application git url as a remote target in your git.</p>
 						<p>'git remote add tsuru git@cloud.tsuru.io:appname.git</p>
-						<p>{% trans 'See how simple it is to deploy:' %}</p>
+						<p>See how simple it is to deploy:</p>
 						<iframe height="320px" width="500" frameborder="0"></iframe>
 					</div>
 				</div>
@@ -197,7 +195,7 @@
 			<div class="container intro-footer">
 				<div class="row">
 					<div class="span12">
-						<button class="btn btn-primary next pull-right">{% trans 'Scaling an application' %}</button>
+						<button class="btn btn-primary next pull-right">Scaling an application</button>
 					</div>
 				</div>
 			</div>
@@ -208,7 +206,7 @@
 				<div class="row">
 					<div class="span12">
 						<div class="page-header">
-							{% trans 'Scaling an application' %}
+							Scaling an application
 						</div>
 					</div>
 				</div>
@@ -216,12 +214,12 @@
 			<div class="container intro-content">
 				<div class="row">
 					<div class="span12">
-						<p>{% trans 'From this point, your application is ready to use :)' %}</p>
+						<p>From this point, your application is ready to use :)</p>
 					</div>
 				</div>
 				<div class="row">
 					<div class="span12">
-						<p>{% trans 'You can also scale it, by increasing the number of its instances.' %}</p>
+						<p>You can also scale it, by increasing the number of its instances.</p>
 					</div>
 				</div>
 				<div class="row">
@@ -231,13 +229,13 @@
 								<span class="icon">
 									<i class="icon-signal"></i>
 								</span>
-								<h5>{% trans 'Units' %}</h5>
+								<h5>Units</h5>
 							</div>
 							<div class="content units-box">
 								<div class="span1">
 									<div class="stats right">
 										<strong id="units">1</strong>
-										<span>{% trans 'Instances' %}</span>
+										<span>Instances</span>
 									</div>
 								</div>
 								<div class="span4">
@@ -251,7 +249,7 @@
 			<div class="container intro-footer">
 				<div class="row">
 					<div class="span12">
-						<button class="btn btn-primary next pull-right">{% trans 'Start now!' %}</button>
+						<button class="btn btn-primary next pull-right">Start now!</button>
 					</div>
 				</div>
 			</div>

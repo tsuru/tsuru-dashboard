@@ -1,18 +1,16 @@
 {% extends "base.html" %}
 
-
-{% load i18n %}
 {% block sidebar %}
 {% include "sidebar.html" with active="apps" %}
 {% endblock %}
 
 {% block header %}
 {% include "apps/navbar.html" %}
-<h1>{% trans 'Teams' %}</h1>
+<h1>Teams</h1>
 {% endblock %}
 
 {% block breadcrumb %}
-<li><a href="{% url 'list-app' %}"> {% trans 'Apps' %}</a><span class="divider">/</span></li>
+<li><a href="{% url 'list-app' %}">Apps</a><span class="divider">/</span></li>
 <li class="active"><a href="{% url 'detail-app' app.name %}"> {{ app.name }}</a></li>
 {% endblock %}
 
@@ -31,7 +29,7 @@
 	</div>
 	<div class="row-fluid">
 		<div class="span10 team-create">
-			<a href="{% url 'app-add-team' app.name %}" class="btn btn-info">{% trans 'Add Team' %}</a>
+			<a href="{% url 'app-add-team' app.name %}" class="btn btn-info">Add Team</a>
 		</div>
 	</div>
 </div>

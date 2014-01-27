@@ -29,9 +29,12 @@ class AddUser(LoginRequiredView):
     def post(self, request, *args, **kwargs):
         team_name = kwargs["team"]
         headers = {'authorization': request.session.get('tsuru_token')}
+        user = request.POST["user"]
         url = "{0}/teams/{1}/{2}".format(settings.TSURU_HOST, team_name,
-                                         request.POST["user"])
-        requests.put(url, headers=headers)
+                                         user)
+        response = requests.put(url, headers=headers)
+        if response.status_code != 200:
+            messages.error(self.request, response.text)
         return redirect(reverse('team-info', args=[team_name]))
 
 

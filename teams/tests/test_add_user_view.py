@@ -14,8 +14,9 @@ class AddUserViewTest(TestCase):
         self.request = RequestFactory().post("/", data)
         self.request.session = {"tsuru_token": "admin"}
 
+    @patch("django.contrib.messages.error")
     @patch("requests.put")
-    def test_view(self, put):
+    def test_view(self, put, error):
         team_name = "avengers"
         response = AddUser.as_view()(self.request, team=team_name)
         self.assertEqual(302, response.status_code)
