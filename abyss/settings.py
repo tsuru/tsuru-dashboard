@@ -96,8 +96,6 @@ INSTALLED_APPS = (
     'intro',
 )
 
-TEST_RUNNER = 'abyss.runner.DiscoveryRunner'
-
 TSURU_HOST = os.environ.get("TSURU_HOST", "http://localhost:8080")
 
 SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"

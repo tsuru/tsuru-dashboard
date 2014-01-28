@@ -87,7 +87,7 @@
 		<h3 id="myModalLabel">Are you sure?</h3>
 	</div>
 	<div class="modal-body">
-		<p>with instance=instance.Name %}This action CANNOT be undone. This will delete the <strong>{{ instance }}</strong></p>
+		<p>with {{ instance.Name }} This action CANNOT be undone. This will delete the <strong>{{ instance.Name }}</strong></p>
 
 		<p>Please type in the name of your service instance to confirm.</p>
 		<input type="text" class="remove-confirmation" />
