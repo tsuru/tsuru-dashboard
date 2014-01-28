@@ -49,18 +49,14 @@ select {
 	margin: 0;
 }
 
-.language-select {
+.report-issue {
 	color: #fff;
 	float: right;
 	padding: 10px 0;
 }
 
-.language-select a {
+.report-issue a {
 	color: #cfcfcf;
-}
-
-.language-select a.active {
-	color: #fff;
 }
 
 .breadcrumb {
