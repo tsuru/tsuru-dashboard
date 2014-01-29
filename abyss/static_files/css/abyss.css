@@ -67,3 +67,7 @@ select {
 .navbar .nav > li > a {
 	padding: 10px 0;
 }
+
+.navbar .gravatar {
+	border-radius: 100%
+}
