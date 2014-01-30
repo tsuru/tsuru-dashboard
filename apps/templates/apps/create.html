@@ -52,7 +52,7 @@
 <script>
 var platform = [
 {% for p in platforms %}
-"{{ p }}",
+"{{ p }}"{% if not forloop.last %},{% endif %}
 {% endfor %}
 ];
 $( "#autocomplete" ).autocomplete({

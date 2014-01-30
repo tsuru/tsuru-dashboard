@@ -1,5 +1,5 @@
 body {
-	padding-top: 40px;
+	padding-top: 49px;
 	padding-bottom: 40px;
 }
 ul.no-style {
@@ -52,7 +52,7 @@ select {
 .report-issue {
 	color: #fff;
 	float: right;
-	padding: 10px 0;
+	margin-top: 13px;
 }
 
 .report-issue a {
