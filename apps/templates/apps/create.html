@@ -31,17 +31,12 @@
 				<fieldset>
 					<div class="clearfix control-group{% if app_form.errors.name %} error{% endif %}">
 						<label for="{{ app_form.name.name }}">Name</label>
-						<input type="text" class="input-xlarge" name="{{ app_form.name.name }}" id="{{ app_form.name.name }}">
+						<input type="text" class="input-xlarge" name="{{ app_form.name.name }}" id="{{ app_form.name.name }}" value="{{ app_form.name.value }}">
 						<span class="help-inline">{{ app_form.errors.name }}</span>
 					</div>
 					<div class="clearfix control-group{% if app_form.errors.platform %} error{% endif %}">
-						<label for="{{ app_form.platform.name }}">Platform}</label>
-						<select name="{{ app_form.platform.name }}" id="{{ app_form.platform.name }}">
-							<option>Select</option>
-							{% for platform in platforms %}
-							<option value="{{ platform }}">{{ platform }}</option>
-							{% endfor %}
-						</select>
+						<label for="{{ app_form.platform.name }}">Platform</label>
+						<input name="{{ app_form.platform.name }}" id="autocomplete" value="{{ app_form.platform.value }}">
 						<span class="help-inline">{{ app_form.errors.platform }}</span>
 					</div>
 					<button class="btn primary" type="submit">Add</button>
@@ -51,3 +46,26 @@
 	</div>
 </div>
 {% endblock %}
+
+{% block extra_js %}
+<script src="{{ STATIC_URL }}js/jquery-ui.custom.js"></script>
+<script>
+var platform = [
+{% for p in platforms %}
+"{{ p }}",
+{% endfor %}
+];
+$( "#autocomplete" ).autocomplete({
+  source: function( request, response ) {
+          var matcher = new RegExp( "^" + $.ui.autocomplete.escapeRegex( request.term ), "i" );
+          response( $.grep( platform, function( item ){
+              return matcher.test( item );
+          }) );
+      }
+});
+</script>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ STATIC_URL }}css/jquery-ui.css" />
+{% endblock extra_css %}
