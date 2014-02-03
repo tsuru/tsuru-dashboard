@@ -1,3 +1,5 @@
+import json
+
 from mock import patch, Mock
 
 from django.test import TestCase
@@ -11,10 +13,16 @@ from apps.forms import AppAddTeamForm
 
 
 class AppAddTeamTestCas(TestCase):
-    def setUp(self):
+    @patch('requests.get')
+    def setUp(self, get):
         self.factory = RequestFactory()
         self.request = self.factory.get('/')
+        self.request.session = {}
         self.app_name = 'app-test'
+        content = u'[{"name": "tsuruteam"}, {"name": "teamvieira"}]'
+        m = Mock(status_code=200, content=content)
+        m.json.return_value = json.loads(content)
+        get.return_value = m
         self.response = AppAddTeam().get(self.request, self.app_name)
         self.request_post = self.factory.post('/', {'team': 'team-test'})
         self.request_post.session = {}
@@ -85,7 +93,13 @@ class AppAddTeamTestCas(TestCase):
         self.assertEqual(0, put.call_count)
 
     @patch('requests.put')
-    def test_post_with_invalid_form_should_return_form_with_errors(self, put):
+    @patch('requests.get')
+    def test_post_invalid_form_should_return_form_with_errors(self, get, put):
+        content = (u"""[{"name":"teamtsuru"},""" +
+                   u"""{"Name":"teamestag"},{"Name":"teambla"}]""")
+        m = Mock(status_code=200, content=content)
+        m.json.return_value = json.loads(content)
+        get.return_value = m
         request = self.factory.post('/', {'team': ''})
         request.session = {}
         response = AppAddTeam().post(request, self.app_name)

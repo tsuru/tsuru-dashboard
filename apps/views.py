@@ -156,18 +156,6 @@ class CreateApp(LoginRequiredView):
         return [p["Name"] for p in platforms]
 
 
-class ListApp(LoginRequiredView):
-    def get(self, request):
-        authorization = {'authorization': request.session.get('tsuru_token')}
-        response = requests.get('%s/apps' % settings.TSURU_HOST,
-                                headers=authorization)
-        if response.status_code == 204:
-            apps = []
-        else:
-            apps = sorted(response.json(), key=lambda item: item["name"])
-        return TemplateResponse(request, "apps/list.html", {'apps': apps})
-
-
 class AppAddTeam(LoginRequiredView):
     template = "apps/app_add_team.html"
 
@@ -175,6 +163,7 @@ class AppAddTeam(LoginRequiredView):
         context = {}
         context['app_name'] = app_name
         context['form'] = AppAddTeamForm()
+        context['teams'] = self._get_teams(request)
         return TemplateResponse(request, self.template, context=context)
 
     def post(self, request, app_name):
@@ -195,6 +184,26 @@ class AppAddTeam(LoginRequiredView):
         return TemplateResponse(request, self.template,
                                 {'form': form, 'app_name': app_name,
                                  'errors': response.content})
+
+    def _get_teams(self, request):
+        authorization = {"authorization": request.session.get("tsuru_token")}
+        response = requests.get("%s/teams" % settings.TSURU_HOST,
+                                headers=authorization)
+        teams = response.json()
+        # import pdb; pdb.set_trace()
+        return [t["name"] for t in teams]
+
+
+class ListApp(LoginRequiredView):
+    def get(self, request):
+        authorization = {'authorization': request.session.get('tsuru_token')}
+        response = requests.get('%s/apps' % settings.TSURU_HOST,
+                                headers=authorization)
+        if response.status_code == 204:
+            apps = []
+        else:
+            apps = sorted(response.json(), key=lambda item: item["name"])
+        return TemplateResponse(request, "apps/list.html", {'apps': apps})
 
 
 class Run(LoginRequiredView):

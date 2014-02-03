@@ -33,7 +33,7 @@
 				<fieldset>
 					<div class="clearfix control-group{% if form.errors.team %} error{% endif %}">
 						<label>Team name</label>
-						<input type="text" class="input-xlarge" name="{{ form.team.name }}">
+						<input type="text" class="input-xlarge" name="{{ form.team.name }}" id="autocomplete">
 						<span class="help-inline">{{ form.errors.team }}</span>
 					</div>
 					<button class="btn primary" type="submit">Add</button>
@@ -43,3 +43,26 @@
 	</div>
 </div>
 {% endblock content %}
+
+{% block extra_js %}
+<script src="{{ STATIC_URL }}js/jquery-ui.custom.js"></script>
+<script>
+var team = [
+{% for t in teams %}
+"{{ t }}"{% if not forloop.last %},{% endif %}
+{% endfor %}
+];
+$( "#autocomplete" ).autocomplete({
+  source: function( request, response ) {
+          var matcher = new RegExp( "^" + $.ui.autocomplete.escapeRegex( request.term ), "i" );
+          response( $.grep( team, function( item ){
+              return matcher.test( item );
+          }) );
+      }
+});
+</script>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ STATIC_URL }}css/jquery-ui.css" />
+{% endblock extra_css %}
