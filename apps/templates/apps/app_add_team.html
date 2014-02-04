@@ -46,6 +46,8 @@
 
 {% block extra_js %}
 <script src="{{ STATIC_URL }}js/jquery-ui.custom.js"></script>
+<script src="{{ STATIC_URL }}js/first_word.js"></script>
+
 <script>
 var team = [
 {% for t in teams %}
@@ -53,12 +55,7 @@ var team = [
 {% endfor %}
 ];
 $( "#autocomplete" ).autocomplete({
-  source: function( request, response ) {
-          var matcher = new RegExp( "^" + $.ui.autocomplete.escapeRegex( request.term ), "i" );
-          response( $.grep( team, function( item ){
-              return matcher.test( item );
-          }) );
-      }
+  source: $.first_word(team)
 });
 </script>
 {% endblock %}

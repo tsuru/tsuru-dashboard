@@ -31,12 +31,12 @@
 				<fieldset>
 					<div class="clearfix control-group{% if app_form.errors.name %} error{% endif %}">
 						<label for="{{ app_form.name.name }}">Name</label>
-						<input type="text" class="input-xlarge" name="{{ app_form.name.name }}" id="{{ app_form.name.name }}" value="{{ app_form.name.value }}">
+						<input type="text" class="input-xlarge" name="{{ app_form.name.name }}" id="{{ app_form.name.name }}" value="{{ app_form.name.value|default:"" }}">
 						<span class="help-inline">{{ app_form.errors.name }}</span>
 					</div>
 					<div class="clearfix control-group{% if app_form.errors.platform %} error{% endif %}">
 						<label for="{{ app_form.platform.name }}">Platform</label>
-						<input name="{{ app_form.platform.name }}" id="autocomplete" value="{{ app_form.platform.value }}">
+						<input name="{{ app_form.platform.name }}" id="autocomplete" value="{{ app_form.platform.value|default:"" }}">
 						<span class="help-inline">{{ app_form.errors.platform }}</span>
 					</div>
 					<button class="btn primary" type="submit">Add</button>
@@ -49,6 +49,7 @@
 
 {% block extra_js %}
 <script src="{{ STATIC_URL }}js/jquery-ui.custom.js"></script>
+<script src="{{ STATIC_URL }}js/first_word.js"></script>
 <script>
 var platform = [
 {% for p in platforms %}
@@ -56,12 +57,7 @@ var platform = [
 {% endfor %}
 ];
 $( "#autocomplete" ).autocomplete({
-  source: function( request, response ) {
-          var matcher = new RegExp( "^" + $.ui.autocomplete.escapeRegex( request.term ), "i" );
-          response( $.grep( platform, function( item ){
-              return matcher.test( item );
-          }) );
-      }
+  source: $.first_word(platform)
 });
 </script>
 {% endblock %}
