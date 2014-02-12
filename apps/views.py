@@ -105,19 +105,6 @@ class AppDetail(LoginRequiredMixin, TemplateView):
         return context
 
 
-class RemoveApp(LoginRequiredView):
-    def get(self, request, *args, **kwargs):
-        app_name = self.kwargs["name"]
-        authorization = {'authorization': request.session.get('tsuru_token')}
-        response = requests.delete(
-            "{0}/apps/{1}".format(settings.TSURU_HOST, app_name),
-            headers=authorization
-        )
-        if response.status_code > 399:
-            return HttpResponse(response.text, status=response.status_code)
-        return redirect(reverse('list-app'))
-
-
 class CreateApp(LoginRequiredView):
     def get(self, request):
         context = {
@@ -190,8 +177,32 @@ class AppAddTeam(LoginRequiredView):
         response = requests.get("%s/teams" % settings.TSURU_HOST,
                                 headers=authorization)
         teams = response.json()
-        # import pdb; pdb.set_trace()
         return [t["name"] for t in teams]
+
+
+class AppRevokeTeam(LoginRequiredView):
+    def get(self, request, app_name, team):
+        app_name = self.kwargs['app_name']
+
+        authorization = {'authorization': request.session.get('tsuru_token')}
+        tsuru_url = "{0}/apps/{1}/{2}".format(
+            settings.TSURU_HOST, app_name, team)
+        requests.delete(tsuru_url, headers=authorization)
+
+        return redirect(reverse('app-teams', args=[app_name]))
+
+
+class RemoveApp(LoginRequiredView):
+    def get(self, request, *args, **kwargs):
+        app_name = self.kwargs["name"]
+        authorization = {'authorization': request.session.get('tsuru_token')}
+        response = requests.delete(
+            "{0}/apps/{1}".format(settings.TSURU_HOST, app_name),
+            headers=authorization
+        )
+        if response.status_code > 399:
+            return HttpResponse(response.text, status=response.status_code)
+        return redirect(reverse('list-app'))
 
 
 class ListApp(LoginRequiredView):

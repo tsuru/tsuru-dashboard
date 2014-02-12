@@ -1,50 +1,120 @@
 body {
-	padding-top: 49px;
 	padding-bottom: 40px;
 }
+
 ul.no-style {
 	list-style-type: none;
 }
-.sidebar .nav {
-	border-left: 1px solid #292929;
-	border-right: 1px solid #4A4A4A;
-	display: inline-block;
-	height: 50px;
+
+.menu.span3 {
 	margin: 0;
+	height: 100%;
+	position: fixed;
+	background-color: #222233;
+}
+
+.content.span9 {
+	float: right;
+}
+
+.sidebar{
+	height: 100%;
+}
+
+.sidebar .nav {
+	border-left: 1px;
+	border-right: 1px;
+	display: inline-block;
+	margin: 0;
+	padding-left: 40px;
+}
+
+.sidebar .nav > li {
+	border-left: 1px;
+	border-right: 1px;
+	list-style: none outside none;
+	margin: 0;
+	min-width: 90px;
 	padding: 0;
 }
-.sidebar .nav > li {
-	border-left: 1px solid #4A4A4A;
-	border-right: 1px solid #292929;
-	float: left;
-	height: 50px;
+
+.sidebar .nav > li.active > a {
+	background: none repeat scroll 0 0 #222233;
+	color: #fff;
+}
+
+.sidebar .nav > li > a {
+	color: #fff;
+	display: block;
+	font-size: 13px;
+	height: 100%;
+	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+	line-height: 50px;
+}
+
+.sidebar .nav > li > a:hover {
+	background-color: transparent;
+	font-weight: bold;
+}
+
+.sidebar .nav > .active {
+	font-weight: bold;
+}
+
+.sidebar .profile {
+	border-left: 1px;
+	border-right: 1px;
+	display: inline-block;
+	margin: 0;
+	padding-top: 35px;
+}
+
+.sidebar .profile > li {
+	border-left: 1px;
+	border-right: 1px;
 	list-style: none outside none;
 	margin: 0;
 	min-width: 90px;
 	padding: 0;
 	text-align: center;
 }
-.sidebar .nav > li.active > a {
-	background: none repeat scroll 0 0 #333333;
+
+.sidebar .profile > li.active > a {
+	background: none repeat scroll 0 0 #222233;
 	color: #fff;
 }
-.sidebar .nav > li > a {
-	color: #636363;
+
+.sidebar .profile > li > a {
+	color: #fff;
 	display: block;
 	font-size: 13px;
-	font-weight: bold;
 	height: 100%;
-	padding: 0 15px;
+	outline: 0 none;
 	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
 	line-height: 50px;
+	text-decoration: none;
 }
+
 .sidebar .inner {
-	background-color: #3B3B3B;
-	background-image: linear-gradient(to bottom, #414141, #323232);
-	background-repeat: repeat-x;
-	border-bottom: 1px solid #000000;
-	height: 50px;
+	height: 100%;
 }
+
+.sidebar .gravatar {
+	border-radius: 100%
+}
+
+.caret {
+	border-top: 4px solid #fff;
+	position: fixed;
+	top: 151px;
+}
+
+.dropdown-menu {
+	position: fixed;
+	top: 155px;
+	left: 113px;
+}
+
 select {
 	margin: 0;
 }
@@ -52,22 +122,11 @@ select {
 .report-issue {
 	color: #fff;
 	float: right;
-	margin-top: 13px;
+	position: fixed;
+	top: 630px;
 }
 
 .report-issue a {
-	color: #cfcfcf;
-}
-
-.breadcrumb {
-	background-color: #fff;
-	padding: 10px 0;
-}
-
-.navbar .nav > li > a {
-	padding: 10px 0;
-}
-
-.navbar .gravatar {
-	border-radius: 100%
+	color: #fff;
+	text-decoration: none;
 }

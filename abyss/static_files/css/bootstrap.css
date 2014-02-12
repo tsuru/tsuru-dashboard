@@ -2907,7 +2907,8 @@ table th[class*="span"],
   top: 100%;
   left: 0;
   z-index: 1000;
-  display: none;
+  /*display: none;*/
+  visibility: hidden;
   float: left;
   min-width: 160px;
   padding: 5px 0;
@@ -3006,7 +3007,7 @@ table th[class*="span"],
 }
 
 .open > .dropdown-menu {
-  display: block;
+  visibility: visible;
 }
 
 .pull-right > .dropdown-menu {

@@ -23,14 +23,48 @@
 				<div class="span10">
 					<p>{{ team }}</p>
 				</div>
+				<div class="content">
+					<a class="btn btn-danger" href="#confirmation" data-toggle="modal" team-name="{{ team }}" team-url="{% url 'app-revoke-team' app.name team %}"><i class="icon-remove icon-white"></i> Revoke Team</a>
+				</div>
 			</div>
 			{% endfor %}
 		</div>
 	</div>
 	<div class="row-fluid">
-		<div class="span10 team-create">
+		<div class="span10 add-create">
 			<a href="{% url 'app-add-team' app.name %}" class="btn btn-info">Add Team</a>
 		</div>
 	</div>
 </div>
+<div id="confirmation" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-header">
+		<h3 id="myModalLabel">Are you sure?</h3>
+	</div>
+	<div class="modal-body">
+		<p> Are you sure you want to revoke access to this app? </p>
+
+		<p>Please type in the name of your team to confirm.</p>
+		<input type="text" class="remove-confirmation" />
+	</div>
+	<div class="modal-footer">
+		<form method="get" action="team-url">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+			<button class="btn btn-danger btn-remove" disabled="disabled">Revoke Team</button>
+		</form>
+	</div>
+</div>
 {% endblock content %}
+
+{% block extra_js %}
+<script src="{{ STATIC_URL }}js/confirmation.js"></script>
+<script type="text/javascript">
+	$(".teams .btn").on('click', function(ev) {
+		ev.preventDefault();
+		var teamName = $(this).attr("team-name");
+		var teamUrl = $(this).attr("team-url");
+		var confirmationForm = $("#confirmation form");
+		confirmationForm.attr("action", teamUrl);
+		$.confirmation(".btn-remove", ".remove-confirmation", teamName);
+	});
+</script>
+{% endblock %}

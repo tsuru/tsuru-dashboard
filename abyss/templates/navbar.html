@@ -1,5 +1,5 @@
 {% load gravatar %}
-<div class="navbar navbar-inverse navbar-fixed-top">
+<div class="navbar">
 	<div class="navbar-inner">
 		<div class="container-fluid">
 			<a href="/" class="brand">
@@ -9,7 +9,7 @@
 				<ul class="nav pull-right">
 					<li class="dropdown">
 					<a data-toggle="dropdown" class="dropdown-toggle" href="#">
-						{% gravatar request.session.username 28 %}
+						{% gravatar request.session.username 100 %}
 						{{ request.session.username }}
 						<b class="caret"></b>
 					</a>

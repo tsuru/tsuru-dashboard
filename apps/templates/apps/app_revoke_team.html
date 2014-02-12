@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block sidebar %}
+{% include "sidebar.html" with active="apps" %}
+{% endblock %}
+
+{% block header %}
+<h1>Add Team</h1>
+{% endblock %}
+
+{% block breadcrumb %}
+<li><a href="{% url 'list-app' %}"> Apps</a><span class="divider">/</span></li>
+<li><a href="{% url 'detail-app' app_name %}"> {{ app_name }}</a><span class="divider">/</span></li>
+<li class="active"><a href="{% url 'app-teams' app_name %}">Teams</a></li>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span12">
+			<form action="{% url 'app-revoke-team' app_name %}" method="post">
+				{% csrf_token %}
+				{% if message %}
+				<div class="alert alert-success">
+					{{ message }}
+				</div>
+				{% endif %}
+				{% if errors %}
+				<div class="alert alert-error">
+					{{ errors }}
+				</div>
+				{% endif %}
+				<fieldset>
+					<div class="clearfix control-group{% if form.errors.team %} error{% endif %}">
+						<label>Team name</label>
+						<input type="text" class="input-xlarge" name="{{ form.team.name }}">
+						<span class="help-inline">{{ form.errors.team }}</span>
+					</div>
+					<button class="btn primary" type="submit">Revoke</button>
+				</fieldset>
+			</form>
+		</div>
+	</div>
+</div>
+{% endblock content %}
