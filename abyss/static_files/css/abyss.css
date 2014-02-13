@@ -64,7 +64,6 @@ ul.no-style {
 .sidebar .profile {
 	border-left: 1px;
 	border-right: 1px;
-	display: inline-block;
 	margin: 0;
 	padding-top: 35px;
 }
@@ -100,7 +99,9 @@ ul.no-style {
 }
 
 .sidebar .gravatar {
-	border-radius: 100%
+	border-radius: 100%;
+	display: block;
+	margin: 0 auto;
 }
 
 .caret {
@@ -110,9 +111,7 @@ ul.no-style {
 }
 
 .dropdown-menu {
-	position: fixed;
-	top: 155px;
-	left: 113px;
+	position: absolute;
 }
 
 select {
@@ -121,9 +120,9 @@ select {
 
 .report-issue {
 	color: #fff;
-	float: right;
-	position: fixed;
-	top: 630px;
+	position: absolute;
+	bottom: 25px;
+	padding-left: 40px;
 }
 
 .report-issue a {

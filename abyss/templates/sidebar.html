@@ -3,7 +3,7 @@
 	<div class="inner">
 		<div class="container-fluid">
 			<div class="nav-collapse collapse">
-				<ul class="profile pull-right">
+				<ul class="profile">
 					<li class="dropdown">
 					<a data-toggle="dropdown" class="dropdown-toggle" href="#">
 						{% gravatar request.session.username 100 %}
@@ -21,9 +21,6 @@
 					</li>
 				</ul>
 			</div>
-	        <div class="report-issue">
-	            <a href="https://github.com/globocom/abyss/issues?state=open">Report an issue</a>
-            </div>
 			<div class="nav">
 				<li{% if active == "apps" %} class="active"{% endif %}>
 				<a href="{% url 'list-app' %}">
@@ -41,6 +38,9 @@
 				</a>
 				</li>
 			</div>
+			<div class="report-issue">
+	            <a href="https://github.com/globocom/abyss/issues?state=open">Report an issue</a>
+            </div>
 		</div> <!-- /container -->
 	</div> <!-- /subnavbar-inner -->
 </div>
