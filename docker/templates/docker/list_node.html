@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block sidebar %}
+{% include "sidebar.html" with active="docker" %}
+{% endblock %}
+
+{% block header %}
+<h1>Nodes</h1>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span12">
+			{% for node in nodes %}
+			<div class="row-fluid">
+				<div class="span11">
+					<p>{{ node.ID }} - {{ node.Address }}</p>
+				</div>
+			</div>
+			{% endfor %}
+		</div>
+	</div>
+</div>
+{% endblock %}
