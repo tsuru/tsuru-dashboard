@@ -20,7 +20,7 @@ class ListServiceViewTest(TestCase):
         response = ListNode.as_view()(self.request)
         self.assertEqual("docker/list_node.html", response.template_name)
         expected = []
-        self.assertListEqual(expected, response.context_data['node'])
+        self.assertListEqual(expected, response.context_data['nodes'])
         get.assert_called_with(
             '{0}/node'.format(settings.TSURU_HOST),
             headers={'authorization': 'admin'})
