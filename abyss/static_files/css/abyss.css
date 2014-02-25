@@ -13,6 +13,10 @@ ul.no-style {
 	background-color: #222233;
 }
 
+.content {
+	padding-bottom: 5px;
+}
+
 .content.span9 {
 	float: right;
 }
