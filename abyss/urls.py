@@ -7,6 +7,7 @@ import os
 urlpatterns = patterns(
     '',
     (r'^$', RedirectView.as_view(url='/apps')),
+    (r'^docker/', include('docker.urls')),
     (r'^auth/', include('auth.urls')),
     (r'^apps/', include('apps.urls')),
     (r'^services/', include('services.urls')),

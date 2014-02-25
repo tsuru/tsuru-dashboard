@@ -6,11 +6,34 @@ ul.no-style {
 	list-style-type: none;
 }
 
-.menu.span3 {
+.menu.span12 {
+	background-color: #222233;
+	position: fixed;
+	z-index: 10;
+	border-bottom: 1px solid #4D4C4C;
+}
+
+.logo-tsuru {
+	max-width: 100px;
+	padding: 13px 13px 13px;
+	display: inline-block;
+}
+
+.drop {
+	display: inline-block;
+	float: right;
+	position: relative;
+	right: 35px;
+	top: 15px;
+}
+
+.userbar.span3 {
 	margin: 0;
 	height: 100%;
 	position: fixed;
 	background-color: #222233;
+	top: 48px;
+	opacity: 0.9;
 }
 
 .content {
@@ -19,6 +42,7 @@ ul.no-style {
 
 .content.span9 {
 	float: right;
+	margin-top: 50px;
 }
 
 .sidebar{
@@ -26,16 +50,12 @@ ul.no-style {
 }
 
 .sidebar .nav {
-	border-left: 1px;
-	border-right: 1px;
-	display: inline-block;
-	margin: 0;
+	display: list-item;
+	margin-top: 10px;
 	padding-left: 40px;
 }
 
 .sidebar .nav > li {
-	border-left: 1px;
-	border-right: 1px;
 	list-style: none outside none;
 	margin: 0;
 	min-width: 90px;
@@ -66,36 +86,14 @@ ul.no-style {
 }
 
 .sidebar .profile {
-	border-left: 1px;
-	border-right: 1px;
 	margin: 0;
-	padding-top: 35px;
-}
-
-.sidebar .profile > li {
-	border-left: 1px;
-	border-right: 1px;
-	list-style: none outside none;
-	margin: 0;
-	min-width: 90px;
-	padding: 0;
+	padding-top: 10px;
+	color: #fff;
 	text-align: center;
 }
 
-.sidebar .profile > li.active > a {
-	background: none repeat scroll 0 0 #222233;
-	color: #fff;
-}
-
-.sidebar .profile > li > a {
-	color: #fff;
-	display: block;
-	font-size: 13px;
-	height: 100%;
+.menu.span12 .drop > li > a {
 	outline: 0 none;
-	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
-	line-height: 50px;
-	text-decoration: none;
 }
 
 .sidebar .inner {
@@ -108,28 +106,33 @@ ul.no-style {
 	margin: 0 auto;
 }
 
-.caret {
-	border-top: 4px solid #fff;
-	position: fixed;
-	top: 151px;
-}
-
 .dropdown-menu {
 	position: absolute;
+	right: 10px;
+	left: inherit;
 }
 
 select {
 	margin: 0;
 }
 
+.admin-menu {
+	color: #fff;
+	border-top: 3px solid #fff;
+}
+
 .report-issue {
 	color: #fff;
 	position: absolute;
-	bottom: 25px;
+	bottom: 55px;
 	padding-left: 40px;
 }
 
 .report-issue a {
 	color: #fff;
 	text-decoration: none;
+}
+
+.span10.app-teams {
+	padding-bottom: 5px;
 }
