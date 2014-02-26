@@ -1,24 +1,25 @@
 {% extends "base.html" %}
 
 {% block sidebar %}
-{% include "sidebar.html" with active="apps" %}
+{% include "sidebar.html" with active="docker" %}
 {% endblock %}
 
 {% block header %}
-{% include "apps/navbar.html" %}
-<h1>Log</h1>
+<h1>Containers</h1>
 {% endblock %}
 
 {% block content %}
 <div class="container-fluid">
 	<div class="row-fluid">
 		<div class="span12">
-			{% for log in logs %}
-			<p>
-			<strong>{{ log.Date }}</strong> - {{ log.Message }}
-			</p>
+			{% for container in containers %}
+			<div class="row-fluid">
+				<div class="span11">
+					<p>{{ container }}</p>
+				</div>
+			</div>
 			{% endfor %}
 		</div>
 	</div>
 </div>
-{% endblock content %}
+{% endblock %}
