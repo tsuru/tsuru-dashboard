@@ -5,20 +5,37 @@
 {% endblock %}
 
 {% block header %}
-<h1>Containers</h1>
+<h1>Containers - {{ address }}</h1>
 {% endblock %}
 
 {% block content %}
 <div class="container-fluid">
 	<div class="row-fluid">
 		<div class="span12">
-			{% for container in containers %}
 			<div class="row-fluid">
 				<div class="span11">
-					<p>{{ container }}</p>
+					<table class="table">
+						<tr>
+						<th id="id_container">ID</th>
+						<th id="appname_container">AppName</th>
+						<th id="type_container">Type</th>
+						<th id="ip_container">IP</th>
+						<th id="hostport_container">HostPort</th>
+						<th id="status_container">Status</th>
+						</tr>
+						{% for container in containers %}
+						<tr>
+						<td headers="id_container">{{ container.ID|slice:":12" }}</td>
+						<td headers="appname_container">{{ container.AppName }}</td>
+						<td headers="type_container">{{ container.Type }}</td>
+						<td headers="ip_container">{{ container.IP }}</td>
+						<td headers="hostport_container">{{ container.HostPort }}</td>
+						<td headers="status_container">{{ container.Status }}</td>
+						</tr>
+						{% endfor %}
+					</table>
 				</div>
 			</div>
-			{% endfor %}
 		</div>
 	</div>
 </div>

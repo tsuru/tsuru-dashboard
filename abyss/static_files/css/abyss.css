@@ -136,3 +136,8 @@ select {
 .span10.app-teams {
 	padding-bottom: 5px;
 }
+
+.table th, .table td {
+	text-align: center;
+	vertical-align: middle;
+}

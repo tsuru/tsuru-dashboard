@@ -14,17 +14,20 @@ class ListNode(LoginRequiredView):
         if response.status_code == 204:
             nodes = []
         else:
-            nodes = sorted(response.json(), key=lambda item: item["ID"])
+            nodes = response.json()
+            for n in nodes:
+                n["Address"] = n["Address"].replace(':4243', '')
         return TemplateResponse(request, "docker/list_node.html",
                                 {'nodes': nodes})
 
 
 class ListContainer(LoginRequiredView):
-    def get(self, request):
+    def get(self, request, address):
         authorization = {'authorization': request.session.get('tsuru_token')}
-        response = requests.get('%s/node/%s/containers' % settings.TSURU_HOST,
-                                headers=authorization)
+        url = '%s/node/%s/containers' % (settings.TSURU_HOST, address)
+        response = requests.get(url, headers=authorization)
         if response.status_code == 204:
             containers = []
+        containers = response.json()
         return TemplateResponse(request, "docker/list_container.html",
-                                {'containers': containers})
+                                {'containers': containers, 'address': address})

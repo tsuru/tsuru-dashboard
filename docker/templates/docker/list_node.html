@@ -14,8 +14,8 @@
 		<div class="span12">
 			{% for node in nodes %}
 			<div class="row-fluid">
-				<div class="span11">
-					<p>{{ node.ID }} - {{ node.Address }}</p>
+				<div class="span9">
+					<a href="{% url 'list-container' node.Address|cut:"http://" %}" title="Containers List"> {{ node.ID }} - {{ node.Address }} </a>
 				</div>
 			</div>
 			{% endfor %}
