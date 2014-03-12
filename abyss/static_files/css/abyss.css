@@ -141,3 +141,23 @@ select {
 	text-align: center;
 	vertical-align: middle;
 }
+
+.pager {
+  padding-top: 20px;
+  padding-left: 40px;
+  }
+.pager .page a {
+  border: 3px solid #bbbbbb;
+  margin-left: 1px;
+  margin-right: 1px;
+  padding-left: 4px;
+  padding-right: 4px;
+  text-decoration: none;
+  color: #000000;
+  }
+.pager .current {
+  border: 3px solid #444444;
+  margin-left: 2px;
+  margin-right: 2px;
+  padding-left: 2px;
+  }

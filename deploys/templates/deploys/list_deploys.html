@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block sidebar %}
+{% include "sidebar.html" with active="deploys" %}
+{% endblock %}
+
+{% block header %}
+<h1>Deploys</h1>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span12">
+			{% for deploy in deploys %}
+			<div class="row-fluid">
+				<div class="span9">
+					{{ deploy.App }} - {{ deploy.Timestamp }} - {{ deploy.Duration }} </a>
+				</div>
+			</div>
+			{% endfor %}
+			{% if is_paginated %}{% load paginator %}{% paginator 3 %}{% endif %}
+		</div>
+	</div>
+</div>
+{% endblock %}

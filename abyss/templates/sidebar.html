@@ -35,6 +35,10 @@
 							<span>Docker</span>
 						</a>
 						</li>
+						<li{% if active == "deploys" %} class="active"{% endif %}>
+						<a href="{% url 'list-deploys' %}">
+							<span>Deploys</span>
+						</a>
 					</div>
 				</div>
 		</div><!--/container-admin -->

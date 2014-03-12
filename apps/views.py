@@ -88,6 +88,7 @@ class AppDetail(LoginRequiredMixin, TemplateView):
             'Authorization': '{} {}'.format('type', token)
         }
         context['app'] = requests.get(url, headers=headers).json()
+        # import pdb; pdb.set_trace()
         service_instances = []
         for service in self.service_list():
             instances = service.get("instances", None)
