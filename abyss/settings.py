@@ -97,7 +97,7 @@ INSTALLED_APPS = (
     'intro',
     'docker',
     'deploys',
-    'dateutil',
+    'python-dateutil',
 )
 
 TSURU_HOST = os.environ.get("TSURU_HOST", "http://localhost:8080")
