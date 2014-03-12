@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% load deploy_time %}
 {% block sidebar %}
 {% include "sidebar.html" with active="deploys" %}
 {% endblock %}
@@ -15,11 +15,11 @@
 			{% for deploy in deploys %}
 			<div class="row-fluid">
 				<div class="span9">
-					{{ deploy.App }} - {{ deploy.Timestamp }} - {{ deploy.Duration }} </a>
+					{{ deploy.App }} - {{ deploy.Timestamp|string_to_date|date:" d-m-Y H:i:s " }} - {{ deploy.Duration }} </a>
 				</div>
 			</div>
 			{% endfor %}
-			{% if is_paginated %}{% load paginator %}{% paginator 3 %}{% endif %}
+			{% if is_paginated %}{% load paginator %}{% paginator 2 %}{% endif %}
 		</div>
 	</div>
 </div>

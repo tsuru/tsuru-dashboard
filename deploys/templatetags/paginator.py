@@ -27,7 +27,7 @@ def paginator(context, adjacent_pages=2):
     endPage = page + adjacent_pages + 1
     if endPage >= paginator.num_pages - 1:
         endPage = paginator.num_pages + 1
-    page_numbers = [n for n in range(startPage, endPage) \
+    page_numbers = [n for n in range(startPage, endPage)
                     if n > 0 and n <= paginator.num_pages]
 
     return {
