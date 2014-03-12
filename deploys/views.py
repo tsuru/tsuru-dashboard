@@ -28,5 +28,4 @@ class ListDeploy(LoginRequiredView):
 
         return TemplateResponse(request, "deploys/list_deploys.html",
                                 {'deploys': deploys, 'paginator': paginator,
-                                'is_paginated': True})
-
+                                 'is_paginated': True})
