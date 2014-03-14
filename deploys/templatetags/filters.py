@@ -8,7 +8,7 @@ register = template.Library()
 
 @register.filter
 def string_to_date(value):
-    deploy_date = parser.parse("2014-02-27T17:55:34.2-03:00")
+    deploy_date = parser.parse(value)
     return deploy_date
 
 
