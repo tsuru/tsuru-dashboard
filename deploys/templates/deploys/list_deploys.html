@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load deploy_time %}
+{% load filters %}
 {% block sidebar %}
 {% include "sidebar.html" with active="deploys" %}
 {% endblock %}
@@ -15,7 +15,7 @@
 			{% for deploy in deploys %}
 			<div class="row-fluid">
 				<div class="span9">
-					{{ deploy.App }} - {{ deploy.Timestamp|string_to_date|date:" d-m-Y H:i:s " }} - {{ deploy.Duration }} </a>
+					{{ deploy.App }} - {{ deploy.Timestamp|string_to_date|date:" d-m-Y H:i:s " }} / {{ deploy.Duration|string_to_time }} </a>
 				</div>
 			</div>
 			{% endfor %}
