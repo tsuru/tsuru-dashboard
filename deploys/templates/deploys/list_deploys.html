@@ -12,13 +12,20 @@
 <div class="container-fluid">
 	<div class="row-fluid">
 		<div class="span12">
-			{% for deploy in deploys %}
-			<div class="row-fluid">
-				<div class="span9">
-					{{ deploy.App }} - {{ deploy.Timestamp|string_to_date|date:" d-m-Y H:i:s " }} / {{ deploy.Duration|string_to_time }} </a>
-				</div>
-			</div>
-			{% endfor %}
+			<table class="table">
+				<tr>
+				<th id="deploy_app">ID</th>
+				<th id="deploy_timestamp">AppName</th>
+				<th id="deploy_duration">Type</th>
+				</tr>
+				{% for deploy in deploys %}
+				<tr>
+				<td headers="deploy_app">{{ deploy.App }}</td>
+				<td headers="deploy_timestamp">{{ deploy.Timestamp|string_to_date|date:" d-m-Y H:i:s " }}</td>
+				<td headers="deploy_duration">{{ deploy.Duration|string_to_time }}</td>
+				</tr>
+				{% endfor %}
+			</table>
 			{% if is_paginated %}{% load paginator %}{% paginator 2 %}{% endif %}
 		</div>
 	</div>
