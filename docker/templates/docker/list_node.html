@@ -11,14 +11,19 @@
 {% block content %}
 <div class="container-fluid">
 	<div class="row-fluid">
-		<div class="span12">
-			{% for node in nodes %}
-			<div class="row-fluid">
-				<div class="span9">
-					<a href="{% url 'list-container' node.Address|cut:"http://" %}" title="Containers List"> {{ node.ID }} - {{ node.Address }} </a>
-				</div>
-			</div>
-			{% endfor %}
+		<div class="span11">
+			<table class="table">
+				<tr>
+				<th id="node_id">ID</th>
+				<th id="node_address">AppName</th>
+				</tr>
+				{% for node in nodes %}
+				<tr>
+				<td headers="node_id"><a href="{% url 'list-container' node.Address|cut:"http://" %}" title="Containers List">{{ node.ID }}</a></td>
+				<td headers="node_address">{{ node.Address }}</td>
+				</tr>
+				{% endfor %}
+			</table>
 		</div>
 	</div>
 </div>
