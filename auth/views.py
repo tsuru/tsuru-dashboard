@@ -91,10 +91,11 @@ class Login(FormView):
         url = '{0}/users/{1}/tokens'.format(settings.TSURU_HOST, username)
         response = requests.post(url, data=json.dumps(data))
         if response.status_code == 200:
-            result = json.loads(response.text)
+            result = response.json()
             self.request.session['username'] = username
             self.request.session['tsuru_token'] = "type {0}".format(
                 result['token'])
+            self.request.session['is_admin'] = result['is_admin']
             return super(Login, self).form_valid(form)
         return redirect('/auth/login')
 

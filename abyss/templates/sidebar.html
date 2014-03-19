@@ -26,6 +26,7 @@
 				</li>
 			</div>
 		</div> <!-- /container-user -->
+		{% if request.session.is_admin == True %}
 		<div class="admin-menu container-fluid">
 				<h4>Admin Menu</h4>
 				<div class="nav-collapse collapse">
@@ -42,6 +43,7 @@
 					</div>
 				</div>
 		</div><!--/container-admin -->
+		{%  endif %}
 	</div> <!-- /inner -->
 	<div class="report-issue">
 	    <a href="https://github.com/globocom/abyss/issues?state=open">Report an issue</a>

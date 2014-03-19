@@ -49,19 +49,19 @@ class LoginViewTest(TestCase):
 
     @patch('requests.post')
     def test_should_set_token_in_the_session(self, post):
+        text = '{"token": "my beautiful token", "is_admin": true}'
+        post.return_value = Mock(status_code=200, text=text)
         data = {'username': 'valid@email.com', 'password': '123456'}
         request = RequestFactory().post('/', data)
         request.session = {}
-        text = '{"token": "my beautiful token"}'
-        post.return_value = Mock(status_code=200, text=text)
         Login.as_view()(request)
         self.assertEqual('type my beautiful token',
                          request.session["tsuru_token"])
 
     @patch('requests.post')
     def test_should_set_username_in_the_session(self, post):
-        post.return_value = Mock(status_code=200,
-                                 text='{"token": "t"}')
+        text = '{"token": "my beautiful token", "is_admin": true}'
+        post.return_value = Mock(status_code=200, text=text)
         data = {'username': 'valid@email.com', 'password': '123456'}
         request = RequestFactory().post('/', data)
         request.session = {}
@@ -69,12 +69,22 @@ class LoginViewTest(TestCase):
         self.assertEqual(data["username"], request.session["username"])
 
     @patch('requests.post')
+    def test_should_set_is_admin_in_the_session(self, post):
+        post.return_value = Mock(status_code=200,
+                                 text='{"token": "t","is_admin": true}')
+        data = {'username': 'valid@email.com', 'password': '123456'}
+        request = RequestFactory().post('/', data)
+        request.session = {}
+        Login.as_view()(request)
+        self.assertEqual(True, request.session["is_admin"])
+
+    @patch('requests.post')
     @override_settings(INTRO_ENABLED=False)
     def test_redirect_to_team_creation_when_login_is_successful(self, post):
         data = {'username': 'valid@email.com', 'password': '123456'}
         request = RequestFactory().post('/', data)
         request.session = {}
-        text = '{"token": "my beautiful token"}'
+        text = '{"token": "my beautiful token", "is_admin": true}'
         post.return_value = Mock(status_code=200, text=text)
         response = Login.as_view()(request)
         self.assertIsInstance(response, HttpResponseRedirect)
@@ -86,7 +96,7 @@ class LoginViewTest(TestCase):
         data = {'username': 'valid@email.com', 'password': '123456'}
         request = RequestFactory().post('/', data)
         request.session = {}
-        text = '{"token": "my beautiful token"}'
+        text = '{"token": "my beautiful token", "is_admin": true}'
         post.return_value = Mock(status_code=200, text=text)
         response = Login.as_view()(request)
         self.assertIsInstance(response, HttpResponseRedirect)
@@ -98,7 +108,7 @@ class LoginViewTest(TestCase):
         data = {'username': 'valid@email.com', 'password': '123456'}
         request = RequestFactory().post('/intro', data)
         request.session = {}
-        text = '{"token": "my beautiful token"}'
+        text = '{"token": "my beautiful token", "is_admin": true}'
         post.return_value = Mock(status_code=200, text=text)
         response = Login.as_view()(request)
         self.assertIsInstance(response, HttpResponseRedirect)
@@ -115,7 +125,7 @@ class LoginViewTest(TestCase):
         intro = Intro.objects.create(email=data['username'])
         request = RequestFactory().post('/', data)
         request.session = {}
-        text = '{"token": "my beautiful token"}'
+        text = '{"token": "my beautiful token", "is_admin": true}'
         post.return_value = Mock(status_code=200, text=text)
         response = Login.as_view()(request)
         self.assertIsInstance(response, HttpResponseRedirect)
