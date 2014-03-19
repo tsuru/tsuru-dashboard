@@ -49,8 +49,10 @@ class LoginViewTest(TestCase):
 
     @patch('requests.post')
     def test_should_set_token_in_the_session(self, post):
-        text = '{"token": "my beautiful token", "is_admin": true}'
-        post.return_value = Mock(status_code=200, text=text)
+        response_mock = Mock(status_code=200)
+        response_mock.json.return_value = {"token": "my beautiful token",
+                                           "is_admin": True}
+        post.return_value = response_mock
         data = {'username': 'valid@email.com', 'password': '123456'}
         request = RequestFactory().post('/', data)
         request.session = {}
@@ -60,8 +62,10 @@ class LoginViewTest(TestCase):
 
     @patch('requests.post')
     def test_should_set_username_in_the_session(self, post):
-        text = '{"token": "my beautiful token", "is_admin": true}'
-        post.return_value = Mock(status_code=200, text=text)
+        response_mock = Mock(status_code=200)
+        response_mock.json.return_value = {"token": "my beautiful token",
+                                           "is_admin": True}
+        post.return_value = response_mock
         data = {'username': 'valid@email.com', 'password': '123456'}
         request = RequestFactory().post('/', data)
         request.session = {}
@@ -70,8 +74,10 @@ class LoginViewTest(TestCase):
 
     @patch('requests.post')
     def test_should_set_is_admin_in_the_session(self, post):
-        post.return_value = Mock(status_code=200,
-                                 text='{"token": "t","is_admin": true}')
+        response_mock = Mock(status_code=200)
+        response_mock.json.return_value = {"token": "my beautiful token",
+                                           "is_admin": True}
+        post.return_value = response_mock
         data = {'username': 'valid@email.com', 'password': '123456'}
         request = RequestFactory().post('/', data)
         request.session = {}
@@ -81,11 +87,13 @@ class LoginViewTest(TestCase):
     @patch('requests.post')
     @override_settings(INTRO_ENABLED=False)
     def test_redirect_to_team_creation_when_login_is_successful(self, post):
+        response_mock = Mock(status_code=200)
+        response_mock.json.return_value = {"token": "my beautiful token",
+                                           "is_admin": True}
+        post.return_value = response_mock
         data = {'username': 'valid@email.com', 'password': '123456'}
         request = RequestFactory().post('/', data)
         request.session = {}
-        text = '{"token": "my beautiful token", "is_admin": true}'
-        post.return_value = Mock(status_code=200, text=text)
         response = Login.as_view()(request)
         self.assertIsInstance(response, HttpResponseRedirect)
         self.assertEqual('/apps', response['Location'])
@@ -93,11 +101,13 @@ class LoginViewTest(TestCase):
     @patch('requests.post')
     @override_settings(INTRO_ENABLED=False)
     def test_redirect_to_team_creation_settings_false(self, post):
+        response_mock = Mock(status_code=200)
+        response_mock.json.return_value = {"token": "my beautiful token",
+                                           "is_admin": True}
+        post.return_value = response_mock
         data = {'username': 'valid@email.com', 'password': '123456'}
         request = RequestFactory().post('/', data)
         request.session = {}
-        text = '{"token": "my beautiful token", "is_admin": true}'
-        post.return_value = Mock(status_code=200, text=text)
         response = Login.as_view()(request)
         self.assertIsInstance(response, HttpResponseRedirect)
         self.assertEqual('/apps', response['Location'])
@@ -105,11 +115,13 @@ class LoginViewTest(TestCase):
     @patch('requests.post')
     @override_settings(INTRO_ENABLED=True)
     def test_redirect_to_team_creation_settings_true(self, post):
+        response_mock = Mock(status_code=200)
+        response_mock.json.return_value = {"token": "my beautiful token",
+                                           "is_admin": True}
+        post.return_value = response_mock
         data = {'username': 'valid@email.com', 'password': '123456'}
         request = RequestFactory().post('/intro', data)
         request.session = {}
-        text = '{"token": "my beautiful token", "is_admin": true}'
-        post.return_value = Mock(status_code=200, text=text)
         response = Login.as_view()(request)
         self.assertIsInstance(response, HttpResponseRedirect)
         self.assertEqual('/intro', response['Location'])
@@ -121,12 +133,14 @@ class LoginViewTest(TestCase):
     @patch('requests.post')
     @override_settings(INTRO_ENABLED=True)
     def test_redirect_to_apps_when_the_intro_alread_exist(self, post):
+        response_mock = Mock(status_code=200)
+        response_mock.json.return_value = {"token": "my beautiful token",
+                                           "is_admin": True}
+        post.return_value = response_mock
         data = {'username': 'valid@email.com', 'password': '123456'}
         intro = Intro.objects.create(email=data['username'])
         request = RequestFactory().post('/', data)
         request.session = {}
-        text = '{"token": "my beautiful token", "is_admin": true}'
-        post.return_value = Mock(status_code=200, text=text)
         response = Login.as_view()(request)
         self.assertIsInstance(response, HttpResponseRedirect)
         self.assertEqual('/apps', response['Location'])
