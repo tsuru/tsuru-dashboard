@@ -1,14 +1,14 @@
 #Abyss (Tsuru Dashboard)
 
-[![Build Status](https://secure.travis-ci.org/globocom/abyss.png?branch=master)](http://travis-ci.org/globocom/abyss)
-[![Build Status](https://drone.io/github.com/globocom/abyss/status.png)](https://drone.io/github.com/globocom/abyss/latest)
+[![Build Status](https://secure.travis-ci.org/tsuru/tsuru-dashboard.png?branch=master)](http://travis-ci.org/tsuru/tsuru-dashboard)
+[![Build Status](https://drone.io/github.com/tsuru/tsuru-dashboard/status.png)](https://drone.io/github.com/tsuru/tsuru-dashboard/latest)
 
 Abyss is a django-base project aimed to providing a tsuru dashboard.
 
 
 For issue tracking:
 
-    * https://github.com/globocom/abyss/issues
+    * https://github.com/tsuru/tsuru-dashboard/issues
 
 #Getting Started
 
