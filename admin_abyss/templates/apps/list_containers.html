@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block sidebar %}
+{% include "sidebar.html" with active="apps(admin)" %}
+{% endblock %}
+
+{% block header %}
+<h1>Admin/Containers - {{ appname }}</h1>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="row-fluid">
+                <div class="span11">
+                    <table class="table">
+                        <tr>
+                        <th id="id_container">ID</th>
+                        <th id="hostaddr_container">HostAddr</th>
+                        <th id="type_container">Type</th>
+                        <th id="ip_container">IP</th>
+                        <th id="hostport_container">HostPort</th>
+                        <th id="status_container">Status</th>
+                        </tr>
+                        {% for container in containers %}
+                        <tr>
+                        <td headers="id_container">{{ container.ID|slice:":12" }}</td>
+                        <td headers="hostaddr_container">{{ container.HostAddr }}</td>
+                        <td headers="type_container">{{ container.Type }}</td>
+                        <td headers="ip_container">{{ container.IP }}</td>
+                        <td headers="hostport_container">{{ container.HostPort }}</td>
+                        <td headers="status_container">{{ container.Status }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

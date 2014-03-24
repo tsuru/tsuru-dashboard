@@ -31,15 +31,21 @@
 				<h4>Admin Menu</h4>
 				<div class="nav-collapse collapse">
 					<div class="nav">
-						<li{% if active == "nodes" %} class="active"{% endif %}>
+						<li{% if active == "docker" %} class="active"{% endif %}>
 						<a href="{% url 'list-node' %}">
-							<span>Docker</span>
+							<span>Hosts</span>
 						</a>
 						</li>
 						<li{% if active == "deploys" %} class="active"{% endif %}>
 						<a href="{% url 'list-deploys' %}">
 							<span>Deploys</span>
 						</a>
+					    </li>
+						<li{% if active == "apps(admin)" %} class="active"{% endif %}>
+						<a href="{% url 'list-app-admin' %}">
+							<span>Apps</span>
+						</a>
+					    </li>
 					</div>
 				</div>
 		</div><!--/container-admin -->

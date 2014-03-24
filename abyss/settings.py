@@ -95,8 +95,7 @@ INSTALLED_APPS = (
     'teams',
     'quotas',
     'intro',
-    'docker',
-    'deploys',
+    'admin_abyss',
 )
 
 TSURU_HOST = os.environ.get("TSURU_HOST", "http://localhost:8080")

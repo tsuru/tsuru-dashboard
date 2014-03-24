@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block sidebar %}
+{% include "sidebar.html" with active="apps(admin)" %}
+{% endblock %}
+
+{% block header %}
+<h1>Admin/Apps</h1>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span12">
+            {% for app in apps %}
+            <div class="row-fluid">
+                <div class="span9">
+                    <a href="{% url 'list-containers-by-app' app.name %}" title="App Containers"> {{ app.name }} </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

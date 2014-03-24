@@ -7,8 +7,7 @@ import os
 urlpatterns = patterns(
     '',
     (r'^$', RedirectView.as_view(url='/apps')),
-    (r'^docker/', include('docker.urls')),
-    (r'^deploys/', include('deploys.urls')),
+    (r'^admin_abyss/', include('admin_abyss.urls')),
     (r'^auth/', include('auth.urls')),
     (r'^apps/', include('apps.urls')),
     (r'^services/', include('services.urls')),
