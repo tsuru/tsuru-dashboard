@@ -95,7 +95,7 @@ class Login(FormView):
             self.request.session['username'] = username
             self.request.session['tsuru_token'] = "type {0}".format(
                 result['token'])
-            self.request.session['is_admin'] = result['is_admin']
+            self.request.session['is_admin'] = result.get('is_admin', False)
             return super(Login, self).form_valid(form)
         return redirect('/auth/login')
 

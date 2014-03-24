@@ -82,7 +82,18 @@ class LoginViewTest(TestCase):
         request = RequestFactory().post('/', data)
         request.session = {}
         Login.as_view()(request)
-        self.assertEqual(True, request.session["is_admin"])
+        self.assertTrue(request.session["is_admin"])
+
+    @patch('requests.post')
+    def test_should_set_is_admin_to_false_when_its_missing(self, post):
+        response_mock = Mock(status_code=200)
+        response_mock.json.return_value = {"token": "my beautiful token"}
+        post.return_value = response_mock
+        data = {'username': 'valid@email.com', 'password': '123456'}
+        request = RequestFactory().post('/', data)
+        request.session = {}
+        Login.as_view()(request)
+        self.assertFalse(request.session["is_admin"])
 
     @patch('requests.post')
     @override_settings(INTRO_ENABLED=False)
