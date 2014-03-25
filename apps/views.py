@@ -67,7 +67,7 @@ class AppDetail(LoginRequiredMixin, TemplateView):
         return {'authorization': self.request.session.get('tsuru_token')}
 
     def service_list(self):
-        tsuru_url = '{0}/services'.format(settings.TSURU_HOST)
+        tsuru_url = '{0}/services/instances'.format(settings.TSURU_HOST)
         return requests.get(tsuru_url, headers=self.authorization).json()
 
     def service_info(self, instance_name):
