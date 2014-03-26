@@ -90,7 +90,7 @@ class AppDetailTestCase(TestCase):
         app_detail.request = self.request
         app_detail.service_list()
         get.assert_called_with(
-            '{0}/services'.format(settings.TSURU_HOST),
+            '{0}/services/instances'.format(settings.TSURU_HOST),
             headers={'authorization': self.request.session.get('tsuru_token')})
 
     @mock.patch('requests.get')
