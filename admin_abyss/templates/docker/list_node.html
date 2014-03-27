@@ -14,13 +14,13 @@
 		<div class="span11">
 			<table class="table">
 				<tr>
-				<th id="node_id">ID</th>
-				<th id="node_address">Host</th>
+				<th>ID</th>
+				<th>Host</th>
 				</tr>
 				{% for node in nodes %}
 				<tr>
-				<td headers="node_id"><a href="{% url 'list-container' node.Address|cut:"http://" %}" title="Containers List">{{ node.ID }}</a></td>
-				<td headers="node_address">{{ node.Address }}</td>
+				<td><a href="{% url 'list-container' node.Address|cut:"http://" %}" title="Containers List">{{ node.ID }}</a></td>
+				<td>{{ node.Address }}</td>
 				</tr>
 				{% endfor %}
 			</table>

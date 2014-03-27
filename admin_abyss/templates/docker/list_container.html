@@ -16,21 +16,21 @@
 				<div class="span11">
 					<table class="table">
 						<tr>
-						<th id="id_container">ID</th>
-						<th id="appname_container">AppName</th>
-						<th id="type_container">Type</th>
-						<th id="ip_container">IP</th>
-						<th id="hostport_container">HostPort</th>
-						<th id="status_container">Status</th>
+						<th>ID</th>
+						<th>AppName</th>
+						<th>Type</th>
+						<th>IP</th>
+						<th>HostPort</th>
+						<th>Status</th>
 						</tr>
 						{% for container in containers %}
 						<tr>
-						<td headers="id_container">{{ container.ID|slice:":12" }}</td>
-						<td headers="appname_container">{{ container.AppName }}</td>
-						<td headers="type_container">{{ container.Type }}</td>
-						<td headers="ip_container">{{ container.IP }}</td>
-						<td headers="hostport_container">{{ container.HostPort }}</td>
-						<td headers="status_container">{{ container.Status }}</td>
+						<td>{{ container.ID|slice:":12" }}</td>
+						<td>{{ container.AppName }}</td>
+						<td>{{ container.Type }}</td>
+						<td>{{ container.IP }}</td>
+						<td>{{ container.HostPort }}</td>
+						<td>{{ container.Status }}</td>
 						</tr>
 						{% endfor %}
 					</table>

@@ -14,15 +14,15 @@
 		<div class="span11">
 			<table class="table">
 				<tr>
-				<th id="deploy_app">App</th>
-				<th id="deploy_timestamp">Timestamp</th>
-				<th id="deploy_duration">Duration</th>
+				<th>App</th>
+				<th>Timestamp</th>
+				<th>Duration</th>
 				</tr>
 				{% for deploy in deploys %}
 				<tr>
-				<td headers="deploy_app">{{ deploy.App }}</td>
-				<td headers="deploy_timestamp">{{ deploy.Timestamp|string_to_date|date:" d-m-Y H:i:s " }}</td>
-				<td headers="deploy_duration">{{ deploy.Duration|string_to_time }}</td>
+				<td>{{ deploy.App }}</td>
+				<td>{{ deploy.Timestamp|string_to_date|date:" d-m-Y H:i:s " }}</td>
+				<td>{{ deploy.Duration|string_to_time }}</td>
 				</tr>
 				{% endfor %}
 			</table>

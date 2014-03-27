@@ -142,6 +142,10 @@ select {
 	vertical-align: middle;
 }
 
+.table.containers-app th, .table.containers-app td{
+	text-align: left;
+}
+
 .pager {
   padding-top: 20px;
   padding-left: 40px;
