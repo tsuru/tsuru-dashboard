@@ -22,8 +22,8 @@
         {% endif %}
         <fieldset>
           <div class="clearfix control-group{% if form.errors.app %} error{% endif %}">
-            <label for="{{ app_form.name.name }}">App</label>
-            <input type="text" class="input-xlarge" name="{{ form.app.name }}" id="{{ form.app.name }}" value="{{ form.app.value|default:"" }}">
+            <label for="{{ app_form.app.name }}">App</label>
+            <input type="text" class="input-xlarge" name="{{ form.app.name }}" id="autocomplete" value="{{ form.app.value|default:"" }}">
             <span class="help-inline">{{ form.errors.app }}</span>
           </div>
           <div class="clearfix control-group{% if form.errors.command %} error{% endif %}">

@@ -9,12 +9,19 @@ from auth.views import LoginRequiredView
 from apps.views import Run
 from apps.forms import RunForm
 
+import json
+
 
 class RunViewTest(TestCase):
-
-    def setUp(self):
+    @patch('requests.get')
+    def setUp(self, get):
         self.factory = RequestFactory()
         self.request = self.factory.get('/')
+        self.request.session = {}
+        content = u'[{"name": "appbla"}, {"name": "appble"}]'
+        m = Mock(status_code=200, content=content)
+        m.json.return_value = json.loads(content)
+        get.return_value = m
         self.response = Run().get(self.request)
         self.request_post = self.factory.post(
             '/',
@@ -83,8 +90,13 @@ class RunViewTest(TestCase):
             Run().post(request)
             self.assertEqual(0, post.call_count)
 
+    @patch('requests.get')
     @patch('requests.post')
-    def test_post_without_app_should_return_form_with_errors(self, post):
+    def test_post_without_app_should_return_form_with_errors(self, get, post):
+        content = (u"""[{"name":"appbla"}, {"name":"appble"}]""")
+        m = Mock(status_code=200, content=content)
+        m.json.return_value = json.loads(content)
+        get.return_value = m
         request = self.factory.post('/', {'app': '',
                                           'command': 'command-test'})
         request.session = {}

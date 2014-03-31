@@ -12,7 +12,7 @@ from auth.views import LoginRequiredView
 from apps.forms import AppAddTeamForm
 
 
-class AppAddTeamTestCas(TestCase):
+class AppAddTeamTestCase(TestCase):
     @patch('requests.get')
     def setUp(self, get):
         self.factory = RequestFactory()

@@ -223,6 +223,7 @@ class Run(LoginRequiredView):
     def get(self, request):
         context = {}
         context['form'] = RunForm()
+        context['apps'] = self._get_apps(request)
         return TemplateResponse(request, self.template, context=context)
 
     def post(self, request):
@@ -241,6 +242,13 @@ class Run(LoginRequiredView):
                                      'message': response.content})
         return TemplateResponse(request, self.template,
                                 {'form': form, 'errors': response.content})
+
+    def _get_apps(self, request):
+        authorization = {"authorization": request.session.get("tsuru_token")}
+        response = requests.get("%s/apps" % settings.TSURU_HOST,
+                                headers=authorization)
+        apps = response.json()
+        return [a["name"] for a in apps]
 
 
 class AppLog(LoginRequiredView):

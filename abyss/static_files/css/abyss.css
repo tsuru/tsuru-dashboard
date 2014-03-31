@@ -112,6 +112,10 @@ ul.no-style {
 	left: inherit;
 }
 
+.dropdown-toggle:focus {
+	outline: 0 none;
+}
+
 select {
 	margin: 0;
 }
