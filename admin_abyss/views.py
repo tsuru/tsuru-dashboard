@@ -48,10 +48,15 @@ class ListContainersByApp(LoginRequiredView):
 
 
 class ListDeploy(LoginRequiredView):
+    template = "deploys/list_deploys.html"
+
     def get(self, request):
+        context = {}
+        context['services'] = self._get_services(request)
+        qr_string = request.GET.get('service', '')
         authorization = {'authorization': request.session.get('tsuru_token')}
-        response = requests.get('%s/deploys' % settings.TSURU_HOST,
-                                headers=authorization)
+        response = requests.get('%s/deploys?service=%s' % (settings.TSURU_HOST,
+                                qr_string), headers=authorization)
         if response.status_code == 204:
             deploys = []
         else:
@@ -66,9 +71,18 @@ class ListDeploy(LoginRequiredView):
         except EmptyPage:
             deploys = paginator.page(paginator.num_pages)
 
-        return TemplateResponse(request, "deploys/list_deploys.html",
-                                {'deploys': deploys, 'paginator': paginator,
-                                 'is_paginated': True})
+        context['deploys'] = deploys
+        context['paginator'] = paginator
+        context['is_paginated'] = True
+        context['current'] = qr_string
+        return TemplateResponse(request, self.template, context=context)
+
+    def _get_services(self, request):
+        authorization = {"authorization": request.session.get("tsuru_token")}
+        response = requests.get("%s/services/instances" % settings.TSURU_HOST,
+                                headers=authorization)
+        services = response.json()
+        return [s["service"] for s in services]
 
 
 class ListAppAdmin(LoginRequiredView):

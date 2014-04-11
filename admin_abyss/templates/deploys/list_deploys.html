@@ -12,7 +12,15 @@
 <div class="container-fluid">
 	<div class="row-fluid">
 		<div class="span11">
-			<table class="table">
+			<form action="" method="get" id="filter">
+				<select id="listfilter" name="service">
+					<option value="">Select Service...</option>
+					{% for service in services %}
+					<option value="{{ service }}"{% if current == service %} selected{% endif %}>{{ service }}</option>
+					{% endfor %}
+				</select>
+			</form>
+			<table class="table" id="list">
 				<tr>
 				<th>App</th>
 				<th>Timestamp</th>
@@ -20,9 +28,9 @@
 				</tr>
 				{% for deploy in deploys %}
 				<tr>
-				<td>{{ deploy.App }}</td>
-				<td>{{ deploy.Timestamp|string_to_date|date:" d-m-Y H:i:s " }}</td>
-				<td>{{ deploy.Duration|string_to_time }}</td>
+				<td href="#">{{ deploy.App }}</td>
+				<td href="#">{{ deploy.Timestamp|string_to_date|date:" d-m-Y H:i:s " }}</td>
+				<td href="#">{{ deploy.Duration|string_to_time }}</td>
 				</tr>
 				{% endfor %}
 			</table>
@@ -30,4 +38,13 @@
 		</div>
 	</div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ STATIC_URL }}js/jquery-1.4.2.min.js"></script>
+<script>
+$("#listfilter").change(function() {
+	$("#filter").submit();
+});
+</script>
 {% endblock %}
