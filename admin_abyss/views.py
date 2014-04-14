@@ -15,7 +15,7 @@ class ListNode(LoginRequiredView):
         if response.status_code == 204:
             nodes = []
         else:
-            nodes = response.json()
+            nodes = sorted(response.json(), key=lambda item: item["ID"])
             for n in nodes:
                 n["Address"] = n["Address"].replace(':4243', '')
         return TemplateResponse(request, "docker/list_node.html",
