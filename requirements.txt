@@ -1,5 +1,5 @@
 Django==1.6.5
-gunicorn==0.17.2
+gunicorn==18.0
 pluct==0.4.1
 requests==2.3.0
 django-gravatar2==1.1.3
