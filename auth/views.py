@@ -151,6 +151,24 @@ class Signup(View):
                                     status=response.status_code)
 
 
+class Callback(View):
+    def get(self, request):
+        code = request.GET.get("code")
+        redirect_url = "{}/auth/callback/".format(request.META.get('Host'))
+        data = {
+            "code": code,
+            "redirectUrl": redirect_url,
+        }
+        url = '{0}/auth/login'.format(settings.TSURU_HOST)
+        response = requests.post(url, data=json.dumps(data))
+        if response.status_code == 200:
+            result = response.json()
+            self.request.session['tsuru_token'] = "type {0}".format(
+                result['token'])
+            self.request.session['is_admin'] = result.get('is_admin', False)
+        return redirect('/auth/login')
+
+
 class Key(LoginRequiredMixin, FormView):
     form_class = KeyForm
     template_name = 'auth/key.html'
