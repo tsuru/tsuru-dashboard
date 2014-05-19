@@ -9,6 +9,7 @@ urlpatterns = patterns(
     url(r'^logout/$', views.Logout.as_view(), name='logout'),
     url(r'^key/$', views.Key.as_view(), name='key'),
     url(r'^signup/$', views.Signup.as_view(), name='signup'),
+    url(r'^callback/$', views.Callback.as_view(), name='callback'),
     url(r'^token-request/$', views.TokenRequest.as_view(),
         name='token-request'),
     url(r'^token-request/success/$', views.TokenRequestSuccess.as_view(),
