@@ -85,12 +85,12 @@ class Login(FormView):
                 return '/intro'
         return '/apps'
 
-    def scheme(self):
+    def scheme_info(self):
         url = '{0}/auth/scheme'.format(settings.TSURU_HOST)
         response = requests.get(url)
         if response.status_code == 200:
-            return response.json()["name"]
-        return "native"
+            return response.json()
+        return {}
 
     def form_valid(self, form):
         username = form.cleaned_data['username']

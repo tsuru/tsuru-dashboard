@@ -158,17 +158,17 @@ class LoginViewTest(TestCase):
         intro.delete()
 
     @patch("requests.get")
-    def test_scheme(self, get_mock):
+    def test_scheme_info(self, get_mock):
         view = Login()
         expected_url = '{}/auth/scheme'.format(settings.TSURU_HOST)
 
-        self.assertEqual(view.scheme(), "native")
+        self.assertDictEqual(view.scheme_info(), {})
         get_mock.assert_called_with(expected_url)
 
         response_mock = Mock(status_code=200)
         response_mock.json.return_value = {"name": "oauth"}
         get_mock.return_value = response_mock
 
-        self.assertEqual(view.scheme(), "oauth")
+        self.assertDictEqual(view.scheme_info(), {"name": "oauth"})
 
         get_mock.assert_called_with(expected_url)
