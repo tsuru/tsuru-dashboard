@@ -14,7 +14,13 @@
 			<div class="logo">
 				<img src="{{ STATIC_URL}}img/brand.svg" alt="" />
 			</div>
-
+			{% if scheme_info.name == "oauth" %}
+			<form class="form-signin" action="" method="get">
+				<div class="form-actions">
+					<a href="{{ scheme_info.data.authorizeUrl }}" class="btn btn-inverse">Login</a>
+				</div>
+				</form>
+			{% else %}
 			<form class="form-signin" action="" method="post">
 				{% csrf_token %}
 				{% if msg %}<div class="alert alert-error">{{ msg }}</div>{% endif %}
@@ -26,7 +32,7 @@
 					<span class="pull-right"><input type="submit" class="btn btn-inverse" value="Login" /></span>
 				</div>
 			</form>
-
+			{% endif %}
 		</div> <!-- /container -->
 	</body>
 </html>
