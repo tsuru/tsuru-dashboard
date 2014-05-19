@@ -77,6 +77,11 @@ class Login(FormView):
     template_name = 'auth/login.html'
     form_class = LoginForm
 
+    def get_context_data(self, *args, **kwargs):
+        data = super(Login, self).get_context_data(*args, **kwargs)
+        data["scheme_info"] = self.scheme_info()
+        return data
+
     def get_success_url(self):
         if hasattr(settings, "INTRO_ENABLED") and settings.INTRO_ENABLED:
             _, created = Intro.objects.get_or_create(

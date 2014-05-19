@@ -14,14 +14,16 @@ from intro.models import Intro
 
 
 class LoginViewTest(TestCase):
-    def test_login_get(self):
+    @patch("requests.get")
+    def test_login_get(self, get_mock):
         request = RequestFactory().get('/')
         response = Login.as_view()(request)
         self.assertIn('auth/login.html', response.template_name)
         form = response.context_data['form']
         self.assertIsInstance(form, LoginForm)
 
-    def test_should_validate_data_from_post(self):
+    @patch("requests.get")
+    def test_should_validate_data_from_post(self, get_mock):
         data = {'username': 'invalid name', 'password': ''}
         request = RequestFactory().post('/', data)
         response = Login.as_view()(request)
@@ -31,7 +33,8 @@ class LoginViewTest(TestCase):
         self.assertEqual('invalid name', form.data['username'])
 
     @patch('requests.post')
-    def test_should_return_200_when_user_does_not_exist(self, post):
+    @patch('requests.get')
+    def test_should_return_200_when_user_does_not_exist(self, get_mock, post):
         data = {'username': 'invalid@email.com', 'password': '123456'}
         post.return_value = Mock(status_code=500)
         response = self.client.post(reverse('login'), data, follow=True)
@@ -172,3 +175,15 @@ class LoginViewTest(TestCase):
         self.assertDictEqual(view.scheme_info(), {"name": "oauth"})
 
         get_mock.assert_called_with(expected_url)
+
+    @patch("requests.get")
+    def test_get_context_data(self, get_mock):
+        view = Login()
+
+        response_mock = Mock(status_code=200)
+        response_mock.json.return_value = {"name": "oauth"}
+        get_mock.return_value = response_mock
+
+        data = view.get_context_data()
+
+        self.assertDictEqual(data["scheme_info"], {"name": "oauth"})
