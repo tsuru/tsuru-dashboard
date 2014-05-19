@@ -18,5 +18,5 @@ compilemessages:
 movemessages:
 	@cp -r locale/ abyss/locale/
 
-run:
+run: clean deps
 	@DEBUG=true ./manage.py runserver
