@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load filters_deploys %}
+{% block sidebar %}
+{% include "sidebar.html" with active="deploys" %}
+{% endblock %}
+
+{% block header %}
+<h1>Admin/Deploys/Graph</h1>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/nv.d3.css">
+{% endblock extra_css %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span11">
+            <div id="deploys-chart" style="width: 900px; height: 1000px;"><svg style="width: 900px; height: 1000px;"></svg></div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ STATIC_URL }}js/jquery.min.js"></script>
+<script src="{{ STATIC_URL }}js/d3.v3.min.js" charset="utf-8"></script>
+<script src="{{ STATIC_URL }}js/nv.d3.js"></script>
+<script>
+(function() {
+    var deploysData = JSON.parse('{{ deploys | safe }}');
+    deploysData = deploysData.map(function(data, i) {
+        data["values"] = data["values"].map(function(value, i) {
+            value["x"] = d3.time.format.iso.parse(value["x"])
+            return value;
+        });
+        return data;
+    });
+    console.log(deploysData);
+    nv.addGraph(function() {
+        var chart = nv.models.lineWithFocusChart();
+
+        chart.xAxis
+            .axisLabel('Date')
+            .tickFormat(d3.time.format.iso.parse);
+
+        chart.x2Axis
+            .axisLabel('Date')
+            .tickFormat(d3.time.format.iso.parse);
+
+        chart.yAxis
+            .axisLabel('Duration');
+
+        d3.select('#deploys-chart svg')
+            .datum(deploysData)
+            .transition().duration(500)
+            .call(chart);
+
+        nv.utils.windowResize(chart.update);
+
+        return chart;
+    });
+}());
+</script>
+{% endblock %}

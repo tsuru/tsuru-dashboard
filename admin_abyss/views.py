@@ -5,6 +5,8 @@ from django.conf import settings
 from auth.views import LoginRequiredView
 
 import requests
+import json
+import re
 
 
 class ListNode(LoginRequiredView):
@@ -83,6 +85,57 @@ class ListDeploy(LoginRequiredView):
                                 headers=authorization)
         services = response.json()
         return [s["service"] for s in services]
+
+
+class DeploysGraph(LoginRequiredView):
+    template = "deploys/deploys_graph.html"
+
+    def get(self, request):
+        context = {}
+        authorization = {'authorization': request.session.get('tsuru_token')}
+        response = requests.get('%s/deploys' % (settings.TSURU_HOST),
+                                headers=authorization)
+        if response.status_code == 204:
+            deploys = []
+        else:
+            deploys = response.json()
+
+        appFilter = request.GET.get('app', None)
+        appExclude = request.GET.get('appExclude', None)
+        minTime = request.GET.get('minTime', None)
+        maxTime = request.GET.get('maxTime', None)
+
+        deploysByApp = {}
+        for deploy in reversed(deploys):
+            if deploy["Duration"] == 0:
+                continue
+
+            minutes = deploy["Duration"] / (1000 * 1000 * 1000.0 * 60)
+            appName = deploy["App"]
+
+            if appFilter and not re.search(appFilter, appName):
+                continue
+            if appExclude and re.search(appExclude, appName):
+                continue
+            if minTime and minutes < int(minTime):
+                continue
+            if maxTime and minutes > int(maxTime):
+                continue
+
+            appEntry = deploysByApp.get(appName)
+            if appEntry is None:
+                appEntry = {}
+                appEntry["key"] = appName
+                deploysByApp[appName] = appEntry
+            values = appEntry.get("values", [])
+            values.append({
+                "x": deploy["Timestamp"],
+                "y": minutes,
+            })
+            appEntry["values"] = values
+
+        context['deploys'] = json.dumps([app for app in deploysByApp.values()])
+        return TemplateResponse(request, self.template, context=context)
 
 
 class ListAppAdmin(LoginRequiredView):
