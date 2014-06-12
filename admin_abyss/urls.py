@@ -10,6 +10,7 @@ urlpatterns = patterns(
     url(r'^(?P<address>[\w.:1-9-]+)/containers/$',
         views.ListContainer.as_view(), name='list-container'),
     url(r'^deploys/$', views.ListDeploy.as_view(), name='list-deploys'),
-    url(r'^deploys/graph$', views.DeploysGraph.as_view(), name='deploys-graph'),
+    url(r'^deploys/graph$', views.DeploysGraph.as_view(),
+        name='deploys-graph'),
     url(r'^apps/$', views.ListAppAdmin.as_view(), name='list-app-admin'),
 )
