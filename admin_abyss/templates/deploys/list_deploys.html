@@ -1,38 +1,54 @@
 {% extends "base.html" %}
 {% load filters_deploys %}
+
 {% block sidebar %}
-{% include "sidebar.html" with active="deploys" %}
+    {% include "sidebar.html" with active="deploys" %}
 {% endblock %}
 
 {% block header %}
-<h1>Admin/Deploys</h1>
+    <h1>Admin/Deploys</h1>
 {% endblock %}
 
+{% block extra_css %}
+<style>
+    .deploys th, .deploys td {
+        text-align: left;
+    }
+
+    .deploys .to-right {
+        text-align: right;
+    }
+</style>
+{% endblock %}
 {% block content %}
 <div class="container-fluid">
 	<div class="row-fluid">
 		<div class="span11">
 			<form action="" method="get" id="filter">
 				<select id="listfilter" name="service">
-					<option value="">Select Service...</option>
+					<option value="">Select Service</option>
 					{% for service in services %}
-					<option value="{{ service }}"{% if current == service %} selected{% endif %}>{{ service }}</option>
+                        <option value="{{ service }}"{% if current == service %} selected{% endif %}>{{ service }}</option>
 					{% endfor %}
 				</select>
 			</form>
-			<table class="table" id="list">
-				<tr>
-				<th>App</th>
-				<th>Timestamp</th>
-				<th>Duration</th>
-				</tr>
-				{% for deploy in deploys %}
-				<tr>
-				<td href="#">{{ deploy.App }}</td>
-				<td href="#">{{ deploy.Timestamp|string_to_date|date:" d-m-Y H:i:s " }}</td>
-				<td href="#">{{ deploy.Duration|string_to_time }}</td>
-				</tr>
-				{% endfor %}
+			<table class="deploys table" id="list">
+                <thead>
+                    <tr>
+                        <th>App</th>
+                        <th class="to-right ">Duration</th>
+                        <th class="to-right ">Timestamp</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for deploy in deploys %}
+                    <tr class="{% if deploy.Error %}error{% endif %}">
+                        <td class='app'>{{ deploy.App }}</td>
+                        <td class='to-right'>{{ deploy.Duration|string_to_time }}</td>
+                        <td class='to-right'>{{ deploy.Timestamp|string_to_date|date:" d-m-Y H:i:s " }}</td>
+                    </tr>
+                    {% endfor %}
+                <tbody>
 			</table>
 			{% if is_paginated %}{% load paginator %}{% paginator 2 %}{% endif %}
 		</div>
@@ -43,8 +59,8 @@
 {% block extra_js %}
 <script src="{{ STATIC_URL }}js/jquery-1.4.2.min.js"></script>
 <script>
-$("#listfilter").change(function() {
-	$("#filter").submit();
-});
+    $("#listfilter").change(function() {
+        $("#filter").submit();
+    });
 </script>
 {% endblock %}
