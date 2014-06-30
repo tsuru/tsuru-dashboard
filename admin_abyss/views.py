@@ -12,7 +12,7 @@ import re
 class ListNode(LoginRequiredView):
     def get(self, request):
         authorization = {'authorization': request.session.get('tsuru_token')}
-        response = requests.get('%s/node' % settings.TSURU_HOST,
+        response = requests.get('%s/docker/node' % settings.TSURU_HOST,
                                 headers=authorization)
         if response.status_code == 204:
             nodes = []
@@ -27,7 +27,7 @@ class ListNode(LoginRequiredView):
 class ListContainer(LoginRequiredView):
     def get(self, request, address):
         authorization = {'authorization': request.session.get('tsuru_token')}
-        url = '%s/node/%s/containers' % (settings.TSURU_HOST, address)
+        url = '%s/docker/node/%s/containers' % (settings.TSURU_HOST, address)
         response = requests.get(url, headers=authorization)
         if response.status_code == 204:
             containers = []
@@ -39,8 +39,8 @@ class ListContainer(LoginRequiredView):
 class ListContainersByApp(LoginRequiredView):
     def get(self, request, appname):
         authorization = {'authorization': request.session.get('tsuru_token')}
-        url = "{0}/node/apps/{1}/containers".format(settings.TSURU_HOST,
-                                                    appname)
+        url = "{0}/docker/node/apps/{1}/containers".format(settings.TSURU_HOST,
+                                                           appname)
         response = requests.get(url, headers=authorization)
         if response.status_code == 204:
             containers = []

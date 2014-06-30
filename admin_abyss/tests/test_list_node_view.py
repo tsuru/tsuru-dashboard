@@ -22,5 +22,5 @@ class ListServiceViewTest(TestCase):
         expected = []
         self.assertListEqual(expected, response.context_data['nodes'])
         get.assert_called_with(
-            '{0}/node'.format(settings.TSURU_HOST),
+            '{0}/docker/node'.format(settings.TSURU_HOST),
             headers={'authorization': 'admin'})

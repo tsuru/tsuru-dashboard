@@ -23,7 +23,8 @@ class ListContainerViewTest(TestCase):
     def test_request_get_to_tsuru_with_args_expected(self, get):
         ListContainersByApp().get(self.request, self.appname)
         get.assert_called_with(
-            '%s/node/apps/%s/containers' % (settings.TSURU_HOST, self.appname),
+            '%s/docker/node/apps/%s/containers' % (settings.TSURU_HOST,
+                                                   self.appname),
             headers={'authorization': self.request.session['tsuru_token']})
 
     @patch('requests.get')
