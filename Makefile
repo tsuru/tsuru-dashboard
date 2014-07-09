@@ -7,7 +7,7 @@ deps:
 test: clean deps
 	@coverage run manage.py test
 	@coverage report -m
-	@flake8 .
+	@flake8 --max-line-length 110 .
 
 makemessages:
 	@django-admin.py makemessages -a

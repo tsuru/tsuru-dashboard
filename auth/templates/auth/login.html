@@ -17,7 +17,7 @@
 			{% if scheme_info.name == "oauth" %}
 			<form class="form-signin" action="" method="get">
 				<div class="form-actions">
-					<a href="{{ scheme_info.data.authorizeUrl }}" class="btn btn-inverse">Login</a>
+					<a href="{{ authorize_url }}" class="btn btn-inverse">Login</a>
 				</div>
 				</form>
 			{% else %}

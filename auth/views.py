@@ -79,7 +79,10 @@ class Login(FormView):
 
     def get_context_data(self, *args, **kwargs):
         data = super(Login, self).get_context_data(*args, **kwargs)
-        data["scheme_info"] = self.scheme_info()
+        data["scheme_info"] = scheme = self.scheme_info()
+        authorize_url = scheme.get('data', {}).get('authorizeUrl', '')
+        callback_url = "http://{}/auth/callback/".format(self.request.META.get('HTTP_HOST'))
+        data["authorize_url"] = authorize_url.replace('__redirect_url__', callback_url)
         return data
 
     def get_success_url(self):
