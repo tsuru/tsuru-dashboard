@@ -17,20 +17,20 @@ class CallbackViewTest(TestCase):
         post_mock.return_value = response_mock
 
         request = RequestFactory().get('/', {"code": "somecode"})
-        request.META['Host'] = 'localhost:3333'
+        request.META['HTTP_HOST'] = 'localhost:3333'
         request.session = {}
 
         response = Callback.as_view()(request)
 
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, "/auth/login")
+        self.assertEqual(response.url, "/apps")
 
         self.assertEqual(request.session["tsuru_token"], "type xpto")
         self.assertEqual(request.session["is_admin"], True)
 
         expected_url = 'http://localhost:8080/auth/login'
         expected_data = json.dumps({
-            "redirectUrl": "localhost:3333/auth/callback/",
+            "redirectUrl": "http://localhost:3333/auth/callback/",
             "code": "somecode"
         })
 
@@ -39,7 +39,7 @@ class CallbackViewTest(TestCase):
     @mock.patch("requests.post")
     def test_callback_wrong_status_code(self, post_mock):
         request = RequestFactory().get('/')
-        request.META['Host'] = 'localhost:3333'
+        request.META['HTTP_HOST'] = 'localhost:3333'
 
         response = Callback.as_view()(request)
 

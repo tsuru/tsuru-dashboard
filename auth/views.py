@@ -157,7 +157,7 @@ class Signup(View):
 class Callback(View):
     def get(self, request):
         code = request.GET.get("code")
-        redirect_url = "{}/auth/callback/".format(request.META.get('Host'))
+        redirect_url = "http://{}/auth/callback/".format(request.META.get('HTTP_HOST'))
         data = {
             "code": code,
             "redirectUrl": redirect_url,
@@ -169,6 +169,7 @@ class Callback(View):
             self.request.session['tsuru_token'] = "type {0}".format(
                 result['token'])
             self.request.session['is_admin'] = result.get('is_admin', False)
+            return redirect('/apps')
         return redirect('/auth/login')
 
 
