@@ -206,3 +206,24 @@ class LoginViewTest(TestCase):
             data["authorize_url"],
             "http://something.com/?redirect=http://localhost:3333/auth/callback/"
         )
+
+    @patch("requests.get")
+    def test_get_context_data_with_data_is_none(self, get_mock):
+        request = RequestFactory().get('/')
+        request.META['HTTP_HOST'] = 'localhost:3333'
+        view = Login()
+        view.request = request
+
+        response_mock = Mock(status_code=200)
+        response_mock.json.return_value = {
+            "name": "native",
+            "data": None
+        }
+        get_mock.return_value = response_mock
+
+        data = view.get_context_data()
+
+        self.assertDictEqual(data["scheme_info"], {
+            "name": "native",
+            "data": None,
+        })
