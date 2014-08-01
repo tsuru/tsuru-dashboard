@@ -4,7 +4,7 @@ import os
 
 BASE_PATH = os.path.abspath(os.path.dirname(__file__))
 
-DEBUG = os.environ.get("DEBUG", "false") == "true"
+DEBUG = os.environ.get("DEBUG", "false") in ("true", "True", "1")
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = ()
