@@ -19,7 +19,7 @@
 				</tr>
 				{% for node in nodes %}
 				<tr>
-				<td><a href="{% url 'list-container' node.Address|cut:"http://" %}" title="Containers List">{{ node.ID }}</a></td>
+				<td><a href="{% url 'list-container' node %}" title="Containers List">{{ node }}</a></td>
 				<td>{{ node.Address }}</td>
 				</tr>
 				{% endfor %}
