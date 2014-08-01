@@ -8,20 +8,31 @@ import requests
 import json
 import re
 
+addr_re = re.compile(r"^https?://(.*):\d{1,5}/?")
+
 
 class ListNode(LoginRequiredView):
     def get(self, request):
         authorization = {'authorization': request.session.get('tsuru_token')}
         response = requests.get('%s/docker/node' % settings.TSURU_HOST,
                                 headers=authorization)
-        if response.status_code == 204:
-            nodes = []
-        else:
-            nodes = sorted(response.json(), key=lambda item: item["ID"])
-            for n in nodes:
-                n["Address"] = n["Address"].replace(':4243', '')
+        nodes = []
+        if response.status_code != 204:
+            data = response.json()
+            if "nodes" in data:
+                nodes = filter(None, map(self.get_addr, data["nodes"]))
+                nodes.sort()
         return TemplateResponse(request, "docker/list_node.html",
-                                {'nodes': nodes})
+                                {"nodes": nodes})
+
+    def get_addr(self, node):
+        addr = node.get("Address")
+        if not addr:
+            return
+        m = addr_re.match(addr)
+        if not m:
+            return
+        return m.group(1)
 
 
 class ListContainer(LoginRequiredView):
