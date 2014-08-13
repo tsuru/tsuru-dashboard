@@ -29,6 +29,13 @@ class ListContainerViewTest(TestCase):
             headers={'authorization': self.request.session['tsuru_token']})
 
     @patch('requests.get')
+    def test_should_use_list_template(self, get):
+        get.return_value = Mock(status_code=204)
+        response = ListContainer.as_view()(self.request, self.address)
+        self.assertEqual("docker/list_container.html", response.template_name)
+        self.assertListEqual([], response.context_data['containers'])
+
+    @patch('requests.get')
     def teste_should_get_list_of_containers_from_tsuru(self, get):
         expected = [{"id": "blabla", "type": "python",
                      "appname": "myapp",
@@ -37,10 +44,7 @@ class ListContainerViewTest(TestCase):
         response_mock.json.return_value = expected
         get.return_value = response_mock
         response = ListContainer.as_view()(self.request, self.address)
-        self.assertListEqual([{"id": "blabla", "type": "python",
-                               "appname": "myapp",
-                               "hostaddr": "http://cittavld1182.globoi.com"}],
-                             response.context_data["containers"])
+        self.assertListEqual(expected, response.context_data["containers"])
 
     def test_get_request_run_url_should_not_return_404(self):
         response = self.client.get(reverse('list-container',

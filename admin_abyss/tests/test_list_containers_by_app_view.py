@@ -28,6 +28,13 @@ class ListContainerViewTest(TestCase):
             headers={'authorization': self.request.session['tsuru_token']})
 
     @patch('requests.get')
+    def test_should_use_list_template(self, get):
+        get.return_value = Mock(status_code=204)
+        response = ListContainersByApp.as_view()(self.request, self.appname)
+        self.assertEqual("apps/list_containers.html", response.template_name)
+        self.assertListEqual([], response.context_data['containers'])
+
+    @patch('requests.get')
     def teste_should_get_list_of_containers_from_tsuru(self, get):
         expected = [{"id": "blabla", "type": "python",
                      "appname": "myapp",

@@ -1,3 +1,5 @@
+import json
+
 from django.test import TestCase
 from django.test.client import RequestFactory
 from django.conf import settings
@@ -7,12 +9,12 @@ from apps.views import AppDetail
 from pluct.resource import Resource
 from pluct.schema import Schema
 
-import mock
+from mock import patch, Mock
 
 
 class AppDetailTestCase(TestCase):
-    @mock.patch("requests.get")
-    @mock.patch("pluct.resource.get")
+    @patch("requests.get")
+    @patch("pluct.resource.get")
     def setUp(self, get, requests_mock):
         request = RequestFactory().get("/")
         request.session = {"tsuru_token": "admin"}
@@ -49,13 +51,13 @@ class AppDetailTestCase(TestCase):
             schema=schema
         )
         get.return_value = resource
-        json_mock = mock.Mock()
+        json_mock = Mock()
         json_mock.json.return_value = self.expected
         requests_mock.return_value = json_mock
-        service_list_mock = mock.Mock()
+        service_list_mock = Mock()
         service_list_mock.return_value = [{"service": "mongodb",
                                            "instances": ["mymongo"]}]
-        service_info_mock = mock.Mock()
+        service_info_mock = Mock()
         service_info_mock.return_value = {"Name": "mymongo",
                                           "ServiceName": "mongodb",
                                           "Apps": ["app1"]}
@@ -83,7 +85,7 @@ class AppDetailTestCase(TestCase):
         self.assertListEqual(service_instances, [{"name": "mymongo",
                                                   "servicename": "mongodb"}])
 
-    @mock.patch('requests.get')
+    @patch('requests.get')
     def test_service_list(self, get):
         AppDetail.service_list = self.old_service_list
         app_detail = AppDetail()
@@ -93,12 +95,30 @@ class AppDetailTestCase(TestCase):
             '{0}/services/instances'.format(settings.TSURU_HOST),
             headers={'authorization': self.request.session.get('tsuru_token')})
 
-    @mock.patch('requests.get')
-    def test_service_info(self, get):
+    @patch('requests.get')
+    def test_service_info_with_invalid_instance_name(self, get):
         AppDetail.service_info = self.old_service_info
         app_detail = AppDetail()
         app_detail.request = self.request
         instance_name = "shubiduba"
+        app_detail.service_info(instance_name)
+        get.assert_called_with(
+            '{0}/services/instances/{1}'.format(settings.TSURU_HOST,
+                                                instance_name),
+            headers={'authorization': self.request.session.get('tsuru_token')})
+
+    @patch('requests.get')
+    def test_service_info(self, get):
+        instance_name = u"""{"Name": "mymongo", "ServiceName": "mongodb",
+                        "Apps": ["app1"]}"""
+        m = Mock(status_code=200, content=instance_name)
+        m.json.return_value = json.loads(instance_name)
+        get.return_value = m
+        request = RequestFactory().get("/")
+        request.session = {}
+        AppDetail.service_info = self.old_service_info
+        app_detail = AppDetail()
+        app_detail.request = self.request
         app_detail.service_info(instance_name)
         get.assert_called_with(
             '{0}/services/instances/{1}'.format(settings.TSURU_HOST,

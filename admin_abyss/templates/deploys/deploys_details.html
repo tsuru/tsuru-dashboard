@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ STATIC_URL }}css/abyss.widget.css" />
+<link rel="stylesheet" href="{{ STATIC_URL }}css/detail.css" />
+{% endblock %}
+
+{% block sidebar %}
+{% include "sidebar.html" with active="deploys" %}
+{% endblock %}
+
+{% block header %}
+<h1>Admin/Deploys</h1>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="widget">
+                <div class="title">
+                    <span class="icon">
+                        <i class="icon-signal"></i>
+                    </span>
+                    <h5>Info</h5>
+                </div>
+                <div class="content">
+                    <p><strong>App:</strong> {{ deploy.App }}</p>
+                    <p><strong>Duration:</strong> {{ deploy.Duration|string_to_time }}}</p>
+                    <p><strong>Timestamp:</strong> { deploy.Timestamp|string_to_date|date:" d-m-Y H:i:s " }}</p>
+                    <p><strong>Last Commit:</strong> {{ deploy.Commit }}</p>
+                    <p><strong>Diff:</strong> {{ deploy.Diff }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

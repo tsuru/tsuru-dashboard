@@ -1,2 +1,2 @@
 [run]
-source = abyss,apps,auth,services
+source = abyss,admin_abyss,apps,auth,services,teams

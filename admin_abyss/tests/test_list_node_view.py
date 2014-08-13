@@ -49,3 +49,33 @@ class ListServiceViewTest(TestCase):
         response = ListNode.as_view()(self.request)
         expected = ["127.0.0.1", "128.0.0.1", "myserver.com"]
         self.assertListEqual(expected, response.context_data["nodes"])
+
+    @patch("requests.get")
+    def test_not_pass_addresses_to_the_template(self, get):
+        response_mock = Mock()
+        response_mock.json.return_value = {
+            "nodes": [
+                {"Address": "",
+                 "Metadata": {"LastSuccess": "2014-08-01T14:09:40Z",
+                              "pool": "theonepool"},
+                 "Status": "ready"},
+            ],
+        }
+        get.return_value = response_mock
+        response = ListNode.as_view()(self.request)
+        self.assertListEqual([], response.context_data["nodes"])
+
+    @patch("requests.get")
+    def test_not_pass_valid_addresses_to_the_template(self, get):
+        response_mock = Mock()
+        response_mock.json.return_value = {
+            "nodes": [
+                {"Address": "127.0.0.1",
+                 "Metadata": {"LastSuccess": "2014-08-01T14:09:40Z",
+                              "pool": "theonepool"},
+                 "Status": "ready"},
+            ],
+        }
+        get.return_value = response_mock
+        response = ListNode.as_view()(self.request)
+        self.assertListEqual([], response.context_data["nodes"])
