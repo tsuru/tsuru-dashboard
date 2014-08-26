@@ -1,5 +1,8 @@
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.template.response import TemplateResponse
+from pygments import highlight
+from pygments.lexers import DiffLexer
+from pygments.formatters import HtmlFormatter
 from django.conf import settings
 
 from auth.views import LoginRequiredView
@@ -162,3 +165,16 @@ class ListAppAdmin(LoginRequiredView):
             apps = sorted(response.json(), key=lambda item: item["name"])
         return TemplateResponse(request, "apps/list_app_admin.html",
                                          {'apps': apps})
+
+
+class DeployInfo(LoginRequiredView):
+    def get(self, request, *args, **kwargs):
+        deploy_id = kwargs["deploy"]
+        headers = {'authorization': request.session.get('tsuru_token')}
+        url = "{0}/deploys/{1}".format(settings.TSURU_HOST, deploy_id)
+        response = requests.get(url, headers=headers)
+        context = {"deploy": response.json()}
+        format = HtmlFormatter()
+        diff_output = highlight(context["deploy"]["Diff"], DiffLexer(), format)
+        context["deploy"]["Diff"] = diff_output
+        return TemplateResponse(request, "deploys/deploy_details.html", context)

@@ -1,8 +1,10 @@
 {% extends "base.html" %}
+{% load filters_deploys %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{{ STATIC_URL }}css/abyss.widget.css" />
 <link rel="stylesheet" href="{{ STATIC_URL }}css/detail.css" />
+<link rel="stylesheet" href="{{ STATIC_URL}}css/deploy-diff.css" />
 {% endblock %}
 
 {% block sidebar %}
@@ -26,10 +28,11 @@
                 </div>
                 <div class="content">
                     <p><strong>App:</strong> {{ deploy.App }}</p>
-                    <p><strong>Duration:</strong> {{ deploy.Duration|string_to_time }}}</p>
-                    <p><strong>Timestamp:</strong> { deploy.Timestamp|string_to_date|date:" d-m-Y H:i:s " }}</p>
+                    <p><strong>Duration:</strong> {{ deploy.Duration|time_to_string }}</p>
+                    <p><strong>Timestamp:</strong> {{ deploy.Timestamp|string_to_date|date:" d-m-Y H:i:s " }}</p>
                     <p><strong>Last Commit:</strong> {{ deploy.Commit }}</p>
-                    <p><strong>Diff:</strong> {{ deploy.Diff }}</p>
+                    {% if deploy.Error %}<p><strong>Error:</strong> {{ deploy.Error }}</p>{% endif %}
+                    <p><strong>Diff:</strong></p>{{ deploy.Diff|safe }}
                 </div>
             </div>
         </div>

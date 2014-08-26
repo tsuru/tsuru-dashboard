@@ -12,5 +12,6 @@ urlpatterns = patterns(
     url(r'^deploys/$', views.ListDeploy.as_view(), name='list-deploys'),
     url(r'^deploys/graph$', views.DeploysGraph.as_view(),
         name='deploys-graph'),
+    url(r'^(?P<deploy>[\s\w@\.-]+)/$', views.DeployInfo.as_view(), name='deploy-info'),
     url(r'^apps/$', views.ListAppAdmin.as_view(), name='list-app-admin'),
 )

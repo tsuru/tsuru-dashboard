@@ -13,5 +13,5 @@ def string_to_date(value):
 
 
 @register.filter
-def string_to_time(value):
+def time_to_string(value):
     return time.strftime('%Mm%Ss', time.gmtime(float(value)/1000000000))

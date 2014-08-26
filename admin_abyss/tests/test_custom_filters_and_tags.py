@@ -12,9 +12,9 @@ class TestFilter(TestCase):
         timestamp = "Feb. 27, 2014, 5:55 p.m."
         self.assertEqual(timestamp, template.render(context))
 
-    def test_string_to_time_filter(self):
+    def test_time_to_string_filter(self):
         html = '{% load filters_deploys %}'
-        html += '{{ duration|string_to_time }}'
+        html += '{{ duration|time_to_string }}'
         template = Template(html)
         context = Context({'duration': '203902854662'})
         self.assertEqual("03m23s", template.render(context))
