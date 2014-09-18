@@ -2,23 +2,18 @@
 
 import os
 
-BASE_PATH = os.path.abspath(os.path.dirname(__file__))
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 DEBUG = os.environ.get("DEBUG", "false") in ("true", "True", "1")
+
 TEMPLATE_DEBUG = DEBUG
 
-ADMINS = ()
-
-MANAGERS = ADMINS
+SECRET_KEY = 'kk809&amp;a%=ghdr0ar06-8k7b2kc38la-1sm3h)324j$-%t17h_b'
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_PATH, 'data.db'),
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': '',
-        'PORT': '',
+        'NAME': os.path.join(BASE_DIR, 'data.db'),
     }
 }
 
@@ -26,33 +21,18 @@ TIME_ZONE = 'America/Sao_Paulo'
 
 LANGUAGE_CODE = 'en-us'
 
-SITE_ID = 1
-
 USE_I18N = True
+
 USE_L10N = True
+
 USE_TZ = True
 
-LANGUAGES = (
-    ('en-us', 'English'),
-)
-
-MEDIA_ROOT = os.path.join(BASE_PATH, 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
-STATIC_ROOT = os.path.join(BASE_PATH, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (
-    os.path.join(BASE_PATH, 'static_files'),
-)
-STATICFILES_FINDERS = (
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-)
-
-SECRET_KEY = 'kk809&amp;a%=ghdr0ar06-8k7b2kc38la-1sm3h)324j$-%t17h_b'
-
-TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.Loader',
-    'django.template.loaders.app_directories.Loader',
+    os.path.join(BASE_DIR, 'static_files'),
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -66,12 +46,13 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 )
 
 MIDDLEWARE_CLASSES = (
-    'django.middleware.locale.LocaleMiddleware',
-    'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'auth.middleware.VerifyToken',
 )
 
@@ -80,13 +61,12 @@ ROOT_URLCONF = 'abyss.urls'
 WSGI_APPLICATION = 'abyss.wsgi.application'
 
 TEMPLATE_DIRS = (
-    os.path.join(BASE_PATH, "templates"),
+    os.path.join(BASE_DIR, "templates"),
 )
 
 INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_gravatar',
@@ -125,9 +105,5 @@ LOGGING = {
         },
     }
 }
-
-LOCALE_PATHS = (
-    os.path.join(BASE_PATH, 'locale'),
-)
 
 ALLOWED_HOSTS = ["*"]
