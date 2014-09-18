@@ -1,4 +1,4 @@
 hooks:
-  pre-restart:
+  build:
   - python manage.py syncdb --noinput
   - python manage.py collectstatic --noinput
