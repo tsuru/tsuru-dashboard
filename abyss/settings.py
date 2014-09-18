@@ -95,7 +95,6 @@ INSTALLED_APPS = (
     'services',
     'teams',
     'quotas',
-    'intro',
     'admin_abyss',
 )
 
@@ -130,7 +129,5 @@ LOGGING = {
 LOCALE_PATHS = (
     os.path.join(BASE_PATH, 'locale'),
 )
-
-INTRO_ENABLED = False
 
 ALLOWED_HOSTS = ["*"]

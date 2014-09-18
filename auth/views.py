@@ -12,8 +12,6 @@ from django.contrib import messages
 from auth.forms import (LoginForm, SignupForm, KeyForm, TokenRequestForm,
                         PasswordRecoveryForm, ChangePasswordForm)
 
-from intro.models import Intro
-
 
 class LoginRequiredMixin(object):
     def dispatch(self, request, *args, **kwargs):
@@ -89,11 +87,6 @@ class Login(FormView):
         return data
 
     def get_success_url(self):
-        if hasattr(settings, "INTRO_ENABLED") and settings.INTRO_ENABLED:
-            _, created = Intro.objects.get_or_create(
-                email=self.request.session['username'])
-            if created:
-                return '/intro'
         return '/apps'
 
     def scheme_info(self):

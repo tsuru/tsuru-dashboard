@@ -3,14 +3,11 @@ from django.http import HttpResponseRedirect
 from django.test import TestCase
 from django.test.client import RequestFactory
 from django.core.urlresolvers import reverse
-from django.test.utils import override_settings
 
 from mock import Mock, patch
 
 from auth.forms import LoginForm
 from auth.views import Login
-
-from intro.models import Intro
 
 
 class LoginViewTest(TestCase):
@@ -99,7 +96,6 @@ class LoginViewTest(TestCase):
         self.assertFalse(request.session["is_admin"])
 
     @patch('requests.post')
-    @override_settings(INTRO_ENABLED=False)
     def test_redirect_to_team_creation_when_login_is_successful(self, post):
         response_mock = Mock(status_code=200)
         response_mock.json.return_value = {"token": "my beautiful token",
@@ -113,7 +109,6 @@ class LoginViewTest(TestCase):
         self.assertEqual('/apps', response['Location'])
 
     @patch('requests.post')
-    @override_settings(INTRO_ENABLED=False)
     def test_redirect_to_team_creation_settings_false(self, post):
         response_mock = Mock(status_code=200)
         response_mock.json.return_value = {"token": "my beautiful token",
@@ -127,38 +122,17 @@ class LoginViewTest(TestCase):
         self.assertEqual('/apps', response['Location'])
 
     @patch('requests.post')
-    @override_settings(INTRO_ENABLED=True)
-    def test_redirect_to_team_creation_settings_true(self, post):
+    def test_redirect_to_apps(self, post):
         response_mock = Mock(status_code=200)
         response_mock.json.return_value = {"token": "my beautiful token",
                                            "is_admin": True}
         post.return_value = response_mock
         data = {'username': 'valid@email.com', 'password': '123456'}
-        request = RequestFactory().post('/intro', data)
-        request.session = {}
-        response = Login.as_view()(request)
-        self.assertIsInstance(response, HttpResponseRedirect)
-        self.assertEqual('/intro', response['Location'])
-        response = Login.as_view()(request)
-        self.assertIsInstance(response, HttpResponseRedirect)
-        self.assertEqual('/apps', response['Location'])
-        Intro.objects.filter(email=data['username']).delete()
-
-    @patch('requests.post')
-    @override_settings(INTRO_ENABLED=True)
-    def test_redirect_to_apps_when_the_intro_alread_exist(self, post):
-        response_mock = Mock(status_code=200)
-        response_mock.json.return_value = {"token": "my beautiful token",
-                                           "is_admin": True}
-        post.return_value = response_mock
-        data = {'username': 'valid@email.com', 'password': '123456'}
-        intro = Intro.objects.create(email=data['username'])
         request = RequestFactory().post('/', data)
         request.session = {}
         response = Login.as_view()(request)
         self.assertIsInstance(response, HttpResponseRedirect)
         self.assertEqual('/apps', response['Location'])
-        intro.delete()
 
     @patch("requests.get")
     def test_scheme_info(self, get_mock):
