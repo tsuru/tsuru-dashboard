@@ -53,15 +53,14 @@ class KeyViewTest(TestCase):
     def test_valid_postshould_return_message_expected(self, post, success):
         post.return_value = Mock(status_code=200)
         Key.as_view()(self.request_post)
-        success.assert_called_with(self.request_post,
-                                   "The key was successfully added")
+        success.assert_called_with(self.request_post, "The key was successfully added", fail_silently=True)
 
     @patch("django.contrib.messages.error")
     @patch('requests.post')
     def test_invalid_post_should_return_error_message(self, post, error):
         post.return_value = Mock(status_code=500, text='Error')
         Key.as_view()(self.request_post)
-        error.assert_called_with(self.request_post, 'Error')
+        error.assert_called_with(self.request_post, 'Error', fail_silently=True)
 
     @patch("django.contrib.messages.success")
     @patch('requests.post')

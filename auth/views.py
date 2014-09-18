@@ -33,9 +33,9 @@ class ChangePassword(LoginRequiredMixin, FormView):
         url = "{0}/users/password".format(settings.TSURU_HOST)
         response = requests.put(url, data=json.dumps(data), headers=headers)
         if response.status_code < 399:
-            messages.success(self.request, u'Password successfully updated!')
+            messages.success(self.request, u'Password successfully updated!', fail_silently=True)
         else:
-            messages.error(self.request, response.text)
+            messages.error(self.request, response.text, fail_silently=True)
         return super(ChangePassword, self).form_valid(form)
 
 
@@ -181,7 +181,7 @@ class Key(LoginRequiredMixin, FormView):
                                  data=json.dumps(form.cleaned_data),
                                  headers=authorization)
         if response.status_code < 399:
-            messages.success(self.request, "The key was successfully added")
+            messages.success(self.request, "The key was successfully added", fail_silently=True)
         else:
-            messages.error(self.request, response.text)
+            messages.error(self.request, response.text, fail_silently=True)
         return super(Key, self).form_valid(form)

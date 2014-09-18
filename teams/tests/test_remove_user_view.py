@@ -35,7 +35,7 @@ class RemoveUserViewTest(TestCase):
         user = "username"
         RemoveUser.as_view()(self.request, team=team_name,
                              user=user)
-        success.assert_called_with(self.request, u'User successfully removed!')
+        success.assert_called_with(self.request, u'User successfully removed!', fail_silently=True)
 
     @patch("django.contrib.messages.error")
     @patch("requests.delete")
@@ -45,4 +45,4 @@ class RemoveUserViewTest(TestCase):
         user = "username"
         RemoveUser.as_view()(self.request, team=team_name,
                              user=user)
-        error.assert_called_with(self.request, u'error')
+        error.assert_called_with(self.request, u'error', fail_silently=True)

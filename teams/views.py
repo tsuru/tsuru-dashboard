@@ -19,9 +19,9 @@ class RemoveUser(LoginRequiredView):
         url = "{0}/teams/{1}/{2}".format(settings.TSURU_HOST, team_name, user)
         response = requests.delete(url, headers=headers)
         if response.status_code < 399:
-            messages.success(self.request, u'User successfully removed!')
+            messages.success(self.request, u'User successfully removed!', fail_silently=True)
         else:
-            messages.error(self.request, response.text)
+            messages.error(self.request, response.text, fail_silently=True)
         return redirect(reverse('team-info', args=[team_name]))
 
 
@@ -34,7 +34,7 @@ class AddUser(LoginRequiredView):
                                          user)
         response = requests.put(url, headers=headers)
         if response.status_code != 200:
-            messages.error(self.request, response.text)
+            messages.error(self.request, response.text, fail_silently=True)
         return redirect(reverse('team-info', args=[team_name]))
 
 
@@ -68,7 +68,7 @@ class Remove(LoginRequiredView):
         response = requests.delete(url, headers=auth)
 
         if response.status_code > 399:
-            messages.error(self.request, u'Can not delete this team!')
+            messages.error(self.request, u'Can not delete this team!', fail_silently=True)
         return redirect(reverse('team-list'))
 
 

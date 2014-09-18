@@ -50,7 +50,7 @@ class TestResetPasswordView(TestCase):
         request = RequestFactory().post("/", data)
         request.session = {'tsuru_token': 'tokentest'}
         ChangePassword.as_view()(request)
-        success.assert_called_with(request, u'Password successfully updated!')
+        success.assert_called_with(request, u'Password successfully updated!', fail_silently=True)
 
     @patch("django.contrib.messages.error")
     @patch("requests.put")
@@ -64,7 +64,7 @@ class TestResetPasswordView(TestCase):
         request = RequestFactory().post("/", data)
         request.session = {'tsuru_token': 'tokentest'}
         ChangePassword.as_view()(request)
-        error.assert_called_with(request, u'error')
+        error.assert_called_with(request, u'error', fail_silently=True)
 
     def test_login_required(self):
         request = RequestFactory().get("/")

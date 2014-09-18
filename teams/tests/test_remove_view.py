@@ -33,4 +33,4 @@ class RemoveViewTest(TestCase):
                                    text=u'Can not delete this team!')
         team_name = "avengers"
         Remove.as_view()(self.request, team=team_name)
-        error.assert_called_with(self.request, u'Can not delete this team!')
+        error.assert_called_with(self.request, u'Can not delete this team!', fail_silently=True)
