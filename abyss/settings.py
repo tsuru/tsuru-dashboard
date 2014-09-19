@@ -2,7 +2,7 @@
 
 import os
 
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
 DEBUG = os.environ.get("DEBUG", "false") in ("true", "True", "1")
 
