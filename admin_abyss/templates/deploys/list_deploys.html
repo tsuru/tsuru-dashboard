@@ -43,7 +43,14 @@
                 <tbody>
                     {% for deploy in deploys %}
                     <tr class="{% if deploy.Error %}error{% endif %}">
-			<td class='app'><a href="{% url 'deploy-info' deploy.ID %}">{{ deploy.App }}</a>{% if deploy.Error %} - {{ deploy.Error }}{% endif %}</td>
+			<td class='app'>
+			    {% if  deploy.ID %}
+			    	<a href="{% url 'deploy-info' deploy.ID %}">{{ deploy.App }}</a>
+			    {% else %}
+			    	{{ deploy.App }}
+			    {% endif %}
+			    {% if deploy.Error %} - {{ deploy.Error }}{% endif %}
+		    	</td>
                         <td class='to-right'>{{ deploy.Duration|time_to_string }}</td>
                         <td class='to-right'>{{ deploy.Timestamp|string_to_date|date:" d-m-Y H:i:s " }}</td>
                     </tr>
