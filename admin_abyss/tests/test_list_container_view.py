@@ -14,7 +14,7 @@ class ListContainerViewTest(TestCase):
         self.factory = RequestFactory()
         self.request = self.factory.get('/')
         self.request.session = {'tsuru_token': 'tokentest'}
-        self.address = 'http://cittavld1182.globoi.com'
+        self.address = 'cittavld1182.globoi.com'
         self.response_mock = Mock()
         self.response_mock.status_code = 200
         self.response_mock.content = '{}'

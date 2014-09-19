@@ -14,13 +14,19 @@
 		<div class="span11">
 			<table class="table">
 				<tr>
-				<th>ID</th>
+				<th>Pool</th>
 				<th>Host</th>
+				<th>Last success</th>
 				</tr>
 				{% for node in nodes %}
 				<tr>
-				<td><a href="{% url 'list-container' node %}" title="Containers List">{{ node }}</a></td>
-				<td>{{ node.Address }}</td>
+				    <td>
+				        <a href="{% url 'list-container' node.Address %}" title="Containers List">
+					    {{ node.Metadata.pool }}
+					</a>
+				     </td>
+				     <td>{{ node.Address }}</td>
+				     <td>{{ node.Metadata.LastSuccess }}</td>
 				</tr>
 				{% endfor %}
 			</table>

@@ -22,24 +22,20 @@ class ListNode(LoginRequiredView):
         nodes = []
         if response.status_code != 204:
             data = response.json()
-            if "nodes" in data:
-                nodes = filter(None, map(self.get_addr, data["nodes"]))
-                nodes.sort()
+            nodes = data.get("nodes", [])
+
+            def sort_nodes_by_pool(node1, node2):
+                return cmp(node1['Metadata'].get('pool'), node2['Metadata'].get('pool'))
+
+            nodes.sort(cmp=sort_nodes_by_pool)
         return TemplateResponse(request, "docker/list_node.html",
                                 {"nodes": nodes})
-
-    def get_addr(self, node):
-        addr = node.get("Address")
-        if not addr:
-            return
-        m = addr_re.match(addr)
-        if not m:
-            return
-        return m.group(1)
 
 
 class ListContainer(LoginRequiredView):
     def get(self, request, address):
+        address = address.replace("http://", "")
+        address = address.split(":")[0]
         authorization = {'authorization': request.session.get('tsuru_token')}
         url = '%s/docker/node/%s/containers' % (settings.TSURU_HOST, address)
         response = requests.get(url, headers=authorization)

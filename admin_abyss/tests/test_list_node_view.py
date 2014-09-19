@@ -7,7 +7,7 @@ from django.test.client import RequestFactory
 from admin_abyss.views import ListNode
 
 
-class ListServiceViewTest(TestCase):
+class ListNodeViewTest(TestCase):
     def setUp(self):
         self.request = RequestFactory().get("/")
         self.request.session = {"tsuru_token": "admin"}
@@ -15,7 +15,7 @@ class ListServiceViewTest(TestCase):
     @patch("requests.get")
     def test_should_use_list_template(self, get):
         response_mock = Mock()
-        response_mock.json.return_value = []
+        response_mock.json.return_value = {}
         get.return_value = response_mock
         response = ListNode.as_view()(self.request)
         self.assertEqual("docker/list_node.html", response.template_name)
@@ -47,35 +47,18 @@ class ListServiceViewTest(TestCase):
         }
         get.return_value = response_mock
         response = ListNode.as_view()(self.request)
-        expected = ["127.0.0.1", "128.0.0.1", "myserver.com"]
+        expected = [
+            {"Address": "http://128.0.0.1:4243",
+             "Metadata": {"LastSuccess": "2014-08-01T14:09:40Z",
+                          "pool": "theonepool"},
+             "Status": "ready"},
+            {"Address": "http://127.0.0.1:2375",
+             "Metadata": {"LastSuccess": "2014-08-01T14:09:40Z",
+                          "pool": "theonepool"},
+             "Status": "ready"},
+            {"Address": "http://myserver.com:2375",
+             "Metadata": {"LastSuccess": "2014-08-01T14:09:40Z",
+                          "pool": "theonepool"},
+             "Status": "ready"},
+        ]
         self.assertListEqual(expected, response.context_data["nodes"])
-
-    @patch("requests.get")
-    def test_not_pass_addresses_to_the_template(self, get):
-        response_mock = Mock()
-        response_mock.json.return_value = {
-            "nodes": [
-                {"Address": "",
-                 "Metadata": {"LastSuccess": "2014-08-01T14:09:40Z",
-                              "pool": "theonepool"},
-                 "Status": "ready"},
-            ],
-        }
-        get.return_value = response_mock
-        response = ListNode.as_view()(self.request)
-        self.assertListEqual([], response.context_data["nodes"])
-
-    @patch("requests.get")
-    def test_not_pass_valid_addresses_to_the_template(self, get):
-        response_mock = Mock()
-        response_mock.json.return_value = {
-            "nodes": [
-                {"Address": "127.0.0.1",
-                 "Metadata": {"LastSuccess": "2014-08-01T14:09:40Z",
-                              "pool": "theonepool"},
-                 "Status": "ready"},
-            ],
-        }
-        get.return_value = response_mock
-        response = ListNode.as_view()(self.request)
-        self.assertListEqual([], response.context_data["nodes"])
