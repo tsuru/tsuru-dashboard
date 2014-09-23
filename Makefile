@@ -9,14 +9,5 @@ test: clean deps
 	@coverage report -m
 	@flake8 --max-line-length 110 .
 
-makemessages:
-	@django-admin.py makemessages -a
-
-compilemessages:
-	@django-admin.py compilemessages
-
-movemessages:
-	@cp -r locale/ abyss/locale/
-
 run: clean deps
 	@DEBUG=true ./manage.py runserver
