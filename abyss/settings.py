@@ -75,6 +75,7 @@ INSTALLED_APPS = (
     'services',
     'teams',
     'quotas',
+    'healthcheck',
     'admin_abyss',
 )
 

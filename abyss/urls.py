@@ -13,6 +13,7 @@ urlpatterns = patterns(
     (r'^services/', include('services.urls')),
     (r'^teams/', include('teams.urls')),
     (r'^quotas/', include('quotas.urls')),
+    (r'^healthcheck/', include('healthcheck.urls')),
 )
 
 urlpatterns += patterns(
