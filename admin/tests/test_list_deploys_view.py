@@ -6,7 +6,7 @@ from django.conf import settings
 from django.test import TestCase
 from django.test.client import RequestFactory
 
-from admin_abyss.views import ListDeploy
+from admin.views import ListDeploy
 
 
 class ListDeployViewTest(TestCase):

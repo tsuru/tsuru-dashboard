@@ -3,7 +3,7 @@ from mock import patch, Mock
 from django.test import TestCase
 from django.test.client import RequestFactory
 
-from admin_abyss.views import ListAppAdmin
+from admin.views import ListAppAdmin
 
 
 class ListAppAdminViewTest(TestCase):

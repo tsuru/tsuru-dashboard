@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, url
 
-from admin_abyss import views
+from admin import views
 
 urlpatterns = patterns(
     '',

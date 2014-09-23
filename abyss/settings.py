@@ -76,7 +76,7 @@ INSTALLED_APPS = (
     'teams',
     'quotas',
     'healthcheck',
-    'admin_abyss',
+    'admin',
 )
 
 TSURU_HOST = os.environ.get("TSURU_HOST", "http://localhost:8080")

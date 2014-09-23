@@ -4,7 +4,7 @@ from django.test import TestCase
 from django.test.client import RequestFactory
 from django.conf import settings
 
-from admin_abyss.views import ListContainersByApp
+from admin.views import ListContainersByApp
 
 
 class ListContainerViewTest(TestCase):

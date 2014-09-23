@@ -5,7 +5,7 @@ from django.test.client import RequestFactory
 from django.core.urlresolvers import reverse
 from django.conf import settings
 
-from admin_abyss.views import ListContainer
+from admin.views import ListContainer
 
 
 class ListContainerViewTest(TestCase):
