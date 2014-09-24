@@ -8,7 +8,7 @@ DEBUG = os.environ.get("DEBUG", "false") in ("true", "True", "1")
 
 TEMPLATE_DEBUG = DEBUG
 
-SECRET_KEY = 'kk809&amp;a%=ghdr0ar06-8k7b2kc38la-1sm3h)324j$-%t17h_b'
+SECRET_KEY = os.environ.get("SECRET_KEY", "your-secret-key")
 
 DATABASES = {
     'default': {
