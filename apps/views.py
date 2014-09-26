@@ -71,6 +71,10 @@ class AppDetail(LoginRequiredMixin, TemplateView):
             return {}
         return response.json()
 
+    def get_envs(self, app_name):
+        url = "{}/apps/{}/env".format(settings.TSURU_HOST, app_name)
+        return requests.get(url, headers=self.authorization).json()
+
     def get_context_data(self, *args, **kwargs):
         context = super(AppDetail, self).get_context_data(*args, **kwargs)
         app_name = kwargs["app_name"]
@@ -81,6 +85,7 @@ class AppDetail(LoginRequiredMixin, TemplateView):
             'Authorization': '{} {}'.format('type', token)
         }
         context['app'] = requests.get(url, headers=headers).json()
+
         service_instances = []
         for service in self.service_list():
             instances = service.get("instances", None)
@@ -94,7 +99,9 @@ class AppDetail(LoginRequiredMixin, TemplateView):
                             {"name": instance_data["Name"],
                              "servicename": instance_data["ServiceName"]}
                         )
+
         context['app']["service_instances"] = service_instances
+        context['app']['envs'] = self.get_envs(app_name)
         return context
 
 
