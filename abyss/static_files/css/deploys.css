@@ -1,0 +1,9 @@
+.deploys th, .deploys td {
+    text-align: left;
+    word-break: break-word;
+    word-wrap: break-word;
+}
+
+.deploys .to-right {
+    text-align: right;
+}

@@ -10,15 +10,7 @@
 {% endblock %}
 
 {% block extra_css %}
-<style>
-    .deploys th, .deploys td {
-        text-align: left;
-    }
-
-    .deploys .to-right {
-        text-align: right;
-    }
-</style>
+<link rel="stylesheet" href="{{ STATIC_URL }}css/deploys.css" />
 {% endblock %}
 {% block content %}
 <div class="container-fluid">
