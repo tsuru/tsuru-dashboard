@@ -39,7 +39,7 @@ class AppLogViewTest(TestCase):
         url = "{}/apps/{}".format(settings.TSURU_HOST, self.app_name)
         calls.append(call(url, headers=authorization))
 
-        url = "{}/apps/{}/log?lines=10".format(settings.TSURU_HOST, self.app_name)
+        url = "{}/apps/{}/log?lines=100".format(settings.TSURU_HOST, self.app_name)
         calls.append(call(url, headers=authorization))
 
         self.assertEqual(calls, get.call_args_list)

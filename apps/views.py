@@ -258,7 +258,7 @@ class AppLog(LoginRequiredView):
         authorization = {"authorization": request.session.get("tsuru_token")}
         app_url = "{}/apps/{}".format(settings.TSURU_HOST, app_name)
         app = requests.get(app_url, headers=authorization).json()
-        log_url = "{}/apps/{}/log?lines=10".format(settings.TSURU_HOST, app_name)
+        log_url = "{}/apps/{}/log?lines=100".format(settings.TSURU_HOST, app_name)
         logs = requests.get(log_url, headers=authorization).json()
         return TemplateResponse(request, self.template, {'logs': logs, 'app': app})
 

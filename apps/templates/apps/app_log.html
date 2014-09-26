@@ -15,7 +15,7 @@
 		<div class="span12">
 			{% for log in logs %}
 			<p>
-			<strong>{{ log.Date }}</strong> - {{ log.Message }}
+			<strong>{{ log.Date }} [ {{ log.Source }} ][ {{ log.Unit }} ]:</strong> {{ log.Message }}
 			</p>
 			{% endfor %}
 		</div>
