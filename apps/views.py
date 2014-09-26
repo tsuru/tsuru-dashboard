@@ -78,12 +78,13 @@ class AppDetail(LoginRequiredMixin, TemplateView):
     def get_context_data(self, *args, **kwargs):
         context = super(AppDetail, self).get_context_data(*args, **kwargs)
         app_name = kwargs["app_name"]
-        token = self.request.session.get('tsuru_token').replace('type ', '')
-        url = '{0}/apps/{1}'.format(settings.TSURU_HOST, app_name)
+        token = self.request.session.get('tsuru_token')
+        url = '{}/apps/{}'.format(settings.TSURU_HOST, app_name)
         headers = {
             'content-type': 'application/json',
-            'Authorization': '{} {}'.format('type', token)
+            'Authorization': token,
         }
+
         context['app'] = requests.get(url, headers=headers).json()
 
         service_instances = []
