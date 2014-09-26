@@ -5,23 +5,16 @@ from django.core.urlresolvers import reverse
 
 from auth.views import LoginRequiredView
 
-from pluct import resource
-
 import requests
 import json
 
 
 class ListService(LoginRequiredView):
     def get(self, request):
-        token = request.session.get('tsuru_token').replace('type ', '')
-        auth = {
-            'type': 'type',
-            'credentials': token,
-        }
         url = "{0}/services/instances".format(settings.TSURU_HOST)
-        services = resource.get(url, auth).data
-        return TemplateResponse(request, "services/list.html",
-                                {'services': services})
+        authorization = {'authorization': request.session.get('tsuru_token')}
+        services = requests.get(url, headers=authorization).json()
+        return TemplateResponse(request, "services/list.html", {'services': services})
 
 
 class ServiceInstanceDetail(LoginRequiredView):
