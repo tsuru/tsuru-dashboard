@@ -1,0 +1,6 @@
+hooks:
+  build:
+    - python manage.py syncdb --noinput
+    - python manage.py collectstatic --noinput
+healthcheck:
+    path: /healthcheck/

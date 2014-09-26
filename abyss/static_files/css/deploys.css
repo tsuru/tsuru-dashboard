@@ -1,5 +1,8 @@
 .deploys th, .deploys td {
     text-align: left;
+}
+
+.deploys td.app {
     word-break: break-word;
     word-wrap: break-word;
 }
