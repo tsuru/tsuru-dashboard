@@ -1,23 +1,20 @@
-from mock import patch, Mock
+from mock import patch, Mock, call
 
 from django.test import TestCase
 from django.test.client import RequestFactory
 from django.core.urlresolvers import reverse
+from django.conf import settings
 
 from auth.views import LoginRequiredView
 from apps.views import AppLog
 
 
 class AppLogViewTest(TestCase):
-    @patch("pluct.resource.get")
+    @patch("requests.get")
     def setUp(self, get):
-        self.factory = RequestFactory()
-        self.request = self.factory.get('/')
+        self.request = RequestFactory().get("/")
         self.request.session = {'tsuru_token': 'tokentest'}
         self.app_name = 'app-teste'
-        self.response_mock = Mock()
-        self.response_mock.status_code = 200
-        self.response_mock.content = '{}'
         self.response = AppLog().get(self.request, self.app_name)
 
     def test_should_require_login_to_set_env(self):
@@ -32,20 +29,27 @@ class AppLogViewTest(TestCase):
     def test_context_should_contain_app(self):
         self.assertIn('app', self.response.context_data.keys())
 
-    @patch('pluct.resource.get')
-    def test_request_get_to_tsuru_with_args_expected(self, get):
-        resource_mock = Mock()
-        get.return_value = resource_mock
+    @patch('requests.get')
+    def test_expected_calls(self, get):
         AppLog().get(self.request, self.app_name)
-        resource_mock.log.assert_called_with(lines=10)
+        authorization = {'authorization': self.request.session.get('tsuru_token')}
 
-    @patch('pluct.resource.get')
+        calls = []
+
+        url = "{}/apps/{}".format(settings.TSURU_HOST, self.app_name)
+        calls.append(call(url, headers=authorization))
+
+        url = "{}/apps/{}/log?lines=10".format(settings.TSURU_HOST, self.app_name)
+        calls.append(call(url, headers=authorization))
+
+        self.assertEqual(calls, get.call_args_list)
+
+    @patch('requests.get')
     def test_should_return_expected_context(self, get):
         expected = [{"logs": "teste"}]
-        log_mock = expected
-        resource_mock = Mock()
-        resource_mock.log.return_value = log_mock
-        get.return_value = resource_mock
+        response_mock = Mock()
+        response_mock.json.return_value = expected
+        get.return_value = response_mock
         response = AppLog().get(self.request, self.app_name)
         self.assertListEqual(expected, response.context_data['logs'])
 
