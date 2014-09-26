@@ -6,16 +6,12 @@ from django.conf import settings
 
 from apps.views import AppDetail
 
-from pluct.resource import Resource
-from pluct.schema import Schema
-
 from mock import patch, Mock
 
 
 class AppDetailTestCase(TestCase):
     @patch("requests.get")
-    @patch("pluct.resource.get")
-    def setUp(self, get, requests_mock):
+    def setUp(self, requests_mock):
         request = RequestFactory().get("/")
         request.session = {"tsuru_token": "admin"}
         self.expected = {
@@ -29,31 +25,10 @@ class AppDetailTestCase(TestCase):
             ],
             "teams": ["tsuruteam", "crane"]
         }
-        schema = Schema(
-            "",
-            type="object",
-            properties={
-                "units":
-                {
-                    "type": "array",
-                    "items": {},
-                },
-                "teams":
-                {
-                    "type": "array",
-                    "items": {},
-                }
-            }
-        )
-        resource = Resource(
-            url="url.com",
-            data=self.expected,
-            schema=schema
-        )
-        get.return_value = resource
         json_mock = Mock()
         json_mock.json.return_value = self.expected
         requests_mock.return_value = json_mock
+
         service_list_mock = Mock()
         service_list_mock.return_value = [{"service": "mongodb",
                                            "instances": ["mymongo"]}]
@@ -61,10 +36,12 @@ class AppDetailTestCase(TestCase):
         service_info_mock.return_value = {"Name": "mymongo",
                                           "ServiceName": "mongodb",
                                           "Apps": ["app1"]}
+
         self.old_service_list = AppDetail.service_list
         AppDetail.service_list = service_list_mock
         self.old_service_info = AppDetail.service_info
         AppDetail.service_info = service_info_mock
+
         self.response = AppDetail.as_view()(request, app_name="app1")
         self.request = request
 
