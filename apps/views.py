@@ -11,22 +11,18 @@ from django.views.generic import TemplateView
 from apps.forms import AppForm, AppAddTeamForm, RunForm, SetEnvForm
 from auth.views import LoginRequiredView, LoginRequiredMixin
 
-from pluct import resource
-
 
 class ChangeUnit(LoginRequiredView):
     def add_unit(self, units, app_name):
         requests.put(
-            "{0}/apps/{1}/units".format(settings.TSURU_HOST,
-                                        app_name),
+            "{0}/apps/{1}/units".format(settings.TSURU_HOST, app_name),
             headers=self.authorization,
             data=str(units)
         )
 
     def remove_units(self, units, app_name):
         requests.delete(
-            "{0}/apps/{1}/units".format(settings.TSURU_HOST,
-                                        app_name),
+            "{0}/apps/{1}/units".format(settings.TSURU_HOST, app_name),
             headers=self.authorization,
             data=str(units)
         )
@@ -35,27 +31,24 @@ class ChangeUnit(LoginRequiredView):
     def authorization(self):
         return {'authorization': self.request.session.get('tsuru_token')}
 
-    def resource(self, app_name):
-        token = self.authorization["authorization"].replace('type ', '')
-        auth = {
-            'type': 'type',
-            'credentials': token,
-        }
+    def get_app(self, app_name):
         url = '{0}/apps/{1}'.format(settings.TSURU_HOST, app_name)
-        return resource.get(url, auth)
+        return requests.get(url, headers=self.authorization).json()
 
     def post(self, request, *args, **kwargs):
         app_name = kwargs['app_name']
 
-        app = self.resource(app_name)
+        app = self.get_app(app_name)
 
-        app_units = len(app.data["units"])
+        app_units = len(app["units"])
         units = int(request.POST["units"])
 
-        if len(app.data["units"]) < int(request.POST['units']):
+        if len(app["units"]) < int(request.POST['units']):
             self.add_unit(units - app_units, app_name)
-        if len(app.data["units"]) > int(request.POST['units']):
+
+        if len(app["units"]) > int(request.POST['units']):
             self.remove_units(app_units - units, app_name)
+
         return redirect(reverse('detail-app', args=[app_name]))
 
 
