@@ -1,6 +1,6 @@
 Django==1.7
 gunicorn==18.0
-requests==2.3.0
+requests==2.4.1
 django-gravatar2==1.1.3
 python-dateutil==2.2
 pygments==1.6
