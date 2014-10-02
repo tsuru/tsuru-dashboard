@@ -1,4 +1,4 @@
-(function($){
+(function($, window){
 
 	var graph = function(kind, graphiteHost, appName) {
 		var url = "http://" + graphiteHost + "/render/?target=keepLastValue(summarize(statsite.tsuru." + appName + ".*.*." + kind + ", \"10minute\", \"max\"))&format=json&jsonp=?&from=-10h";
@@ -34,7 +34,7 @@
 
 			nv.utils.windowResize(chart.update);
 
-			window.setTimeout(graph, 60000, kind);
+			window.setTimeout(graph, 60000, kind, graphiteHost, appName);
 			return chart;
 			});
 		});
@@ -50,4 +50,4 @@
 	$.Graph = graphs;
 
 
-})(jQuery);
+})(jQuery, window);
