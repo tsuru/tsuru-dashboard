@@ -24,32 +24,25 @@
 					<span>Teams</span>
 				</a>
 				</li>
+				{% if request.session.is_admin %}
+				<li{% if active == "docker" %} class="active"{% endif %}>
+					<a href="{% url 'list-node' %}">
+						<span>Hosts</span>
+					</a>
+				</li>
+				<li{% if active == "deploys" %} class="active"{% endif %}>
+					<a href="{% url 'list-deploys' %}">
+						<span>Deploys</span>
+					</a>
+			    	</li>
+				<li{% if active == "apps(admin)" %} class="active"{% endif %}>
+					<a href="{% url 'list-app-admin' %}">
+						<span>Apps</span>
+					</a>
+			    	</li>
+				{% endif %}
 			</div>
 		</div> <!-- /container-user -->
-		{% if request.session.is_admin == True %}
-		<div class="admin-menu container-fluid">
-				<h4>Admin Menu</h4>
-				<div class="nav-collapse collapse">
-					<div class="nav">
-						<li{% if active == "docker" %} class="active"{% endif %}>
-						<a href="{% url 'list-node' %}">
-							<span>Hosts</span>
-						</a>
-						</li>
-						<li{% if active == "deploys" %} class="active"{% endif %}>
-						<a href="{% url 'list-deploys' %}">
-							<span>Deploys</span>
-						</a>
-					    </li>
-						<li{% if active == "apps(admin)" %} class="active"{% endif %}>
-						<a href="{% url 'list-app-admin' %}">
-							<span>Apps</span>
-						</a>
-					    </li>
-					</div>
-				</div>
-		</div><!--/container-admin -->
-		{%  endif %}
 	</div> <!-- /inner -->
 	<div class="report-issue">
 	    <a href="https://github.com/tsuru/tsuru-dashboard/issues?state=open">Report an issue</a>
