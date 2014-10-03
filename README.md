@@ -1,9 +1,9 @@
-#Abyss (Tsuru Dashboard)
+#tsuru-dashboard
 
 [![Build Status](https://secure.travis-ci.org/tsuru/tsuru-dashboard.png?branch=master)](http://travis-ci.org/tsuru/tsuru-dashboard)
 [![Build Status](https://drone.io/github.com/tsuru/tsuru-dashboard/status.png)](https://drone.io/github.com/tsuru/tsuru-dashboard/latest)
 
-Abyss is a django-base project aimed to providing a tsuru dashboard.
+tsuru-dashboard is a django-base project aimed to providing a tsuru dashboard.
 
 
 For issue tracking:
