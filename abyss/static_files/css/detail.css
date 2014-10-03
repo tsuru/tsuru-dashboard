@@ -38,3 +38,19 @@
 	display: block;
 	padding: 10px 0;
 }
+
+#metrics div {
+	border: #777 1px solid;
+	margin: 3px;
+	display: inline-block;
+}
+
+#metrics svg {
+	width: 285px;
+	height: 200px
+}
+
+#metrics h2 {
+	font-size: 16px;
+	margin: 0 38px;
+}

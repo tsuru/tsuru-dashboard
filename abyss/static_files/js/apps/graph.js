@@ -1,21 +1,24 @@
 (function($, window){
 
 	var graph = function(kind, graphiteHost, appName) {
-		var url = "http://" + graphiteHost + "/render/?target=keepLastValue(summarize(statsite.tsuru." + appName + ".*.*." + kind + ", \"10minute\", \"max\"))&format=json&jsonp=?&from=-10h";
+		var url = "http://" + graphiteHost + "/render/?target=summarize(statsite.tsuru." + appName + ".*.*." + kind + ", \"10minute\", \"max\")&format=json&jsonp=?&from=-1h";
 		$.getJSON( url , function( data ) {
-			var d = [];
-			$.each(data[0]["datapoints"], function(index, value) {
-				var v = value[0];
-				if ( ( kind === "mem_sum" ) || ( kind === "mem_max" ) ) {
-					v = v / ( 1024 * 1024 );
-				}
-				d.push({y: v, x: new Date(value[1] * 1000)});
+			var g = [];
+			$.each(data, function(index, target) {
+				var d = [];
+				$.each(target["datapoints"], function(index, value) {
+					var v = value[0];
+					if ( ( kind === "mem_sum" ) || ( kind === "mem_max" ) ) {
+						v = v / ( 1024 * 1024 );
+					}
+					d.push({y: v, x: new Date(value[1] * 1000)});
+				});
+				g.push({key: target["target"], values: d});
 			});
-			d = [{key: kind, values: d}];
 
 			nv.addGraph(function() {
 				var chart = nv.models.lineChart()
-				chart.forceY([0, 100])
+				.forceY([0, 100])
 				.showLegend(false);
 
 			chart.xAxis
@@ -24,11 +27,11 @@
 				});
 
 			$("#metrics ." + kind).remove();
-			var element = '<div class="' + kind + '" style="width: 900px; height: 300px;"><h2>' + kind + '</h2><svg style="width: 900px; height: 300px;"></svg></div>';
+			var element = '<div class="' + kind + '"><h2>' + kind + '</h2><svg></svg></div>';
 			$('#metrics').append(element);
 
 			d3.select('#metrics .' + kind + ' svg')
-				.datum(d)
+				.datum(g)
 				.transition().duration(500)
 				.call(chart);
 
