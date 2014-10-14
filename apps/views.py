@@ -75,6 +75,17 @@ class AppDetail(LoginRequiredMixin, TemplateView):
         url = "{}/apps/{}/env".format(settings.TSURU_HOST, app_name)
         return requests.get(url, headers=self.authorization).json()
 
+    def get_containers(self, app_name):
+        if not self.request.session.get("is_admin"):
+            return []
+
+        url = "{}/docker/node/apps/{}/containers".format(settings.TSURU_HOST, app_name)
+        response = requests.get(url, headers=self.authorization)
+
+        if response.status_code == 204:
+            return []
+        return response.json()
+
     def get_context_data(self, *args, **kwargs):
         context = super(AppDetail, self).get_context_data(*args, **kwargs)
         app_name = kwargs["app_name"]
@@ -103,6 +114,14 @@ class AppDetail(LoginRequiredMixin, TemplateView):
 
         context['app']["service_instances"] = service_instances
         context['app']['envs'] = self.get_envs(app_name)
+
+        for container in self.get_containers(app_name):
+            for index, unit in enumerate(context['app']['units']):
+                if unit["Name"] == container["ID"]:
+                    context['app']['units'][index].update({
+                        'HostAddr': container['HostAddr'],
+                        'HostPort': container['HostPort'],
+                    })
         return context
 
 

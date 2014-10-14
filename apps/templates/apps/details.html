@@ -61,11 +61,19 @@
 						<tr>
 							<th>ID</th>
 							<th>State</th>
+							{% if request.session.is_admin %}
+							<th>HostAddr</th>
+							<th>HostPort</th>
+							{% endif %}
 						</tr>
 						{% for unit in app.units %}
 						<tr>
 							<td>{{ unit.Name }}</td>
 							<td>{{ unit.Status }}</td>
+							{% if request.session.is_admin %}
+							<td>{{ unit.HostAddr }}</td>
+							<td>{{ unit.HostPort }}</td>
+							{% endif %}
 						</tr>
 						{% endfor %}
 					</table>

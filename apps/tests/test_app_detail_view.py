@@ -70,6 +70,24 @@ class AppDetailTestCase(TestCase):
         url = '{}/apps/appname/env'.format(settings.TSURU_HOST)
         get.assert_called_with(url, headers={'authorization': 'admin'})
 
+    @patch('requests.get')
+    def test_get_containers(self, get):
+        expected = []
+        response_mock = Mock()
+        response_mock.json.return_value = expected
+        get.return_value = response_mock
+
+        request = RequestFactory().get("/")
+        request.session = {"is_admin": True, "tsuru_token": "admin"}
+
+        app_detail = AppDetail()
+        app_detail.request = request
+        envs = app_detail.get_containers("appname")
+
+        self.assertListEqual(envs, expected)
+        url = '{}/docker/node/apps/appname/containers'.format(settings.TSURU_HOST)
+        get.assert_called_with(url, headers={'authorization': 'admin'})
+
     def test_should_get_the_app_info_from_tsuru(self):
         self.assertDictEqual(self.expected,
                              self.response.context_data["app"])
