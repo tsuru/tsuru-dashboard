@@ -14,9 +14,12 @@
 				});
 			});
 
-			$( "#" + kind ).remove();
-			var element = '<div class="graph-container"><h2>' + kind + '</h2><div id="' + kind + '"></div></div>';
-			$( '#metrics' ).append(element);
+			if ( $("#" + kind).parents(".graph-container").length === 0 ) {
+				var element = '<div class="graph-container"><h2>' + kind + '</h2><div id="' + kind + '"></div></div>';
+				$( '#metrics' ).append(element);
+			} else {
+				$("#" + kind).html("");
+			}
 
 			new Morris.Line({
 				element: kind,
@@ -29,7 +32,7 @@
 				labels: ['Value']
 			});
 
-			window.setTimeout(graph, 60000, kind, graphiteHost, appName);
+			window.setTimeout(graph, 10000, kind, graphiteHost, appName);
 
 		});
 	}
