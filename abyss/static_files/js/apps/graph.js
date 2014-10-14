@@ -29,6 +29,8 @@
 				labels: ['Value']
 			});
 
+			window.setTimeout(graph, 60000, kind, graphiteHost, appName);
+
 		});
 	}
 
