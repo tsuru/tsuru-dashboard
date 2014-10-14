@@ -47,20 +47,6 @@ class ListContainer(LoginRequiredView):
                                 {'containers': containers, 'address': address})
 
 
-class ListContainersByApp(LoginRequiredView):
-    def get(self, request, appname):
-        authorization = {'authorization': request.session.get('tsuru_token')}
-        url = "{0}/docker/node/apps/{1}/containers".format(settings.TSURU_HOST,
-                                                           appname)
-        response = requests.get(url, headers=authorization)
-        if response.status_code == 204:
-            containers = []
-        else:
-            containers = response.json()
-        return TemplateResponse(request, "apps/list_containers.html",
-                                {'containers': containers, 'appname': appname})
-
-
 class ListDeploy(LoginRequiredView):
     template = "deploys/list_deploys.html"
 
@@ -148,19 +134,6 @@ class DeploysGraph(LoginRequiredView):
 
         context['deploys'] = json.dumps([app for app in deploysByApp.values()])
         return TemplateResponse(request, self.template, context=context)
-
-
-class ListAppAdmin(LoginRequiredView):
-    def get(self, request):
-        authorization = {'authorization': request.session.get('tsuru_token')}
-        response = requests.get('%s/apps' % settings.TSURU_HOST,
-                                headers=authorization)
-        if response.status_code == 204:
-            apps = []
-        else:
-            apps = sorted(response.json(), key=lambda item: item["name"])
-        return TemplateResponse(request, "apps/list_app_admin.html",
-                                         {'apps': apps})
 
 
 class DeployInfo(LoginRequiredView):
