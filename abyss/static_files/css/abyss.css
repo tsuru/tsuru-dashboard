@@ -27,8 +27,8 @@ ul.no-style {
 	top: 15px;
 }
 
-.userbar.span3 {
-	margin: 0;
+.userbar {
+	margin: 0 !important;
 	height: 100%;
 	position: fixed;
 	background-color: #222233;
@@ -36,12 +36,9 @@ ul.no-style {
 	opacity: 0.9;
 }
 
-.content {
+.content.container {
 	padding-bottom: 5px;
-}
-
-.content.span9 {
-	float: right;
+	float: right !important;
 	margin-top: 50px;
 }
 
