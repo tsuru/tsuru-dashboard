@@ -40,9 +40,12 @@
 }
 
 #metrics div {
-	border: #777 1px solid;
-	margin: 3px;
+	margin: 2px;
 	display: inline-block;
+}
+
+#metrics .graph-container {
+	border: #777 1px solid;
 }
 
 #metrics svg {

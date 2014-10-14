@@ -15,7 +15,7 @@
 			});
 
 			$( "#" + kind ).remove();
-			var element = '<div id="' + kind + '"></div>';
+			var element = '<div class="graph-container"><h2>' + kind + '</h2><div id="' + kind + '"></div></div>';
 			$( '#metrics' ).append(element);
 
 			new Morris.Line({
