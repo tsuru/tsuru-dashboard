@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="{{ STATIC_URL }}css/jquery-ui.css" />
 <link rel="stylesheet" href="{{ STATIC_URL }}css/abyss.widget.css" />
 <link rel="stylesheet" href="{{ STATIC_URL }}css/detail.css" />
-<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/nv.d3.css">
+<link rel="stylesheet" href="http://cdn.oesmith.co.uk/morris-0.5.1.css">
 {% endblock %}
 
 {% block sidebar %}
@@ -139,6 +139,7 @@
 				<div class="content">
 						<div class="row-fluid">
 							<div class="span12" id="metrics">
+								<div id="myfirstchart"></div>
 							</div>
 						</div>
 				</div>
@@ -190,8 +191,10 @@
 <script src="{{ STATIC_URL }}js/apps/units.js"></script>
 <script src="{{ STATIC_URL }}js/apps/graph.js"></script>
 <script src="{{ STATIC_URL }}js/confirmation.js"></script>
-<script src="{{ STATIC_URL }}js/d3.v2.min.js" charset="utf-8"></script>
-<script src="{{ STATIC_URL }}js/nv.d3.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+<script src="http://cdn.oesmith.co.uk/morris-0.5.1.min.js"></script>
+
+
 <script type="text/javascript">
 	new $.Slider({{ app.units|length }});
 	$.confirmation(".btn-remove", ".remove-confirmation", '{{ app.name }}');

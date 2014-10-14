@@ -1,45 +1,34 @@
 (function($, window){
 
 	var graph = function(kind, graphiteHost, appName) {
-		var url = "http://" + graphiteHost + "/render/?target=summarize(statsite.tsuru." + appName + ".*.*." + kind + ", \"1minute\", \"max\")&format=json&jsonp=?&from=-1h";
+		var url = "http://" + graphiteHost + "/render/?target=summarize(maxSeries(statsite.tsuru." + appName + ".*.*." + kind + "), \"1minute\", \"max\")&format=json&jsonp=?&from=-1h";
 		$.getJSON( url , function( data ) {
-			var g = [];
+			var d = [];
 			$.each(data, function(index, target) {
-				var d = [];
 				$.each(target["datapoints"], function(index, value) {
 					var v = value[0];
 					if ( ( kind === "mem_sum" ) || ( kind === "mem_max" ) ) {
 						v = v / ( 1024 * 1024 );
 					}
-					d.push({y: v, x: new Date(value[1] * 1000)});
+					d.push({y: v, x: new Date(value[1] * 1000).getTime()});
 				});
-				g.push({key: target["target"], values: d});
 			});
 
-			nv.addGraph(function() {
-				var chart = nv.models.lineChart()
-				.forceY([0, 100])
-				.showLegend(false);
+			$( "#" + kind ).remove();
+			var element = '<div id="' + kind + '"></div>';
+			$( '#metrics' ).append(element);
 
-			chart.xAxis
-				.tickFormat(function(d){
-					return d3.time.format('%X')(new Date(d));
-				});
-
-			$("#metrics ." + kind).remove();
-			var element = '<div class="' + kind + '"><h2>' + kind + '</h2><svg></svg></div>';
-			$('#metrics').append(element);
-
-			d3.select('#metrics .' + kind + ' svg')
-				.datum(g)
-				.transition().duration(500)
-				.call(chart);
-
-			nv.utils.windowResize(chart.update);
-
-			window.setTimeout(graph, 60000, kind, graphiteHost, appName);
-			return chart;
+			new Morris.Line({
+				element: kind,
+				pointSize: 0,
+				hideHover: 'always',
+				smooth: true,
+				data: d,
+				xkey: 'x',
+				ykeys: ['y'],
+				labels: ['Value']
 			});
+
 		});
 	}
 
