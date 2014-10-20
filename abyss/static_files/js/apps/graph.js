@@ -15,7 +15,8 @@
 			});
 
 			if ( $("#" + kind).parents(".graph-container").length === 0 ) {
-				var element = '<div class="graph-container"><h2>' + kind + '</h2><div id="' + kind + '"></div></div>';
+				var url = '/apps/xavier-qa2/metrics/?kind=' + kind + '&from=' + from + '&serie=' + serie;
+				var element = '<div class="graph-container"><h2>' + kind + '</h2><a href="' + url + '"><div id="' + kind + '"></div></a></div>';
 				$( '#metrics' ).append(element);
 			} else {
 				$("#" + kind).html("");
