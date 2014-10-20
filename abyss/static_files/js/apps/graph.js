@@ -1,6 +1,6 @@
 (function($, window){
 
-	var graph = function(kind, graphiteHost, appName, from, serie) {
+	var graph = function(kind, graphiteHost, appName, from, serie, hover) {
 		var url = "http://" + graphiteHost + "/render/?target=summarize(maxSeries(keepLastValue(statsite.tsuru." + appName + ".*.*." + kind + ")), \"" + serie + "\", \"max\")&format=json&jsonp=?&from=-" + from;
 		$.getJSON( url , function( data ) {
 			var d = [];
@@ -21,23 +21,26 @@
 			} else {
 				$("#" + kind).html("");
 			}
-			new Morris.Line({
+			var options = {
 				element: kind,
 				pointSize: 0,
-				hideHover: 'always',
 				smooth: true,
 				data: d,
 				xkey: 'x',
 				ykeys: ['y'],
 				labels: ['Value']
-			});
-			window.setTimeout(graph, 60000, kind, graphiteHost, appName, from, serie);
+			};
+			if (!hover) {
+				options["hideHover"] = "always";
+			}
+			new Morris.Line(options);
+			window.setTimeout(graph, 60000, kind, graphiteHost, appName, from, serie, hover);
 
 		});
 	}
 
-	var graphs = function(graphiteHost, appName, kind, from, serie) {
-		graph(kind, graphiteHost, appName, from, serie);
+	var graphs = function(graphiteHost, appName, kind, from, serie, hover) {
+		graph(kind, graphiteHost, appName, from, serie, hover);
 	}
 
 	$.Graph = graphs;

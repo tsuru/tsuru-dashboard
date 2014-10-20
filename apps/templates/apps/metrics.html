@@ -97,7 +97,7 @@
 	$("input[name=kind]").val(queryString("kind"));
 	{% for env in app.envs %}
 	{% if env.name == "GRAPHITE_HOST" %}
-		$.Graph("{{ env.value }}", "{{ app.name }}", queryString("kind"), queryString("from"), queryString("serie"));
+		$.Graph("{{ env.value }}", "{{ app.name }}", queryString("kind"), queryString("from"), queryString("serie"), true);
 	{% endif %}
 	{% endfor %}
 </script>
