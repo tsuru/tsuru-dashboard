@@ -21,7 +21,6 @@
 			} else {
 				$("#" + kind).html("");
 			}
-
 			new Morris.Line({
 				element: kind,
 				pointSize: 0,
@@ -32,8 +31,7 @@
 				ykeys: ['y'],
 				labels: ['Value']
 			});
-
-			window.setTimeout(graph, 10000, kind, graphiteHost, appName, from, serie);
+			window.setTimeout(graph, 60000, kind, graphiteHost, appName, from, serie);
 
 		});
 	}
