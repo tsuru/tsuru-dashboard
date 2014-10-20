@@ -1,7 +1,7 @@
 (function($, window){
 
 	var graph = function(kind, graphiteHost, appName, from, serie) {
-		var url = "http://" + graphiteHost + "/render/?target=summarize(maxSeries(statsite.tsuru." + appName + ".*.*." + kind + "), \"" + serie + "\", \"max\")&format=json&jsonp=?&from=-" + from;
+		var url = "http://" + graphiteHost + "/render/?target=summarize(maxSeries(keepLastValue(statsite.tsuru." + appName + ".*.*." + kind + ")), \"" + serie + "\", \"max\")&format=json&jsonp=?&from=-" + from;
 		$.getJSON( url , function( data ) {
 			var d = [];
 			$.each(data, function(index, target) {
