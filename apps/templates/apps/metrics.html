@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ STATIC_URL }}css/jquery-ui.css" />
+<link rel="stylesheet" href="{{ STATIC_URL }}css/abyss.widget.css" />
+<link rel="stylesheet" href="http://cdn.oesmith.co.uk/morris-0.5.1.css">
+{% endblock %}
+
+{% block sidebar %}
+{% include "sidebar.html" with active="apps" %}
+{% endblock %}
+
+{% block header %}
+{% include "apps/navbar.html" %}
+<h1>{{ app.name }}</h1>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span12">
+			<form method="GET">
+				<div class="span1">
+				<label>Time range:</label> 
+				</div>
+				<div class="span3">
+				<select name="from">
+					<option value="1d">last day</option>
+					<option value="1w">last week</option>
+					<option value="30d">last month</option>
+					<option value="1y">last year</option>
+				</select>
+				</div>
+				<div class="span1">
+				<label>Period:</label> 
+				</div>
+				<div class="span3">
+				<select name="serie">
+					<option value="1h">1 hour</option>
+					<option value="1d">1 day</option>
+					<option value="1w">1 week</option>
+					<option value="30d">1 month</option>
+				</select>
+				</div>
+				<div class="span1">
+				<input type="hidden" name="kind">
+				<input type="submit" value="filter">
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<div class="container-fluid">
+	{% for env in app.envs %}
+	{% if env.name == "GRAPHITE_HOST" %}
+	<div class="row-fluid">
+		<div class="span12">
+			<div class="widget">
+				<div class="title">
+					<spam class="icon">
+						<i class="icon-signal"></i>
+					</spam>
+					<h5>Metrics</h5>
+				</div>
+				<div class="content">
+						<div class="row-fluid">
+							<div class="span12" id="metrics">
+							</div>
+						</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	{% endif %}
+	{% endfor %}
+</div>
+{% endblock content %}
+
+{% block extra_js %}
+<script src="{{ STATIC_URL}}js/jquery.min.js"></script>
+<script src="{{ STATIC_URL }}js/jquery-ui.custom.js"></script>
+<script src="{{ STATIC_URL }}js/apps/graph.js"></script>
+<script src="{{ STATIC_URL }}js/confirmation.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+<script src="http://cdn.oesmith.co.uk/morris-0.5.1.min.js"></script>
+
+<script type="text/javascript">
+	var queryString = function(key) {
+		var keys = {};
+		var items = window.location.search.substr(1).split("&");
+		$.each(items, function(i, item) {
+			var keyValue = item.split("=");
+			keys[keyValue[0]] = keyValue[1];
+		});
+		return keys[key];
+	}
+	$("input[name=kind]").val(queryString("kind"));
+	{% for env in app.envs %}
+	{% if env.name == "GRAPHITE_HOST" %}
+		$.Graph("{{ env.value }}", "{{ app.name }}", queryString("kind"), queryString("from"), queryString("serie"));
+	{% endif %}
+	{% endfor %}
+</script>
+{% endblock %}

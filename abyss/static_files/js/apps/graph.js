@@ -1,7 +1,7 @@
 (function($, window){
 
-	var graph = function(kind, graphiteHost, appName) {
-		var url = "http://" + graphiteHost + "/render/?target=summarize(maxSeries(statsite.tsuru." + appName + ".*.*." + kind + "), \"1minute\", \"max\")&format=json&jsonp=?&from=-1h";
+	var graph = function(kind, graphiteHost, appName, from, serie) {
+		var url = "http://" + graphiteHost + "/render/?target=summarize(maxSeries(statsite.tsuru." + appName + ".*.*." + kind + "), \"" + serie + "\", \"max\")&format=json&jsonp=?&from=-" + from;
 		$.getJSON( url , function( data ) {
 			var d = [];
 			$.each(data, function(index, target) {
@@ -32,16 +32,13 @@
 				labels: ['Value']
 			});
 
-			window.setTimeout(graph, 10000, kind, graphiteHost, appName);
+			window.setTimeout(graph, 10000, kind, graphiteHost, appName, from, serie);
 
 		});
 	}
 
-	var graphs = function(graphiteHost, appName) {
-		var kinds = ["mem_sum", "cpu_sum", "mem_pct_sum", "mem_pct_max", "mem_max", "cpu_max"];
-		$.each(kinds, function(i, kind) {
-			graph(kind, graphiteHost, appName);
-		});
+	var graphs = function(graphiteHost, appName, kind, from, serie) {
+		graph(kind, graphiteHost, appName, from, serie);
 	}
 
 	$.Graph = graphs;

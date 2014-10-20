@@ -349,3 +349,28 @@ class AppEnv(LoginRequiredView):
         tsuru_url = '%s/apps/%s/env' % (settings.TSURU_HOST, app_name)
         return requests.post(tsuru_url, data=form.data.get('env'),
                              headers=authorization)
+
+
+class MetricDetail(LoginRequiredMixin, TemplateView):
+    template_name = 'apps/metrics.html'
+
+    @property
+    def authorization(self):
+        return {'authorization': self.request.session.get('tsuru_token')}
+
+    def get_envs(self, app_name):
+        url = "{}/apps/{}/env".format(settings.TSURU_HOST, app_name)
+        return requests.get(url, headers=self.authorization).json()
+
+    def get_app(self, app_name):
+        url = '{}/apps/{}'.format(settings.TSURU_HOST, app_name)
+        return requests.get(url, headers=self.authorization).json()
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(MetricDetail, self).get_context_data(*args, **kwargs)
+        app_name = kwargs["app_name"]
+
+        context['app'] = self.get_app(app_name)
+        context['app']['envs'] = self.get_envs(app_name)
+
+        return context
