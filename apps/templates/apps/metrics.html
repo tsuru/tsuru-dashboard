@@ -94,6 +94,8 @@
 		});
 		return keys[key];
 	}
+	$("select[name=from]").val(queryString("from"));
+	$("select[name=serie]").val(queryString("serie"));
 	$("input[name=kind]").val(queryString("kind"));
 	{% for env in app.envs %}
 	{% if env.name == "GRAPHITE_HOST" %}
