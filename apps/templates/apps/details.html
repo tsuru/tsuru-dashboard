@@ -207,9 +207,22 @@
 
 	{% for env in app.envs %}
 	{% if env.name == "GRAPHITE_HOST" %}
-		var kinds = ["mem_pct_max", "mem_max", "cpu_max"];
+		var kinds = [
+			{"kind": "mem_max", "label": "memory utilization (MB)", "max": 512},
+			{"kind": "cpu_max", "label": "cpu utilization (%)", "max": 100}
+		];
 		$.each(kinds, function(i, kind) {
-			$.Graph("{{ env.value }}", "{{ app.name }}", kind, "1h", "1min", false);
+			var opts = {
+				graphiteHost: "{{ env.value }}",
+				appName: "{{ app.name }}",
+				kind: kind["kind"],
+				serie: "1min",
+				from: "1h",
+				label: kind["label"],
+				max: kind["max"],
+				hover: false
+			}
+			$.Graph(opts);
 		})
 	{% endif %}
 	{% endfor %}

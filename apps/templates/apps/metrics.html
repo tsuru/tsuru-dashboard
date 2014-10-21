@@ -20,7 +20,7 @@
 	<div class="row-fluid">
 		<div class="span12">
 			<form method="GET">
-				<div class="span1">
+				<div class="span2">
 				<label>Time range:</label> 
 				</div>
 				<div class="span3">
@@ -97,7 +97,21 @@
 	$("input[name=kind]").val(queryString("kind"));
 	{% for env in app.envs %}
 	{% if env.name == "GRAPHITE_HOST" %}
-		$.Graph("{{ env.value }}", "{{ app.name }}", queryString("kind"), queryString("from"), queryString("serie"), true);
+		var kinds = {
+			"mem_max": {"label": "memory utilization (MB)", "max": 512},
+			"cpu_max": {"label": "cpu utilization (%)", "max": 100}
+		}
+		var opts = {
+			graphiteHost: "{{ env.value }}",
+			appName: "{{ app.name }}",
+			kind: queryString("kind"),
+			serie: queryString("serie"),
+			from: queryString("from"),
+			label: kinds[queryString("kind")]["label"],
+			max: kinds[queryString("kind")]["max"],
+			hover: true
+		}
+		$.Graph(opts);
 	{% endif %}
 	{% endfor %}
 </script>

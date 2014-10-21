@@ -1,46 +1,48 @@
 (function($, window){
 
-	var graph = function(kind, graphiteHost, appName, from, serie, hover) {
-		var url = "http://" + graphiteHost + "/render/?target=summarize(maxSeries(keepLastValue(statsite.tsuru." + appName + ".*.*." + kind + ")), \"" + serie + "\", \"max\")&format=json&jsonp=?&from=-" + from;
+	var graph = function(opts) {
+		var url = "http://" + opts["graphiteHost"] + "/render/?target=summarize(maxSeries(keepLastValue(statsite.tsuru." + opts["appName"] + ".*.*." + opts["kind"] + ")), \"" + opts["serie"] + "\", \"max\")&format=json&jsonp=?&from=-" + opts["from"];
 		$.getJSON( url , function( data ) {
 			var d = [];
 			$.each(data, function(index, target) {
 				$.each(target["datapoints"], function(index, value) {
 					var v = value[0];
-					if ( ( kind === "mem_sum" ) || ( kind === "mem_max" ) ) {
+					if ( opts["kind"] === "mem_max" ) {
 						v = v / ( 1024 * 1024 );
 					}
 					d.push({y: v, x: new Date(value[1] * 1000).getTime()});
 				});
 			});
 
-			if ( $("#" + kind).parents(".graph-container").length === 0 ) {
-				var url = '/apps/' + appName + '/metrics/?kind=' + kind + '&from=' + from + '&serie=' + serie;
-				var element = '<div class="graph-container"><h2>' + kind + '</h2><a href="' + url + '"><div id="' + kind + '"></div></a></div>';
+			if ( $("#" + opts["kind"]).parents(".graph-container").length === 0 ) {
+				var label = opts["label"] ? opts["label"] : opts["kind"];
+				var url = '/apps/' + opts["appName"] + '/metrics/?kind=' + opts["kind"] + '&from=' + opts["from"] + '&serie=' + opts["serie"];
+				var element = '<div class="graph-container"><h2>' + label + '</h2><a href="' + url + '"><div id="' + opts["kind"] + '"></div></a></div>';
 				$( '#metrics' ).append(element);
 			} else {
-				$("#" + kind).html("");
+				$("#" + opts["kind"]).html("");
 			}
 			var options = {
-				element: kind,
+				element: opts["kind"],
 				pointSize: 0,
 				smooth: true,
 				data: d,
 				xkey: 'x',
 				ykeys: ['y'],
+				ymax: opts["max"],
 				labels: ['Value']
 			};
-			if (!hover) {
+			if (!opts["hover"]) {
 				options["hideHover"] = "always";
 			}
 			new Morris.Line(options);
-			window.setTimeout(graph, 60000, kind, graphiteHost, appName, from, serie, hover);
+			window.setTimeout(graph, 60000, opts);
 
 		});
 	}
 
-	var graphs = function(graphiteHost, appName, kind, from, serie, hover) {
-		graph(kind, graphiteHost, appName, from, serie, hover);
+	var graphs = function(opts) {
+		graph(opts);
 	}
 
 	$.Graph = graphs;
