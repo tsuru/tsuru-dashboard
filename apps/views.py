@@ -59,17 +59,9 @@ class AppDetail(LoginRequiredMixin, TemplateView):
     def authorization(self):
         return {'authorization': self.request.session.get('tsuru_token')}
 
-    def service_list(self):
-        tsuru_url = '{0}/services/instances'.format(settings.TSURU_HOST)
+    def service_instances(self, app_name):
+        tsuru_url = '{}/services/instances?app={}'.format(settings.TSURU_HOST, app_name)
         return requests.get(tsuru_url, headers=self.authorization).json()
-
-    def service_info(self, instance_name):
-        tsuru_url = '{0}/services/instances/{1}'.format(settings.TSURU_HOST,
-                                                        instance_name)
-        response = requests.get(tsuru_url, headers=self.authorization)
-        if response.status_code != 200:
-            return {}
-        return response.json()
 
     def get_envs(self, app_name):
         url = "{}/apps/{}/env".format(settings.TSURU_HOST, app_name)
@@ -99,18 +91,12 @@ class AppDetail(LoginRequiredMixin, TemplateView):
         context['app'] = requests.get(url, headers=headers).json()
 
         service_instances = []
-        for service in self.service_list():
-            instances = service.get("instances", None)
-            instances = instances or []
-            for instance in instances:
-                instance_data = self.service_info(instance)
-                if instance_data != {}:
-                    app_name = context['app']['name']
-                    if app_name in instance_data['Apps']:
-                        service_instances.append(
-                            {"name": instance_data["Name"],
-                             "servicename": instance_data["ServiceName"]}
-                        )
+
+        for service in self.service_instances(app_name):
+            if service["instances"]:
+                service_instances.append(
+                    {"name": service["instances"][0], "servicename": service["service"]}
+                )
 
         context['app']["service_instances"] = service_instances
         context['app']['envs'] = self.get_envs(app_name)
