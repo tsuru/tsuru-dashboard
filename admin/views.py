@@ -147,3 +147,15 @@ class DeployInfo(LoginRequiredView):
         diff_output = highlight(context["deploy"]["Diff"], DiffLexer(), format)
         context["deploy"]["Diff"] = diff_output
         return TemplateResponse(request, "deploys/deploy_details.html", context)
+
+
+class ListHealing(LoginRequiredView):
+    @property
+    def authorization(self):
+        return {'authorization': self.request.session.get('tsuru_token')}
+
+    def get(self, request):
+        url = '{}/docker/healing'.format(settings.TSURU_HOST)
+        response = requests.get(url, headers=self.authorization)
+        events = response.json()
+        return TemplateResponse(request, "docker/list_healing.html", {"events": events})

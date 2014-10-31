@@ -35,6 +35,11 @@
 						<span>Deploys</span>
 					</a>
 			    	</li>
+				<li{% if active == "healing" %} class="active"{% endif %}>
+					<a href="{% url 'list-healing' %}">
+						<span>Healing</span>
+					</a>
+			    	</li>
 				{% endif %}
 			</div>
 		</div> <!-- /container-user -->

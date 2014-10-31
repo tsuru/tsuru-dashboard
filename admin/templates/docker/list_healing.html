@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block sidebar %}
+{% include "sidebar.html" with active="healing" %}
+{% endblock %}
+
+{% block header %}
+<h1>Admin/Healing</h1>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span11">
+			<table class="table">
+				<tr>
+				<th>Start</th>
+				<th>Finish</th>
+				<th>Success</th>
+				<th>Failing</th>
+				<th>Created</th>
+				<th>Error</th>
+				</tr>
+				{% for event in events %}
+				<tr>
+					<td>{{ event.StartTime }}</td>
+					<td>{{ event.EndTime }}</td>
+					<td>{{ event.Succefull }}</td>
+					<td>{% if event.FailingNode.Address %}{{ event.FailingNode.Address }}{% else %}{{ event.FailingContainer.ID }}{% endif %}</td>
+					<td>{% if event.CreatedNode.Address %}{{ event.CreatedNode.Address }}{% else %}{{ event.CreatedContainer.ID }}{% endif %}</td>
+					<td>{{ event.Error }}</td>
+				</tr>
+				{% endfor %}
+			</table>
+		</div>
+	</div>
+</div>
+{% endblock %}
