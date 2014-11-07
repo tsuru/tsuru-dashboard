@@ -1,3 +1,5 @@
+.PHONY: deploy-to-tsuru
+
 clean:
 	@find . -name "*.pyc" -delete
 
@@ -11,3 +13,6 @@ test: clean deps
 
 run: clean deps
 	@DEBUG=true ./manage.py runserver
+
+deploy-to-tsuru:
+	./deploy-to-tsuru
