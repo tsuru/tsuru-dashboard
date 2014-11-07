@@ -1,0 +1,50 @@
+#!/bin/sh
+
+set -o errexit
+set -o errtrace
+set -o nounset
+
+GIT_URL="git@github.com:tsuru/tsuru-dashboard"
+TSURU_APP=$(basename ${GIT_URL})
+PLATFORM="python"
+TEAM_OWNER="admin"
+TSURU="tsuru"
+
+if [ -f tsuru.yaml -o -f tsuru.yml ]; then
+    echo "********************************************************************"
+    echo "  We seem to be in a tsuru app directory; skipping git clone..."
+    echo "********************************************************************"
+    echo
+else
+    echo "********************************************************************"
+    echo "  git cloning ${GIT_URL} ..."
+    echo "********************************************************************"
+    git clone ${GIT_URL} ${TSURU_APP}
+    cd ${TSURU_APP}
+    echo
+fi
+
+echo "********************************************************************"
+echo "  Creating a tsuru app..."
+echo "********************************************************************"
+${TSURU} app-create ${TSURU_APP} ${PLATFORM} --team ${TEAM_OWNER}
+echo
+
+echo "********************************************************************"
+echo "  Setting up git remote for tsuru..."
+echo "********************************************************************"
+git_remote_url=$(${TSURU} app-info -a ${TSURU_APP} | awk '/^Repository:/ { print $2 }')
+git remote add tsuru $git_remote_url || true
+git remote -v | grep '^tsuru'
+echo
+
+echo "********************************************************************"
+echo "  Pushing app to tsuru..."
+echo "********************************************************************"
+${TSURU} app-deploy .
+echo
+
+echo "********************************************************************"
+echo "  Showing app info..."
+echo "********************************************************************"
+${TSURU} app-info
