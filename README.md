@@ -1,16 +1,19 @@
-#tsuru-dashboard
+# tsuru-dashboard
 
 [![Build Status](https://secure.travis-ci.org/tsuru/tsuru-dashboard.png?branch=master)](http://travis-ci.org/tsuru/tsuru-dashboard)
 [![Build Status](https://drone.io/github.com/tsuru/tsuru-dashboard/status.png)](https://drone.io/github.com/tsuru/tsuru-dashboard/latest)
 
-tsuru-dashboard is a django-base project aimed to providing a tsuru dashboard.
-
+tsuru-dashboard is a Django-based project aimed at providing a Web-based dashboard for tsuru.
 
 For issue tracking:
 
-    * https://github.com/tsuru/tsuru-dashboard/issues
+* https://github.com/tsuru/tsuru-dashboard/issues
 
-#Getting Started
+# Deploying to tsuru
+
+tsuru-dashboard can be deployed to tsuru like any other app.
+
+# Setting up a development environment
 
 For local development, first create a virtualenv and install the deps:
 
@@ -21,6 +24,6 @@ If all is well you should able to run the local server:
     $ export TSURU_HOST=http://tsuru-api-endpoint.com
     $ ./manage.py runserver
 
-#Running tests
+# Running tests
 
     $ make test
