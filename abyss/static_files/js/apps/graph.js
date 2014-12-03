@@ -1,7 +1,11 @@
 (function($, window){
 
 	var graph = function(opts) {
-		var url = "http://" + opts["graphiteHost"] + "/render/?target=summarize(maxSeries(keepLastValue(statsite.tsuru." + opts["appName"] + ".*.*." + opts["kind"] + ")), \"" + opts["serie"] + "\", \"max\")&format=json&jsonp=?&from=-" + opts["from"];
+		var host = opts["graphiteHost"];
+		if ( host.indexOf( "http" ) === -1 ) {
+			host = "http://" + host;
+		}
+		var url = host + "/render/?target=summarize(maxSeries(keepLastValue(statsite.tsuru." + opts["appName"] + ".*.*." + opts["kind"] + ")), \"" + opts["serie"] + "\", \"max\")&format=json&jsonp=?&from=-" + opts["from"];
 		$.getJSON( url , function( data ) {
 			var d = [];
 			$.each(data, function(index, target) {
