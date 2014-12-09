@@ -208,8 +208,9 @@
 	{% for env in app.envs %}
 	{% if env.name == "GRAPHITE_HOST" %}
 		var kinds = [
-			{"kind": "mem_max", "label": "memory utilization (MB)", "max": 512},
-			{"kind": "cpu_max", "label": "cpu utilization (%)", "max": 100}
+			{"id": "mem_max", "kind": "*.*.mem_max", "label": "memory utilization (MB)", "max": 512},
+			{"id": "cpu_max", "kind": "*.*.cpu_max", "label": "cpu utilization (%)", "max": 100},
+			{"id": "connections", "kind": "*.net.connections", "label": "connections established", "max": 100}
 		];
 		$.each(kinds, function(i, kind) {
 			var opts = {
@@ -220,7 +221,8 @@
 				from: "1h",
 				label: kind["label"],
 				max: kind["max"],
-				hover: false
+				hover: false,
+				id: kind["id"]
 			}
 			$.Graph(opts);
 		})
