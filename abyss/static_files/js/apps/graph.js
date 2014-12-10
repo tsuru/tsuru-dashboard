@@ -11,11 +11,8 @@
 			$.each(data, function(index, target) {
 				$.each(target["datapoints"], function(index, value) {
 					var v = value[0];
-					if ( opts["kind"].indexOf("mem_max") !== -1 ) {
+					if ( ( opts["kind"].indexOf("mem_max") !== -1 ) || ( opts["kind"].indexOf("recv") !== -1 ) || ( opts["kind"].indexOf("sent") !== -1 ) ) {
 						v = v / ( 1024 * 1024 );
-					}
-					if ( opts["kind"].indexOf("disk_usage") !== -1 ) {
-						v = v / ( 1024 * 1024 * 1024 );
 					}
 					d.push({y: v, x: new Date(value[1] * 1000).getTime()});
 				});
