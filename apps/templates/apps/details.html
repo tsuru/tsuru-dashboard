@@ -30,12 +30,11 @@
 				<div class="content">
 					<p>
 					{% if app.cname or app.ip %}
-						<strong>App url:</strong> 
-						{% if app.cname %}
-							<a href="http://{{ app.cname }}" target="_blank">http://{{ app.cname }}</a>
-						{% else %}
-							<a href="http://{{ app.ip }}" target="_blank">http://{{ app.ip }}</a>
-						{% endif %}
+						<strong>App url:</strong>
+						<a href="http://{{ app.ip }}" target="_blank">http://{{ app.ip }}</a>
+						{% for cname in app.cname %}
+							<a href="http://{{ cname }}" target="_blank">http://{{ cname }}</a>
+						{% endfor %}
 					{% endif %}
 					</p>
 					<p><strong>Git clone url:</strong> {{ app.repository }}</p>
