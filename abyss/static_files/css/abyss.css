@@ -114,6 +114,7 @@ ul.no-style {
 }
 
 select {
+	width: 125px;
 	margin-bottom: 20px;
 }
 

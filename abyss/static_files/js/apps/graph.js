@@ -5,7 +5,12 @@
 		if ( host.indexOf( "http" ) === -1 ) {
 			host = "http://" + host;
 		}
-		var url = host + "/render/?target=summarize(maxSeries(keepLastValue(statsite.tsuru." + opts["appName"] + "." + opts["kind"] + ")), \"" + opts["serie"] + "\", \"max\")&format=json&jsonp=?&from=-" + opts["from"];
+
+		if ( typeof opts["statistic"] === "undefined" ) {
+			opts["statistic"] = "maxSeries";
+		}
+
+		var url = host + "/render/?target=summarize(" + opts["statistic"] + "(keepLastValue(statsite.tsuru." + opts["appName"] + "." + opts["kind"] + ")), \"" + opts["serie"] + "\", \"max\")&format=json&jsonp=?&from=-" + opts["from"];
 		$.getJSON( url , function( data ) {
 			var d = [];
 			$.each(data, function(index, target) {

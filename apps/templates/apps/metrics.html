@@ -21,9 +21,15 @@
 		<div class="span12">
 			<form method="GET">
 				<div class="span2">
-				<label>Time range:</label> 
+				<label>Statistic:</label>
+				<select name="statistic">
+					<option value="maxSeries">Maximum</option>
+					<option value="averageSeries">Average</option>
+					<option value="minSeries">Minimum</option>
+				</select>
 				</div>
-				<div class="span3">
+				<div class="span2">
+				<label>Time range:</label>
 				<select name="from">
 					<option value="1h">last hour</option>
 					<option value="3h">last 3 hours</option>
@@ -35,10 +41,8 @@
 					<option value="2w">last 2 weeks</option>
 				</select>
 				</div>
-				<div class="span1">
+				<div class="span2">
 				<label>Period:</label> 
-				</div>
-				<div class="span3">
 				<select name="serie">
 					<option value="1min">1 minute</option>
 					<option value="5min">5 minutes</option>
@@ -103,6 +107,11 @@
 	$("select[name=from]").val(queryString("from"));
 	$("select[name=serie]").val(queryString("serie"));
 	$("input[name=kind]").val(queryString("kind"));
+	var statistic = "maxSeries";
+	if ( typeof queryString("statistic") !== "undefined" ) {
+		statistic = queryString("statistic");
+	}
+	$("select[name=statistic]").val(statistic);
 	{% for env in app.envs %}
 	{% if env.name == "GRAPHITE_HOST" %}
 		var kinds = [
@@ -128,7 +137,8 @@
 			label: kinds[queryString("kind")]["label"],
 			max: kinds[queryString("kind")]["max"],
 			hover: true,
-			id: kinds[queryString("kind")]["id"]
+			id: kinds[queryString("kind")]["id"],
+			statistic: queryString("statistic")
 		}
 		$.Graph(opts);
 	{% endif %}
