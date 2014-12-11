@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load filters_deploys %}
+
+{% block sidebar %}
+{% include "sidebar.html" with active="apps" %}
+{% endblock %}
+
+{% block header %}
+{% include "apps/navbar.html" %}
+<h1>{{ app.name }}</h1>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ STATIC_URL }}css/deploys.css" />
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span11">
+		<table class="deploys table" id="list">
+                <thead>
+                    <tr>
+                        <th>Timestamp</th>
+                        <th>Duration</th>
+                        <th>Error message</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for deploy in deploys %}
+                    <tr class="{% if deploy.Error %}error{% endif %}">
+                        <td>{{ deploy.Timestamp|string_to_date|date:" d-m-Y H:i:s " }}</td>
+                        <td>{{ deploy.Duration|time_to_string }}</td>
+			<td>
+			    {% if deploy.Error %}{{ deploy.Error }}{% endif %}
+		    	</td>
+                    </tr>
+                    {% endfor %}
+                <tbody>
+			</table>
+			{% if is_paginated %}{% load paginator %}{% paginator 2 %}{% endif %}
+		</div>
+	</div>
+</div>
+{% endblock %}
