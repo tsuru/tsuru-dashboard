@@ -1,6 +1,7 @@
 import json
 import requests
 
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.template.response import TemplateResponse
 from django.conf import settings
 from django.http import HttpResponse
@@ -10,6 +11,46 @@ from django.views.generic import TemplateView
 
 from apps.forms import AppForm, AppAddTeamForm, RunForm, SetEnvForm
 from auth.views import LoginRequiredView, LoginRequiredMixin
+
+
+class ListDeploy(LoginRequiredView):
+    template = "apps/deploys.html"
+
+    @property
+    def authorization(self):
+        return {'authorization': self.request.session.get('tsuru_token')}
+
+    def get(self, request, *args, **kwargs):
+        app_name = kwargs["app_name"]
+
+        url = '{}/deploys?app={}'.format(settings.TSURU_HOST, app_name)
+        response = requests.get(url, headers=self.authorization)
+
+        deploys = []
+        if response.status_code != 204:
+            deploys = response.json()
+
+        paginator = Paginator(deploys, 20)
+        page = request.GET.get('page')
+
+        try:
+            deploys = paginator.page(page)
+        except PageNotAnInteger:
+            deploys = paginator.page(1)
+        except EmptyPage:
+            deploys = paginator.page(paginator.num_pages)
+
+        context = {}
+        context['deploys'] = deploys
+        context['paginator'] = paginator
+        context['is_paginated'] = True
+
+        class App(object):
+            def __init__(self, name):
+                self.name = name
+
+        context['app'] = App(name=app_name)
+        return TemplateResponse(request, self.template, context=context)
 
 
 class ChangeUnit(LoginRequiredView):
