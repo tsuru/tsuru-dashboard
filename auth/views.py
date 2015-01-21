@@ -1,5 +1,6 @@
 import json
 import requests
+import pprint
 
 from django.conf import settings
 from django.template.response import TemplateResponse
@@ -101,14 +102,18 @@ class Login(FormView):
         data = {"password": form.cleaned_data['password']}
         url = '{0}/users/{1}/tokens'.format(settings.TSURU_HOST, username)
         response = requests.post(url, data=json.dumps(data))
+
         if response.status_code == 200:
             result = response.json()
             self.request.session['username'] = username
             self.request.session['tsuru_token'] = "type {0}".format(
                 result['token'])
             self.request.session['is_admin'] = result.get('is_admin', False)
+
             return super(Login, self).form_valid(form)
-        return redirect('/auth/login')
+        else:
+            form.add_error(None, response.content)
+            return super(Login, self).form_invalid(form)
 
 
 class Logout(View):
