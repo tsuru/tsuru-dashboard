@@ -29,7 +29,10 @@
                 <tbody>
                     {% for deploy in deploys %}
                     <tr class="{% if deploy.Error %}error{% endif %}">
-                        <td>{{ deploy.Timestamp|string_to_date|date:" d-m-Y H:i:s " }}</td>
+			<td>
+			    <a href="{% url 'app-deploy' app.name deploy.ID  %}">
+				{{ deploy.Timestamp|string_to_date|date:" d-m-Y H:i:s " }}</td>
+			    </a>
                         <td>{{ deploy.Duration|time_to_string }}</td>
 			<td>
 			    {% if deploy.Error %}{{ deploy.Error }}{% endif %}

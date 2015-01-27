@@ -9,8 +9,40 @@ from django.shortcuts import redirect
 from django.core.urlresolvers import reverse
 from django.views.generic import TemplateView
 
+from pygments import highlight
+from pygments.lexers import DiffLexer
+from pygments.formatters import HtmlFormatter
+
 from apps.forms import AppForm, AppAddTeamForm, RunForm, SetEnvForm
 from auth.views import LoginRequiredView, LoginRequiredMixin
+
+
+class DeployInfo(LoginRequiredMixin, TemplateView):
+    template_name = "apps/deploy.html"
+
+    @property
+    def authorization(self):
+        return {'authorization': self.request.session.get('tsuru_token')}
+
+    def get_context_data(self, *args, **kwargs):
+        deploy_id = kwargs["deploy"]
+        context = super(DeployInfo, self).get_context_data(*args, **kwargs)
+
+        url = "{}/deploys/{}".format(settings.TSURU_HOST, deploy_id)
+        response = requests.get(url, headers=self.authorization)
+        context["deploy"] = response.json()
+
+        format = HtmlFormatter()
+        diff_output = highlight(context["deploy"]["Diff"], DiffLexer(), format)
+        context["deploy"]["Diff"] = diff_output
+
+        class App(object):
+            def __init__(self, name):
+                self.name = name
+
+        app_name = kwargs["app_name"]
+        context['app'] = App(name=app_name)
+        return context
 
 
 class ListDeploy(LoginRequiredView):

@@ -27,4 +27,6 @@ urlpatterns = patterns(
     url(r'^(?P<app_name>[\w-]+)/metrics/$',
         views.MetricDetail.as_view(), name='metrics-app'),
     url(r'^(?P<app_name>[\w-]+)/deploys/$', views.ListDeploy.as_view(), name='app-deploys'),
+    url(r'^(?P<app_name>[\w-]+)/deploys/(?P<deploy>[\s\w@\.-]+)/$',
+        views.DeployInfo.as_view(), name='app-deploy'),
 )
