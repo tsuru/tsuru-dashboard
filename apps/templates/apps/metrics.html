@@ -112,36 +112,45 @@
 		statistic = queryString("statistic");
 	}
 	$("select[name=statistic]").val(statistic);
+	var graphiteHost = "";
+	var graphitePrefix = "";
 	{% for env in app.envs %}
 	{% if env.name == "GRAPHITE_HOST" %}
-		var kinds = [
-			{"id": "mem_max", "kind": "*.*.mem_max", "label": "memory utilization (MB)", "max": 512},
-			{"id": "cpu_max", "kind": "*.*.cpu_max", "label": "cpu utilization (%)", "max": 100},
-			{"id": "connections", "kind": "*.net.connections", "label": "connections established", "max": 100},
-			{"id": "netsent", "kind": "*.net.sent", "label": "net I/O sent", "max": 10000},
-			{"id": "netrecv", "kind": "*.net.recv", "label": "net I/O received", "max": 10000}
-		];
-		var kinds = {
-			"*.*.mem_max": {"label": "memory utilization (MB)", "max": 512, "id": "mem_max"},
-			"*.*.cpu_max": {"label": "cpu utilization (%)", "max": 100, "id": "cpu_max"},
-			"*.net.connections": {"label": "connections established", "max": 100, "id": "connections"},
-			"*.net.recv": {"label": "net I/O received", "max": 10000, "id": "netrecv"},
-			"*.net.sent": {"label": "net I/O sent", "max": 10000, "id": "netsent"}
-		}
-		var opts = {
-			graphiteHost: "{{ env.value }}",
-			appName: "{{ app.name }}",
-			kind: queryString("kind"),
-			serie: queryString("serie"),
-			from: queryString("from"),
-			label: kinds[queryString("kind")]["label"],
-			max: kinds[queryString("kind")]["max"],
-			hover: true,
-			id: kinds[queryString("kind")]["id"],
-			statistic: queryString("statistic")
-		}
-		$.Graph(opts);
+		graphiteHost = "{{ env.value }}";
+	{% endif %}
+	{% if env.name == "GRAPHITE_PREFIX" %}
+		graphitePrefix = "{{ env.value }}";
 	{% endif %}
 	{% endfor %}
+	var appName = "{{ app.name }}";
+	var prefix = graphitePrefix + ".tsuru." + appName;
+	var kinds = [
+		{"id": "mem_max", "kind": "*.*.mem_max", "label": "memory utilization (MB)", "max": 512},
+		{"id": "cpu_max", "kind": "*.*.cpu_max", "label": "cpu utilization (%)", "max": 100},
+		{"id": "connections", "kind": "*.net.connections", "label": "connections established", "max": 100},
+		{"id": "netsent", "kind": "*.net.sent", "label": "net I/O sent", "max": 10000},
+		{"id": "netrecv", "kind": "*.net.recv", "label": "net I/O received", "max": 10000}
+	];
+	var kinds = {
+		"*.*.mem_max": {"label": "memory utilization (MB)", "max": 512, "id": "mem_max"},
+		"*.*.cpu_max": {"label": "cpu utilization (%)", "max": 100, "id": "cpu_max"},
+		"*.net.connections": {"label": "connections established", "max": 100, "id": "connections"},
+		"*.net.recv": {"label": "net I/O received", "max": 10000, "id": "netrecv"},
+		"*.net.sent": {"label": "net I/O sent", "max": 10000, "id": "netsent"}
+	}
+	var opts = {
+		graphiteHost: graphiteHost,
+		appName: "{{ app.name }}",
+		kind: queryString("kind"),
+		serie: queryString("serie"),
+		from: queryString("from"),
+		label: kinds[queryString("kind")]["label"],
+		max: kinds[queryString("kind")]["max"],
+		hover: true,
+		id: kinds[queryString("kind")]["id"],
+		statistic: queryString("statistic"),
+		prefix: prefix
+	}
+	$.Graph(opts);
 </script>
 {% endblock %}

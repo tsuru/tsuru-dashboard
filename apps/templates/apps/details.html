@@ -204,30 +204,43 @@
 	new $.Slider({{ app.units|length }});
 	$.confirmation(".btn-remove", ".remove-confirmation", '{{ app.name }}');
 
+	var graphiteHost = "";
+	var graphitePrefix = "";
+	var appName = "{{ app.name }}";
+
 	{% for env in app.envs %}
-	{% if env.name == "GRAPHITE_HOST" %}
-		var kinds = [
-			{"id": "mem_max", "kind": "*.*.mem_max", "label": "memory utilization (MB)", "max": 512},
-			{"id": "cpu_max", "kind": "*.*.cpu_max", "label": "cpu utilization (%)", "max": 100},
-			{"id": "connections", "kind": "*.net.connections", "label": "connections established", "max": 100},
-			{"id": "netsent", "kind": "*.net.sent", "label": "net I/O sent", "max": 10000},
-			{"id": "netrecv", "kind": "*.net.recv", "label": "net I/O received", "max": 10000}
-		];
-		$.each(kinds, function(i, kind) {
-			var opts = {
-				graphiteHost: "{{ env.value }}",
-				appName: "{{ app.name }}",
-				kind: kind["kind"],
-				serie: "1min",
-				from: "1h",
-				label: kind["label"],
-				max: kind["max"],
-				hover: false,
-				id: kind["id"]
-			}
-			$.Graph(opts);
-		})
-	{% endif %}
+		{% if env.name == "GRAPHITE_HOST" %}
+			graphiteHost = "{{ env.value }}";
+		{% endif %}
+		{% if env.name == "GRAPHITE_PREFIX" %}
+			graphitePrefix = "{{ env.value }}";
+		{% endif %}
 	{% endfor %}
+	var kinds = [
+		{"id": "mem_max", "kind": "*.*.mem_max", "label": "memory utilization (MB)", "max": 512},
+		{"id": "cpu_max", "kind": "*.*.cpu_max", "label": "cpu utilization (%)", "max": 100},
+		{"id": "connections", "kind": "*.net.connections", "label": "connections established", "max": 100},
+		{"id": "netsent", "kind": "*.net.sent", "label": "net I/O sent", "max": 10000},
+		{"id": "netrecv", "kind": "*.net.recv", "label": "net I/O received", "max": 10000}
+	];
+	if (graphitePrefix.length === 0) {
+		graphitePrefix = "statsite";
+	}
+	var prefix = graphitePrefix + ".tsuru." + appName;
+	$.each(kinds, function(i, kind) {
+		var opts = {
+			graphiteHost: graphiteHost,
+			appName: appName,
+			kind: kind["kind"],
+			serie: "1min",
+			from: "1h",
+			label: kind["label"],
+			max: kind["max"],
+			hover: false,
+			id: kind["id"],
+			prefix: prefix
+		}
+		$.Graph(opts);
+	});
 </script>
 {% endblock %}
