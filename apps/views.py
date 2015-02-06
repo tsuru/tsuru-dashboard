@@ -468,7 +468,7 @@ class AutoscaleEnable(LoginRequiredMixin, View):
 
     def auto_scale_enable(self, app_name):
         url = '{}/autoscale/{}/enable'.format(settings.TSURU_HOST, app_name)
-        return requests.put(url, headers=self.authorization).json()
+        return requests.put(url, headers=self.authorization)
 
     def post(self, *args, **kwargs):
         app_name = kwargs["app_name"]
@@ -484,7 +484,7 @@ class AutoscaleDisable(LoginRequiredMixin, View):
 
     def auto_scale_disable(self, app_name):
         url = '{}/autoscale/{}/disable'.format(settings.TSURU_HOST, app_name)
-        return requests.put(url, headers=self.authorization).json()
+        return requests.put(url, headers=self.authorization)
 
     def post(self, *args, **kwargs):
         app_name = kwargs["app_name"]

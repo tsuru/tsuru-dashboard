@@ -126,7 +126,12 @@
 						<tr>
 							<td>{{ app.autoScaleConfig.minUnits}}</td>
 							<td>{{ app.autoScaleConfig.maxUnits }}</td>
-							<td>{{ app.autoScaleConfig.enabled }}</td>
+							<td>
+								<form method="POST" action="/apps/{{ app.name}}/autoscale/{% if app.autoScaleConfig.enabled %}disable{% else %}enable{% endif %}/" id="autoscale-enable">
+								{% csrf_token %}
+								<input type="submit" value="{{ app.autoScaleConfig.enabled }}">
+							    </form>
+							</td>
 						</tr>
 					</table>
 					<h4>Increase</h4>
