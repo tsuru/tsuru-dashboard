@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ STATIC_URL }}css/jquery-ui.css" />
+<link rel="stylesheet" href="{{ STATIC_URL }}css/abyss.widget.css" />
+<link rel="stylesheet" href="http://cdn.oesmith.co.uk/morris-0.5.1.css">
+{% endblock %}
+
+{% block sidebar %}
+{% include "sidebar.html" with active="apps" %}
+{% endblock %}
+
+{% block header %}
+{% include "apps/navbar.html" %}
+<h1>{{ app.name }} - auto scale history</h1>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span12">
+		{{ history_list }}
+		</div>
+	</div>
+</div>
+{% endblock content %}

@@ -433,3 +433,28 @@ class MetricDetail(LoginRequiredMixin, TemplateView):
         context['app']['envs'] = self.get_envs(app_name)
 
         return context
+
+
+class AutoscaleDetail(LoginRequiredMixin, TemplateView):
+    template_name = 'apps/autoscale.html'
+
+    @property
+    def authorization(self):
+        return {'authorization': self.request.session.get('tsuru_token')}
+
+    def get_app(self, app_name):
+        url = '{}/apps/{}'.format(settings.TSURU_HOST, app_name)
+        return requests.get(url, headers=self.authorization).json()
+
+    def get_history(self, app_name):
+        url = '{}/autoscale?app={}'.format(settings.TSURU_HOST, app_name)
+        return requests.get(url, headers=self.authorization).json()
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(AutoscaleDetail, self).get_context_data(*args, **kwargs)
+        app_name = kwargs["app_name"]
+
+        context['app'] = self.get_app(app_name)
+        context['history_list'] = self.get_history(app_name)
+
+        return context
