@@ -474,3 +474,19 @@ class AutoscaleEnable(LoginRequiredMixin, View):
         app_name = kwargs["app_name"]
         self.auto_scale_enable(app_name)
         return redirect(reverse('detail-app', args=[app_name]))
+
+
+class AutoscaleDisable(LoginRequiredMixin, View):
+
+    @property
+    def authorization(self):
+        return {'authorization': self.request.session.get('tsuru_token')}
+
+    def auto_scale_disable(self, app_name):
+        url = '{}/autoscale/{}/disable'.format(settings.TSURU_HOST, app_name)
+        return requests.put(url, headers=self.authorization).json()
+
+    def post(self, *args, **kwargs):
+        app_name = kwargs["app_name"]
+        self.auto_scale_disable(app_name)
+        return redirect(reverse('detail-app', args=[app_name]))
