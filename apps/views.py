@@ -7,7 +7,7 @@ from django.conf import settings
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.core.urlresolvers import reverse
-from django.views.generic import TemplateView, View
+from django.views.generic import TemplateView
 
 from pygments import highlight
 from pygments.lexers import DiffLexer
@@ -433,60 +433,3 @@ class MetricDetail(LoginRequiredMixin, TemplateView):
         context['app']['envs'] = self.get_envs(app_name)
 
         return context
-
-
-class AutoscaleDetail(LoginRequiredMixin, TemplateView):
-    template_name = 'apps/autoscale.html'
-
-    @property
-    def authorization(self):
-        return {'authorization': self.request.session.get('tsuru_token')}
-
-    def get_app(self, app_name):
-        url = '{}/apps/{}'.format(settings.TSURU_HOST, app_name)
-        return requests.get(url, headers=self.authorization).json()
-
-    def get_history(self, app_name):
-        url = '{}/autoscale?app={}'.format(settings.TSURU_HOST, app_name)
-        return requests.get(url, headers=self.authorization).json()
-
-    def get_context_data(self, *args, **kwargs):
-        context = super(AutoscaleDetail, self).get_context_data(*args, **kwargs)
-        app_name = kwargs["app_name"]
-
-        context['app'] = self.get_app(app_name)
-        context['history_list'] = self.get_history(app_name)
-
-        return context
-
-
-class AutoscaleEnable(LoginRequiredMixin, View):
-
-    @property
-    def authorization(self):
-        return {'authorization': self.request.session.get('tsuru_token')}
-
-    def auto_scale_enable(self, app_name):
-        url = '{}/autoscale/{}/enable'.format(settings.TSURU_HOST, app_name)
-        return requests.put(url, headers=self.authorization)
-
-    def post(self, *args, **kwargs):
-        app_name = kwargs["app_name"]
-        self.auto_scale_enable(app_name)
-        return redirect(reverse('detail-app', args=[app_name]))
-
-
-class AutoscaleDisable(LoginRequiredMixin, View):
-
-    @property
-    def authorization(self):
-        return {'authorization': self.request.session.get('tsuru_token')}
-
-    def auto_scale_disable(self, app_name):
-        url = '{}/autoscale/{}/disable'.format(settings.TSURU_HOST, app_name)
-        return requests.put(url, headers=self.authorization)
-
-    def post(self, *args, **kwargs):
-        app_name = kwargs["app_name"]
-        self.auto_scale_disable(app_name)
-        return redirect(reverse('detail-app', args=[app_name]))
