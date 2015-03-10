@@ -25,8 +25,28 @@ body {
 .form-signin input[type="password"] {
 	font-size: 16px;
 	height: auto;
-	margin-bottom: 15px;
+	margin-bottom: 0;
 	padding: 7px 9px;
+}
+.form-signin div.input-wrapper {
+	margin-bottom: 15px;
+}
+.form-signin div.input-wrapper > * {
+    display: block;
+    width: 100%;
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+            box-sizing: border-box;
+}
+.form-signin div.input-wrapper > ul.errorlist {
+	background: #FFC4C4;
+	border: 1px solid #C20000;
+	margin: 0;
+}
+.form-signin div.input-wrapper > ul.errorlist li {
+	list-style: none;
+	padding: 5px;
+	font-size: 0.9em;
 }
 .form-actions {
 	margin: 0px;
