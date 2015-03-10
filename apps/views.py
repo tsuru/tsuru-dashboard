@@ -33,7 +33,8 @@ class DeployInfo(LoginRequiredMixin, TemplateView):
         context["deploy"] = response.json()
 
         format = HtmlFormatter()
-        diff_output = highlight(context["deploy"]["Diff"], DiffLexer(), format)
+        diff = context["deploy"].get("Diff", "")
+        diff_output = highlight(diff, DiffLexer(), format)
         context["deploy"]["Diff"] = diff_output
 
         class App(object):
