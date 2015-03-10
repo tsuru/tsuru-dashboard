@@ -1,6 +1,5 @@
 import json
 import requests
-import pprint
 
 from django.conf import settings
 from django.template.response import TemplateResponse
