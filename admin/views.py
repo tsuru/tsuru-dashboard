@@ -144,7 +144,7 @@ class DeployInfo(LoginRequiredView):
         response = requests.get(url, headers=headers)
         context = {"deploy": response.json()}
         format = HtmlFormatter()
-        diff_output = highlight(context["deploy"]["Diff"], DiffLexer(), format)
+        diff_output = highlight(context["deploy"].get("Diff", ""), DiffLexer(), format)
         context["deploy"]["Diff"] = diff_output
         return TemplateResponse(request, "deploys/deploy_details.html", context)
 
