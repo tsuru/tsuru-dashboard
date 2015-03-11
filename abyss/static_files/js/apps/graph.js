@@ -82,13 +82,42 @@
 
 
 		});
-}
+	}
 
-var graphs = function(opts) {
-	graph(opts);
-}
+	var allGraphs = function(appName, envs) {
+		var graphitePrefix = envs["GRAPHITE_PREFIX"] || "";
+		var graphiteHost = envs["GRAPHITE_HOST"] || "";
 
-$.Graph = graphs;
+		var kinds = [
+			{"id": "mem_max", "kind": "*.*.mem_max", "label": "memory utilization (MB)", "max": 512},
+			{"id": "cpu_max", "kind": "*.*.cpu_max", "label": "cpu utilization (%)", "max": 100},
+			{"id": "connections", "kind": "*.net.connections", "label": "connections established", "max": 100},
+		];
 
+		if (graphitePrefix.length === 0) {
+			graphitePrefix = "statsite";
+		}
+
+		var prefix = graphitePrefix + ".tsuru." + appName;
+
+		$.each(kinds, function(i, kind) {
+			var opts = {
+				graphiteHost: graphiteHost,
+				appName: appName,
+				kind: kind["kind"],
+				serie: "1min",
+				from: "1h",
+				label: kind["label"],
+				max: kind["max"],
+				hover: false,
+				id: kind["id"],
+				prefix: prefix
+			}
+			graph(opts);
+		});
+	};
+
+	$.AllGraphs = allGraphs;
+	$.Graph = graph;
 
 })(jQuery, window);
