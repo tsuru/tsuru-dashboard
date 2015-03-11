@@ -8,11 +8,12 @@
 	}
 
 	var graph = function(opts) {
-		opts["graphiteHost"] = normalizeUrl(opts["graphiteHost"]);
+		var defaultOpts = {
+			"statistic": "maxSeries"
+		};
+		opts = $.extend({}, defaultOpts, opts);
 
-		if ( typeof opts["statistic"] === "undefined" ) {
-			opts["statistic"] = "maxSeries";
-		}
+		opts["graphiteHost"] = normalizeUrl(opts["graphiteHost"]);
 
 		var url = opts["graphiteHost"] + "/render/?target=summarize(" + opts["statistic"] + "(keepLastValue(" + opts["prefix"] + "." + opts["kind"] + ")), \"" + opts["serie"] + "\", \"max\")&format=json&jsonp=?&from=-" + opts["from"];
 
