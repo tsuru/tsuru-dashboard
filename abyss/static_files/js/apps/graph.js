@@ -1,16 +1,20 @@
 (function($, window){
 
-	var graph = function(opts) {
-		var host = opts["graphiteHost"];
-		if ( host.indexOf( "http" ) === -1 ) {
+	var normalizeUrl = function(host) {
+		if (host.indexOf("http") === -1) {
 			host = "http://" + host;
 		}
+		return host;
+	}
+
+	var graph = function(opts) {
+		opts["graphiteHost"] = normalizeUrl(opts["graphiteHost"]);
 
 		if ( typeof opts["statistic"] === "undefined" ) {
 			opts["statistic"] = "maxSeries";
 		}
 
-		var url = host + "/render/?target=summarize(" + opts["statistic"] + "(keepLastValue(" + opts["prefix"] + "." + opts["kind"] + ")), \"" + opts["serie"] + "\", \"max\")&format=json&jsonp=?&from=-" + opts["from"];
+		var url = opts["graphiteHost"] + "/render/?target=summarize(" + opts["statistic"] + "(keepLastValue(" + opts["prefix"] + "." + opts["kind"] + ")), \"" + opts["serie"] + "\", \"max\")&format=json&jsonp=?&from=-" + opts["from"];
 
 		$.getJSON( url , function( data ) {
 			var d = [];
