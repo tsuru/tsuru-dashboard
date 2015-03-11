@@ -85,7 +85,7 @@
 	}
 
 	var allGraphs = function(appName, envs) {
-		var graphitePrefix = envs["GRAPHITE_PREFIX"] || "";
+		var graphitePrefix = envs["GRAPHITE_PREFIX"] || "statsite";
 		var graphiteHost = envs["GRAPHITE_HOST"] || "";
 
 		var kinds = [
@@ -93,10 +93,6 @@
 			{"id": "cpu_max", "kind": "*.*.cpu_max", "label": "cpu utilization (%)", "max": 100},
 			{"id": "connections", "kind": "*.net.connections", "label": "connections established", "max": 100},
 		];
-
-		if (graphitePrefix.length === 0) {
-			graphitePrefix = "statsite";
-		}
 
 		var prefix = graphitePrefix + ".tsuru." + appName;
 

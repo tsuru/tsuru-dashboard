@@ -112,28 +112,24 @@
 		statistic = queryString("statistic");
 	}
 	$("select[name=statistic]").val(statistic);
-	var graphiteHost = "";
-	var graphitePrefix = "";
+
+	var envs = {};
+
 	{% for env in app.envs %}
-	{% if env.name == "GRAPHITE_HOST" %}
-		graphiteHost = "{{ env.value }}";
-	{% endif %}
-	{% if env.name == "GRAPHITE_PREFIX" %}
-		graphitePrefix = "{{ env.value }}";
-	{% endif %}
+		envs["{{ env.name }}"] = "{{ env.value }}";
 	{% endfor %}
+
 	var appName = "{{ app.name }}";
+	var graphitePrefix = envs["GRAPHITE_PREFIX"] || "statsite";
+	var graphiteHost = envs["GRAPHITE_HOST"] || "";
 	var prefix = graphitePrefix + ".tsuru." + appName;
-	var kinds = [
-		{"id": "mem_max", "kind": "*.*.mem_max", "label": "memory utilization (MB)", "max": 512},
-		{"id": "cpu_max", "kind": "*.*.cpu_max", "label": "cpu utilization (%)", "max": 100},
-		{"id": "connections", "kind": "*.net.connections", "label": "connections established", "max": 100},
-	];
+
 	var kinds = {
 		"*.*.mem_max": {"label": "memory utilization (MB)", "max": 512, "id": "mem_max"},
 		"*.*.cpu_max": {"label": "cpu utilization (%)", "max": 100, "id": "cpu_max"},
 		"*.net.connections": {"label": "connections established", "max": 100, "id": "connections"},
 	}
+
 	var opts = {
 		graphiteHost: graphiteHost,
 		appName: "{{ app.name }}",
