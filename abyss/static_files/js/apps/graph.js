@@ -88,6 +88,10 @@
 		var graphitePrefix = envs["GRAPHITE_PREFIX"] || "statsite";
 		var graphiteHost = envs["GRAPHITE_HOST"] || "";
 
+		if (graphiteHost.length === 0) {
+			return
+		}
+
 		var kinds = [
 			{"id": "mem_max", "kind": "*.*.mem_max", "label": "memory utilization (MB)", "max": 512},
 			{"id": "cpu_max", "kind": "*.*.cpu_max", "label": "cpu utilization (%)", "max": 100},
