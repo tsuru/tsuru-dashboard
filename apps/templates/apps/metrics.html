@@ -90,6 +90,7 @@
 <script src="{{ STATIC_URL}}js/jquery.min.js"></script>
 <script src="{{ STATIC_URL }}js/jquery-ui.custom.js"></script>
 <script src="{{ STATIC_URL }}js/apps/graph.js"></script>
+<script src="{{ STATIC_URL }}js/apps/graphite.js"></script>
 <script src="{{ STATIC_URL }}js/confirmation.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
 <script src="http://cdn.oesmith.co.uk/morris-0.5.1.min.js"></script>
@@ -120,28 +121,14 @@
 	{% endfor %}
 
 	var appName = "{{ app.name }}";
-	var graphitePrefix = envs["GRAPHITE_PREFIX"] || "statsite";
-	var graphiteHost = envs["GRAPHITE_HOST"] || "";
-	var prefix = graphitePrefix + ".tsuru." + appName;
-
-	var kinds = {
-		"*.*.mem_max": {"label": "memory utilization (MB)", "max": 512, "id": "mem_max"},
-		"*.*.cpu_max": {"label": "cpu utilization (%)", "max": 100, "id": "cpu_max"},
-		"*.net.connections": {"label": "connections established", "max": 100, "id": "connections"},
-	}
-
 	var opts = {
-		graphiteHost: graphiteHost,
 		appName: "{{ app.name }}",
 		kind: queryString("kind"),
 		serie: queryString("serie"),
 		from: queryString("from"),
-		label: kinds[queryString("kind")]["label"],
-		max: kinds[queryString("kind")]["max"],
 		hover: true,
-		id: kinds[queryString("kind")]["id"],
 		statistic: queryString("statistic"),
-		prefix: prefix
+		envs: envs
 	}
 	$.Graph(opts);
 </script>
