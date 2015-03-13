@@ -4,10 +4,14 @@
 		if (opts["envs"].hasOwnProperty("GRAPHITE_HOST")){
 			$.graphiteGraph(opts);
 		}
+
+		if (opts["envs"].hasOwnProperty("ELASTICSEARCH_HOST")){
+			$.elasticSearchGraph(opts);
+		}
 	}
 
 	var allGraphs = function(appName, envs) {
-		var kinds = ["mem_max", "cpu_max", "connections"];
+		var kinds = ["mem_max", "cpu_max"];
 		$.each(kinds, function(i, kind) {
 			var opts = {
 				appName: appName,
