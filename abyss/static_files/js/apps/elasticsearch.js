@@ -71,15 +71,22 @@
 	var processData = function(opts, data) {
 		var d = [];
 		$.each(data.aggregations.range.buckets[0].date.buckets, function(index, bucket) {
-			var v = bucket.max.value;
-			if ((getMetric(opts).indexOf("mem_max") !== -1 ) ||
-			(getMetric(opts).indexOf("recv") !== -1) ||
-			(getMetric(opts).indexOf("sent") !== -1 )) {
+			var max = bucket.max.value;
+			var min = bucket.min.value;
+			var avg = bucket.avg.value;
 
-				v = v / ( 1024 * 1024 );
+			if ((getMetric(opts).indexOf("mem_max") !== -1 )) {
+
+				max = max / ( 1024 * 1024 );
+				min = min / ( 1024 * 1024 );
+				avg = avg / ( 1024 * 1024 );
 
 			}
-			d.push({x: new Date(bucket.key).getTime(), y: v});
+
+			d.push({
+				x: new Date(bucket.key).getTime(),
+				max: max, min: min, avg: avg
+			});
 		});
 		return d;
 	}
@@ -96,9 +103,9 @@
 			smooth: true,
 			data: processData(opts, data),
 			xkey: 'x',
-			ykeys: ['y'],
+			ykeys: ['max', 'min', 'avg'],
 			ymax: getMax(opts),
-			labels: ['Value']
+			labels: ['max', 'min', 'avg']
 		};
 
 		if (!opts["hover"]) {
