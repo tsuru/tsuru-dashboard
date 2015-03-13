@@ -12,6 +12,11 @@
 
 	var allGraphs = function(appName, envs) {
 		var kinds = ["mem_max", "cpu_max"];
+
+		if (envs.hasOwnProperty("ELASTICSEARCH_HOST")){
+			kinds.push("response_time");
+		}
+
 		$.each(kinds, function(i, kind) {
 			var opts = {
 				appName: appName,

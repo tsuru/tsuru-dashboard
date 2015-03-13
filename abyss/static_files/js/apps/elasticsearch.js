@@ -3,7 +3,8 @@
 	var kinds = {
 		"mem_max": {"label": "memory utilization (MB)", "max": 512, "id": "mem_max", "metric": "*.*.mem_max"},
 		"cpu_max": {"label": "cpu utilization (%)", "max": 100, "id": "cpu_max", "metric": "*.*.cpu_max"},
-		"connections": {"label": "connections established", "max": 100, "id": "connections", "metric": "*.net.connections"}
+		"connections": {"label": "connections established", "max": 100, "id": "connections", "metric": "*.net.connections"},
+		"response_time": {"label": "response time", "max": 20, "id": "response_time", "metric": "response_time"}
 	}
 
 	var normalizeUrl = function(host) {
@@ -70,6 +71,9 @@
 
 	var processData = function(opts, data) {
 		var d = [];
+		var maxValue = 0;
+		var minValue = "init";
+
 		$.each(data.aggregations.range.buckets[0].date.buckets, function(index, bucket) {
 			var max = bucket.max.value;
 			var min = bucket.min.value;
@@ -83,12 +87,28 @@
 
 			}
 
+			if (minValue === "init") {
+				minValue = min;
+			}
+
+			if (min < minValue) {
+				minValue = min;
+			}
+
+			if (max > maxValue) {
+				maxValue = max;
+			}
+
 			d.push({
 				x: new Date(bucket.key).getTime(),
 				max: max, min: min, avg: avg
 			});
 		});
-		return d;
+		return {
+			data: d,
+			min: minValue,
+			max: maxValue
+		}
 	}
 
 	var getMax = function(opts) {
@@ -97,14 +117,16 @@
 	}
 
 	var buildGraph = function(opts, data) {
+		var result = processData(opts, data);
 		var options = {
 			element: opts["kind"],
 			pointSize: 0,
 			smooth: true,
-			data: processData(opts, data),
+			data: result.data,
 			xkey: 'x',
 			ykeys: ['max', 'min', 'avg'],
-			ymax: getMax(opts),
+			ymax: result.max,
+			ymin: result.min,
 			labels: ['max', 'min', 'avg']
 		};
 
