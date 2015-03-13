@@ -21,14 +21,6 @@
 		<div class="span12">
 			<form method="GET">
 				<div class="span2">
-				<label>Statistic:</label>
-				<select name="statistic">
-					<option value="maxSeries">Maximum</option>
-					<option value="averageSeries">Average</option>
-					<option value="minSeries">Minimum</option>
-				</select>
-				</div>
-				<div class="span2">
 				<label>Time range:</label>
 				<select name="from">
 					<option value="1h">last hour</option>
@@ -106,12 +98,6 @@
 	$("select[name=from]").val(queryString("from"));
 	$("select[name=serie]").val(queryString("serie"));
 	$("input[name=kind]").val(queryString("kind"));
-	var statistic = "maxSeries";
-	if ( typeof queryString("statistic") !== "undefined" ) {
-		statistic = queryString("statistic");
-	}
-	$("select[name=statistic]").val(statistic);
-
 	var envs = {};
 
 	{% for env in app.envs %}
@@ -125,7 +111,6 @@
 		serie: queryString("serie"),
 		from: queryString("from"),
 		hover: true,
-		statistic: queryString("statistic"),
 		envs: envs
 	}
 	$.Graph(opts);
