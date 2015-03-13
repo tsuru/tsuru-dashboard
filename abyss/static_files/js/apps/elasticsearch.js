@@ -18,9 +18,13 @@
 		return kinds[kind]["metric"];
 	}
 
+	var getIndex = function(opts) {
+		return normalizeUrl(opts["envs"]["ELASTICSEARCH_INDEX"] || ".measure-tsuru-*");
+	}
+
 	var buildQuery = function(opts) {
 		return {
-			"index": ".measure-tsuru-*",
+			"index": getIndex(opts),
 			"type": opts["kind"],
 			"body":
 			{
