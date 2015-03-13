@@ -79,7 +79,7 @@
 				v = v / ( 1024 * 1024 );
 
 			}
-			d.push({x: new Date(bucket.key * 1000).getTime(), y: v});
+			d.push({x: new Date(bucket.key).getTime(), y: v});
 		});
 		return d;
 	}
