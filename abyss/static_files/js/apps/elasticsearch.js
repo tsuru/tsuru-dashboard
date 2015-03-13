@@ -19,7 +19,7 @@
 	}
 
 	var getIndex = function(opts) {
-		return normalizeUrl(opts["envs"]["ELASTICSEARCH_INDEX"] || ".measure-tsuru-*");
+		return opts["envs"]["ELASTICSEARCH_INDEX"] || ".measure-tsuru-*";
 	}
 
 	var buildQuery = function(opts) {
@@ -38,25 +38,26 @@
 					}
 				},
 				"aggs": {
-					"date": {
-						"date_histogram": {
+					"range": {
+						"date_range": {
 							"field": "@timestamp",
-							"interval": "1m"
+							"ranges": [
+								{
+									"from": "now-1h/h",
+									"to": "now"
+								}
+							]
 						},
 						"aggs": {
-							"max": {
-								"max": {
-									"field": "value"
-								}
-							},
-							"min": {
-								"min": {
-									"field": "value"
-								}
-							},
-							"avg": {
-								"avg": {
-									"field": "value"
+							"date": {
+								"date_histogram": {
+									"field": "@timestamp",
+									"interval": "1m"
+								},
+								"aggs": {
+									"max": {"max": {"field": "value"}},
+									"min": {"min": {"field": "value"}},
+									"avg": {"avg": {"field": "value"}}
 								}
 							}
 						}
@@ -69,7 +70,7 @@
 
 	var processData = function(opts, data) {
 		var d = [];
-		$.each(data.aggregations.date.buckets, function(index, bucket) {
+		$.each(data.aggregations.range.buckets[0].date.buckets, function(index, bucket) {
 			var v = bucket.max.value;
 			if ((getMetric(opts).indexOf("mem_max") !== -1 ) ||
 			(getMetric(opts).indexOf("recv") !== -1) ||
