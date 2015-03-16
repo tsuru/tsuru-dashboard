@@ -54,7 +54,6 @@
 		var options = {
 			element: opts["kind"],
 			pointSize: 0,
-			smooth: true,
 			data: processData(opts, data),
 			xkey: 'x',
 			ykeys: ['y'],

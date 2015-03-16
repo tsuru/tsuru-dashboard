@@ -151,7 +151,6 @@
 		var options = {
 			element: opts["kind"],
 			pointSize: 0,
-			smooth: true,
 			data: result.data,
 			xkey: 'x',
 			ykeys: ['max', 'min', 'avg'],
