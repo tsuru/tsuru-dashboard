@@ -165,6 +165,7 @@
 		var client = $.es.Client({hosts: url});
 		client.search(query).then(function(data) {
 			buildGraph(opts, data);
+			window.setTimeout(buildGraph, 60000, opts, data);
 		});
 
 	}
