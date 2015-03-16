@@ -16,6 +16,20 @@
 		return ranges[from];
 	}
 
+	var series = {
+		"1min": "1m",
+		"5min": "5m",
+		"15min": "15m",
+		"1h": "1h",
+		"6h": "6h",
+		"1d": "1d"
+	}
+
+	var getSerie = function(opts) {
+		var serie = opts["serie"] || "1m";
+		return series[serie];
+	}
+
 	var kinds = {
 		"mem_max": {"label": "memory utilization (MB)", "max": 512, "id": "mem_max", "metric": "*.*.mem_max"},
 		"cpu_max": {"label": "cpu utilization (%)", "max": 100, "id": "cpu_max", "metric": "*.*.cpu_max"},
@@ -60,7 +74,7 @@
 							"field": "@timestamp",
 							"ranges": [
 								{
-									"from": "now-" + getFrom(opts),//"now-1h/h",
+									"from": "now-" + getFrom(opts),
 									"to": "now"
 								}
 							]
@@ -69,7 +83,7 @@
 							"date": {
 								"date_histogram": {
 									"field": "@timestamp",
-									"interval": "1m"
+									"interval": getSerie(opts)
 								},
 								"aggs": {
 									"max": {"max": {"field": "value"}},
