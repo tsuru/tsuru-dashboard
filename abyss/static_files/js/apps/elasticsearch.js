@@ -117,6 +117,10 @@
 
 			}
 
+			max = Math.round(max)/100;
+			min = Math.round(min)/100;
+			avg = Math.round(avg)/100;
+
 			if (minValue === "init") {
 				minValue = min;
 			}
