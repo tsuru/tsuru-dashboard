@@ -1,5 +1,21 @@
 (function($, window){
 
+	var ranges = {
+		"1h": "1h/h",
+		"3h": "3h/h",
+		"6h": "6h/h",
+		"12h": "12h/h",
+		"1d": "1d/d",
+		"3d": "3d/d",
+		"1w": "1w/w",
+		"2w": "2w/w"
+	}
+
+	var getFrom = function(opts) {
+		var from = opts["from"] || "1h";
+		return ranges[from];
+	}
+
 	var kinds = {
 		"mem_max": {"label": "memory utilization (MB)", "max": 512, "id": "mem_max", "metric": "*.*.mem_max"},
 		"cpu_max": {"label": "cpu utilization (%)", "max": 100, "id": "cpu_max", "metric": "*.*.cpu_max"},
@@ -44,7 +60,7 @@
 							"field": "@timestamp",
 							"ranges": [
 								{
-									"from": "now-1h/h",
+									"from": "now-" + getFrom(opts),//"now-1h/h",
 									"to": "now"
 								}
 							]
