@@ -15,6 +15,7 @@
 
 		if (envs.hasOwnProperty("ELASTICSEARCH_HOST")){
 			kinds.push("response_time");
+			kinds.push("requests_min");
 		}
 
 		$.each(kinds, function(i, kind) {

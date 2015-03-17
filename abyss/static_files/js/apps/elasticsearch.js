@@ -34,7 +34,8 @@
 		"mem_max": {"label": "memory utilization (MB)", "max": 512, "id": "mem_max", "metric": "*.*.mem_max"},
 		"cpu_max": {"label": "cpu utilization (%)", "max": 100, "id": "cpu_max", "metric": "*.*.cpu_max"},
 		"connections": {"label": "connections established", "max": 100, "id": "connections", "metric": "*.net.connections"},
-		"response_time": {"label": "response time", "max": 20, "id": "response_time", "metric": "response_time"}
+		"response_time": {"label": "response time", "max": 20, "id": "response_time", "metric": "response_time"},
+		"requests_min": {"label": "requests/min", "max": 20, "id": "requests_min", "metric": "response_time"}
 	}
 
 	var normalizeUrl = function(host) {
@@ -99,6 +100,86 @@
 
 	}
 
+	var requestsMinQuery = function(opts) {
+		return {
+			"index": getIndex(opts),
+			"type": "response_time",
+			"body":
+			{
+				"query": {
+					"filtered": {
+						"query": {
+							"match": {
+								"app": opts["appName"]
+							}
+						}
+					}
+				},
+				"aggs": {
+					"range": {
+						"date_range": {
+							"field": "@timestamp",
+							"ranges": [
+								{
+									"from": "now-" + getFrom(opts),
+									"to": "now"
+								}
+							]
+						},
+						"aggs": {
+							"date": {
+								"date_histogram": {
+									"field": "@timestamp",
+									"interval": "1m"
+								},
+								"aggs": {
+									"sum": {"sum": {"field": "count"}}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+	}
+
+	var processRequestsMinData = function(opts, data) {
+		var d = [];
+		var maxValue = 0;
+		var minValue = "init";
+		$.each(data.aggregations.range.buckets[0].date.buckets, function(index, bucket) {
+			var sum = bucket.sum.value;
+
+			sum = Math.round(sum);
+
+			if (minValue === "init") {
+				minValue = sum;
+			}
+
+			if (sum < minValue) {
+				minValue = sum;
+			}
+
+			if (sum > maxValue) {
+				maxValue = sum;
+			}
+			d.push({
+				x: new Date(bucket.key).getTime(),
+				sum: sum
+			});
+		});
+		if (minValue === maxValue) {
+			minValue = Math.round(minValue);
+			maxValue = Math.ceil(maxValue);
+		}
+		return {
+			data: d,
+			min: minValue,
+			max: maxValue
+		}
+	}
+
 	var processData = function(opts, data) {
 		var d = [];
 		var maxValue = 0;
@@ -117,9 +198,9 @@
 
 			}
 
-			max = Math.round(max)/100;
-			min = Math.round(min)/100;
-			avg = Math.round(avg)/100;
+			max = Math.round(max);
+			min = Math.round(min);
+			avg = Math.round(avg);
 
 			if (minValue === "init") {
 				minValue = min;
@@ -174,6 +255,27 @@
 		new Morris.Line(options);
 	}
 
+	var buildRequestsMinGraph = function(opts, data) {
+		var result = processRequestsMinData(opts, data);
+		var options = {
+			element: opts["kind"],
+			pointSize: 0,
+			data: result.data,
+			xkey: 'x',
+			ykeys: ['sum'],
+			ymax: result.max,
+			ymin: result.min,
+			labels: ['req/min']
+		};
+
+		if (!opts["hover"]) {
+			options["hideHover"] = "always";
+		}
+
+		buildContainer(opts);
+		new Morris.Line(options);
+	}
+
 	var getLabel = function(opts) {
 		var kind = opts["kind"];
 		return kinds[kind]["label"];
@@ -194,16 +296,27 @@
 		return normalizeUrl(opts["envs"]["ELASTICSEARCH_HOST"] || "");
 	}
 
+
 	var elasticSearchGraph = function(opts) {
 		var query = buildQuery(opts);
+		if (opts["kind"] === "requests_min") {
+			opts["serie"] = "1min";
+			query = requestsMinQuery(opts);
+		}
 		var url = elasticSearchHost(opts);
 
 		var client = $.es.Client({hosts: url});
 		client.search(query).then(function(data) {
-			buildGraph(opts, data);
-			window.setTimeout(buildGraph, 60000, opts, data);
+			if (opts["kind"] === "requests_min") {
+				opts["serie"] = "1min";
+				query = requestsMinQuery(opts);
+				buildRequestsMinGraph(opts, data);
+				window.setTimeout(buildRequestsMinGraph, 60000, opts, data);
+			} else {
+				buildGraph(opts, data);
+				window.setTimeout(buildGraph, 60000, opts, data);
+			}
 		});
-
 	}
 
 	$.elasticSearchGraph = elasticSearchGraph;
