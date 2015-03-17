@@ -35,7 +35,8 @@
 		"cpu_max": {"label": "cpu utilization (%)", "max": 100, "id": "cpu_max", "metric": "*.*.cpu_max"},
 		"connections": {"label": "connections established", "max": 100, "id": "connections", "metric": "*.net.connections"},
 		"response_time": {"label": "response time", "max": 20, "id": "response_time", "metric": "response_time"},
-		"requests_min": {"label": "requests/min", "max": 20, "id": "requests_min", "metric": "response_time"}
+		"requests_min": {"label": "requests/min", "max": 20, "id": "requests_min", "metric": "response_time"},
+		"units": {"label": "units", "max": 20, "id": "units", "metric": "cpu_max"}
 	}
 
 	var normalizeUrl = function(host) {
@@ -144,6 +145,86 @@
 
 	}
 
+	var unitsQuery = function(opts) {
+		return {
+			"index": getIndex(opts),
+			"type": "cpu_max",
+			"body":
+			{
+				"query": {
+					"filtered": {
+						"query": {
+							"match": {
+								"app": opts["appName"]
+							}
+						}
+					}
+				},
+				"aggs": {
+					"range": {
+						"date_range": {
+							"field": "@timestamp",
+							"ranges": [
+								{
+									"from": "now-" + getFrom(opts),
+									"to": "now-3m/m"
+								}
+							]
+						},
+						"aggs": {
+							"date": {
+								"date_histogram": {
+									"field": "@timestamp",
+									"interval": "2m"
+								},
+								"aggs": {
+									"units": {"cardinality": {"field": "host"}}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+	}
+
+	var processUnitsData = function(opts, data) {
+		var d = [];
+		var maxValue = 0;
+		var minValue = "init";
+		$.each(data.aggregations.range.buckets[0].date.buckets, function(index, bucket) {
+			var units = bucket.units.value;
+
+			units = Math.round(units);
+
+			if (minValue === "init") {
+				minValue = units;
+			}
+
+			if (units < minValue) {
+				minValue = units;
+			}
+
+			if (units > maxValue) {
+				maxValue = units;
+			}
+			d.push({
+				x: new Date(bucket.key).getTime(),
+				units: units
+			});
+		});
+		if (minValue === maxValue) {
+			minValue = Math.round(minValue);
+			maxValue = Math.ceil(maxValue);
+		}
+		return {
+			data: d,
+			min: minValue,
+			max: maxValue
+		}
+	}
+
 	var processRequestsMinData = function(opts, data) {
 		var d = [];
 		var maxValue = 0;
@@ -244,6 +325,7 @@
 			ykeys: ['max', 'min', 'avg'],
 			ymax: result.max,
 			ymin: result.min,
+			smooth: false,
 			labels: ['max', 'min', 'avg']
 		};
 
@@ -265,6 +347,7 @@
 			ykeys: ['sum'],
 			ymax: result.max,
 			ymin: result.min,
+			smooth: false,
 			labels: ['req/min']
 		};
 
@@ -275,6 +358,29 @@
 		buildContainer(opts);
 		new Morris.Line(options);
 	}
+
+	var buildUnitsGraph = function(opts, data) {
+		var result = processUnitsData(opts, data);
+		var options = {
+			element: opts["kind"],
+			pointSize: 0,
+			data: result.data,
+			xkey: 'x',
+			ykeys: ['units'],
+			ymax: result.max,
+			ymin: result.min,
+			smooth: false,
+			labels: ['units']
+		};
+
+		if (!opts["hover"]) {
+			options["hideHover"] = "always";
+		}
+
+		buildContainer(opts);
+		new Morris.Line(options);
+	}
+
 
 	var getLabel = function(opts) {
 		var kind = opts["kind"];
@@ -303,6 +409,10 @@
 			opts["serie"] = "1min";
 			query = requestsMinQuery(opts);
 		}
+		if (opts["kind"] === "units") {
+			opts["serie"] = "3min";
+			query = unitsQuery(opts);
+		}
 		var url = elasticSearchHost(opts);
 
 		var client = $.es.Client({hosts: url});
@@ -312,6 +422,11 @@
 				query = requestsMinQuery(opts);
 				buildRequestsMinGraph(opts, data);
 				window.setTimeout(buildRequestsMinGraph, 60000, opts, data);
+			} else if (opts["kind"] === "units") {
+				opts["serie"] = "3min";
+				query = unitsQuery(opts);
+				buildUnitsGraph(opts, data);
+				window.setTimeout(buildUnitsGraph, 60000, opts, data);
 			} else {
 				buildGraph(opts, data);
 				window.setTimeout(buildGraph, 60000, opts, data);
