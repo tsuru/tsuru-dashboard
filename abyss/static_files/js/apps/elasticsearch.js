@@ -132,12 +132,15 @@
 			if (max > maxValue) {
 				maxValue = max;
 			}
-
 			d.push({
 				x: new Date(bucket.key).getTime(),
 				max: max, min: min, avg: avg
 			});
 		});
+		if (minValue === maxValue) {
+			minValue = Math.round(minValue);
+			maxValue = Math.ceil(maxValue);
+		}
 		return {
 			data: d,
 			min: minValue,
