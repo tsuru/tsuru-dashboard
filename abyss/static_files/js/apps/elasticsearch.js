@@ -101,6 +101,50 @@
 
 	}
 
+	var connectionsQuery = function(opts) {
+		return {
+			"index": getIndex(opts),
+			"type": "connection",
+			"body":
+			{
+				"query": {
+					"filtered": {
+						"query": {
+							"match": {
+								"app": "newmetricsteste02"
+							}
+						}
+					}
+				},
+				"aggs": {
+					"range": {
+						"date_range": {
+							"field": "@timestamp",
+							"ranges": [
+								{
+									"from": "now-1d/d",
+									"to": "now"
+								}
+							]
+						},
+						"aggs": {
+							"date": {
+								"date_histogram": {
+									"field": "@timestamp",
+									"interval": "1m"
+								},
+								"aggs": {
+									"connection": {"terms": {"field": "connection.raw"}}
+								}
+							}
+						}
+					}
+				}
+			}
+
+		}
+	}
+
 	var requestsMinQuery = function(opts) {
 		return {
 			"index": getIndex(opts),
@@ -187,6 +231,44 @@
 			}
 		}
 
+	}
+
+	var processConnectionsData = function(opts, data) {
+		var d = [];
+		var keys = [];
+		var maxValue = 0;
+		var minValue = "init";
+		$.each(data.aggregations.range.buckets[0].date.buckets, function(index, bucket) {
+			var size = bucket.connection.buckets[0].doc_count;
+			var conn = bucket.connection.buckets[0].key;
+
+			if (minValue === "init") {
+				minValue = size;
+			}
+
+			if (size < minValue) {
+				minValue = size;
+			}
+
+			if (size > maxValue) {
+				maxValue = size;
+			}
+			keys.push(conn);
+			var obj = {};
+			obj["x"] = new Date(bucket.key).getTime();
+			obj[conn] = size;
+			d.push(obj);
+		});
+		if (minValue === maxValue) {
+			minValue = Math.round(minValue);
+			maxValue = Math.ceil(maxValue);
+		}
+		return {
+			data: d,
+			min: minValue,
+			max: maxValue,
+			keys: keys
+		}
 	}
 
 	var processUnitsData = function(opts, data) {
@@ -359,6 +441,28 @@
 		new Morris.Line(options);
 	}
 
+	var buildConnectionsGraph = function(opts, data) {
+		var result = processConnectionsData(opts, data);
+		var options = {
+			element: opts["kind"],
+			pointSize: 0,
+			data: result.data,
+			xkey: 'x',
+			ykeys: result.keys,
+			ymax: result.max,
+			ymin: result.min,
+			smooth: false,
+			labels: result.keys
+		};
+
+		if (!opts["hover"]) {
+			options["hideHover"] = "always";
+		}
+
+		buildContainer(opts);
+		new Morris.Line(options);
+	}
+
 	var buildUnitsGraph = function(opts, data) {
 		var result = processUnitsData(opts, data);
 		var options = {
@@ -413,6 +517,9 @@
 			opts["serie"] = "3min";
 			query = unitsQuery(opts);
 		}
+		if (opts["kind"] === "connections") {
+			query = connectionsQuery(opts);
+		}
 		var url = elasticSearchHost(opts);
 
 		var client = $.es.Client({hosts: url});
@@ -427,6 +534,10 @@
 				query = unitsQuery(opts);
 				buildUnitsGraph(opts, data);
 				window.setTimeout(buildUnitsGraph, 60000, opts, data);
+			} else if (opts["kind"] === "connections") {
+				query = connectionsQuery(opts);
+				buildConnectionsGraph(opts, data);
+				window.setTimeout(buildConnectionsGraph, 60000, opts, data);
 			} else {
 				buildGraph(opts, data);
 				window.setTimeout(buildGraph, 60000, opts, data);
