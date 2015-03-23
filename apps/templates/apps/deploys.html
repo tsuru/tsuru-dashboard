@@ -23,20 +23,21 @@
                     <tr>
                         <th>Timestamp</th>
                         <th>Duration</th>
+                        <th>Origin</th>
                         <th>Error message</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for deploy in deploys %}
                     <tr class="{% if deploy.Error %}error{% endif %}">
-			<td>
-			    <a href="{% url 'app-deploy' app.name deploy.ID  %}">
-				{{ deploy.Timestamp|string_to_date|date:" d-m-Y H:i:s " }}</td>
-			    </a>
+                        <td>
+                            <a href="{% url 'app-deploy' app.name deploy.ID  %}">
+                                {{ deploy.Timestamp|string_to_date|date:" d-m-Y H:i:s " }}
+                            </a>
+                        </td>
                         <td>{{ deploy.Duration|time_to_string }}</td>
-			<td>
-			    {% if deploy.Error %}{{ deploy.Error }}{% endif %}
-		    	</td>
+                        <td>{{ deploy.Origin }}</td>
+                        <td>{% if deploy.Error %}{{ deploy.Error }}{% endif %}</td>
                     </tr>
                     {% endfor %}
                 <tbody>
