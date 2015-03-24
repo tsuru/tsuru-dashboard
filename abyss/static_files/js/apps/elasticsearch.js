@@ -63,9 +63,9 @@
 			{
 				"query": {
 					"filtered": {
-						"query": {
-							"match": {
-								"app": opts["appName"]
+						"filter": {
+							"term": {
+								"app.raw": opts["appName"]
 							}
 						}
 					}
@@ -109,9 +109,9 @@
 			{
 				"query": {
 					"filtered": {
-						"query": {
-							"match": {
-								"app": "newmetricsteste02"
+						"filter": {
+							"term": {
+								"app.raw": opts["appName"]
 							}
 						}
 					}
@@ -153,9 +153,9 @@
 			{
 				"query": {
 					"filtered": {
-						"query": {
-							"match": {
-								"app": opts["appName"]
+						"filter": {
+							"term": {
+								"app.raw": opts["appName"]
 							}
 						}
 					}
@@ -197,9 +197,9 @@
 			{
 				"query": {
 					"filtered": {
-						"query": {
-							"match": {
-								"app": opts["appName"]
+						"filter": {
+							"term": {
+								"app.raw": opts["appName"]
 							}
 						}
 					}
@@ -364,6 +364,7 @@
 			max = Math.round(max);
 			min = Math.round(min);
 			avg = Math.round(avg);
+			console.log(max, bucket.max.value, bucket);
 
 			if (minValue === "init") {
 				minValue = min;
