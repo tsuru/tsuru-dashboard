@@ -39,7 +39,11 @@
                         <td>{{ deploy.Origin }}</td>
                         <td>{% if deploy.Error %}{{ deploy.Error }}{% endif %}</td>
                         {% if deploy.CanRollback and forloop.counter0 %}
-                        <td><a href="{% url 'app-rollback' app.name deploy.Image %}">rollback to {{ deploy.Image }}</a></td>
+                        <td>
+                            <a class="btn" href="#confirmation"
+                                data-toggle="modal" app-name="{{ app.name }}" rollback-url="{% url 'app-rollback' app.name deploy.Image %}">
+                                Rollback to {{ deploy.Image }}
+                            </a>
                         {% else %}
                             <td>Can't rollback</td>
                         {% endif %}
@@ -51,4 +55,33 @@
 		</div>
 	</div>
 </div>
+<div id="confirmation" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-header">
+		<h3 id="myModalLabel">Are you sure?</h3>
+	</div>
+	<div class="modal-body">
+		<p>Are you sure you want to rollback your app? </p>
+		<p>Please type in the name of your app to confirm.</p>
+		<input type="text" placeholder="app's name" class="remove-confirmation" />
+	</div>
+	<div class="modal-footer">
+		<form method="get" action="rollback-url">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+			<button class="btn btn-danger btn-rollback" disabled="disabled">Rollback</button>
+		</form>
+	</div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script src="{{ STATIC_URL }}js/confirmation.js"></script>
+<script type="text/javascript">
+$(".deploys .btn").on('click', function(ev) {
+		ev.preventDefault();
+        var appName = $(this).attr("app-name")
+		var rollbackUrl = $(this).attr("rollback-url");
+		var confirmationForm = $("#confirmation form");
+		confirmationForm.attr("action", rollbackUrl);
+        $.confirmation(".btn-rollback", ".remove-confirmation", appName);
+	});
+</script>
 {% endblock %}
