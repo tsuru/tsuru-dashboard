@@ -4,7 +4,7 @@ import requests
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.template.response import TemplateResponse
 from django.conf import settings
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseServerError
 from django.shortcuts import redirect
 from django.core.urlresolvers import reverse
 from django.views.generic import TemplateView
@@ -434,3 +434,17 @@ class MetricDetail(LoginRequiredMixin, TemplateView):
         context['app']['envs'] = self.get_envs(app_name)
 
         return context
+
+
+class AppRollback(LoginRequiredView):
+    @property
+    def authorization(self):
+        return {'authorization': self.request.session.get('tsuru_token')}
+
+    def get(self, request, app_name, image):
+        url = '{}/apps/{}/deploy/rollback'.format(settings.TSURU_HOST, app_name)
+        import ipdb; ipdb.set_trace()
+        response = requests.post(url, headers=self.authorization, data={'image': image})
+        if response.status_code == 200:
+            return HttpResponse("OK")
+        return HttpResponseServerError("NOT OK")

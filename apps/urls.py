@@ -29,4 +29,6 @@ urlpatterns = patterns(
     url(r'^(?P<app_name>[\w-]+)/deploys/$', views.ListDeploy.as_view(), name='app-deploys'),
     url(r'^(?P<app_name>[\w-]+)/deploys/(?P<deploy>[\s\w@\.-]+)/$',
         views.DeployInfo.as_view(), name='app-deploy'),
+    url(r'^(?P<app_name>[\w-]+)/rollback/(?P<image>.+)/$',
+        views.AppRollback.as_view(), name='app-rollback'),
 )

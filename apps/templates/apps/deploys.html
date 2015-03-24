@@ -38,6 +38,11 @@
                         <td>{{ deploy.Duration|time_to_string }}</td>
                         <td>{{ deploy.Origin }}</td>
                         <td>{% if deploy.Error %}{{ deploy.Error }}{% endif %}</td>
+                        {% if deploy.CanRollback and forloop.counter0 %}
+                        <td><a href="{% url 'app-rollback' app.name deploy.Image %}">rollback to {{ deploy.Image }}</a></td>
+                        {% else %}
+                            <td>Can't rollback</td>
+                        {% endif %}
                     </tr>
                     {% endfor %}
                 <tbody>
