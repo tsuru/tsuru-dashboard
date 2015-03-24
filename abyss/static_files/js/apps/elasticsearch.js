@@ -529,17 +529,12 @@
 		var client = $.es.Client({hosts: url});
 		client.search(query).then(function(data) {
 			if (opts["kind"] === "requests_min") {
-				opts["serie"] = "1min";
-				query = requestsMinQuery(opts);
 				buildRequestsMinGraph(opts, data);
 				window.setTimeout(buildRequestsMinGraph, 60000, opts, data);
 			} else if (opts["kind"] === "units") {
-				opts["serie"] = "3min";
-				query = unitsQuery(opts);
 				buildUnitsGraph(opts, data);
 				window.setTimeout(buildUnitsGraph, 60000, opts, data);
 			} else if (opts["kind"] === "connections") {
-				query = connectionsQuery(opts);
 				buildConnectionsGraph(opts, data);
 				window.setTimeout(buildConnectionsGraph, 60000, opts, data);
 			} else {
