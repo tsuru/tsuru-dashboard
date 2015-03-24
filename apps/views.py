@@ -443,8 +443,7 @@ class AppRollback(LoginRequiredView):
 
     def get(self, request, app_name, image):
         url = '{}/apps/{}/deploy/rollback'.format(settings.TSURU_HOST, app_name)
-        import ipdb; ipdb.set_trace()
         response = requests.post(url, headers=self.authorization, data={'image': image})
         if response.status_code == 200:
-            return HttpResponse("OK")
+            return redirect(reverse('app-deploys', args=[app_name]))
         return HttpResponseServerError("NOT OK")

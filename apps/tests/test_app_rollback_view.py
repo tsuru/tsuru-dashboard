@@ -22,7 +22,7 @@ class AppRollbackViewTest(TestCase):
         post.return_value = m
         response = AppRollback.as_view()(
             self.request, app_name='test', image='localhost:3030/tsuru/app-test:v44')
-        self.assertEqual('OK', response.content)
+        self.assertEqual(302, response.status_code)
 
     @patch("requests.post")
     def test_post_with_invalid_app_and_image(self, post):
