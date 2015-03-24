@@ -1,6 +1,6 @@
 (function($) {
 	function confirmation(btn, input, password) {
-		$(input).val("none")
+		$(input).val("")
 		$(input).on('keyup change', function() {
 			if ($(input).val() === password) {
 				$(btn).removeAttr("disabled");
