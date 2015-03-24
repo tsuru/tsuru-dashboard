@@ -38,22 +38,3 @@
   </div>
 </div>
 {% endblock %}
-
-{% block extra_js %}
-<script src="{{ STATIC_URL }}js/jquery-ui.custom.js"></script>
-<script src="{{ STATIC_URL }}js/first_word.js"></script>
-<script>
-var app = [
-{% for a in apps %}
-"{{ a }}"{% if not forloop.last %},{% endif %}
-{% endfor %}
-];
-$( "#autocomplete" ).autocomplete({
-  source: $.first_word(app)
-});
-</script>
-{% endblock %}
-
-{% block extra_css %}
-<link rel="stylesheet" href="{{ STATIC_URL }}css/jquery-ui.css" />
-{% endblock extra_css %}
