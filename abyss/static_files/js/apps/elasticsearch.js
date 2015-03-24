@@ -237,23 +237,20 @@
 		var d = [];
 		var keys = [];
 		var maxValue = 0;
-		var minValue = "init";
+		var minValue = 0;
 		$.each(data.aggregations.range.buckets[0].date.buckets, function(index, bucket) {
 			var size = bucket.connection.buckets[0].doc_count;
 			var conn = bucket.connection.buckets[0].key;
 
-			if (minValue === "init") {
-				minValue = size;
-			}
-
 			if (size < minValue) {
 				minValue = size;
 			}
-
 			if (size > maxValue) {
 				maxValue = size;
 			}
-			keys.push(conn);
+			if (keys.indexOf(conn) === -1) {
+				keys.push(conn);
+			}
 			var obj = {};
 			obj["x"] = new Date(bucket.key).getTime();
 			obj[conn] = size;
@@ -263,6 +260,13 @@
 			minValue = Math.round(minValue);
 			maxValue = Math.ceil(maxValue);
 		}
+		keys.forEach(function(key) {
+			d.forEach(function(data) {
+				if (!data.hasOwnProperty(key)){
+					data[key] = 0;
+				}
+			});
+		});
 		return {
 			data: d,
 			min: minValue,
@@ -364,7 +368,6 @@
 			max = Math.round(max);
 			min = Math.round(min);
 			avg = Math.round(avg);
-			console.log(max, bucket.max.value, bucket);
 
 			if (minValue === "init") {
 				minValue = min;
