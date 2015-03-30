@@ -100,8 +100,7 @@ LOGGING = {
         'console': {
             'level': 'INFO',
             'filters': ['require_debug_false'],
-            'class': 'logging.StreamHandler',
-            'formatter': 'simple'
+            'class': 'logging.StreamHandler'
         }
     },
     'loggers': {
