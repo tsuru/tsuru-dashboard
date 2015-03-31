@@ -122,7 +122,7 @@
 							"field": "@timestamp",
 							"ranges": [
 								{
-									"from": "now-1d/d",
+									"from": "now-" + getFrom(opts),
 									"to": "now"
 								}
 							]
@@ -239,21 +239,23 @@
 		var maxValue = 0;
 		var minValue = 0;
 		$.each(data.aggregations.range.buckets[0].date.buckets, function(index, bucket) {
-			var size = bucket.connection.buckets[0].doc_count;
-			var conn = bucket.connection.buckets[0].key;
-
-			if (size < minValue) {
-				minValue = size;
-			}
-			if (size > maxValue) {
-				maxValue = size;
-			}
-			if (keys.indexOf(conn) === -1) {
-				keys.push(conn);
-			}
 			var obj = {};
 			obj["x"] = new Date(bucket.key).getTime();
-			obj[conn] = size;
+			$.each(bucket.connection.buckets, function(index, bucket) {
+				var size = bucket.doc_count;
+				var conn = bucket.key;
+
+				if (size < minValue) {
+					minValue = size;
+				}
+				if (size > maxValue) {
+					maxValue = size;
+				}
+				if (keys.indexOf(conn) === -1) {
+					keys.push(conn);
+				}
+				obj[conn] = size;
+			});
 			d.push(obj);
 		});
 		if (minValue === maxValue) {
