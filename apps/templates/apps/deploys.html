@@ -19,39 +19,24 @@
 	<div class="row-fluid">
 		<div class="span11">
 		<table class="deploys table" id="list">
-                <thead>
-                    <tr>
-                        <th>Timestamp</th>
-                        <th>Duration</th>
-                        <th>Origin</th>
-                        <th>Error message</th>
-                    </tr>
-                </thead>
-                <tbody>
                     {% for deploy in deploys %}
                     <tr class="{% if deploy.Error %}error{% endif %}">
-                        <td>
-                            <a href="{% url 'app-deploy' app.name deploy.ID  %}">
-                                {{ deploy.Timestamp|string_to_date|date:" d-m-Y H:i:s " }}
-                            </a>
-                        </td>
-                        <td>{{ deploy.Duration|time_to_string }}</td>
-                        <td>{{ deploy.Origin }}</td>
-                        <td>{% if deploy.Error %}{{ deploy.Error }}{% endif %}</td>
-                        {% if deploy.CanRollback and forloop.counter0 %}
-                        <td>
-                            <a class="btn" href="#confirmation"
-                                data-toggle="modal" app-name="{{ app.name }}" rollback-url="{% url 'app-rollback' app.name deploy.Image %}">
-                                Rollback to {{ deploy.Image }}
-                            </a>
-                        {% else %}
-                            <td>Can't rollback</td>
-                        {% endif %}
+			<td>
+				{{ deploy.Timestamp|string_to_date|date:" d-m-Y H:i:s " }}
+				- deployed from: {{ deploy.Origin }}
+				<br>
+				duration: {{ deploy.Duration|time_to_string }} - 
+				<a href="{% url 'app-deploy' app.name deploy.ID  %}">view info</a>
+				{% if deploy.CanRollback and forloop.counter0 %}
+				- 
+				<a href="#confirmation"
+				data-toggle="modal" app-name="{{ app.name }}" rollback-url="{% url 'app-rollback' app.name deploy.Image %}">roll back to here</a>
+				{% endif %}
+			</td>
                     </tr>
                     {% endfor %}
-                <tbody>
-			</table>
-			{% if is_paginated %}{% load paginator %}{% paginator 2 %}{% endif %}
+		</table>
+		{% if is_paginated %}{% load paginator %}{% paginator 2 %}{% endif %}
 		</div>
 	</div>
 </div>
