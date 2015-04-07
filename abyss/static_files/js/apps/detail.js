@@ -3,6 +3,9 @@
 	var detail = function(appName, envs) {
 		var allGraphs = function(appName, envs) {
 			var kinds = ["mem_max", "cpu_max", "connections"];
+			if (envs.hasOwnProperty("GRAPHITE_HOST") || envs.hasOwnProperty("ELASTICSEARCH_HOST")) {
+				$(".metrics-container").css("display", "block");
+			}
 
 			if (envs.hasOwnProperty("ELASTICSEARCH_HOST")){
 				kinds.push("response_time");
