@@ -254,14 +254,12 @@
 				if (keys.indexOf(conn) === -1) {
 					keys.push(conn);
 				}
-				obj[conn] = size;
+				obj[conn] = size.toFixed(2);
 			});
 			d.push(obj);
 		});
-		if (minValue === maxValue) {
-			minValue = Math.round(minValue);
-			maxValue = Math.ceil(maxValue);
-		}
+		minValue = Math.round(minValue);
+		maxValue = Math.ceil(maxValue);
 		keys.forEach(function(key) {
 			d.forEach(function(data) {
 				if (!data.hasOwnProperty(key)){
@@ -271,8 +269,8 @@
 		});
 		return {
 			data: d,
-			min: minValue,
-			max: maxValue,
+			min: minValue.toFixed(2),
+			max: maxValue.toFixed(2),
 			keys: keys
 		}
 	}
@@ -283,8 +281,6 @@
 		var minValue = "init";
 		$.each(data.aggregations.range.buckets[0].date.buckets, function(index, bucket) {
 			var units = bucket.units.value;
-
-			units = Math.round(units);
 
 			if (minValue === "init") {
 				minValue = units;
@@ -299,17 +295,15 @@
 			}
 			d.push({
 				x: new Date(bucket.key).getTime(),
-				units: units
+				units: units.toFixed(2)
 			});
 		});
-		if (minValue === maxValue) {
-			minValue = Math.round(minValue);
-			maxValue = Math.ceil(maxValue);
-		}
+		minValue = Math.round(minValue);
+		maxValue = Math.ceil(maxValue);
 		return {
 			data: d,
-			min: minValue,
-			max: maxValue
+			min: minValue.toFixed(2),
+			max: maxValue.toFixed(2)
 		}
 	}
 
@@ -319,8 +313,6 @@
 		var minValue = "init";
 		$.each(data.aggregations.range.buckets[0].date.buckets, function(index, bucket) {
 			var sum = bucket.sum.value;
-
-			sum = Math.round(sum);
 
 			if (minValue === "init") {
 				minValue = sum;
@@ -335,17 +327,15 @@
 			}
 			d.push({
 				x: new Date(bucket.key).getTime(),
-				sum: sum
+				sum: sum.toFixed(2)
 			});
 		});
-		if (minValue === maxValue) {
-			minValue = Math.round(minValue);
-			maxValue = Math.ceil(maxValue);
-		}
+		minValue = Math.round(minValue);
+		maxValue = Math.ceil(maxValue);
 		return {
 			data: d,
-			min: minValue,
-			max: maxValue
+			min: minValue.toFixed(2),
+			max: maxValue.toFixed(2)
 		}
 	}
 
@@ -367,10 +357,6 @@
 
 			}
 
-			max = Math.round(max);
-			min = Math.round(min);
-			avg = Math.round(avg);
-
 			if (minValue === "init") {
 				minValue = min;
 			}
@@ -384,17 +370,15 @@
 			}
 			d.push({
 				x: new Date(bucket.key).getTime(),
-				max: max, min: min, avg: avg
+				max: max.toFixed(2), min: min.toFixed(2), avg: avg.toFixed(2)
 			});
 		});
-		if (minValue === maxValue) {
-			minValue = Math.round(minValue);
-			maxValue = Math.ceil(maxValue);
-		}
+		minValue = Math.round(minValue);
+		maxValue = Math.ceil(maxValue);
 		return {
 			data: d,
-			min: minValue,
-			max: maxValue
+			min: minValue.toFixed(2),
+			max: maxValue.toFixed(2)
 		}
 	}
 
