@@ -110,6 +110,11 @@ LOGGING = {
             'level': 'INFO',
             'propagate': True,
         },
+        'dashboard': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
     }
 }
 
