@@ -9,5 +9,5 @@ logger = logging.getLogger('dashboard')
 class VerifyToken(object):
     def process_exception(self, request, exception):
         if isinstance(exception, Exception):
-            logging.error(exception)
+            logger.error(exception)
             return redirect(reverse("logout"))
