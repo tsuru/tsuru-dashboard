@@ -77,6 +77,7 @@ INSTALLED_APPS = (
     'quotas',
     'healthcheck',
     'admin',
+    'autoscale',
 )
 
 TSURU_HOST = os.environ.get("TSURU_HOST", "http://localhost:8080")
