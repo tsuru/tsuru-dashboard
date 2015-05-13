@@ -29,13 +29,13 @@ class ListDeployViewTest(TestCase):
         response_mock = Mock()
         response_mock.json.return_value = []
         get.return_value = response_mock
-        request = RequestFactory().get("/?page=0")
+        request = RequestFactory().get("/?page=1")
         request.session = {"tsuru_token": "admin"}
         response = ListDeploy.as_view()(request)
         self.assertEqual("deploys/list_deploys.html", response.template_name)
         self.assertIn('deploys', response.context_data.keys())
         get.assert_called_with(
-            '{0}/deploys?service='.format(settings.TSURU_HOST),
+            '{0}/deploys?service=&skip=0&limit=20'.format(settings.TSURU_HOST),
             headers={'authorization': 'admin'})
 
     @patch('requests.get')
@@ -46,7 +46,7 @@ class ListDeployViewTest(TestCase):
         get.return_value = m
         response = ListDeploy.as_view()(self.request)
         self.assertEqual("deploys/list_deploys.html", response.template_name)
-        self.assertListEqual([], response.context_data['deploys'].object_list)
+        self.assertListEqual([], response.context_data['deploys'])
         get.assert_called_with(
-            '{0}/deploys?service='.format(settings.TSURU_HOST),
+            '{0}/deploys?service=&skip=0&limit=20'.format(settings.TSURU_HOST),
             headers={'authorization': 'admin'})

@@ -29,6 +29,6 @@ class ListDeployViewTest(TestCase):
 
         self.response = ListDeploy.as_view()(self.request, app_name="appname")
 
-        url = '{}/deploys?app=appname'.format(settings.TSURU_HOST)
+        url = '{}/deploys?app=appname&skip=0&limit=20'.format(settings.TSURU_HOST)
         headers = {'authorization': 'admin'}
         get.assert_called_with(url, headers=headers)

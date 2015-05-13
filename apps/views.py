@@ -1,7 +1,6 @@
 import json
 import requests
 
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.template.response import TemplateResponse
 from django.conf import settings
 from django.http import HttpResponse, HttpResponseServerError

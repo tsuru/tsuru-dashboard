@@ -1,4 +1,3 @@
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.template.response import TemplateResponse
 from pygments import highlight
 from pygments.lexers import DiffLexer
@@ -70,7 +69,6 @@ class ListDeploy(LoginRequiredView):
             deploys = []
         else:
             deploys = response.json()
-
 
         context['deploys'] = deploys
         context['service'] = service
