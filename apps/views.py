@@ -56,33 +56,34 @@ class ListDeploy(LoginRequiredView):
     def get(self, request, *args, **kwargs):
         app_name = kwargs["app_name"]
 
-        url = '{}/deploys?app={}'.format(settings.TSURU_HOST, app_name)
+        page = int(request.GET.get('page', '1'))
+
+        skip = (page * 20) - 20
+        limit = page * 20
+
+        url = '{}/deploys?app={}&skip={}&limit={}'.format(settings.TSURU_HOST, app_name,
+                                                          skip, limit)
         response = requests.get(url, headers=self.authorization)
 
         deploys = []
         if response.status_code != 204:
             deploys = response.json()
 
-        paginator = Paginator(deploys, 20)
-        page = request.GET.get('page')
-
-        try:
-            deploys = paginator.page(page)
-        except PageNotAnInteger:
-            deploys = paginator.page(1)
-        except EmptyPage:
-            deploys = paginator.page(paginator.num_pages)
-
         context = {}
         context['deploys'] = deploys
-        context['paginator'] = paginator
-        context['is_paginated'] = True
 
         class App(object):
             def __init__(self, name):
                 self.name = name
 
         context['app'] = App(name=app_name)
+
+        if len(deploys) >= 20:
+            context['next'] = page + 1
+
+        if page > 0:
+            context['previous'] = page - 1
+
         return TemplateResponse(request, self.template, context=context)
 
 

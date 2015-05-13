@@ -36,7 +36,7 @@
                     </tr>
                     {% endfor %}
 		</table>
-		{% if is_paginated %}{% load paginator %}{% paginator 2 %}{% endif %}
+		{% include "deploys/paginator.html" %}
 		</div>
 	</div>
 </div>
