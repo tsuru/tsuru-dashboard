@@ -82,6 +82,7 @@ class ListDeploy(LoginRequiredView):
         return TemplateResponse(request, self.template, context=context)
 
     def _get_services(self, request):
+        return []
         authorization = {"authorization": request.session.get("tsuru_token")}
         response = requests.get("%s/services/instances" % settings.TSURU_HOST,
                                 headers=authorization)
