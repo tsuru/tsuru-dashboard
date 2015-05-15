@@ -32,21 +32,12 @@ ul.no-style {
 	opacity: 0.9;
 }
 
-.sidebar{
-	height: 100%;
-}
-
 .sidebar .nav {
-	display: list-item;
 	margin-top: 10px;
-	padding-left: 40px;
 }
 
 .sidebar .nav > li {
-	list-style: none outside none;
-	margin: 0;
 	min-width: 90px;
-	padding: 0;
 }
 
 .sidebar .nav > li.active > a {
@@ -56,11 +47,7 @@ ul.no-style {
 
 .sidebar .nav > li > a {
 	color: #fff;
-	display: block;
 	font-size: 13px;
-	height: 100%;
-	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
-	line-height: 50px;
 }
 
 .sidebar .nav > li > a:hover {
@@ -70,27 +57,6 @@ ul.no-style {
 
 .sidebar .nav > .active {
 	font-weight: bold;
-}
-
-.sidebar .profile {
-	margin: 0;
-	padding-top: 10px;
-	color: #fff;
-	text-align: center;
-}
-
-.menu.span12 .drop > li > a {
-	outline: 0 none;
-}
-
-.sidebar .inner {
-	height: 100%;
-}
-
-.sidebar .gravatar {
-	border-radius: 100%;
-	display: block;
-	margin: 0 auto;
 }
 
 .dropdown-menu {

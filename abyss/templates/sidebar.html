@@ -1,14 +1,7 @@
-{% load gravatar %}
 <div class="sidebar">
 	<div class="inner">
 		<div class="container-fluid">
-			<div class="nav-collapse collapse">
-				<ul class="profile">
-					{% gravatar request.session.username 100 %}
-					{{ request.session.username }}
-				</ul>
-			</div>
-			<div class="nav">
+			<ul class="nav nav-pills">
 				<li{% if active == "apps" %} class="active"{% endif %}>
 				<a href="{% url 'list-app' %}">
 					<span>Apps</span>
@@ -17,11 +10,6 @@
 				<li{% if active == "services" %} class="active"{% endif %}>
 				<a href="{% url 'service-list' %}">
 					<span>Services</span>
-				</a>
-				</li>
-				<li{% if active == "teams" %} class="active"{% endif %}>
-				<a href="{% url 'team-list' %}">
-					<span>Teams</span>
 				</a>
 				</li>
 				{% if request.session.is_admin %}
@@ -41,10 +29,7 @@
 					</a>
 			    	</li>
 				{% endif %}
-			</div>
+			</ul>
 		</div> <!-- /container-user -->
 	</div> <!-- /inner -->
-	<div class="report-issue">
-	    <a href="https://github.com/tsuru/tsuru-dashboard/issues?state=open">Report an issue</a>
-    </div>
 </div>
