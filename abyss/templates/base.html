@@ -12,42 +12,42 @@
 		{% endblock extra_css %}
 	</head>
 	<body>
-	<div class="row-fluid">
-		<div class="menu span12">
-			<div class="logo-tsuru">
-				<img src="{{ STATIC_URL}}img/brand.svg" alt="" />
-	        </div>
-        	<div class="drop">
-				<a data-toggle="dropdown" class="dropdown-toggle" href="#">
-					<i class="icon-cog icon-white"></i>
-				</a>
-				<ul class="dropdown-menu">
-					<li><a href="{% url 'key' %}">Add keys</a></li>
-					<li><a href="{% url 'quota' %}">Quota info</a></li>
-					<li class="divider"></li>
-					<li><a href="{% url 'change-password' %}">Change password</a></li>
-					<li><a href="{% url 'logout' %}">Logout</a></li>
-				</ul>
-        	</div>
-		</div>
-		<div class="userbar span3">
-			{% block sidebar %}
-			{% include "sidebar.html" %}
-			{% endblock %}
-		</div>
-		<div class="content container span9">
-			<div class="container-fluid">
-				<div class="row-fluid">
-					<div class="page-header">
-						{% block header %}{% endblock %}
-					</div>
+		<div class="row-fluid">
+			<div class="menu span12">
+				<div class="logo-tsuru">
+					<img src="{{ STATIC_URL}}img/brand.svg" alt="" />
+				</div>
+				<div class="drop">
+					<a data-toggle="dropdown" class="dropdown-toggle" href="#">
+						<i class="icon-cog icon-white"></i>
+					</a>
+					<ul class="dropdown-menu">
+						<li><a href="{% url 'key' %}">Add keys</a></li>
+						<li><a href="{% url 'quota' %}">Quota info</a></li>
+						<li class="divider"></li>
+						<li><a href="{% url 'change-password' %}">Change password</a></li>
+						<li><a href="{% url 'logout' %}">Logout</a></li>
+					</ul>
 				</div>
 			</div>
-			{% include "messages.html" %}
-			{% block content %}
-			{% endblock %}
+			<div class="userbar span3">
+				{% block sidebar %}
+				{% include "sidebar.html" %}
+				{% endblock %}
+			</div>
+			<div class="content container span9">
+				<div class="container-fluid">
+					<div class="row-fluid">
+						<div class="page-header">
+							{% block header %}{% endblock %}
+						</div>
+					</div>
+				</div>
+				{% include "messages.html" %}
+				{% block content %}
+				{% endblock %}
+			</div>
 		</div>
-	</div>
 		<script src="{{ STATIC_URL}}js/jquery.min.js"></script>
 		<script src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
 		{% block extra_js %}
