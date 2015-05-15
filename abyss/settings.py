@@ -80,6 +80,8 @@ INSTALLED_APPS = (
 
 TSURU_HOST = os.environ.get("TSURU_HOST", "http://localhost:8080")
 
+SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
