@@ -8,8 +8,6 @@ ul.no-style {
 
 .menu.span12 {
 	background-color: #222233;
-	position: fixed;
-	z-index: 10;
 	border-bottom: 1px solid #4D4C4C;
 }
 
@@ -30,16 +28,8 @@ ul.no-style {
 .userbar {
 	margin: 0 !important;
 	height: 100%;
-	position: fixed;
 	background-color: #222233;
-	top: 48px;
 	opacity: 0.9;
-}
-
-.content.container {
-	padding-bottom: 5px;
-	float: right !important;
-	margin-top: 50px;
 }
 
 .sidebar{
