@@ -6,50 +6,53 @@
 {% endblock %}
 
 {% block header %}
-    <h1>Admin/Deploys</h1>
+    	<h1>Admin/Deploys</h1>
 {% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{{ STATIC_URL }}css/deploys.css" />
+	<link rel="stylesheet" href="{{ STATIC_URL }}css/deploys.css" />
 {% endblock %}
+
 {% block content %}
 <div class="container-fluid">
 	<div class="row-fluid">
-		<div class="span11">
+		<div class="span12">
 			<form action="" method="get" id="filter">
 				<select id="listfilter" name="service">
 					<option value="">Select Service</option>
 					{% for srv in services %}
-                        <option value="{{ service }}"{% if service == srv %} selected{% endif %}>{{ srv }}</option>
+					<option value="{{ srv }}"{% if service == srv %} selected{% endif %}>
+						{{ srv }}
+					</option>
 					{% endfor %}
 				</select>
 			</form>
 			<table class="deploys table" id="list">
-                <thead>
-                    <tr>
-                        <th>App</th>
-                        <th class="to-right ">Duration</th>
-                        <th class="to-right ">Origin</th>
-                        <th class="to-right ">Timestamp</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for deploy in deploys %}
-                    <tr class="{% if deploy.Error %}error{% endif %}">
-                        <td class='app'>
-                            {% if  deploy.ID %}
-                                <a href="{% url 'deploy-info' deploy.ID %}">{{ deploy.App }}</a>
-                            {% else %}
-                                {{ deploy.App }}
-                            {% endif %}
-                            {% if deploy.Error %} - {{ deploy.Error }}{% endif %}
-                        </td>
-                        <td class='to-right'>{{ deploy.Duration|time_to_string }}</td>
-                        <td class='to-right'>{{ deploy.Origin }}</td>
-                        <td class='to-right'>{{ deploy.Timestamp|string_to_date|date:" d-m-Y H:i:s " }}</td>
-                    </tr>
-                    {% endfor %}
-                <tbody>
+				<thead>
+					<tr>
+						<th>App</th>
+						<th class="to-right">Duration</th>
+						<th class="to-right">Origin</th>
+						<th class="to-right">Timestamp</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for deploy in deploys %}
+					<tr class="{% if deploy.Error %}error{% endif %}">
+						<td class='app'>
+							{% if  deploy.ID %}
+							<a href="{% url 'deploy-info' deploy.ID %}">{{ deploy.App }}</a>
+							{% else %}
+							{{ deploy.App }}
+							{% endif %}
+							{% if deploy.Error %} - {{ deploy.Error }}{% endif %}
+						</td>
+						<td class='to-right'>{{ deploy.Duration|time_to_string }}</td>
+						<td class='to-right'>{{ deploy.Origin }}</td>
+						<td class='to-right'>{{ deploy.Timestamp|string_to_date|date:" d-m-Y H:i:s " }}</td>
+					</tr>
+					{% endfor %}
+				</tbody>
 			</table>
 			{% include "deploys/paginator.html" %}
 		</div>

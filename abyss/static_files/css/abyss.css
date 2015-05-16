@@ -27,9 +27,12 @@ ul.no-style {
 
 .userbar {
 	margin: 0 !important;
-	height: 100%;
 	background-color: #222233;
 	opacity: 0.9;
+}
+
+.content {
+	margin: 0 !important;
 }
 
 .sidebar .nav {
