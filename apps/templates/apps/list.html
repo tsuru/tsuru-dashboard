@@ -6,7 +6,7 @@
 
 {% block header %}
 <div class="btn-group pull-right">
-	<a class="btn" title="Create App" href="{% url 'create-app' %}"><i class="icon-plus"></i></a>
+	<a class="btn" title="new app" href="{% url 'create-app' %}">new app</a>
 </div>
 <h1>Apps</h1>
 {% endblock %}
@@ -15,22 +15,28 @@
 <div class="container-fluid">
 	<div class="row-fluid">
 		<div class="span12">
+			<table class="table">
 			{% for app in apps %}
-			<div class="row-fluid">
-				<div class="span9">
-					<a href="{% url 'detail-app' app.name %}" title="App Details"> {{ app.name }} </a>
-				</div>
-				<div class="span1">
-					<a href="{% url 'app_log' app.name %}" title="Log"> <i class="icon-tasks"></i> </a>
-				</div>
-				<div class="span1">
-					<a href="{% url 'app-teams' app.name %}" title="Collaborators"> <i class="icon-user"></i> </a>
-				</div>
-				<div class="span1">
-					<a href="{% url 'detail-app' app.name %}" title="Settings"> <i class="icon-wrench"></i> </a>
-				</div>
-			</div>
+				<tr>
+					<td>
+						<a href="{% url 'detail-app' app.name %}" title="App Details">
+							{{ app.name }}
+						</a>
+					</td>
+					<td class="text-right-important">
+						<a class="btn" href="{% url 'app_log' app.name %}" title="Log">
+							<i class="icon-tasks"></i> logs
+						</a>
+						<a class="btn" href="{% url 'app-teams' app.name %}" title="Collaborators">
+							<i class="icon-user"></i> collaborators
+						</a>
+						<a class="btn" href="{% url 'detail-app' app.name %}" title="Settings">
+							<i class="icon-wrench"></i> settings
+						</a>
+					</td>
+				</tr>
 			{% endfor %}
+			</table>
 		</div>
 	</div>
 </div>

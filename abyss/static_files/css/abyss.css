@@ -96,30 +96,31 @@ select {
 }
 
 .table th, .table td {
-	text-align: center;
 	vertical-align: middle;
 }
 
-.table.containers-app th, .table.containers-app td{
-	text-align: left;
+.pager {
+	padding-top: 20px;
+	padding-left: 40px;
 }
 
-.pager {
-  padding-top: 20px;
-  padding-left: 40px;
-  }
 .pager .page a {
-  border: 3px solid #bbbbbb;
-  margin-left: 1px;
-  margin-right: 1px;
-  padding-left: 4px;
-  padding-right: 4px;
-  text-decoration: none;
-  color: #000000;
-  }
+	border: 3px solid #bbbbbb;
+	margin-left: 1px;
+	margin-right: 1px;
+	padding-left: 4px;
+	padding-right: 4px;
+	text-decoration: none;
+	color: #000000;
+}
+
 .pager .current {
-  border: 3px solid #444444;
-  margin-left: 2px;
-  margin-right: 2px;
-  padding-left: 2px;
-  }
+	  border: 3px solid #444444;
+	  margin-left: 2px;
+	  margin-right: 2px;
+	  padding-left: 2px;
+}
+
+.text-right-important {
+	text-align: right !important;
+}
