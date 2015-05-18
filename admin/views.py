@@ -146,6 +146,7 @@ class DeployInfo(LoginRequiredView):
         headers = {'authorization': request.session.get('tsuru_token')}
         url = "{0}/deploys/{1}".format(settings.TSURU_HOST, deploy_id)
         response = requests.get(url, headers=headers)
+        import pdb; pdb.set_trace()
         context = {"deploy": response.json()}
         format = HtmlFormatter()
         diff_output = highlight(context["deploy"].get("Diff", ""), DiffLexer(), format)

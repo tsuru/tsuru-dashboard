@@ -150,7 +150,12 @@ class AppDetail(LoginRequiredMixin, TemplateView):
 
         if response.status_code == 204:
             return []
-        return response.json()
+
+        data = response.json()
+        if not data:
+            return []
+
+        return data
 
     def get_context_data(self, *args, **kwargs):
         context = super(AppDetail, self).get_context_data(*args, **kwargs)
