@@ -33,6 +33,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static_files'),
+    'dashboard/static_files',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -75,6 +76,7 @@ INSTALLED_APPS = (
     'healthcheck',
     'admin',
     'autoscale',
+    'dashboard',
 )
 
 TSURU_HOST = os.environ.get("TSURU_HOST", "http://localhost:8080")

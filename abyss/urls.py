@@ -1,12 +1,13 @@
+import os
+
 from django.conf.urls import patterns, include
 from django.views.generic.base import RedirectView
 
-import os
-
+from abyss.views import IndexView
 
 urlpatterns = patterns(
     '',
-    (r'^$', RedirectView.as_view(url='/apps')),
+    (r'^$', IndexView.as_view()),
     (r'^admin/', include('admin.urls')),
     (r'^auth/', include('auth.urls')),
     (r'^apps/', include('apps.urls')),
@@ -15,6 +16,7 @@ urlpatterns = patterns(
     (r'^quotas/', include('quotas.urls')),
     (r'^healthcheck/', include('healthcheck.urls')),
     (r'^autoscale/', include('autoscale.urls')),
+    (r'^dashboard/', include('dashboard.urls')),
 )
 
 urlpatterns += patterns(
