@@ -28,8 +28,9 @@ $.ajax({
     },
     error: function(jqXHR, textStatus, errorThrown) {
         console.log(textStatus, errorThrown);
-        kpiGroup.unlock()
-    },
+        kpiGroup.addKPI('error', {caption: 'error', value: 0});
+        kpiGroup.unlock();
+    }
 });
 db.addComponent(kpiGroup);
 
@@ -46,9 +47,9 @@ $.ajax({
     },
     error: function(jqXHR, textStatus, errorThrown) {
         console.log(textStatus, errorThrown);
-        healingKPI.setValue("-");
+        healingKPI.setValue(0);
         healingKPI.unlock();
-    },
+    }
 });
 db.addComponent(healingKPI);
 
@@ -68,7 +69,7 @@ $.ajax({
         console.log(textStatus, errorThrown);
         deployGauge.setValue(0);
         deployGauge.unlock();
-    },
+    }
 });
 db.addComponent(deployGauge);
 
