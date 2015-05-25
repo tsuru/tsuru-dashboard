@@ -1,7 +1,6 @@
 import os
 
 from django.conf.urls import patterns, include
-from django.views.generic.base import RedirectView
 
 from abyss.views import IndexView
 

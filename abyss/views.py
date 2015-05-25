@@ -1,6 +1,3 @@
-import requests
-
-from django.conf import settings
 from django.http import HttpResponseRedirect
 
 from auth.views import LoginRequiredView

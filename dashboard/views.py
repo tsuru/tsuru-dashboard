@@ -24,7 +24,8 @@ class HealingView(View):
         healings = []
         for healing in resp:
             end_time = healing['EndTime']
-            if (datetime.now() - datetime.strptime(end_time, "%Y-%m-%dT%H:%M:%S.%f-03:00") < timedelta(days=1)):
+            end_time = datetime.strptime(end_time, "%Y-%m-%dT%H:%M:%S.%f-03:00")
+            if (datetime.now() - end_time < timedelta(days=1)):
                 healings.append(healing)
         return JsonResponse(healings, safe=False)
 
@@ -39,7 +40,12 @@ class CloudStatusView(View):
             total_containers += len(app['units'])
         url = "{}/docker/node".format(settings.TSURU_HOST)
         nodes = requests.get(url, headers=authorization).json()
-        data = {"total_apps": len(apps), "containers_by_nodes": total_containers/len(nodes['nodes']), "total_containers": total_containers, "total_nodes": len(nodes['nodes'])}
+        data = {
+            "total_apps": len(apps),
+            "containers_by_nodes": total_containers/len(nodes['nodes']),
+            "total_containers": total_containers,
+            "total_nodes": len(nodes['nodes'])
+        }
         return JsonResponse(data, safe=False)
 
 
@@ -54,9 +60,9 @@ class DeploysView(View):
             timestamp = deploy['Timestamp']
             formated_timestamp = re.split("\.\d{0,5}", timestamp)
             formated_timestamp = "".join(formated_timestamp)
-            if (datetime.now() - datetime.strptime(formated_timestamp, "%Y-%m-%dT%H:%M:%S-03:00") < timedelta(days=1)):
+            timestamp = datetime.strptime(formated_timestamp, "%Y-%m-%dT%H:%M:%S-03:00")
+            if (datetime.now() - timestamp < timedelta(days=1)):
                 if deploy['Error']:
                     errored += 1
                 last_deploys.append(deploy)
         return JsonResponse({"last_deploys": last_deploys, "errored": errored}, safe=False)
-
