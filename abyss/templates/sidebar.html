@@ -27,7 +27,12 @@
 					<a href="{% url 'list-healing' %}">
 						<span>Healing</span>
 					</a>
-			    	</li>
+                </li>
+				<li{% if active == "dashboard" %} class="active"{% endif %}>
+					<a href="{% url 'dashboard' %}">
+                        <span>Dashboard</span>
+					</a>
+                </li>
 				{% endif %}
 			</ul>
 		</div> <!-- /container-user -->
