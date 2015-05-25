@@ -14,7 +14,7 @@ class LoginRequiredMixinTest(TestCase):
         request.session = {}
         response = StubView.as_view()(request)
         self.assertIsInstance(response, HttpResponseRedirect)
-        expected_url = reverse('login')
+        expected_url = "%s?next=%s" % (reverse('login'), request.path)
         self.assertEqual(expected_url, response['Location'])
 
     def test_should_invoke_view_dispatch_when_user_is_authenticated(self):

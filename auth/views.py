@@ -17,7 +17,7 @@ class LoginRequiredMixin(object):
     def dispatch(self, request, *args, **kwargs):
         token = request.session.get('tsuru_token')
         if not token:
-            return redirect(reverse('login'))
+            return redirect("%s?next=%s" % (reverse('login'), request.path))
         return super(LoginRequiredMixin, self).dispatch(
             request, *args, **kwargs)
 
@@ -76,6 +76,7 @@ class Login(FormView):
     form_class = LoginForm
 
     def get_context_data(self, *args, **kwargs):
+        self.request.session["next_url"] = self.request.GET.get("next", "/apps")
         data = super(Login, self).get_context_data(*args, **kwargs)
         data["scheme_info"] = scheme = self.scheme_info()
         scheme_data = scheme.get('data', {})
@@ -169,7 +170,8 @@ class Callback(View):
             self.request.session['tsuru_token'] = "type {0}".format(
                 result['token'])
             self.request.session['is_admin'] = result.get('is_admin', False)
-            return redirect('/apps')
+            next_url = self.request.session["next_url"]
+            return redirect(next_url)
         return redirect('/auth/login')
 
 

@@ -18,7 +18,7 @@ class CallbackViewTest(TestCase):
 
         request = RequestFactory().get('/', {"code": "somecode"})
         request.META['HTTP_HOST'] = 'localhost:3333'
-        request.session = {}
+        request.session = {"next_url": "/apps"}
 
         response = Callback.as_view()(request)
 

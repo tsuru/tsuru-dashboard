@@ -14,6 +14,7 @@ class LoginViewTest(TestCase):
     @patch("requests.get")
     def test_login_get(self, get_mock):
         request = RequestFactory().get("/")
+        request.session = {"next_url": "/"}
         response = Login.as_view()(request)
         self.assertIn("auth/login.html", response.template_name)
         form = response.context_data["form"]
@@ -23,6 +24,7 @@ class LoginViewTest(TestCase):
     def test_should_validate_data_from_post(self, get_mock):
         data = {"username": "invalid name", "password": ""}
         request = RequestFactory().post("/", data)
+        request.session = {"next_url": "/"}
         response = Login.as_view()(request)
         form = response.context_data["form"]
         self.assertIn("auth/login.html", response.template_name)
@@ -43,6 +45,7 @@ class LoginViewTest(TestCase):
     def test_should_send_request_post_to_tsuru_with_args_expected(self, get_mock, post):
         data = {"username": "valid@email.com", "password": "123456"}
         request = RequestFactory().post("/", data)
+        request.session = {"next_url": "/"}
         expected_url = "%s/users/valid@email.com/tokens" % settings.TSURU_HOST
         Login.as_view()(request)
         self.assertEqual(1, post.call_count)
@@ -155,6 +158,7 @@ class LoginViewTest(TestCase):
     @patch("requests.get")
     def test_get_context_data(self, get_mock):
         request = RequestFactory().get("/")
+        request.session = {"next_url": "/"}
         request.META["HTTP_HOST"] = "localhost:3333"
         view = Login()
         view.request = request
@@ -187,6 +191,7 @@ class LoginViewTest(TestCase):
     def test_get_context_data_with_data_is_none(self, get_mock):
         request = RequestFactory().get("/")
         request.META["HTTP_HOST"] = "localhost:3333"
+        request.session = {"next_url": "/"}
         view = Login()
         view.request = request
 

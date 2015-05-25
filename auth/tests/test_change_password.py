@@ -71,4 +71,4 @@ class TestResetPasswordView(TestCase):
         request.session = {}
         response = ChangePassword.as_view()(request)
         self.assertEqual(302, response.status_code)
-        self.assertEqual(reverse('login'), response.items()[1][1])
+        self.assertEqual("%s?next=%s" % (reverse('login'), request.path), response.items()[1][1])
