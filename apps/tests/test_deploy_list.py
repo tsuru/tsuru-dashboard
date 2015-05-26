@@ -21,7 +21,6 @@ class ListDeployViewTest(TestCase):
     def test_should_use_deploys_template(self, get):
         self.assertEqual("apps/deploys.html", self.response.template_name)
         self.assertIn('deploys', self.response.context_data.keys())
-        self.assertIn('attention_message', self.response.context_data.keys())
 
     @patch('requests.get')
     def test_deploy_list(self, get):

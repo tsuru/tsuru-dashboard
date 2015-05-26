@@ -18,28 +18,27 @@
 <div class="container-fluid">
 	<div class="row-fluid">
 		<div class="span11">
-        {% if attention_message %}
-            <div class="alert alert-info" role="alert">
-                <span class="icon icon-info-sign"></span> {{ attention_message }}
-            </div>
-        {% endif %}
 		<table class="deploys table" id="list">
-                    {% for deploy in deploys %}
-                    <tr class="{% if deploy.Error %}error{% endif %}">
-			<td>
-				{{ deploy.Timestamp|string_to_date|date:" d-m-Y H:i:s " }}
-				- deployed from: {{ deploy.Origin }}
-				<br>
-				duration: {{ deploy.Duration|time_to_string }} - 
-				<a href="{% url 'app-deploy' app.name deploy.ID  %}">view info</a>
-				{% if deploy.CanRollback and forloop.counter0 %}
-				- 
-				<a href="#confirmation"
-				data-toggle="modal" app-name="{{ app.name }}" rollback-url="{% url 'app-rollback' app.name deploy.Image %}">roll back to here</a>
-				{% endif %}
-			</td>
-                    </tr>
-                    {% endfor %}
+            {% for deploy in deploys %}
+                <tr class="{% if deploy.Error %}error{% endif %}">
+                    <td>
+                        {{ deploy.Timestamp|string_to_date|date:" d-m-Y H:i:s " }}
+                        - deployed from: {{ deploy.Origin }}
+                        <br>
+                        duration: {{ deploy.Duration|time_to_string }} - 
+                        <a href="{% url 'app-deploy' app.name deploy.ID  %}">view info</a>
+                        {% if deploy.CanRollback and forloop.counter0 %}
+                        - 
+                        <a href="#confirmation"
+                        data-toggle="modal" app-name="{{ app.name }}" rollback-url="{% url 'app-rollback' app.name deploy.Image %}">roll back to here</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% empty %}
+                <div class="alert alert-info" role="alert">
+                    <span class="icon icon-info-sign"></span> Your app don't have any deploy.
+                </div>
+            {% endfor %}
 		</table>
 		{% include "deploys/paginator.html" %}
 		</div>
