@@ -18,6 +18,11 @@
 <div class="container-fluid">
 	<div class="row-fluid">
 		<div class="span11">
+        {% if attention_message %}
+            <div class="alert alert-info" role="alert">
+                <span class="icon icon-info-sign"></span> {{ attention_message }}
+            </div>
+        {% endif %}
 		<table class="deploys table" id="list">
                     {% for deploy in deploys %}
                     <tr class="{% if deploy.Error %}error{% endif %}">

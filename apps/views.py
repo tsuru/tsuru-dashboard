@@ -65,11 +65,14 @@ class ListDeploy(LoginRequiredView):
         response = requests.get(url, headers=self.authorization)
 
         deploys = []
+        attention_message = "Your app don't have any deploy."
         if response.status_code != 204:
             deploys = response.json()
+            attention_message = ""
 
         context = {}
         context['deploys'] = deploys
+        context['attention_message'] = attention_message
 
         class App(object):
             def __init__(self, name):
