@@ -13,7 +13,7 @@ import json
 class ServiceAddViewTest(TestCase):
     @patch("requests.post")
     def test_post(self, post):
-        data = {"name": "name"}
+        data = {"name": "name", "team": "team"}
         request = RequestFactory().post("/", data)
         request.session = {"tsuru_token": "admin"}
         response = ServiceAdd.as_view()(request, service_name="service")
@@ -22,9 +22,10 @@ class ServiceAddViewTest(TestCase):
         post.assert_called_with(
             '{0}/services/instances'.format(settings.TSURU_HOST),
             headers={'authorization': 'admin'},
-            data=json.dumps({"name": "name", "service_name": "service"}))
+            data=json.dumps({"name": "name", "team": "team", "service_name": "service"}))
 
-    def test_get(self):
+    @patch("requests.get")
+    def test_get(self, get):
         request = RequestFactory().get("/")
         request.session = {"tsuru_token": "admin"}
         response = ServiceAdd.as_view()(request, service_name="service")

@@ -65,7 +65,7 @@ class ServiceAdd(LoginRequiredView):
                                 headers=authorization)
         teams = response.json()
         return TemplateResponse(request, "services/add.html",
-                {'service': {"name": service_name}, "teams": teams})
+                                {'service': {"name": service_name}, "teams": teams})
 
 
 class Bind(LoginRequiredView):
