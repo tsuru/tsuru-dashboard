@@ -18,6 +18,13 @@
 					<div class="control-group">
 						<label>Name</label>
 						<input type="text" class="input-xlarge" name="name">
+						<label>Team</label>
+                        <select name="team">
+                            <option></option>
+                            {% for team in teams %}
+                                <option value={{ team.name }}>{{ team.name }}</option> 
+                            {% endfor %}
+                        </select>
 					</div>
 					<button class="btn primary" type="submit">Add</button>
 				</fieldset>

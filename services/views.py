@@ -51,6 +51,7 @@ class ServiceAdd(LoginRequiredView):
         authorization = {'authorization': request.session.get('tsuru_token')}
         tsuru_url = '{0}/services/instances'.format(settings.TSURU_HOST)
         data = {"name": request.POST["name"],
+                "team": request.POST["team"],
                 "service_name": service_name}
         requests.post(tsuru_url,
                       data=json.dumps(data),
@@ -59,8 +60,12 @@ class ServiceAdd(LoginRequiredView):
 
     def get(self, request, *args, **kwargs):
         service_name = kwargs["service_name"]
+        authorization = {'authorization': request.session.get('tsuru_token')}
+        response = requests.get("%s/teams" % settings.TSURU_HOST,
+                                headers=authorization)
+        teams = response.json()
         return TemplateResponse(request, "services/add.html",
-                                {'service': {"name": service_name}})
+                {'service': {"name": service_name}, "teams": teams})
 
 
 class Bind(LoginRequiredView):
