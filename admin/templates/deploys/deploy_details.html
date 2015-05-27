@@ -33,6 +33,12 @@
                     <p><strong>Last Commit:</strong> {{ deploy.Commit }}</p>
                     {% if deploy.Error %}<p><strong>Error:</strong> {{ deploy.Error }}</p>{% endif %}
                     <p><strong>Diff:</strong></p>{{ deploy.Diff|safe }}
+                    <p><strong>Log:</strong></p>
+                    <div>
+                        <pre>
+                            {{ deploy.Log|escape }}
+                        </pre>
+                    </div>
                 </div>
             </div>
         </div>

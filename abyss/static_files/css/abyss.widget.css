@@ -1,3 +1,7 @@
+.first {
+    margin-left: 0 !important;
+}
+
 .widget {
 	border: 1px solid #d3d3d3;
 	-webkit-border-top-left-radius: 4px;
@@ -9,6 +13,35 @@
 	margin: 10px 0;
 }
 
+.widget.limited-list {
+    height: 300px;
+    overflow: hidden;
+    position: relative;
+}
+
+.expand-service-list {
+    background: -moz-linear-gradient(top,  rgba(255,255,255,0) 0%, rgba(255,255,255,0) 1%, rgba(255,255,255,1) 60%, rgba(255,255,255,1) 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,0)), color-stop(1%,rgba(255,255,255,0)), color-stop(60%,rgba(255,255,255,1)), color-stop(100%,rgba(255,255,255,1)));
+    background: -webkit-linear-gradient(top,  rgba(255,255,255,0) 0%,rgba(255,255,255,0) 1%,rgba(255,255,255,1) 60%,rgba(255,255,255,1) 100%);
+    background: -o-linear-gradient(top,  rgba(255,255,255,0) 0%,rgba(255,255,255,0) 1%,rgba(255,255,255,1) 60%,rgba(255,255,255,1) 100%);
+    background: -ms-linear-gradient(top,  rgba(255,255,255,0) 0%,rgba(255,255,255,0) 1%,rgba(255,255,255,1) 60%,rgba(255,255,255,1) 100%);
+    background: linear-gradient(to bottom,  rgba(255,255,255,0) 0%,rgba(255,255,255,0) 1%,rgba(255,255,255,1) 60%,rgba(255,255,255,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#ffffff',GradientType=0 );
+    
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 50px;
+    line-height: 60px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.widget ul {
+    margin-left: 10px;
+}
+
 .widget .title {
 	height: 40px;
 	background: -moz-linear-gradient(top, #fafafa 0%, #e9e9e9 100%);
@@ -17,17 +50,45 @@
 	background: -o-linear-gradient(top, #fafafa 0%, #e9e9e9 100%);
 	background: -ms-linear-gradient(top, #fafafa 0%, #e9e9e9 100%);
 	background: linear-gradient(top, #fafafa 0%, #e9e9e9 100%);
-	margin-left: 5px;
+	padding-left: 5px;
 }
 
-.widget .title i {
+.widget.limited-list .title a {
 	display: inline-block;
+    margin: 10px 10px 0;
+}
+
+.widget.limited-list .title h5 {
+    overflow: hidden;
 }
 
 .widget .title h5 {
 	display: inline-block;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 70%;
 }
 
 .widget .content {
-	padding: 5px;
+    padding: 5px;
+}
+
+.modal {
+    padding: 0;
+    border: none;
+}
+
+.modal .title {
+    height: 40px;
+    padding-left: 20px;
+    margin-bottom: 20px;
+    background-color: #222233;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    color: white;
+}
+
+.modal .title h5 {
+    margin: 0;
+    line-height: 40px;
 }
