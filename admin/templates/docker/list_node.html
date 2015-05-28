@@ -19,34 +19,30 @@
 
 {% block content %}
 <div class="container-fluid">
-	<div class="row-fluid">
-        {% for key, nodes in pools.items %}
-        <div class="span4 {% if forloop.counter0|divisibleby:3 %}first{% endif %}">
-                <div class="widget">
-                    <div class="title">
-                        <h4>{{ key }}</h4>
-                    </div>
-                    <div class="content">
-                        <table class="table">
-                            <tr>
-                                <th>Host</th>
-                                <th>Last success</th>
-                            </tr>
-                            {% for node in nodes %}
-                            <tr>
-                                <td>
-                                    <a href="{% url 'list-container' node.Address %}" title="Containers List">
-                                        {{ node.Address }}
-                                    </a>
-                                </td>
-                                <td>{{ node.Metadata.LastSuccess|date:"Y/m/d H:i:s e" }}</td>
-                            </tr>
-                            {% endfor %}
-                        </table>
-                    </div>
+    {% for key, nodes in pools.items %}
+    <div class="span4 {% if forloop.counter0|divisibleby:3 %}first{% endif %}">
+            <div class="widget">
+                <div class="title">
+                    <h4>{{ key }}</h4>
                 </div>
+                <table class="table">
+                    <tr>
+                        <th>Host</th>
+                        <th>Last success</th>
+                    </tr>
+                    {% for node in nodes %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'list-container' node.Address %}" title="Containers List">
+                                {{ node.Address }}
+                            </a>
+                        </td>
+                        <td>{{ node.Metadata.LastSuccess|date:"Y/m/d H:i:s e" }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
             </div>
-        {% endfor %}
-	</div>
+        </div>
+    {% endfor %}
 </div>
 {% endblock %}

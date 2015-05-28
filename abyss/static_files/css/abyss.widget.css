@@ -62,7 +62,7 @@
     overflow: hidden;
 }
 
-.widget .title h5 {
+.widget .title h5, .widget .title h4 {
 	display: inline-block;
     white-space: nowrap;
     text-overflow: ellipsis;
