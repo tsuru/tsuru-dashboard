@@ -18,17 +18,18 @@ class ListNode(LoginRequiredView):
         authorization = {'authorization': request.session.get('tsuru_token')}
         response = requests.get('%s/docker/node' % settings.TSURU_HOST,
                                 headers=authorization)
-        nodes = []
+        pools = {}
         if response.status_code != 204:
             data = response.json()
             nodes = data.get("nodes", [])
 
-            def sort_nodes_by_pool(node1, node2):
-                return cmp(node1['Metadata'].get('pool'), node2['Metadata'].get('pool'))
+            for node in nodes:
+                nodes_by_pool = pools.get(node["Metadata"].get("pool"), [])
+                nodes_by_pool.append(node)
+                pools[node["Metadata"].get("pool")] = nodes_by_pool
 
-            nodes.sort(cmp=sort_nodes_by_pool)
         return TemplateResponse(request, "docker/list_node.html",
-                                {"nodes": nodes})
+                                {"pools": pools})
 
 
 class ListContainer(LoginRequiredView):

@@ -19,8 +19,8 @@ class ListNodeViewTest(TestCase):
         get.return_value = response_mock
         response = ListNode.as_view()(self.request)
         self.assertEqual("docker/list_node.html", response.template_name)
-        expected = []
-        self.assertListEqual(expected, response.context_data["nodes"])
+        expected = {}
+        self.assertEqual(expected, response.context_data["pools"])
         get.assert_called_with(
             "{0}/docker/node".format(settings.TSURU_HOST),
             headers={"authorization": "admin"})
@@ -47,7 +47,7 @@ class ListNodeViewTest(TestCase):
         }
         get.return_value = response_mock
         response = ListNode.as_view()(self.request)
-        expected = [
+        expected = {"theonepool": [
             {"Address": "http://128.0.0.1:4243",
              "Metadata": {"LastSuccess": "2014-08-01T14:09:40Z",
                           "pool": "theonepool"},
@@ -60,5 +60,5 @@ class ListNodeViewTest(TestCase):
              "Metadata": {"LastSuccess": "2014-08-01T14:09:40Z",
                           "pool": "theonepool"},
              "Status": "ready"},
-        ]
-        self.assertListEqual(expected, response.context_data["nodes"])
+        ]}
+        self.assertEqual(expected, response.context_data["pools"])

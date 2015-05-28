@@ -1,5 +1,14 @@
 {% extends "base.html" %}
 
+{% block extra_css %}
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/abyss.widget.css" />
+    <style>
+        .span4 {
+            height: 500px;
+        }
+    </style>
+{% endblock %}
+
 {% block sidebar %}
 {% include "sidebar.html" with active="docker" %}
 {% endblock %}
@@ -11,26 +20,33 @@
 {% block content %}
 <div class="container-fluid">
 	<div class="row-fluid">
-		<div class="span12">
-			<table class="table">
-				<tr>
-					<th>Pool</th>
-					<th>Host</th>
-					<th>Last success</th>
-				</tr>
-				{% for node in nodes %}
-				<tr>
-				    <td>
-				        <a href="{% url 'list-container' node.Address %}" title="Containers List">
-					    {{ node.Metadata.pool }}
-					</a>
-				     </td>
-				     <td>{{ node.Address }}</td>
-				     <td>{{ node.Metadata.LastSuccess }}</td>
-				</tr>
-				{% endfor %}
-			</table>
-		</div>
+        {% for key, nodes in pools.items %}
+        <div class="span4 {% if forloop.counter0|divisibleby:3 %}first{% endif %}">
+                <div class="widget">
+                    <div class="title">
+                        <h4>{{ key }}</h4>
+                    </div>
+                    <div class="content">
+                        <table class="table">
+                            <tr>
+                                <th>Host</th>
+                                <th>Last success</th>
+                            </tr>
+                            {% for node in nodes %}
+                            <tr>
+                                <td>
+                                    <a href="{% url 'list-container' node.Address %}" title="Containers List">
+                                        {{ node.Address }}
+                                    </a>
+                                </td>
+                                <td>{{ node.Metadata.LastSuccess }}</td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
 	</div>
 </div>
 {% endblock %}
