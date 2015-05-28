@@ -1,4 +1,5 @@
 from mock import patch, Mock
+from datetime import datetime
 
 from django.conf import settings
 from django.test import TestCase
@@ -32,32 +33,33 @@ class ListNodeViewTest(TestCase):
             "machines": None,
             "nodes": [
                 {"Address": "http://128.0.0.1:4243",
-                 "Metadata": {"LastSuccess": "2014-08-01T14:09:40Z",
-                              "pool": "theonepool"},
+                    "Metadata": {"LastSuccess": "2014-08-01T14:09:40-03:00",
+                                 "pool": "theonepool"},
                  "Status": "ready"},
                 {"Address": "http://127.0.0.1:2375",
-                 "Metadata": {"LastSuccess": "2014-08-01T14:09:40Z",
+                 "Metadata": {"LastSuccess": "2014-08-01T14:09:40-03:00",
                               "pool": "theonepool"},
                  "Status": "ready"},
                 {"Address": "http://myserver.com:2375",
-                 "Metadata": {"LastSuccess": "2014-08-01T14:09:40Z",
+                 "Metadata": {"LastSuccess": "2014-08-01T14:09:40-03:00",
                               "pool": "theonepool"},
                  "Status": "ready"},
             ],
         }
         get.return_value = response_mock
         response = ListNode.as_view()(self.request)
+        date = "2014-08-01T14:09:40-03:00"
         expected = {"theonepool": [
             {"Address": "http://128.0.0.1:4243",
-             "Metadata": {"LastSuccess": "2014-08-01T14:09:40Z",
+             "Metadata": {"LastSuccess": datetime.strptime(date, "%Y-%m-%dT%H:%M:%S-03:00"),
                           "pool": "theonepool"},
              "Status": "ready"},
             {"Address": "http://127.0.0.1:2375",
-             "Metadata": {"LastSuccess": "2014-08-01T14:09:40Z",
-                          "pool": "theonepool"},
+                "Metadata": {"LastSuccess": datetime.strptime(date, "%Y-%m-%dT%H:%M:%S-03:00"),
+                             "pool": "theonepool"},
              "Status": "ready"},
             {"Address": "http://myserver.com:2375",
-             "Metadata": {"LastSuccess": "2014-08-01T14:09:40Z",
+             "Metadata": {"LastSuccess": datetime.strptime(date, "%Y-%m-%dT%H:%M:%S-03:00"),
                           "pool": "theonepool"},
              "Status": "ready"},
         ]}

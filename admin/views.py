@@ -1,14 +1,17 @@
-from django.template.response import TemplateResponse
-from pygments import highlight
-from pygments.lexers import DiffLexer
-from pygments.formatters import HtmlFormatter
-from django.conf import settings
-
-from auth.views import LoginRequiredView
-
 import requests
 import json
 import re
+
+from datetime import datetime
+
+from django.template.response import TemplateResponse
+from django.conf import settings
+
+from pygments import highlight
+from pygments.lexers import DiffLexer
+from pygments.formatters import HtmlFormatter
+
+from auth.views import LoginRequiredView
 
 addr_re = re.compile(r"^https?://(.*):\d{1,5}/?")
 
@@ -24,6 +27,9 @@ class ListNode(LoginRequiredView):
             nodes = data.get("nodes", [])
 
             for node in nodes:
+                dt = node["Metadata"].get("LastSuccess", "")
+                if dt:
+                    node["Metadata"]["LastSuccess"] = datetime.strptime(dt, "%Y-%m-%dT%H:%M:%S-03:00")
                 nodes_by_pool = pools.get(node["Metadata"].get("pool"), [])
                 nodes_by_pool.append(node)
                 pools[node["Metadata"].get("pool")] = nodes_by_pool

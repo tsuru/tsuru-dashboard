@@ -39,7 +39,7 @@
                                         {{ node.Address }}
                                     </a>
                                 </td>
-                                <td>{{ node.Metadata.LastSuccess }}</td>
+                                <td>{{ node.Metadata.LastSuccess|date:"Y/m/d H:i:s e" }}</td>
                             </tr>
                             {% endfor %}
                         </table>
