@@ -169,4 +169,12 @@ class ListHealing(LoginRequiredView):
         url = '{}/docker/healing'.format(settings.TSURU_HOST)
         response = requests.get(url, headers=self.authorization)
         events = response.json()
-        return TemplateResponse(request, "docker/list_healing.html", {"events": events})
+        formatted_events = []
+        for event in events:
+            event['FailingContainer']['ID'] = event['FailingContainer']['ID'][:12]
+            event['CreatedContainer']['ID'] = event['CreatedContainer']['ID'][:12]
+            event['App'] = event['FailingContainer']['AppName']
+            event['StartTime'] = datetime.strptime(event['StartTime'], "%Y-%m-%dT%H:%M:%S.%f-03:00")
+            event['EndTime'] = datetime.strptime(event['EndTime'], "%Y-%m-%dT%H:%M:%S.%f-03:00")
+            formatted_events.append(event)
+        return TemplateResponse(request, "docker/list_healing.html", {"events": formatted_events})

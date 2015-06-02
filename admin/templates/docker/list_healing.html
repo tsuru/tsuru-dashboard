@@ -4,35 +4,55 @@
 {% include "sidebar.html" with active="healing" %}
 {% endblock %}
 
+{% block extra_css %}
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/jquery.modal.css" />
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/healings.css" />
+{% endblock %}
+
 {% block header %}
-<h1>Admin/Healing</h1>
+    <h1>Admin/Healing</h1>
 {% endblock %}
 
 {% block content %}
 <div class="container-fluid">
 	<div class="row-fluid">
 		<div class="span12">
-			<table class="table">
-				<tr>
-				<th>Start</th>
-				<th>Finish</th>
-				<th>Success</th>
-				<th>Failing</th>
-				<th>Created</th>
-				<th>Error</th>
-				</tr>
+			<table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>App</th>
+                        <th>Failing</th>
+                        <th>Created</th>
+                        <th>Start</th>
+                        <th>Finish</th>
+                    </tr>
+                </thead>
+                <tbody>
 				{% for event in events %}
-				<tr>
-					<td>{{ event.StartTime }}</td>
-					<td>{{ event.EndTime }}</td>
-					<td>{{ event.Succefull }}</td>
-					<td>{% if event.FailingNode.Address %}{{ event.FailingNode.Address }}{% else %}{{ event.FailingContainer.ID }}{% endif %}</td>
-					<td>{% if event.CreatedNode.Address %}{{ event.CreatedNode.Address }}{% else %}{{ event.CreatedContainer.ID }}{% endif %}</td>
-					<td>{{ event.Error }}</td>
-				</tr>
+                    <tr class="{% if event.Error %}error{% endif %}">
+                        <td>{{ event.App }}</td>
+                        <td>{% if event.FailingNode.Address %}{{ event.FailingNode.Address }}{% else %}{{ event.FailingContainer.ID }}{% endif %}</td>
+                        <td>{% if event.CreatedNode.Address %}{{ event.CreatedNode.Address }}{% else %}{{ event.CreatedContainer.ID }}{% endif %}</td>
+                        <td>{{ event.StartTime }}</td>
+                        <td>{{ event.EndTime }}</td>
+                        {% if event.Error %}
+                        <td class="to-error">
+                            {{ event.Error }}
+                        </td>
+                        {% endif %}
+                    </tr>
 				{% endfor %}
+                </tbody>
 			</table>
 		</div>
 	</div>
 </div>
+<div class="modal break-word">
+    <p></p>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ STATIC_URL }}js/jquery.modal.js"></script>
+<script src="{{ STATIC_URL }}js/healing-modal.js"></script>
 {% endblock %}
