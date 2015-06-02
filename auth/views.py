@@ -13,10 +13,19 @@ from auth.forms import (LoginForm, SignupForm, KeyForm, TokenRequestForm,
                         PasswordRecoveryForm, ChangePasswordForm)
 
 
+def token_is_valid(token):
+    headers = {'authorization': token}
+    url = "{0}/users/info".format(settings.TSURU_HOST)
+    response = requests.get(url, headers=headers)
+    if response.status_code == 200:
+        return True
+    return False
+
+
 class LoginRequiredMixin(object):
     def dispatch(self, request, *args, **kwargs):
         token = request.session.get('tsuru_token')
-        if not token:
+        if not token or not token_is_valid(token):
             return redirect("%s?next=%s" % (reverse('login'), request.path))
         return super(LoginRequiredMixin, self).dispatch(
             request, *args, **kwargs)

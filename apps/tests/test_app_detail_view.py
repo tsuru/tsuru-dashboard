@@ -23,7 +23,7 @@ class AppDetailTestCase(TestCase):
             ],
             "teams": ["tsuruteam", "crane"]
         }
-        json_mock = Mock()
+        json_mock = Mock(status_code=200)
         json_mock.json.return_value = self.expected
         requests_mock.return_value = json_mock
 
@@ -45,7 +45,7 @@ class AppDetailTestCase(TestCase):
     @patch('requests.get')
     def test_get_envs(self, get):
         expected = [{"name": "DATABASE_HOST", "value": "localhost", "public": True}]
-        response_mock = Mock()
+        response_mock = Mock(status_code=200)
         response_mock.json.return_value = expected
         get.return_value = response_mock
 
@@ -63,7 +63,7 @@ class AppDetailTestCase(TestCase):
     @patch('requests.get')
     def test_get_containers(self, get):
         expected = []
-        response_mock = Mock()
+        response_mock = Mock(status_code=200)
         response_mock.json.return_value = expected
         get.return_value = response_mock
 
@@ -88,6 +88,7 @@ class AppDetailTestCase(TestCase):
 
     @patch('requests.get')
     def test_service_instances(self, get):
+        get.return_value = Mock(status_code=200)
         AppDetail.service_instances = self.old_service_instances
         app_detail = AppDetail()
         app_detail.request = self.request

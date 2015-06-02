@@ -12,7 +12,9 @@ from mock import patch, Mock
 
 
 class TestResetPasswordView(TestCase):
-    def test_get(self):
+    @patch("requests.get")
+    def test_get(self, get):
+        get.return_value = Mock(status_code=200)
         request = RequestFactory().get("/")
         request.session = {"tsuru_token": "ble"}
         response = ChangePassword.as_view()(request)
@@ -23,7 +25,9 @@ class TestResetPasswordView(TestCase):
 
     @patch("django.contrib.messages.error")
     @patch("requests.put")
-    def test_post(self, put, error):
+    @patch("requests.get")
+    def test_post(self, get, put, error):
+        get.return_value = Mock(status_code=200)
         data = {
             "old": "old",
             "new": "new",
@@ -40,7 +44,9 @@ class TestResetPasswordView(TestCase):
 
     @patch("django.contrib.messages.success")
     @patch("requests.put")
-    def test_post_sends_success_message(self, put, success):
+    @patch("requests.get")
+    def test_post_sends_success_message(self, get, put, success):
+        get.return_value = Mock(status_code=200)
         put.return_value = Mock(status_code=200)
         data = {
             "old": "old",
@@ -54,7 +60,9 @@ class TestResetPasswordView(TestCase):
 
     @patch("django.contrib.messages.error")
     @patch("requests.put")
-    def test_post_sends_error_message(self, put, error):
+    @patch("requests.get")
+    def test_post_sends_error_message(self, get, put, error):
+        get.return_value = Mock(status_code=200)
         put.return_value = Mock(status_code=403, text=u'error')
         data = {
             "old": "old",
@@ -66,7 +74,9 @@ class TestResetPasswordView(TestCase):
         ChangePassword.as_view()(request)
         error.assert_called_with(request, u'error', fail_silently=True)
 
-    def test_login_required(self):
+    @patch("requests.get")
+    def test_login_required(self, get):
+        get.return_value = Mock(status_code=200)
         request = RequestFactory().get("/")
         request.session = {}
         response = ChangePassword.as_view()(request)

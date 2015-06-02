@@ -5,7 +5,7 @@ from django.conf import settings
 
 from teams.views import AddUser
 
-from mock import patch
+from mock import patch, Mock
 
 
 class AddUserViewTest(TestCase):
@@ -16,7 +16,9 @@ class AddUserViewTest(TestCase):
 
     @patch("django.contrib.messages.error")
     @patch("requests.put")
-    def test_view(self, put, error):
+    @patch("requests.get")
+    def test_view(self, get, put, error):
+        get.return_value = Mock(status_code=200)
         team_name = "avengers"
         response = AddUser.as_view()(self.request, team=team_name)
         self.assertEqual(302, response.status_code)

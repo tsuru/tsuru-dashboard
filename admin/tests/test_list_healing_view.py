@@ -13,7 +13,9 @@ class ListHealingViewTest(TestCase):
         self.request.session = {"tsuru_token": "admin"}
 
     @patch("requests.get")
-    def test_should_use_list_template(self, get):
+    @patch("auth.views.token_is_valid")
+    def test_should_use_list_template(self, token_is_valid, get):
+        token_is_valid.return_value = True
         response_mock = Mock()
         response_mock.json.return_value = []
         get.return_value = response_mock

@@ -10,8 +10,9 @@ from auth.forms import KeyForm
 
 
 class KeyViewTest(TestCase):
-
-    def setUp(self):
+    @patch("requests.get")
+    def setUp(self, get):
+        get.return_value = Mock(status_code=200)
         self.factory = RequestFactory()
         self.request = self.factory.get('/')
         self.request.session = {"tsuru_token": "admin"}
@@ -38,7 +39,9 @@ class KeyViewTest(TestCase):
 
     @patch("django.contrib.messages.error")
     @patch('requests.post')
-    def test_post_with_name_should_send_request_post_to_tsuru(self, post, er):
+    @patch('requests.get')
+    def test_post_with_name_should_send_request_post_to_tsuru(self, get, post, er):
+        get.return_value = Mock(status_code=200)
         self.request_post.session = {'tsuru_token': 'tokentest'}
         Key.as_view()(self.request_post)
         self.assertEqual(1, post.call_count)
@@ -50,21 +53,27 @@ class KeyViewTest(TestCase):
 
     @patch("django.contrib.messages.success")
     @patch('requests.post')
-    def test_valid_postshould_return_message_expected(self, post, success):
+    @patch('requests.get')
+    def test_valid_postshould_return_message_expected(self, get, post, success):
+        get.return_value = Mock(status_code=200)
         post.return_value = Mock(status_code=200)
         Key.as_view()(self.request_post)
         success.assert_called_with(self.request_post, "The key was successfully added", fail_silently=True)
 
     @patch("django.contrib.messages.error")
     @patch('requests.post')
-    def test_invalid_post_should_return_error_message(self, post, error):
+    @patch('requests.get')
+    def test_invalid_post_should_return_error_message(self, get, post, error):
+        get.return_value = Mock(status_code=200)
         post.return_value = Mock(status_code=500, text='Error')
         Key.as_view()(self.request_post)
         error.assert_called_with(self.request_post, 'Error', fail_silently=True)
 
     @patch("django.contrib.messages.success")
     @patch('requests.post')
-    def test_successfully_post_should_redirects(self, post, m):
+    @patch('requests.get')
+    def test_successfully_post_should_redirects(self, get, post, m):
+        get.return_value = Mock(status_code=200)
         post.return_value = Mock(status_code=200)
         response = Key.as_view()(self.request_post)
         self.assertEqual(302, response.status_code)
@@ -72,21 +81,27 @@ class KeyViewTest(TestCase):
 
     @patch("django.contrib.messages.error")
     @patch('requests.post')
-    def test_post_with_error_should_redirects(self, post, er):
+    @patch('requests.get')
+    def test_post_with_error_should_redirects(self, get, post, er):
+        get.return_value = Mock(status_code=200)
         post.return_value = Mock(status_code=500, content='Error')
         response = Key.as_view()(self.request_post)
         self.assertEqual(302, response.status_code)
         self.assertEqual(reverse('key'), response.items()[1][1])
 
     @patch('requests.post')
-    def test_post_without_key_should_not_send_request_to_tsuru(self, post):
+    @patch('requests.get')
+    def test_post_without_key_should_not_send_request_to_tsuru(self, get, post):
+        get.return_value = Mock(status_code=200)
         request = self.factory.post('/team/', {'key': ''})
         request.session = {}
         Key.as_view()(request)
         self.assertEqual(0, post.call_count)
 
     @patch('requests.post')
-    def test_post_without_key_should_return_form_with_errors(self, post):
+    @patch('requests.get')
+    def test_post_without_key_should_return_form_with_errors(self, get, post):
+        get.return_value = Mock(status_code=200)
         request = self.factory.post('/team/', {'key': ''})
         request.session = {"tsuru_token": "admin"}
         response = Key.as_view()(request)

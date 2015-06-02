@@ -1,4 +1,4 @@
-from mock import patch
+from mock import patch, Mock
 
 from django.test import TestCase
 from django.test.client import RequestFactory
@@ -10,7 +10,9 @@ from services.views import ServiceRemove
 
 class ServiceRemoveViewTest(TestCase):
     @patch("requests.delete")
-    def test_view(self, delete):
+    @patch("requests.get")
+    def test_view(self, get, delete):
+        get.return_value = Mock(status_code=200)
         request = RequestFactory().get("/")
         request.session = {"tsuru_token": "admin"}
         service_name = "service"

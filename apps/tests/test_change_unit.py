@@ -20,7 +20,7 @@ class ChangeUnitViewTest(TestCase):
                 {"Ip": "7.7.7.7"}
             ],
         }
-        response_mock = Mock()
+        response_mock = Mock(status_code=200)
         response_mock.json.return_value = data
         get.return_value = response_mock
 
@@ -51,7 +51,7 @@ class ChangeUnitViewTest(TestCase):
                 {"Ip": "9.9.9.9"},
             ],
         }
-        response_mock = Mock()
+        response_mock = Mock(status_code=200)
         response_mock.json.return_value = data
         get.return_value = response_mock
 
@@ -81,7 +81,7 @@ class ChangeUnitViewTest(TestCase):
                 {"Ip": "9.9.9.9"},
             ],
         }
-        response_mock = Mock()
+        response_mock = Mock(status_code=200)
         response_mock.json.return_value = data
         get.return_value = response_mock
 

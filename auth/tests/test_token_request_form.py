@@ -3,7 +3,7 @@ from django.conf import settings
 
 from auth.forms import TokenRequestForm
 
-from mock import patch
+from mock import patch, Mock
 
 
 class TokenRequestFormTest(TestCase):
@@ -26,7 +26,9 @@ class TokenRequestFormTest(TestCase):
             self.assertFalse(form.is_valid())
 
     @patch("requests.post")
-    def test_send_request(self, post):
+    @patch("requests.get")
+    def test_send_request(self, get, post):
+        get.return_value = Mock(status_code=200)
         form = TokenRequestForm({"email": "a@a.com"})
         form.is_valid()
         form.send()

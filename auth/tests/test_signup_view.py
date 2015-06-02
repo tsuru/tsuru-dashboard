@@ -32,7 +32,9 @@ class SignupViewTest(TestCase):
                       form.errors['same_password_again'])
 
     @patch('requests.post')
-    def test_return_msg_on_success(self, post):
+    @patch('requests.get')
+    def test_return_msg_on_success(self, get, post):
+        get.return_value = Mock(status_code=200)
         data = {'email': 'test@test.com', 'password': 'abc123',
                 'same_password_again': 'abc123'}
         request = self.factory.post('/signup', data)
@@ -42,7 +44,9 @@ class SignupViewTest(TestCase):
         self.assertEqual(expected, response.context_data["message"])
 
     @patch('requests.post')
-    def test_post_sends_to_tsuru_with_args_expected(self, post):
+    @patch('requests.get')
+    def test_post_sends_to_tsuru_with_args_expected(self, get, post):
+        get.return_value = Mock(status_code=200)
         data = {'email': 'test@test.com', 'password': 'abc123',
                 'same_password_again': 'abc123'}
         request = self.factory.post('/signup', data)

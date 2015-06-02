@@ -32,7 +32,9 @@ class InfoViewTest(TestCase):
         self.assertDictEqual(data, response.context_data['quota'])
 
     @patch("requests.get")
-    def test_view_on_quota_not_found(self, get):
+    @patch("auth.views.token_is_valid")
+    def test_view_on_quota_not_found(self, token_is_valid, get):
+        token_is_valid.return_value = True
         get.return_value = Mock(status_code=404)
         response = Info.as_view()(self.request)
         get.assert_called_with(

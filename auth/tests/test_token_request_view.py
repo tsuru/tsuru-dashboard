@@ -4,7 +4,7 @@ from django.conf import settings
 
 from auth.forms import TokenRequestForm
 
-from mock import patch
+from mock import patch, Mock
 
 
 class TokeRequestViewTest(TestCase):
@@ -15,7 +15,9 @@ class TokeRequestViewTest(TestCase):
         self.assertIsInstance(response.context['form'], TokenRequestForm)
 
     @patch("requests.post")
-    def test_send_when_form_is_valid(self, post):
+    @patch("requests.get")
+    def test_send_when_form_is_valid(self, get, post):
+        get.return_value = Mock(status_code=200)
         response = self.client.post(reverse('token-request'),
                                     {"email": "some@email.com"})
         self.assertRedirects(response, reverse('token-request-success'))

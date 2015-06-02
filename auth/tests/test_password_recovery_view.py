@@ -4,7 +4,7 @@ from django.conf import settings
 
 from auth.forms import PasswordRecoveryForm
 
-from mock import patch
+from mock import patch, Mock
 
 
 class PasswordRecoveryViewTest(TestCase):
@@ -15,7 +15,9 @@ class PasswordRecoveryViewTest(TestCase):
         self.assertIsInstance(response.context['form'], PasswordRecoveryForm)
 
     @patch("requests.post")
-    def test_send_when_form_is_valid(self, post):
+    @patch("requests.get")
+    def test_send_when_form_is_valid(self, get, post):
+        get.return_value = Mock(status_code=200)
         response = self.client.post(reverse('password-recovery'),
                                     {"email": "some@email.com", "token": "tt"})
         self.assertRedirects(response, reverse('password-recovery-success'))

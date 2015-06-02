@@ -17,7 +17,9 @@ class AppRollbackViewTest(TestCase):
         assert issubclass(AppRollback, LoginRequiredView)
 
     @patch("requests.post")
-    def test_post_with_valid_app_and_image(self, post):
+    @patch("auth.views.token_is_valid")
+    def test_post_with_valid_app_and_image(self, token_is_valid, post):
+        token_is_valid.return_value = True
         m = Mock(status_code=200, content="")
         post.return_value = m
         response = AppRollback.as_view()(
@@ -25,7 +27,9 @@ class AppRollbackViewTest(TestCase):
         self.assertEqual(302, response.status_code)
 
     @patch("requests.post")
-    def test_post_with_invalid_app_and_image(self, post):
+    @patch("auth.views.token_is_valid")
+    def test_post_with_invalid_app_and_image(self, token_is_valid, post):
+        token_is_valid.return_value = True
         m = Mock(status_code=500, content="")
         post.return_value = m
         response = AppRollback.as_view()(

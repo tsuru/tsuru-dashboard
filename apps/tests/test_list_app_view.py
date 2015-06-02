@@ -12,7 +12,9 @@ class ListAppViewTest(TestCase):
         self.request.session = {"tsuru_token": "admin"}
 
     @patch('requests.get')
-    def test_should_use_list_template(self, get):
+    @patch("auth.views.token_is_valid")
+    def test_should_use_list_template(self, token_is_valid, get):
+        token_is_valid.return_value = True
         get.return_value = Mock(status_code=204)
         response = ListApp.as_view()(self.request)
         self.assertEqual("apps/list.html", response.template_name)

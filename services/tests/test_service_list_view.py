@@ -14,7 +14,7 @@ class ListServiceViewTest(TestCase):
         request.session = {"tsuru_token": "admin"}
         expected = {"teste": "teste"}
 
-        response_mock = Mock()
+        response_mock = Mock(status_code=200)
         response_mock.json.return_value = expected
         get.return_value = response_mock
 

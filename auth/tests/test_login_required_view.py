@@ -5,6 +5,8 @@ from django.core.urlresolvers import reverse
 
 from auth.views import LoginRequiredView
 
+import mock
+
 
 class LoginRequiredViewTest(TestCase):
 
@@ -16,7 +18,9 @@ class LoginRequiredViewTest(TestCase):
         expected_url = "%s?next=%s" % (reverse('login'), request.path)
         self.assertEqual(expected_url, response['Location'])
 
-    def test_should_invoke_view_dispatch_when_user_is_authenticated(self):
+    @mock.patch("requests.get")
+    def test_should_invoke_view_dispatch_when_user_is_authenticated(self, get):
+        get.return_value = mock.Mock(status_code=200)
         request = RequestFactory().get('/')
         request.session = {'tsuru_token': 'my beautiful token'}
         response = StubView.as_view()(request)

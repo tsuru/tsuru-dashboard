@@ -6,10 +6,14 @@ from django.views.generic.base import View
 
 from auth.views import LoginRequiredMixin
 
+from mock import patch, Mock
+
 
 class LoginRequiredMixinTest(TestCase):
 
-    def test_should_redirect_to_login_page_if_user_is_not_authenticated(self):
+    @patch("requests.get")
+    def test_should_redirect_to_login_page_if_user_is_not_authenticated(self, get):
+        get.return_value = Mock(status_code=200)
         request = RequestFactory().get('/')
         request.session = {}
         response = StubView.as_view()(request)
@@ -17,7 +21,9 @@ class LoginRequiredMixinTest(TestCase):
         expected_url = "%s?next=%s" % (reverse('login'), request.path)
         self.assertEqual(expected_url, response['Location'])
 
-    def test_should_invoke_view_dispatch_when_user_is_authenticated(self):
+    @patch("requests.get")
+    def test_should_invoke_view_dispatch_when_user_is_authenticated(self, get):
+        get.return_value = Mock(status_code=200)
         request = RequestFactory().get('/')
         request.session = {'tsuru_token': 'my beautiful token'}
         response = StubView.as_view()(request)

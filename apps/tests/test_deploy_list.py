@@ -1,4 +1,4 @@
-from mock import patch
+from mock import patch, Mock
 
 from django.test import TestCase
 from django.conf import settings
@@ -9,7 +9,9 @@ from apps.views import ListDeploy
 
 class ListDeployViewTest(TestCase):
     @patch('requests.get')
-    def setUp(self, get):
+    @patch("auth.views.token_is_valid")
+    def setUp(self, token_is_valid, get):
+        token_is_valid.return_value = True
         self.request = RequestFactory().get("/")
         self.request.session = {"tsuru_token": "admin"}
         self.response = ListDeploy.as_view()(self.request, app_name="appname")
@@ -18,12 +20,17 @@ class ListDeployViewTest(TestCase):
         self.assertIn('app', self.response.context_data.keys())
 
     @patch('requests.get')
-    def test_should_use_deploys_template(self, get):
+    @patch("auth.views.token_is_valid")
+    def test_should_use_deploys_template(self, token_is_valid, get):
+        token_is_valid.return_value = True
+        get.return_value = Mock(status_code=200)
         self.assertEqual("apps/deploys.html", self.response.template_name)
         self.assertIn('deploys', self.response.context_data.keys())
 
     @patch('requests.get')
-    def test_deploy_list(self, get):
+    @patch("auth.views.token_is_valid")
+    def test_deploy_list(self, token_is_valid, get):
+        token_is_valid.return_value = True
         self.request = RequestFactory().get("/")
         self.request.session = {"tsuru_token": "admin"}
 

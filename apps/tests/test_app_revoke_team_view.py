@@ -11,7 +11,9 @@ from apps.views import AppRevokeTeam
 class AppRevokeTeamTestCase(TestCase):
 
     @patch("requests.delete")
-    def test_view(self, delete):
+    @patch("auth.views.token_is_valid")
+    def test_view(self, token_is_valid, delete):
+        token_is_valid.return_value = True
         request = RequestFactory().get("/")
         request.session = {"tsuru_token": "admin"}
         app_name = "app_name"

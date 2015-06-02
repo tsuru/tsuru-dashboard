@@ -23,7 +23,9 @@ class InfoViewTest(TestCase):
                      u'Diff': u'test_diff'}
 
     @patch("requests.get")
-    def test_view(self, get):
+    @patch("auth.views.token_is_valid")
+    def test_view(self, token_is_valid, get):
+        token_is_valid.return_value = True
         response_mock = Mock()
         response_mock.json.return_value = copy.deepcopy(self.data)
         get.return_value = response_mock
@@ -40,7 +42,9 @@ class InfoViewTest(TestCase):
         )
 
     @patch("requests.get")
-    def test_view_without_diff(self, get):
+    @patch("auth.views.token_is_valid")
+    def test_view_without_diff(self, token_is_valid, get):
+        token_is_valid.return_value = True
         data = copy.deepcopy(self.data)
         del data["Diff"]
         response_mock = Mock()

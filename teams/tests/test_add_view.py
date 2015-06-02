@@ -11,7 +11,9 @@ from teams.forms import TeamForm
 
 
 class TeamViewTest(TestCase):
-    def setUp(self):
+    @patch("requests.get")
+    def setUp(self, get):
+        get.return_value = Mock(status_code=200)
         self.factory = RequestFactory()
         self.request = self.factory.get('/')
         self.request.session = {"tsuru_token": "admin"}
@@ -37,7 +39,9 @@ class TeamViewTest(TestCase):
         self.assertNotEqual(404, response.status_code)
 
     @patch('requests.post')
-    def test_post_sends_request_to_tsuru(self, post):
+    @patch('requests.get')
+    def test_post_sends_request_to_tsuru(self, get, post):
+        get.return_value = Mock(status_code=200)
         self.request_post.session = {'tsuru_token': 'tokentest'}
         Add.as_view()(self.request_post)
         self.assertEqual(1, post.call_count)
@@ -48,19 +52,25 @@ class TeamViewTest(TestCase):
                      self.request_post.session['tsuru_token']})
 
     @patch('requests.post')
-    def test_valid_post_redirect_to_team_list(self, post):
+    @patch('requests.get')
+    def test_valid_post_redirect_to_team_list(self, get, post):
+        get.return_value = Mock(status_code=200)
         post.return_value = Mock(status_code=200)
         response = Add.as_view()(self.request_post)
         self.assertEqual(302, response.status_code)
         self.assertEqual(reverse('team-list'), response.items()[1][1])
 
     @patch('requests.post')
-    def test_post_with_invalid_name_should_return_500(self, post):
+    @patch('requests.get')
+    def test_post_with_invalid_name_should_return_500(self, get, post):
+        get.return_value = Mock(status_code=200)
         post.return_value = Mock(status_code=500, content='Error')
         response = Add.as_view()(self.request_post)
         self.assertEqual('Error', response.context_data.get('errors'))
 
-    def test_post_without_name_should_return_form_with_errors(self):
+    @patch("requests.get")
+    def test_post_without_name_should_return_form_with_errors(self, get):
+        get.return_value = Mock(status_code=200)
         request = self.factory.post('/team/', {'name': ''})
         request.session = {"tsuru_token": "admin"}
         response = Add.as_view()(request)

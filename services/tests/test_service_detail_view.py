@@ -16,7 +16,7 @@ class ServiceInstanceDetailViewTest(TestCase):
     @patch("requests.get")
     def test_get_instance_data(self, get, apps):
         data = {u'Name': u'instance'}
-        response_mock = Mock()
+        response_mock = Mock(status_code=200)
         response_mock.json.return_value = data
         get.return_value = response_mock
         response = ServiceInstanceDetail.as_view()(self.request,
@@ -34,7 +34,7 @@ class ServiceInstanceDetailViewTest(TestCase):
     def test_get_apps(self, get, get_instance):
         instance_mock = {'Apps': ["ble"]}
         get_instance.return_value = instance_mock
-        response_mock = Mock()
+        response_mock = Mock(status_code=200)
         response_mock.json.return_value = [{u'name': u'app1'},
                                            {u'name': u'ble'},
                                            {u'name': u'app2'}]

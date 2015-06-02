@@ -23,7 +23,7 @@ class MetricDetailTest(TestCase):
             ],
             "teams": ["tsuruteam", "crane"]
         }
-        json_mock = Mock()
+        json_mock = Mock(status_code=200)
         json_mock.json.return_value = self.expected
         requests_mock.return_value = json_mock
 

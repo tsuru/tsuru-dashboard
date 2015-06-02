@@ -14,7 +14,7 @@ class ListServiceViewTest(TestCase):
 
     @patch('requests.get')
     def test_should_use_list_template(self, get):
-        response_mock = Mock()
+        response_mock = Mock(status_code=200)
         response_mock.json.return_value = []
         get.return_value = response_mock
         response = List.as_view()(self.request)
@@ -26,7 +26,9 @@ class ListServiceViewTest(TestCase):
             headers={'authorization': 'admin'})
 
     @patch('requests.get')
-    def test_should_return_empty_list_when_status_is_204(self, get):
+    @patch("auth.views.token_is_valid")
+    def test_should_return_empty_list_when_status_is_204(self, token_is_valid, get):
+        token_is_valid.return_value = True
         get.return_value = Mock(status_code=204)
         response = List.as_view()(self.request)
         self.assertEqual("teams/list.html", response.template_name)

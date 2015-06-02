@@ -16,7 +16,7 @@ class InfoViewTest(TestCase):
 
     @patch("requests.get")
     def test_view(self, get):
-        response_mock = Mock()
+        response_mock = Mock(status_code=200)
         response_mock.json.return_value = self.data
         get.return_value = response_mock
         response = Info.as_view()(self.request, team="avengers")

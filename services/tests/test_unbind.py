@@ -1,5 +1,3 @@
-from mock import patch
-
 from django.test import TestCase
 from django.test.client import RequestFactory
 from django.conf import settings
@@ -7,10 +5,14 @@ from django.core.urlresolvers import reverse
 
 from services.views import Unbind
 
+from mock import patch, Mock
+
 
 class UnbindViewTest(TestCase):
     @patch("requests.delete")
-    def test_view(self, delete):
+    @patch("requests.get")
+    def test_view(self, get, delete):
+        get.return_value = Mock(status_code=200)
         request = RequestFactory().get("/")
         request.session = {"tsuru_token": "admin"}
         instance = "instance"
