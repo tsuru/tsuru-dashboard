@@ -3,25 +3,25 @@ var db = new EmbeddedDashboard();
 // get kpi group data and set update
 var kpiGroup = new KPIGroupComponent();
 kpiGroup.setDimensions(12, 2);
-kpiGroup.setCaption("Cloud Status");    
+kpiGroup.setCaption("Cloud Status");
 kpiGroup.lock();
 $.ajax({
     url: "/dashboard/cloud_status",
     success: function(data) {
         kpiGroup.addKPI('total_apps', {
-            caption: 'Total de Apps',
+            caption: 'Apps',
             value: data.total_apps,
         });
         kpiGroup.addKPI('total_containers', {
-            caption: 'Total de Containers',
+            caption: 'Units',
             value: data.total_containers,
         });
         kpiGroup.addKPI('total_nodes', {
-            caption: 'Total de Nós',
+            caption: 'Nodes',
             value: data.total_nodes,
         });
         kpiGroup.addKPI('containers_by_nodes', {
-            caption: 'Containers por Nó',
+            caption: 'Units by node',
             value: data.containers_by_nodes,
         });
         kpiGroup.unlock();
@@ -37,7 +37,7 @@ db.addComponent(kpiGroup);
 // healing data and set update
 var healingKPI = new KPIComponent();
 healingKPI.setDimensions(6, 3);
-healingKPI.setCaption("Healing - ultimas 24hrs");    
+healingKPI.setCaption("Healings (last 24h)");
 healingKPI.lock();
 $.ajax({
     url: "/dashboard/healing_status",
@@ -56,7 +56,7 @@ db.addComponent(healingKPI);
 // deploy data and set update
 var deployGauge = new GaugeComponent();
 deployGauge.setDimensions(6, 3);
-deployGauge.setCaption("Deploys com erro - utlimas 24hrs");    
+deployGauge.setCaption("Deploys with error (last 24h)");
 deployGauge.lock();
 $.ajax({
     url: "/dashboard/deploys",
