@@ -1,0 +1,76 @@
+{% extends "apps/base.html" %}
+
+{% block app-content %}
+	<div class="row-fluid">
+		<div class="span12">
+			<form method="GET">
+				<div class="span2">
+				<label>Time range:</label>
+				<select name="from">
+					<option value="1h">last hour</option>
+					<option value="3h">last 3 hours</option>
+					<option value="6h">last 6 hours</option>
+					<option value="12h">last 12 hours</option>
+					<option value="1d">last 24 hours</option>
+					<option value="3d">last 3 days</option>
+					<option value="1w">last 1 week</option>
+					<option value="2w">last 2 weeks</option>
+				</select>
+				</div>
+				<div class="span2">
+				<label>Period:</label> 
+				<select name="serie">
+					<option value="1min">1 minute</option>
+					<option value="5min">5 minutes</option>
+					<option value="15min">15 minutes</option>
+					<option value="1h">1 hour</option>
+					<option value="6h">6 hours</option>
+					<option value="1d">1 day</option>
+				</select>
+				</div>
+				<div class="span1">
+				<input type="hidden" name="kind">
+				<input type="submit" value="filter">
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span12">
+			<div class="widget">
+				<div class="title">
+					<spam class="icon">
+						<i class="icon-signal"></i>
+					</spam>
+					<h5>Metrics</h5>
+				</div>
+				<div class="content">
+						<div class="row-fluid">
+							<div class="span12" id="metrics">
+							</div>
+						</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ STATIC_URL }}js/apps/elasticsearch.jquery.min.js"></script>
+<script src="{{ STATIC_URL }}js/apps/graph.js"></script>
+<script src="{{ STATIC_URL }}js/apps/graphite.js"></script>
+<script src="{{ STATIC_URL }}js/apps/elasticsearch.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+<script src="http://cdn.oesmith.co.uk/morris-0.5.1.min.js"></script>
+<script src="{{ STATIC_URL }}js/apps/metrics.js"></script>
+<script type="text/javascript">
+	var appName = "{{ app.name }}";
+	var envs = {};
+	{% for env in app.envs %}
+		envs["{{ env.name }}"] = "{{ env.value }}";
+	{% endfor %}
+	$.metrics(appName, envs);
+</script>
+{% endblock %}

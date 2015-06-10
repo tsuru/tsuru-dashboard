@@ -484,7 +484,7 @@
 	var buildContainer = function(opts) {
 		if ( $("#" + opts["kind"]).parents(".graph-container").length === 0 ) {
 			var label = getLabel(opts);
-			var url = '/apps/' + opts["appName"] + '/metrics/?kind=' + opts["kind"] + '&from=' + opts["from"] + '&serie=' + opts["serie"];
+			var url = '/apps/' + opts["appName"] + '/metrics/details/?kind=' + opts["kind"] + '&from=' + opts["from"] + '&serie=' + opts["serie"];
 			var element = '<div class="graph-container"><h2>' + label + '</h2><a href="' + url + '"><div id="' + opts["kind"] + '"></div></a></div>';
 			$( '#metrics' ).append(element);
 		} else {
