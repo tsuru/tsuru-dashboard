@@ -3,8 +3,6 @@ var db = new EmbeddedDashboard();
 // get kpi group data and set update
 var kpiGroup = new KPIGroupComponent();
 kpiGroup.setDimensions(12, 2);
-kpiGroup.setCaption("Cloud Status");
-kpiGroup.lock();
 $.ajax({
     url: "/dashboard/cloud_status",
     success: function(data) {
