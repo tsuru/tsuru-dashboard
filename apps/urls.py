@@ -24,7 +24,7 @@ urlpatterns = patterns(
         views.AppRevokeTeam.as_view(), name='app-revoke-team'),
     url(r'^(?P<app_name>[\w-]+)/units/$',
         views.ChangeUnit.as_view(), name='change-units'),
-    url(r'^(?P<app_name>[\w-]+)/metrics/$',
+    url(r'^(?P<app_name>[\w-]+)/metrics/details/$',
         views.MetricDetail.as_view(), name='metrics-app'),
     url(r'^(?P<app_name>[\w-]+)/deploys/$', views.ListDeploy.as_view(), name='app-deploys'),
     url(r'^(?P<app_name>[\w-]+)/deploys/(?P<deploy>[\s\w@\.-]+)/$',
