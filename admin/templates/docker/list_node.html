@@ -1,12 +1,14 @@
 {% extends "base.html" %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{{ STATIC_URL }}css/abyss.widget.css" />
-    <style>
-        .span4 {
-            height: 500px;
-        }
-    </style>
+<style>
+table td, table th {
+    width: 230px;
+    overflow: hidden;
+    display: inline-block;
+    white-space: nowrap;
+}
+</style>
 {% endblock %}
 
 {% block sidebar %}
@@ -20,29 +22,33 @@
 {% block content %}
 <div class="container-fluid">
     {% for key, nodes in pools.items %}
-    <div class="span4 {% if forloop.counter0|divisibleby:3 %}first{% endif %}">
-            <div class="widget">
-                <div class="title">
-                    <h4>{{ key }}</h4>
-                </div>
-                <table class="table">
-                    <tr>
-                        <th>Host</th>
-                        <th>Last success</th>
-                    </tr>
-                    {% for node in nodes %}
-                    <tr>
-                        <td>
-                            <a href="{% url 'list-container' node.Address %}" title="Containers List">
-                                {{ node.Address }}
-                            </a>
-                        </td>
-                        <td>{{ node.Metadata.LastSuccess|date:"Y/m/d H:i:s e" }}</td>
-                    </tr>
-                    {% endfor %}
-                </table>
-            </div>
+    <div class="row-fluid">
+        <div class="span12">
+            <h3>{{ key }}</h3>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Host</th>
+                    <th>Last success</th>
+                    <th>Status</th>
+                </tr>
+                <thead>
+                <tbody>
+                {% for node in nodes %}
+                <tr>
+                    <td>
+                        <a href="{% url 'list-container' node.Address %}" title="Containers List">
+                            {{ node.Address }}
+                        </a>
+                    </td>
+                    <td>{{ node.Metadata.LastSuccess|date:"Y/m/d H:i:s e" }}</td>
+                    <td>{{ node.Status }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
         </div>
+    </div>
     {% endfor %}
 </div>
 {% endblock %}
