@@ -42,7 +42,7 @@ healingKPI.lock();
 $.ajax({
     url: "/dashboard/healing_status",
     success: function(data) {
-        healingKPI.setValue(data.length);
+        healingKPI.setValue(data.healing);
         healingKPI.unlock();
     },
     error: function(jqXHR, textStatus, errorThrown) {

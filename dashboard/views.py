@@ -21,13 +21,16 @@ class HealingView(View):
         authorization = {"authorization": request.session.get("tsuru_token")}
         url = "{}/docker/healing".format(settings.TSURU_HOST)
         resp = requests.get(url, headers=authorization).json()
-        healings = []
+        healings = 0
         for healing in resp:
             end_time = healing['EndTime']
-            end_time = datetime.strptime(end_time, "%Y-%m-%dT%H:%M:%S.%f-03:00")
-            if (datetime.now() - end_time < timedelta(days=1)):
-                healings.append(healing)
-        return JsonResponse(healings, safe=False)
+            try:
+                end_time = datetime.strptime(end_time, "%Y-%m-%dT%H:%M:%S.%f-03:00")
+                if (datetime.now() - end_time < timedelta(days=1)):
+                    healings += 1
+            except ValueError:
+                pass
+        return JsonResponse({"healing": healings}, safe=False)
 
 
 class CloudStatusView(View):
