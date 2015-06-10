@@ -2,16 +2,22 @@
     <div class="navbar-inner">
         <ul class="nav">
             <li>
-                <a title="Deploys" href="{% url 'app-deploys' app.name %}">deploys</a>
+                <a title="resources" href="">resources</a>
             </li>
             <li>
-                <a title="Log" href="{% url 'app_log' app.name %}">log</a>
+                <a title="metrics" href="">metrics</a>
             </li>
             <li>
-                <a title="Teams" href="{% url 'app-teams' app.name %}">teams</a>
+                <a title="deploys" href="{% url 'app-deploys' app.name %}">deploys</a>
             </li>
             <li>
-                <a title="Settings" href="{% url 'detail-app' app.name %}">settings</a>
+                <a title="log" href="{% url 'app_log' app.name %}">log</a>
+            </li>
+            <li>
+                <a title="access" href="{% url 'app-teams' app.name %}">access</a>
+            </li>
+            <li>
+                <a title="settings" href="{% url 'detail-app' app.name %}">settings</a>
             </li>
         </ul>
     </div>

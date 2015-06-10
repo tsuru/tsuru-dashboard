@@ -14,8 +14,8 @@ urlpatterns = patterns(
         views.RemoveApp.as_view(), name='remove_app'),
     url(r'^(?P<app_name>[\w-]+)/log/$', views.AppLog.as_view(),
         name='app_log'),
-    url(r'^(?P<app_name>[\w-]+)/env/$', views.AppEnv.as_view(),
-        name='get-env'),
+    url(r'^(?P<app_name>[\w-]+)/settings/$', views.Settings.as_view(),
+        name='app-settings'),
     url(r'^(?P<app_name>[\w-]+)/teams/$',
         views.AppTeams.as_view(), name='app-teams'),
     url(r'^(?P<app_name>[\w-]+)/team/add/$',
@@ -31,4 +31,5 @@ urlpatterns = patterns(
         views.DeployInfo.as_view(), name='app-deploy'),
     url(r'^(?P<app_name>[\w-]+)/rollback/(?P<image>.+)/$',
         views.AppRollback.as_view(), name='app-rollback'),
+    url(r'^(?P<app_name>[\w-]+)/env/$', views.AppEnv.as_view(), name='get-env'),
 )

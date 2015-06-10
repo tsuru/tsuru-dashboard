@@ -1,21 +1,6 @@
-{% extends "base.html" %}
+{% extends "apps/base.html" %}
 
-{% block extra_css %}
-<link rel="stylesheet" href="{{ STATIC_URL }}css/abyss.widget.css" />
-<link rel="stylesheet" href="http://cdn.oesmith.co.uk/morris-0.5.1.css">
-{% endblock %}
-
-{% block sidebar %}
-{% include "sidebar.html" with active="apps" %}
-{% endblock %}
-
-{% block header %}
-{% include "apps/navbar.html" %}
-<h1>{{ app.name }}</h1>
-{% endblock %}
-
-{% block content %}
-<div class="container-fluid">
+{% block app-content %}
 	<div class="row-fluid">
 		<div class="span12">
 			<form method="GET">
@@ -70,8 +55,7 @@
 			</div>
 		</div>
 	</div>
-</div>
-{% endblock content %}
+{% endblock %}
 
 {% block extra_js %}
 <script src="{{ STATIC_URL }}js/apps/elasticsearch.jquery.min.js"></script>

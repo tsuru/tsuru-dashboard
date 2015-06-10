@@ -157,24 +157,7 @@
 		</div>
 	</div>
 </div>
-<div id="confirmation" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	<div class="modal-header">
-		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-		<h3 id="myModalLabel">Are you sure?</h3>
-	</div>
-	<div class="modal-body">
-		<p>with {{ app.name }} This action CANNOT be undone. This will delete the <strong>{{ app.name }}</strong></p>
-
-		<p>Please type in the name of your application to confirm.</p>
-		<input type="text" class="remove-confirmation" />
-	</div>
-	<div class="modal-footer">
-		<form method="get" action="{% url 'remove_app' app.name %}">
-			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-			<button class="btn btn-danger btn-remove" disabled="disabled">Delete app</button>
-		</form>
-	</div>
-{% endblock app-content %}
+{% endblock %}
 
 {% block extra_js %}
 <script src="{{ STATIC_URL }}js/apps/elasticsearch.jquery.min.js"></script>

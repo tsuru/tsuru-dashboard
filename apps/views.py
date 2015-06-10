@@ -453,3 +453,30 @@ class AppRollback(LoginRequiredView):
         if response.status_code == 200:
             return redirect(reverse('app-deploys', args=[app_name]))
         return HttpResponseServerError("NOT OK")
+
+
+class Settings(LoginRequiredMixin, TemplateView):
+    template_name = 'apps/settings.html'
+
+    @property
+    def authorization(self):
+        return {'authorization': self.request.session.get('tsuru_token')}
+
+    def get_envs(self, app_name):
+        url = "{}/apps/{}/env".format(settings.TSURU_HOST, app_name)
+        return requests.get(url, headers=self.authorization).json()
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(Settings, self).get_context_data(*args, **kwargs)
+        app_name = kwargs["app_name"]
+        token = self.request.session.get('tsuru_token')
+        url = '{}/apps/{}'.format(settings.TSURU_HOST, app_name)
+        headers = {
+            'content-type': 'application/json',
+            'Authorization': token,
+        }
+
+        context['app'] = requests.get(url, headers=headers).json()
+        context['app']['envs'] = self.get_envs(app_name)
+
+        return context
