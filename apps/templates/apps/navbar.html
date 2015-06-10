@@ -1,7 +1,18 @@
-
-<div class="btn-group pull-right">
-	<a class="btn" title="Deploys" href="{% url 'app-deploys' app.name %}">deploys</a>
-	<a class="btn" title="Log" href="{% url 'app_log' app.name %}">log</a>
-	<a class="btn" title="Teams" href="{% url 'app-teams' app.name %}">teams</a>
-	<a class="btn" title="Settings" href="{% url 'detail-app' app.name %}">settings</a>
+<div class="navbar">
+    <div class="navbar-inner">
+        <ul class="nav">
+            <li>
+                <a title="Deploys" href="{% url 'app-deploys' app.name %}">deploys</a>
+            </li>
+            <li>
+                <a title="Log" href="{% url 'app_log' app.name %}">log</a>
+            </li>
+            <li>
+                <a title="Teams" href="{% url 'app-teams' app.name %}">teams</a>
+            </li>
+            <li>
+                <a title="Settings" href="{% url 'detail-app' app.name %}">settings</a>
+            </li>
+        </ul>
+    </div>
 </div>

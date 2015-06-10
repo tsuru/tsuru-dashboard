@@ -1,16 +1,10 @@
-{% extends "base.html" %}
+{% extends "apps/base.html" %}
 
 {% block sidebar %}
 {% include "sidebar.html" with active="apps" %}
 {% endblock %}
 
-{% block header %}
-{% include "apps/navbar.html" %}
-<h1>Teams</h1>
-{% endblock %}
-
-{% block content %}
-<div class="container-fluid">
+{% block app-content %}
 	<div class="row-fluid">
 		<div class="span12 teams">
 			{% for team in app.teams %}
@@ -47,8 +41,7 @@
 			<button class="btn btn-danger btn-remove" disabled="disabled">Revoke Team</button>
 		</form>
 	</div>
-</div>
-{% endblock content %}
+{% endblock %}
 
 {% block extra_js %}
 <script src="{{ STATIC_URL }}js/confirmation.js"></script>

@@ -234,6 +234,7 @@ class AppAddTeam(LoginRequiredView):
     def get(self, request, app_name):
         context = {}
         context['app_name'] = app_name
+        context['app'] = {"name": app_name}
         context['form'] = AppAddTeamForm()
         context['teams'] = self._get_teams(request)
         return TemplateResponse(request, self.template, context=context)

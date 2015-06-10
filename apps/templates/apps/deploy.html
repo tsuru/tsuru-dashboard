@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "apps/base.html" %}
 {% load filters_deploys %}
 
 {% block extra_css %}
@@ -7,17 +7,7 @@
 <link rel="stylesheet" href="{{ STATIC_URL}}css/deploy-diff.css" />
 {% endblock %}
 
-{% block sidebar %}
-{% include "sidebar.html" with active="deploys" %}
-{% endblock %}
-
-{% block header %}
-{% include "apps/navbar.html" %}
-<h1>{{ app.name }}</h1>
-{% endblock %}
-
-{% block content %}
-<div class="container-fluid">
+{% block app-content %}
     <div class="row-fluid">
         <div class="span12">
             <div class="widget">
@@ -42,5 +32,4 @@
             </div>
         </div>
     </div>
-</div>
-{% endblock content %}
+{% endblock %}

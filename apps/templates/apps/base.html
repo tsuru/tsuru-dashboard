@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block sidebar %}
+{% include "sidebar.html" with active="apps" %}
+{% endblock %}
+
+{% block header %}
+<h1>{{ app.name }}</h1>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    {% include "apps/navbar.html" %}
+    {% block app-content %}{% endblock %}
+</div>
+{% endblock content %}
