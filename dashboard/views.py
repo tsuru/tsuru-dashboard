@@ -58,7 +58,7 @@ class DeploysView(View):
         url = "{}/deploys?limit=250".format(settings.TSURU_HOST)
         deploys = requests.get(url, headers=authorization).json()
         errored = 0
-        last_deploys = []
+        last_deploys = 0
         for deploy in deploys:
             timestamp = deploy['Timestamp']
             formated_timestamp = re.split("\.\d{0,5}", timestamp)
@@ -67,5 +67,5 @@ class DeploysView(View):
             if (datetime.now() - timestamp < timedelta(days=1)):
                 if deploy['Error']:
                     errored += 1
-                last_deploys.append(deploy)
+                last_deploys += 1
         return JsonResponse({"last_deploys": last_deploys, "errored": errored}, safe=False)

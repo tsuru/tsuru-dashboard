@@ -61,7 +61,7 @@ deployGauge.lock();
 $.ajax({
     url: "/dashboard/deploys",
     success: function(data) {
-        deployGauge.setLimits(0, data.last_deploys.length);
+        deployGauge.setLimits(0, data.last_deploys);
         deployGauge.setValue(data.errored);
         deployGauge.unlock();
     },
