@@ -43,24 +43,6 @@ class AppDetailTestCase(TestCase):
         self.assertIn("apps/details.html", self.response.template_name)
 
     @patch('requests.get')
-    def test_get_envs(self, get):
-        expected = [{"name": "DATABASE_HOST", "value": "localhost", "public": True}]
-        response_mock = Mock(status_code=200)
-        response_mock.json.return_value = expected
-        get.return_value = response_mock
-
-        request = RequestFactory().get("/")
-        request.session = {"tsuru_token": "admin"}
-
-        app_detail = AppDetail()
-        app_detail.request = request
-        envs = app_detail.get_envs("appname")
-
-        self.assertListEqual(envs, expected)
-        url = '{}/apps/appname/env'.format(settings.TSURU_HOST)
-        get.assert_called_with(url, headers={'authorization': 'admin'})
-
-    @patch('requests.get')
     def test_get_containers(self, get):
         expected = []
         response_mock = Mock(status_code=200)

@@ -137,10 +137,6 @@ class AppDetail(LoginRequiredMixin, TemplateView):
         tsuru_url = '{}/services/instances?app={}'.format(settings.TSURU_HOST, app_name)
         return requests.get(tsuru_url, headers=self.authorization).json()
 
-    def get_envs(self, app_name):
-        url = "{}/apps/{}/env".format(settings.TSURU_HOST, app_name)
-        return requests.get(url, headers=self.authorization).json()
-
     def get_containers(self, app_name):
         if not self.request.session.get("is_admin"):
             return []
@@ -178,7 +174,6 @@ class AppDetail(LoginRequiredMixin, TemplateView):
                 )
 
         context['app']["service_instances"] = service_instances
-        context['app']['envs'] = self.get_envs(app_name)
 
         for container in self.get_containers(app_name):
             for index, unit in enumerate(context['app']['units']):

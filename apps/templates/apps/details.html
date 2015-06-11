@@ -33,33 +33,30 @@
             </div>
         </div>
 	</div>
-    {% comment %}
-	{% if instance.name %}
+	{% if app.service_instances %}
 	<div class="row-fluid">
 		<div class="span12">
-			<div class="widget">
-				<div class="title">
-					<spam class="icon">
-						<i class="icon-signal"></i>
-					</spam>
-					<h5>Service Instances</h5>
-				</div>
-				<div class="content">
-					<ul class="no-style">
-						{% for instance in app.service_instances %}
-						<li>
-						<div class="row-fluid">
-							<div class="span3">
-								{{ instance.name }}
-							</div>
-						</div>
-						{% endfor %}
-					</ul>
-				</div>
-			</div>
-		</div>
+            <h3>Services</h3>
+            <div class="content">
+                <table class="table containers-app">
+                    <thead>
+                    <tr>
+                        <th>service</th>
+                        <th>name</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+					{% for instance in app.service_instances %}
+                    <tr>
+                        <td>{{ instance.servicename }}</td>
+                        <td>{{ instance.name }}</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
 	</div>
-	{% endif %}
-    {% endcomment %}
+    {% endif %}
 </div>
 {% endblock %}
