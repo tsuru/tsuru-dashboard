@@ -1,18 +1,10 @@
 # This is the official list of people who have contributed code to
 # tsuru-dashboard.
-# The AUTHORS file lists the copyright holders; this file lists people.
-# For example, Globo.com employees are listed here but not in AUTHORS,
-# because Globo.com holds the copyright.
-#
-# You can update this list using the following command:
-#
-#   % git shortlog -se | awk '{print $2 " " $3 " " $4}'
-#
-# Please keep this file sorted, and group users with multiple emails.
 
 Adriana Silva <adriana.silva@corp.globo.com>
 Andrews Medina <andrewsmedina@gmail.com>
 Cezar Sa Espinola
+Dan Hilton <daniel.hilton@gmail.com>
 Evandro Flores <eof@eof.com.br>
 Flavia Missi <flaviamissi@gmail.com>
 Francisco Souza <f@souza.cc> <fss@corp.globo.com>
