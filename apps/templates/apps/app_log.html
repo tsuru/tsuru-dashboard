@@ -1,5 +1,9 @@
 {% extends "apps/base.html" %}
 
+{% block navbar %}
+    {% include "apps/navbar.html" with active="log" %}
+{% endblock %}
+
 {% block app-content %}
 <div class="container-fluid">
 	<div class="row-fluid">

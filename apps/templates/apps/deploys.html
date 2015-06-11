@@ -5,6 +5,10 @@
 <link rel="stylesheet" href="{{ STATIC_URL }}css/deploys.css" />
 {% endblock %}
 
+{% block navbar %}
+    {% include "apps/navbar.html" with active="deploys" %}
+{% endblock %}
+
 {% block app-content %}
 	<div class="row-fluid">
 		<div class="span11">

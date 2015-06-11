@@ -10,7 +10,9 @@
 
 {% block content %}
 <div class="container-fluid">
-    {% include "apps/navbar.html" %}
+    {% block navbar %}
+        {% include "apps/navbar.html" with active="resources" %}
+    {% endblock %}
     {% block app-content %}{% endblock %}
 </div>
 {% endblock content %}

@@ -1,19 +1,19 @@
 <div class="navbar">
     <div class="navbar-inner">
         <ul class="nav">
-            <li>
+            <li{% if active == "resources" %} class="active"{% endif %}>
                 <a title="resources" href="{% url 'detail-app' app.name %}">resources</a>
             </li>
-            <li>
+            <li{% if active == "metrics" %} class="active"{% endif %}>
                 <a title="metrics" href="{% url 'app-metrics' app.name %}">metrics</a>
             </li>
-            <li>
+            <li{% if active == "deploys" %} class="active"{% endif %}>
                 <a title="deploys" href="{% url 'app-deploys' app.name %}">deploys</a>
             </li>
-            <li>
+            <li{% if active == "log" %} class="active"{% endif %}>
                 <a title="log" href="{% url 'app_log' app.name %}">log</a>
             </li>
-            <li>
+            <li{% if active == "settings" %} class="active"{% endif %}>
                 <a title="settings" href="{% url 'app-settings' app.name %}">settings</a>
             </li>
         </ul>

@@ -1,5 +1,9 @@
 {% extends "apps/base.html" %}
 
+{% block navbar %}
+    {% include "apps/navbar.html" with active="metrics" %}
+{% endblock %}
+
 {% block app-content %}
 	<div class="row-fluid">
 		<div class="span12">

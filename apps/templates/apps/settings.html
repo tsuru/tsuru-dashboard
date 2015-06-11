@@ -11,6 +11,9 @@ table td, table th {
 </style>
 {% endblock %}
 
+{% block navbar %}
+    {% include "apps/navbar.html" with active="settings" %}
+{% endblock %}
 
 {% block app-content %}
 	<div class="row-fluid">

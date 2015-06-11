@@ -6,6 +6,10 @@
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
 {% endblock %}
 
+{% block navbar %}
+    {% include "apps/navbar.html" with active="metrics" %}
+{% endblock %}
+
 {% block app-content %}
 	<div class="row-fluid metrics-container">
 		<div class="span12">
