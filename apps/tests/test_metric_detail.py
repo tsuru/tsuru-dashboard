@@ -31,7 +31,7 @@ class MetricDetailTest(TestCase):
         self.request = request
 
     def test_should_use_detail_template(self):
-        self.assertIn("apps/metrics.html", self.response.template_name)
+        self.assertIn("apps/metric_details.html", self.response.template_name)
 
     @patch('requests.get')
     def test_get_envs(self, get):
