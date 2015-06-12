@@ -23,17 +23,6 @@
 							{{ app.name }}
 						</a>
 					</td>
-					<td class="text-right-important">
-						<a class="btn" href="{% url 'app_log' app.name %}" title="Log">
-							<i class="icon-tasks"></i> logs
-						</a>
-						<a class="btn" href="{% url 'app-teams' app.name %}" title="Collaborators">
-							<i class="icon-user"></i> collaborators
-						</a>
-						<a class="btn" href="{% url 'detail-app' app.name %}" title="Settings">
-							<i class="icon-wrench"></i> settings
-						</a>
-					</td>
 				</tr>
 			{% endfor %}
 			</table>
