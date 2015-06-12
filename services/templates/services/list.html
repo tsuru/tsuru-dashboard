@@ -1,11 +1,5 @@
 {% extends "base.html" %}
 
-{% block extra_css %}
-<link rel="stylesheet" href="{{ STATIC_URL }}css/jquery.modal.css" />
-<link rel="stylesheet" href="{{ STATIC_URL }}css/abyss.widget.css" />
-<link rel="stylesheet" href="{{ STATIC_URL }}css/abyss.services.css" />
-{% endblock %}
-
 {% block sidebar %}
 {% include "sidebar.html" with active="services" %}
 {% endblock %}
@@ -17,32 +11,25 @@
 {% block content %}
 <div class="container-fluid">
     {% for service in services %}
-        <div class="span3 {% if forloop.counter0|divisibleby:4 %}first{%endif%}">
-            <div class="widget limited-list">
-                <div class="title">
-                    <h5>{{ service.service }}</h5>
-                    <a class="btn btn-primary btn-mini pull-right" href="{% url 'service-add' service.service %}">
+    <div class="row-fluid">
+        <div class="span12">
+            <h3>{{ service.service }}
+                <a class="btn btn-primary btn-mini pull-right" href="{% url 'service-add' service.service %}">
                         <span class="icon"><i class="icon-white icon-plus"></i>
-                    </a>
-                </div>
-                <ul class="no-style">
-                    {% for instance in service.instances %}
-                        <li>
-                            <a href="{% url 'service-detail' instance %}">{{ instance }}</a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
+                </a>
+            </h3>
+            <table class="table">
+                {% for instance in service.instances %}
+                <tr>
+                    <td>
+                        <a href="{% url 'service-detail' instance %}">{{ instance }}</a>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
         </div>
+    </div>
     {% endfor %}
 </div>
-<div class="modal">
-    <a href="" rel="modal:close"></a>
-    <div class='target'></div>
-</div>
-{% endblock %}
-
-{% block extra_js %}
-    <script src="{{ STATIC_URL }}js/jquery.modal.js"></script>
-    <script src="{{ STATIC_URL }}js/service-modal.js"></script>
 {% endblock %}
