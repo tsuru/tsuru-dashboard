@@ -106,19 +106,3 @@ class CreateAppViewTest(TestCase):
             data='{"platform": "django", "name": "myepe"}',
             headers={'authorization': request.session['tsuru_token']}
         )
-
-    @patch('requests.get')
-    @patch('requests.post')
-    def test_invalid_post_includes_expected_message_in_ctx(self, post, get):
-        content = u"""[{"Name":"python"},{"Name":"ruby"},{"Name":"static"}]"""
-        m = Mock(status_code=200, content=content)
-        m.json.return_value = json.loads(content)
-        get.return_value = m
-        request = RequestFactory().post(
-            "/",
-            {"name": "myepe", "platform": "python"})
-        request.session = {}
-        post.return_value = Mock(status_code=200)
-        response = CreateApp().post(request)
-        self.assertEqual("App was successfully created",
-                         response.context_data.get('message'))

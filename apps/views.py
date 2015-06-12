@@ -7,6 +7,7 @@ from django.http import HttpResponse, HttpResponseServerError
 from django.shortcuts import redirect
 from django.core.urlresolvers import reverse
 from django.views.generic import TemplateView
+from django.contrib import messages
 
 from pygments import highlight
 from pygments.lexers import DiffLexer
@@ -186,39 +187,42 @@ class AppDetail(LoginRequiredMixin, TemplateView):
 
 
 class CreateApp(LoginRequiredView):
+    template_name = 'apps/create.html'
+
+    def render(self, request, context):
+        return TemplateResponse(request, self.template_name, context)
+
     def get(self, request):
         context = {
             "app_form": AppForm(),
             "platforms": self._get_platforms(request),
         }
-        return TemplateResponse(request, "apps/create.html", context)
+        return self.render(request, context)
 
     def post(self, request):
         context = {}
         form = AppForm(request.POST)
         if form.is_valid():
-            authorization = {'authorization':
-                             request.session.get('tsuru_token')}
+            authorization = {'authorization': request.session.get('tsuru_token')}
+
             response = requests.post(
                 '%s/apps' % settings.TSURU_HOST,
                 data=json.dumps(form.data),
                 headers=authorization
             )
             if response.status_code == 200:
-                context['message'] = "App was successfully created"
-                context['platforms'] = self._get_platforms(request)
-            else:
-                context['errors'] = response.content
-                context['platforms'] = self._get_platforms(request)
-        else:
-            context['platforms'] = self._get_platforms(request)
+                messages.success(request, u"App was successfully created", fail_silently=True)
+                return redirect(reverse('list-app'))
+
+            context['errors'] = response.content
+
+        context['platforms'] = self._get_platforms(request)
         context['app_form'] = form
-        return TemplateResponse(request, 'apps/create.html', context)
+        return self.render(request, context)
 
     def _get_platforms(self, request):
         authorization = {"authorization": request.session.get("tsuru_token")}
-        response = requests.get("%s/platforms" % settings.TSURU_HOST,
-                                headers=authorization)
+        response = requests.get("%s/platforms" % settings.TSURU_HOST, headers=authorization)
         platforms = response.json()
         return [p["Name"] for p in platforms]
 
