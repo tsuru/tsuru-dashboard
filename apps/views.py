@@ -205,11 +205,15 @@ class CreateApp(LoginRequiredView):
         if form.is_valid():
             authorization = {'authorization': request.session.get('tsuru_token')}
 
-            response = requests.post(
-                '%s/apps' % settings.TSURU_HOST,
-                data=json.dumps(form.data),
-                headers=authorization
-            )
+            data = form.data.dict()
+            if data.get("plan"):
+                data["plan"] = {"name": data["plan"]}
+
+            data = json.dumps(data)
+
+            url = '{}/apps'.format(settings.TSURU_HOST)
+            response = requests.post(url, data=data, headers=authorization)
+
             if response.status_code == 200:
                 messages.success(request, u"App was successfully created", fail_silently=True)
                 return redirect(reverse('list-app'))

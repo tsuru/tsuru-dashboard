@@ -90,19 +90,22 @@ class CreateAppViewTest(TestCase):
     @patch('requests.get')
     @patch('requests.post')
     def test_post_should_send_to_tsuru_with_args_expected(self, post, get):
-        content = u"""[{"Name":"python"},{"Name":"ruby"},{"Name":"static"}]"""
+        content = u'[{"Name":"python"},{"Name":"ruby"},{"Name":"static"}]'
         m = Mock(status_code=200, content=content)
         m.json.return_value = json.loads(content)
         get.return_value = m
         post.return_value = Mock(status_code=200)
-        request = RequestFactory().post(
-            "/",
-            {"name": "myepe", "platform": "django"})
+
+        data = {"name": "myepe", "platform": "django", "plan": "basic"}
+        request = RequestFactory().post("/", data)
         request.session = {'tsuru_token': 'tokentest'}
+
         CreateApp().post(request)
+
         self.assertEqual(1, post.call_count)
+        url = '{}/apps'.format(settings.TSURU_HOST)
         post.assert_called_with(
-            '%s/apps' % settings.TSURU_HOST,
-            data='{"platform": "django", "name": "myepe"}',
+            url,
+            data='{"platform": "django", "name": "myepe", "plan": {"name": "basic"}}',
             headers={'authorization': request.session['tsuru_token']}
         )
