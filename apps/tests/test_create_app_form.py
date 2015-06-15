@@ -8,8 +8,17 @@ class AppFormTest(TestCase):
     def test_forms_should_have_AppForm(self):
         self.assertTrue(hasattr(forms, "AppForm"))
 
-    def test_AppForm_should_have_name_field(self):
-        self.assertIn("name", forms.AppForm.base_fields)
+    def test_fields(self):
+        fields = ["name", "platform", "team", "pool", "plan"]
+        for field_name in fields:
+            self.assertIn(field_name, forms.AppForm.base_fields)
 
-    def test_AppForm_should_have_platform_field(self):
-        self.assertIn("platform", forms.AppForm.base_fields)
+    def test_required_false_fields(self):
+        fields = ["team", "pool", "plan"]
+        for field_name in fields:
+            self.assertFalse(forms.AppForm.base_fields[field_name].required)
+
+    def test_required_fields(self):
+        fields = ["name", "platform"]
+        for field_name in fields:
+            self.assertTrue(forms.AppForm.base_fields[field_name].required)
