@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block header %}
-<h1>Create App</h1>
+<h1>New app</h1>
 {% endblock %}
 
 {% block content %}
@@ -35,7 +35,22 @@
 						<input name="{{ app_form.platform.name }}" id="autocomplete" value="{{ app_form.platform.value|default:"" }}">
 						<span class="help-inline">{{ app_form.errors.platform }}</span>
 					</div>
-					<button class="btn primary" type="submit">Add</button>
+					<div class="clearfix control-group{% if app_form.errors.team %} error{% endif %}">
+						<label for="{{ app_form.team.name }}">Team</label>
+						<input type="text" class="input-xlarge" name="{{ app_form.team.name }}" id="{{ app_form.team.name }}" value="{{ app_form.team.value|default:"" }}">
+						<span class="help-inline">{{ app_form.errors.team }}</span>
+					</div>
+					<div class="clearfix control-group{% if app_form.errors.plan %} error{% endif %}">
+						<label for="{{ app_form.plan.name }}">Plan</label>
+						<input type="text" class="input-xlarge" name="{{ app_form.plan.name }}" id="{{ app_form.plan.name }}" value="{{ app_form.plan.value|default:"" }}">
+						<span class="help-inline">{{ app_form.errors.plan }}</span>
+					</div>
+					<div class="clearfix control-group{% if app_form.errors.pool %} error{% endif %}">
+						<label for="{{ app_form.pool.name }}">Pool</label>
+						<input type="text" class="input-xlarge" name="{{ app_form.pool.name }}" id="{{ app_form.pool.name }}" value="{{ app_form.pool.value|default:"" }}">
+						<span class="help-inline">{{ app_form.errors.pool }}</span>
+					</div>
+					<button class="btn primary" type="submit">Create app</button>
 				</fieldset>
 			</form>
 		</div>
