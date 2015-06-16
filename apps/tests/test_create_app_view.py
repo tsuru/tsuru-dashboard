@@ -22,6 +22,7 @@ class CreateAppViewTest(TestCase):
         request.session = {}
         view = CreateApp()
         view.plans = lambda r: ("small", [("small", "small")])
+        view.teams = lambda r: []
         response = view.get(request)
         self.assertEqual("apps/create.html", response.template_name)
 
@@ -36,6 +37,7 @@ class CreateAppViewTest(TestCase):
 
         view = CreateApp()
         view.plans = lambda r: ("basic", [("basic", "basic")])
+        view.teams = lambda r: []
         response = view.get(request)
 
         app_form = response.context_data['app_form']
@@ -53,9 +55,12 @@ class CreateAppViewTest(TestCase):
             {"name": "myepe", "platform": "python"})
         request.session = {}
         post.return_value = Mock(status_code=500, content='Error')
+
         view = CreateApp()
         view.plans = lambda r: ("small", [("small", "small")])
+        view.teams = lambda r: []
         response = view.post(request)
+
         self.assertEqual('Error', response.context_data.get("errors"))
 
     @patch('requests.get')
@@ -66,9 +71,12 @@ class CreateAppViewTest(TestCase):
         get.return_value = m
         request = RequestFactory().post("/", {"name": ""})
         request.session = {}
+
         view = CreateApp()
         view.plans = lambda r: ("small", [("small", "small")])
+        view.teams = lambda r: []
         response = view.post(request)
+
         form = response.context_data.get('app_form')
         self.assertIn('name', form.errors)
         self.assertIn(u'This field is required.', form.errors.get('name'))

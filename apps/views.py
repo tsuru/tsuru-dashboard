@@ -198,6 +198,7 @@ class CreateApp(LoginRequiredView):
         form.fields['plan'].choices = plans
         form.fields['plan'].initial = default
         form.fields['platform'].choices = self.platforms(request)
+        form.fields['team'].choices = self.teams(request)
         context = {
             "app_form": form,
         }
@@ -209,6 +210,7 @@ class CreateApp(LoginRequiredView):
         default, plans = self.plans(request)
         form.fields['plan'].choices = plans
         form.fields['platform'].choices = self.platforms(request)
+        form.fields['team'].choices = self.teams(request)
         if form.is_valid():
             authorization = {'authorization': request.session.get('tsuru_token')}
 
@@ -230,6 +232,13 @@ class CreateApp(LoginRequiredView):
         form.fields['plan'].initial = default
         context['app_form'] = form
         return self.render(request, context)
+
+    def teams(self, request):
+        authorization = {"authorization": request.session.get("tsuru_token")}
+        url = "{}/teams".format(settings.TSURU_HOST)
+        response = requests.get(url, headers=authorization)
+        teams = response.json()
+        return [(t["name"], t["name"]) for t in teams]
 
     def platforms(self, request):
         authorization = {"authorization": request.session.get("tsuru_token")}

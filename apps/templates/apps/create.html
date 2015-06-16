@@ -37,7 +37,7 @@
 					</div>
 					<div class="clearfix control-group{% if app_form.errors.team %} error{% endif %}">
 						<label for="{{ app_form.team.name }}">Team</label>
-						<input type="text" class="input-xlarge" name="{{ app_form.team.name }}" id="{{ app_form.team.name }}" value="{{ app_form.team.value|default:"" }}">
+                        {{ app_form.team}}
 						<span class="help-inline">{{ app_form.errors.team }}</span>
 					</div>
 					<div class="clearfix control-group{% if app_form.errors.plan %} error{% endif %}">
