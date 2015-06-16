@@ -4,7 +4,7 @@ from django import forms
 class AppForm(forms.Form):
     name = forms.CharField(max_length=60)
     platform = forms.CharField(max_length=60)
-    plan = forms.CharField(max_length=60, required=False)
+    plan = forms.ChoiceField(required=False)
     team = forms.CharField(max_length=60, required=False)
     pool = forms.CharField(max_length=60, required=False)
 

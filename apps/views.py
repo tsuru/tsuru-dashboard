@@ -193,8 +193,12 @@ class CreateApp(LoginRequiredView):
         return TemplateResponse(request, self.template_name, context)
 
     def get(self, request):
+        form = AppForm()
+        default, plans = self.plans(request)
+        form.fields['plan'].choices = plans
+        form.fields['plan'].initial = default
         context = {
-            "app_form": AppForm(),
+            "app_form": form,
             "platforms": self._get_platforms(request),
         }
         return self.render(request, context)
@@ -202,6 +206,8 @@ class CreateApp(LoginRequiredView):
     def post(self, request):
         context = {}
         form = AppForm(request.POST)
+        default, plans = self.plans(request)
+        form.fields['plan'].choices = plans
         if form.is_valid():
             authorization = {'authorization': request.session.get('tsuru_token')}
 
@@ -221,6 +227,7 @@ class CreateApp(LoginRequiredView):
             context['errors'] = response.content
 
         context['platforms'] = self._get_platforms(request)
+        form.fields['plan'].initial = default
         context['app_form'] = form
         return self.render(request, context)
 
@@ -229,6 +236,19 @@ class CreateApp(LoginRequiredView):
         response = requests.get("%s/platforms" % settings.TSURU_HOST, headers=authorization)
         platforms = response.json()
         return [p["Name"] for p in platforms]
+
+    def plans(self, request):
+        authorization = {"authorization": request.session.get("tsuru_token")}
+        url = "{}/plans".format(settings.TSURU_HOST)
+        response = requests.get(url, headers=authorization)
+        plans = response.json()
+        plan_list = []
+        default = ""
+        for p in plans:
+            if p.get("default"):
+                default = p["name"]
+            plan_list.append((p["name"], p["name"]))
+        return default, plan_list
 
 
 class AppAddTeam(LoginRequiredView):

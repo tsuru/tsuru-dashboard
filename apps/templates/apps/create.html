@@ -42,7 +42,7 @@
 					</div>
 					<div class="clearfix control-group{% if app_form.errors.plan %} error{% endif %}">
 						<label for="{{ app_form.plan.name }}">Plan</label>
-						<input type="text" class="input-xlarge" name="{{ app_form.plan.name }}" id="{{ app_form.plan.name }}" value="{{ app_form.plan.value|default:"" }}">
+                        {{ app_form.plan }}
 						<span class="help-inline">{{ app_form.errors.plan }}</span>
 					</div>
 					<div class="clearfix control-group{% if app_form.errors.pool %} error{% endif %}">

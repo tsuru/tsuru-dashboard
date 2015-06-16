@@ -20,7 +20,9 @@ class CreateAppViewTest(TestCase):
         get.return_value = m
         request = RequestFactory().get("/")
         request.session = {}
-        response = CreateApp().get(request)
+        view = CreateApp()
+        view.plans = lambda r: ("small", [("small", "small")])
+        response = view.get(request)
         self.assertEqual("apps/create.html", response.template_name)
 
     @patch('requests.get')
@@ -31,7 +33,11 @@ class CreateAppViewTest(TestCase):
         get.return_value = m
         request = RequestFactory().get("/")
         request.session = {}
-        response = CreateApp().get(request)
+
+        view = CreateApp()
+        view.plans = lambda r: ("basic", [("basic", "basic")])
+        response = view.get(request)
+
         app_form = response.context_data['app_form']
         self.assertIsInstance(app_form, forms.AppForm)
 
@@ -43,7 +49,11 @@ class CreateAppViewTest(TestCase):
         get.return_value = m
         request = RequestFactory().get("/")
         request.session = {}
-        response = CreateApp().get(request)
+
+        view = CreateApp()
+        view.plans = lambda r: ("basic", [("basic", "basic")])
+        response = view.get(request)
+
         platforms = response.context_data["platforms"]
         self.assertEqual(["python", "ruby", "static"], platforms)
 
@@ -59,7 +69,9 @@ class CreateAppViewTest(TestCase):
             {"name": "myepe", "platform": "python"})
         request.session = {}
         post.return_value = Mock(status_code=500, content='Error')
-        response = CreateApp().post(request)
+        view = CreateApp()
+        view.plans = lambda r: ("small", [("small", "small")])
+        response = view.post(request)
         self.assertEqual('Error', response.context_data.get("errors"))
 
     @patch('requests.get')
@@ -70,7 +82,9 @@ class CreateAppViewTest(TestCase):
         get.return_value = m
         request = RequestFactory().post("/", {"name": ""})
         request.session = {}
-        response = CreateApp().post(request)
+        view = CreateApp()
+        view.plans = lambda r: ("small", [("small", "small")])
+        response = view.post(request)
         form = response.context_data.get('app_form')
         self.assertIn('name', form.errors)
         self.assertIn(u'This field is required.', form.errors.get('name'))
@@ -83,7 +97,11 @@ class CreateAppViewTest(TestCase):
         get.return_value = m
         request = RequestFactory().post("/", {"name": ""})
         request.session = {}
-        response = CreateApp().post(request)
+
+        view = CreateApp()
+        view.plans = lambda r: ("basic", [("basic", "basic")])
+        response = view.post(request)
+
         platforms = response.context_data.get('platforms')
         self.assertEqual(["python", "ruby", "static"], platforms)
 
@@ -100,7 +118,9 @@ class CreateAppViewTest(TestCase):
         request = RequestFactory().post("/", data)
         request.session = {'tsuru_token': 'tokentest'}
 
-        CreateApp().post(request)
+        view = CreateApp()
+        view.plans = lambda r: ("basic", [("basic", "basic")])
+        view.post(request)
 
         self.assertEqual(1, post.call_count)
         url = '{}/apps'.format(settings.TSURU_HOST)
