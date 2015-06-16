@@ -42,22 +42,6 @@ class CreateAppViewTest(TestCase):
         self.assertIsInstance(app_form, forms.AppForm)
 
     @patch('requests.get')
-    def test_platform_list_should_be_in_context(self, get):
-        content = u"""[{"Name":"python"},{"Name":"ruby"},{"Name":"static"}]"""
-        m = Mock(status_code=200, content=content)
-        m.json.return_value = json.loads(content)
-        get.return_value = m
-        request = RequestFactory().get("/")
-        request.session = {}
-
-        view = CreateApp()
-        view.plans = lambda r: ("basic", [("basic", "basic")])
-        response = view.get(request)
-
-        platforms = response.context_data["platforms"]
-        self.assertEqual(["python", "ruby", "static"], platforms)
-
-    @patch('requests.get')
     @patch('requests.post')
     def test_post_with_invalid_name_should_return_500(self, post, get):
         content = u"""[{"Name":"python"},{"Name":"ruby"},{"Name":"static"}]"""
@@ -90,28 +74,8 @@ class CreateAppViewTest(TestCase):
         self.assertIn(u'This field is required.', form.errors.get('name'))
 
     @patch('requests.get')
-    def test_post_failure_should_include_platforms(self, get):
-        content = u"""[{"Name":"python"},{"Name":"ruby"},{"Name":"static"}]"""
-        m = Mock(status_code=200, content=content)
-        m.json.return_value = json.loads(content)
-        get.return_value = m
-        request = RequestFactory().post("/", {"name": ""})
-        request.session = {}
-
-        view = CreateApp()
-        view.plans = lambda r: ("basic", [("basic", "basic")])
-        response = view.post(request)
-
-        platforms = response.context_data.get('platforms')
-        self.assertEqual(["python", "ruby", "static"], platforms)
-
-    @patch('requests.get')
     @patch('requests.post')
     def test_post_should_send_to_tsuru_with_args_expected(self, post, get):
-        content = u'[{"Name":"python"},{"Name":"ruby"},{"Name":"static"}]'
-        m = Mock(status_code=200, content=content)
-        m.json.return_value = json.loads(content)
-        get.return_value = m
         post.return_value = Mock(status_code=200)
 
         data = {"name": "myepe", "platform": "django", "plan": "basic"}
@@ -120,6 +84,7 @@ class CreateAppViewTest(TestCase):
 
         view = CreateApp()
         view.plans = lambda r: ("basic", [("basic", "basic")])
+        view.platforms = lambda r: [("django", "django")]
         view.post(request)
 
         self.assertEqual(1, post.call_count)
