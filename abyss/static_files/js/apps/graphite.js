@@ -90,7 +90,7 @@
 	}
 
 	var graphitePrefix = function(opts) {
-		var graphitePrefix = opts["envs"]["GRAPHITE_PREFIX"] || "statsite";
+		var graphitePrefix = opts["envs"]["GRAPHITE_PREFIX"] || "stats.gauges";
 		return graphitePrefix + ".tsuru." + opts["appName"];
 	}
 
