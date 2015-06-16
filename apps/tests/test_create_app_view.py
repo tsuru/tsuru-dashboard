@@ -20,10 +20,13 @@ class CreateAppViewTest(TestCase):
         get.return_value = m
         request = RequestFactory().get("/")
         request.session = {}
+
         view = CreateApp()
         view.plans = lambda r: ("small", [("small", "small")])
         view.teams = lambda r: []
+        view.pools = lambda r: []
         response = view.get(request)
+
         self.assertEqual("apps/create.html", response.template_name)
 
     @patch('requests.get')
@@ -38,6 +41,7 @@ class CreateAppViewTest(TestCase):
         view = CreateApp()
         view.plans = lambda r: ("basic", [("basic", "basic")])
         view.teams = lambda r: []
+        view.pools = lambda r: []
         response = view.get(request)
 
         app_form = response.context_data['app_form']
@@ -59,6 +63,7 @@ class CreateAppViewTest(TestCase):
         view = CreateApp()
         view.plans = lambda r: ("small", [("small", "small")])
         view.teams = lambda r: []
+        view.pools = lambda r: []
         response = view.post(request)
 
         self.assertEqual('Error', response.context_data.get("errors"))
@@ -75,6 +80,7 @@ class CreateAppViewTest(TestCase):
         view = CreateApp()
         view.plans = lambda r: ("small", [("small", "small")])
         view.teams = lambda r: []
+        view.pools = lambda r: []
         response = view.post(request)
 
         form = response.context_data.get('app_form')

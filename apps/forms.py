@@ -6,7 +6,7 @@ class AppForm(forms.Form):
     platform = forms.ChoiceField()
     plan = forms.ChoiceField(required=False)
     team = forms.ChoiceField(required=False)
-    pool = forms.CharField(max_length=60, required=False)
+    pool = forms.ChoiceField(required=False)
 
 
 class AppAddTeamForm(forms.Form):

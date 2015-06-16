@@ -199,6 +199,7 @@ class CreateApp(LoginRequiredView):
         form.fields['plan'].initial = default
         form.fields['platform'].choices = self.platforms(request)
         form.fields['team'].choices = self.teams(request)
+        form.fields['pool'].choices = self.pools(request)
         context = {
             "app_form": form,
         }
@@ -211,6 +212,7 @@ class CreateApp(LoginRequiredView):
         form.fields['plan'].choices = plans
         form.fields['platform'].choices = self.platforms(request)
         form.fields['team'].choices = self.teams(request)
+        form.fields['pool'].choices = self.pools(request)
         if form.is_valid():
             authorization = {'authorization': request.session.get('tsuru_token')}
 
@@ -232,6 +234,16 @@ class CreateApp(LoginRequiredView):
         form.fields['plan'].initial = default
         context['app_form'] = form
         return self.render(request, context)
+
+    def pools(self, request):
+        authorization = {"authorization": request.session.get("tsuru_token")}
+        url = "{}/pools".format(settings.TSURU_HOST)
+        response = requests.get(url, headers=authorization)
+        pools = set()
+        for team_list in response.json():
+            for pool in team_list["Pools"]:
+                pools.add(pool)
+        return [(p, p) for p in pools]
 
     def teams(self, request):
         authorization = {"authorization": request.session.get("tsuru_token")}
