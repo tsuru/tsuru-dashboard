@@ -198,7 +198,7 @@ class CreateApp(LoginRequiredView):
         form.fields['plan'].choices = plans
         form.fields['plan'].initial = default
         form.fields['platform'].choices = self.platforms(request)
-        form.fields['team'].choices = self.teams(request)
+        form.fields['teamOwner'].choices = self.teams(request)
         form.fields['pool'].choices = self.pools(request)
         context = {
             "app_form": form,
@@ -211,7 +211,7 @@ class CreateApp(LoginRequiredView):
         default, plans = self.plans(request)
         form.fields['plan'].choices = plans
         form.fields['platform'].choices = self.platforms(request)
-        form.fields['team'].choices = self.teams(request)
+        form.fields['teamOwner'].choices = self.teams(request)
         form.fields['pool'].choices = self.pools(request)
         if form.is_valid():
             authorization = {'authorization': request.session.get('tsuru_token')}
@@ -221,6 +221,7 @@ class CreateApp(LoginRequiredView):
                 data["plan"] = {"name": data["plan"]}
 
             data = json.dumps(data)
+            print data
 
             url = '{}/apps'.format(settings.TSURU_HOST)
             response = requests.post(url, data=data, headers=authorization)
@@ -243,27 +244,33 @@ class CreateApp(LoginRequiredView):
         for team_list in response.json():
             for pool in team_list["Pools"]:
                 pools.add(pool)
-        return [(p, p) for p in pools]
+        result = [("", "")]
+        result.extend([(p, p) for p in pools])
+        return result
 
     def teams(self, request):
         authorization = {"authorization": request.session.get("tsuru_token")}
         url = "{}/teams".format(settings.TSURU_HOST)
         response = requests.get(url, headers=authorization)
         teams = response.json()
-        return [(t["name"], t["name"]) for t in teams]
+        result = [("", "")]
+        result.extend([(t["name"], t["name"]) for t in teams])
+        return result
 
     def platforms(self, request):
         authorization = {"authorization": request.session.get("tsuru_token")}
         response = requests.get("%s/platforms" % settings.TSURU_HOST, headers=authorization)
         platforms = response.json()
-        return [(p["Name"], p["Name"]) for p in platforms]
+        result = [("", "")]
+        result.extend([(p["Name"], p["Name"]) for p in platforms])
+        return result
 
     def plans(self, request):
         authorization = {"authorization": request.session.get("tsuru_token")}
         url = "{}/plans".format(settings.TSURU_HOST)
         response = requests.get(url, headers=authorization)
         plans = response.json()
-        plan_list = []
+        plan_list = [("", "")]
         default = ""
         for p in plans:
             if p.get("default"):

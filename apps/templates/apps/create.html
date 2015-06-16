@@ -35,10 +35,10 @@
                         {{ app_form.platform }}
 						<span class="help-inline">{{ app_form.errors.platform }}</span>
 					</div>
-					<div class="clearfix control-group{% if app_form.errors.team %} error{% endif %}">
-						<label for="{{ app_form.team.name }}">Team</label>
-                        {{ app_form.team}}
-						<span class="help-inline">{{ app_form.errors.team }}</span>
+					<div class="clearfix control-group{% if app_form.errors.teamOwner %} error{% endif %}">
+						<label for="{{ app_form.teamOwner.name }}">Team</label>
+                        {{ app_form.teamOwner }}
+						<span class="help-inline">{{ app_form.errors.teamOwner }}</span>
 					</div>
 					<div class="clearfix control-group{% if app_form.errors.plan %} error{% endif %}">
 						<label for="{{ app_form.plan.name }}">Plan</label>

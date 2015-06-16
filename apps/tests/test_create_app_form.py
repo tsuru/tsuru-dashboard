@@ -9,12 +9,12 @@ class AppFormTest(TestCase):
         self.assertTrue(hasattr(forms, "AppForm"))
 
     def test_fields(self):
-        fields = ["name", "platform", "team", "pool", "plan"]
+        fields = ["name", "platform", "teamOwner", "pool", "plan"]
         for field_name in fields:
             self.assertIn(field_name, forms.AppForm.base_fields)
 
     def test_required_false_fields(self):
-        fields = ["team", "pool", "plan"]
+        fields = ["teamOwner", "pool", "plan"]
         for field_name in fields:
             self.assertFalse(forms.AppForm.base_fields[field_name].required)
 
