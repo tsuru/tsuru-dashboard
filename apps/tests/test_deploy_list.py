@@ -39,3 +39,20 @@ class ListDeployViewTest(TestCase):
         url = '{}/deploys?app=appname&skip=0&limit=20'.format(settings.TSURU_HOST)
         headers = {'authorization': 'admin'}
         get.assert_called_with(url, headers=headers)
+
+    @patch('requests.get')
+    @patch("auth.views.token_is_valid")
+    def test_empty_list(self, token_is_valid, get):
+        response_mock = Mock(status_code=200)
+        response_mock.json.return_value = None
+        get.return_value = response_mock
+        token_is_valid.return_value = True
+
+        request = RequestFactory().get("/")
+        request.session = {"tsuru_token": "admin"}
+
+        ListDeploy.as_view()(request, app_name="appname")
+
+        url = '{}/deploys?app=appname&skip=0&limit=20'.format(settings.TSURU_HOST)
+        headers = {'authorization': 'admin'}
+        get.assert_called_with(url, headers=headers)

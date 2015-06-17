@@ -71,7 +71,7 @@ class ListDeploy(LoginRequiredView):
 
         deploys = []
         if response.status_code != 204:
-            deploys = response.json()
+            deploys = response.json() or []
 
         context = {}
         context['deploys'] = deploys
