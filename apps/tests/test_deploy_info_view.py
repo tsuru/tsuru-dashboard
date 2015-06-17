@@ -59,7 +59,7 @@ class InfoViewTest(TestCase):
             deploy="53e143cb874ccb1f68000001",
             app_name="app_name",
         )
-        data["Diff"] = u"""<div class="highlight"><pre>\n</pre></div>\n"""
+        data["Diff"] = None
         self.assertEqual("apps/deploy.html", response.template_name[0])
         self.assertDictEqual(data, response.context_data['deploy'])
         self.assertIn('app', response.context_data.keys())

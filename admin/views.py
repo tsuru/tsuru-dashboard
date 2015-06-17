@@ -154,9 +154,15 @@ class DeployInfo(LoginRequiredView):
         url = "{0}/deploys/{1}".format(settings.TSURU_HOST, deploy_id)
         response = requests.get(url, headers=headers)
         context = {"deploy": response.json()}
-        format = HtmlFormatter()
-        diff_output = highlight(context["deploy"].get("Diff", ""), DiffLexer(), format)
-        context["deploy"]["Diff"] = diff_output
+
+        diff = context["deploy"].get("Diff")
+        if diff and diff != u'The deployment must have at least two commits for the diff.':
+            format = HtmlFormatter()
+            diff = highlight(diff, DiffLexer(), format)
+        else:
+            diff = None
+
+        context["deploy"]["Diff"] = diff
         return TemplateResponse(request, "deploys/deploy_details.html", context)
 
 

@@ -32,10 +32,14 @@ class DeployInfo(LoginRequiredMixin, TemplateView):
         response = requests.get(url, headers=self.authorization)
         context["deploy"] = response.json()
 
-        format = HtmlFormatter()
-        diff = context["deploy"].get("Diff", "")
-        diff_output = highlight(diff, DiffLexer(), format)
-        context["deploy"]["Diff"] = diff_output
+        diff = context["deploy"].get("Diff")
+        if diff and diff != u'The deployment must have at least two commits for the diff.':
+            format = HtmlFormatter()
+            diff = highlight(diff, DiffLexer(), format)
+        else:
+            diff = None
+
+        context["deploy"]["Diff"] = diff
 
         class App(object):
             def __init__(self, name):
@@ -225,7 +229,6 @@ class CreateApp(LoginRequiredView):
                 data["plan"] = {"name": data["plan"]}
 
             data = json.dumps(data)
-            print data
 
             url = '{}/apps'.format(settings.TSURU_HOST)
             response = requests.post(url, data=data, headers=authorization)
