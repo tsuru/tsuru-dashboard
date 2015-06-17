@@ -1,5 +1,6 @@
 from django.test import TestCase
 from django.test.client import RequestFactory
+from django.http import Http404
 from django.conf import settings
 
 from apps.views import AppDetail
@@ -78,3 +79,18 @@ class AppDetailTestCase(TestCase):
         get.assert_called_with(
             '{0}/services/instances?app=appname'.format(settings.TSURU_HOST),
             headers={'authorization': self.request.session.get('tsuru_token')})
+
+    @patch("requests.get")
+    @patch("auth.views.token_is_valid")
+    def test_not_found(self, token_is_valid, requests_mock):
+        token_is_valid.return_value = True
+        request = RequestFactory().get("/")
+        request.session = {"tsuru_token": "admin"}
+        requests_mock.return_value = Mock(status_code=404)
+
+        service_instances_mock = Mock()
+        service_instances_mock.return_value = [{"service": "mongodb", "instances": ["mymongo"]}]
+        AppDetail.service_instances = service_instances_mock
+
+        with self.assertRaises(Http404):
+            AppDetail.as_view()(request, app_name="app1")

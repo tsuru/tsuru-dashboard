@@ -3,7 +3,7 @@ import requests
 
 from django.template.response import TemplateResponse
 from django.conf import settings
-from django.http import HttpResponse, HttpResponseServerError
+from django.http import HttpResponse, HttpResponseServerError, Http404
 from django.shortcuts import redirect
 from django.core.urlresolvers import reverse
 from django.views.generic import TemplateView
@@ -164,7 +164,11 @@ class AppDetail(LoginRequiredMixin, TemplateView):
             'Authorization': token,
         }
 
-        context['app'] = requests.get(url, headers=headers).json()
+        response = requests.get(url, headers=headers)
+        if response.status_code == 404:
+            raise Http404()
+
+        context['app'] = response.json()
 
         service_instances = []
 
