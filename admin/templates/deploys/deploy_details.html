@@ -24,7 +24,7 @@
                 <p><strong>App:</strong> {{ deploy.App }}</p>
                 <p><strong>Duration:</strong> {{ deploy.Duration|time_to_string }}</p>
                 <p><strong>Timestamp:</strong> {{ deploy.Timestamp|string_to_date|date:" d-m-Y H:i:s " }}</p>
-                <p><strong>Last Commit:</strong> {{ deploy.Commit }}</p>
+                {% if deploy.Commit %}<p><strong>Last Commit:</strong> {{ deploy.Commit }}</p>{% endif %}
                 {% if deploy.Error %}<p><strong>Error:</strong> {{ deploy.Error }}</p>{% endif %}
                 {% if deploy.Diff %}
                 <p><strong>Diff:</strong></p>{{ deploy.Diff|safe }}
@@ -34,30 +34,6 @@
                     <pre>
                         {{ deploy.Log|escape }}
                     </pre>
-                </div>
-            </div>
-        </div>
-        <div class="span12">
-            <div class="widget">
-                <div class="title">
-                    <span class="icon">
-                        <i class="icon-signal"></i>
-                    </span>
-                    <h5>Info</h5>
-                </div>
-                <div class="content">
-                    <p><strong>App:</strong> {{ deploy.App }}</p>
-                    <p><strong>Duration:</strong> {{ deploy.Duration|time_to_string }}</p>
-                    <p><strong>Timestamp:</strong> {{ deploy.Timestamp|string_to_date|date:" d-m-Y H:i:s " }}</p>
-                    <p><strong>Last Commit:</strong> {{ deploy.Commit }}</p>
-                    {% if deploy.Error %}<p><strong>Error:</strong> {{ deploy.Error }}</p>{% endif %}
-                    <p><strong>Diff:</strong></p>{{ deploy.Diff|safe }}
-                    <p><strong>Log:</strong></p>
-                    <div>
-                        <pre>
-                            {{ deploy.Log|escape }}
-                        </pre>
-                    </div>
                 </div>
             </div>
         </div>
