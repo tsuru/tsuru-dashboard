@@ -3,6 +3,34 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{{ STATIC_URL }}css/deploys.css" />
+<link rel="stylesheet" href="https://rawgit.com/enyo/dropzone/master/dist/dropzone.css">
+<style>
+#fileselect {
+    display: none;
+}
+
+#filedrag
+{
+display: block;
+font-weight: bold;
+text-align: center;
+padding: 1em 0;
+margin: 1em 0;
+color: #555;
+border: 2px dashed #555;
+border-radius: 7px;
+cursor: default;
+}
+
+#filedrag.hover
+{
+color: #f00;
+border-color: #f00;
+border-style: solid;
+box-shadow: inset 0 3px 4px #888;
+}
+
+</style>
 {% endblock %}
 
 {% block navbar %}
@@ -11,7 +39,30 @@
 
 {% block app-content %}
 	<div class="row-fluid">
-		<div class="span11">
+		<div class="span12">
+<form id="upload" action="index.html" method="POST" enctype="multipart/form-data">
+
+
+        <input type="hidden" id="MAX_FILE_SIZE" name="MAX_FILE_SIZE" value="300000" />
+
+        <div>
+                    <input type="file" id="fileselect" name="fileselect[]" multiple="multiple" />
+                        <div id="filedrag">drop files here</div>
+                        </div>
+
+                                <div id="messages">
+                                </div>
+                        <div id="submitbutton">
+                                <button type="submit">Deploy</button>
+                                </div>
+
+
+                                </form>
+
+        </div>
+    </div>
+	<div class="row-fluid">
+		<div class="span12">
 		<table class="deploys table" id="list">
             {% for deploy in deploys %}
                 <tr class="{% if deploy.Error %}error{% endif %}">
@@ -56,6 +107,7 @@
 {% endblock %}
 
 {% block extra_js %}
+<script src="https://rawgit.com/enyo/dropzone/master/dist/dropzone.js"></script>
 <script src="{{ STATIC_URL }}js/confirmation.js"></script>
 <script type="text/javascript">
 $(".deploys .btn").on('click', function(ev) {
@@ -66,5 +118,89 @@ $(".deploys .btn").on('click', function(ev) {
 		confirmationForm.attr("action", rollbackUrl);
         $.confirmation(".btn-rollback", ".remove-confirmation", appName);
 	});
+(function() {
+// getElementById
+function $id(id) {
+    return document.getElementById(id);
+}
+
+// output information
+function Output(msg) {
+    var m = $id("messages");
+    m.innerHTML = msg + m.innerHTML;
+}
+
+
+// file drag hover
+function FileDragHover(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    e.target.className = (e.type == "dragover" ? "hover" : "");
+}
+
+
+// file selection
+function FileSelectHandler(e) {
+
+    // cancel event and hover styling
+    FileDragHover(e);
+
+    // fetch FileList object
+    var files = e.target.files || e.dataTransfer.files;
+
+    // process all File objects
+    for (var i = 0, f; f = files[i]; i++) {
+        ParseFile(f);
+    }
+
+}
+
+
+// output file information
+function ParseFile(file) {
+
+    Output(
+    "<p>File information: <strong>" + file.name +
+    "</strong> type: <strong>" + file.type +
+    "</strong> size: <strong>" + file.size +
+    "</strong> bytes</p>"
+    );
+
+}
+
+
+// initialize
+function Init() {
+
+var fileselect = $id("fileselect"),
+filedrag = $id("filedrag"),
+submitbutton = $id("submitbutton");
+
+// file select
+fileselect.addEventListener("change", FileSelectHandler, false);
+
+// is XHR2 available?
+var xhr = new XMLHttpRequest();
+if (xhr.upload) {
+
+// file drop
+filedrag.addEventListener("dragover", FileDragHover, false);
+filedrag.addEventListener("dragleave", FileDragHover, false);
+filedrag.addEventListener("drop", FileSelectHandler, false);
+filedrag.style.display = "block";
+
+// remove submit button
+// submitbutton.style.display = "none";
+}
+
+}
+
+// call initialization file
+if (window.File && window.FileList && window.FileReader) {
+Init();
+}
+
+
+})();
 </script>
 {% endblock %}
