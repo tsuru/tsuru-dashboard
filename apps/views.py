@@ -1,4 +1,6 @@
 import json
+import tarfile
+
 import requests
 
 from django.template.response import TemplateResponse
@@ -56,6 +58,18 @@ class ListDeploy(LoginRequiredView):
     @property
     def authorization(self):
         return {'authorization': self.request.session.get('tsuru_token')}
+
+    def create_targz(self, request):
+        tar = tarfile.open("deploy.tar.gz", "w:gz")
+
+        for f in request.FILES.getlist('fileselect[]'):
+            tar.addfile(tarfile.TarInfo(f.name), f.read())
+
+        tar.close()
+
+    def post(self, request, *args, **kwargs):
+        self.create_targz(request)
+        return redirect(reverse('app-deploys', args=[kwargs["app_name"]]))
 
     def get(self, request, *args, **kwargs):
         app_name = kwargs["app_name"]
