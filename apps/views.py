@@ -13,7 +13,8 @@ from pygments import highlight
 from pygments.lexers import DiffLexer
 from pygments.formatters import HtmlFormatter
 
-from apps.forms import AppForm, AppAddTeamForm, RunForm, SetEnvForm
+from apps.forms import AppForm, AppAddTeamForm, RunForm, SetEnvForm,\
+    UploadFileForm
 from auth.views import LoginRequiredView, LoginRequiredMixin
 
 
@@ -89,6 +90,21 @@ class ListDeploy(LoginRequiredView):
             context['previous'] = page - 1
 
         return TemplateResponse(request, self.template, context=context)
+
+
+class DeployUpload(LoginRequiredView):
+
+    @property
+    def authorization(self):
+        return {'authorization': self.request.session.get('tsuru_token')}
+
+    def post(self, request, *args, **kwargs):
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            return HttpResponse('')
+        else:
+            response = {'error': 'no file found'}
+            return HttpResponseServerError(json.dumps(response))
 
 
 class ChangeUnit(LoginRequiredView):
