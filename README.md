@@ -22,6 +22,8 @@ For local development, first create a virtualenv and install the deps:
 If all is well you should able to run the local server:
 
     $ export TSURU_HOST=http://tsuru-api-endpoint.com
+    $ ./manage.py migrate
+    $ ./manage.py collectstatic
     $ ./manage.py runserver
 
 # Running tests
