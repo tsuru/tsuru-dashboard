@@ -20,3 +20,7 @@ class RunForm(forms.Form):
 
 class SetEnvForm(forms.Form):
     env = forms.CharField(max_length=1000)
+
+
+class UploadFileForm(forms.Form):
+    files = forms.FileField()
