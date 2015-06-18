@@ -27,7 +27,7 @@ class DeployUploadTest(TestCase):
         response = DeployUpload.as_view()(request)
 
         self.assertEqual(response.status_code, 500)
-        self.assertTrue('no file found' in response.content)
+        self.assertIn('no file found', response.content)
 
     @patch('auth.views.token_is_valid')
     def test_if_found_the_file(self, mck_token_is_valid):
