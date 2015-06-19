@@ -1,7 +1,7 @@
 import json
 import tarfile
 import time
-import tempfile
+from cStringIO import StringIO
 from zipfile import ZipFile
 from base64 import decodestring
 
@@ -64,41 +64,47 @@ class ListDeploy(LoginRequiredView):
         return {'authorization': self.request.session.get('tsuru_token')}
 
     def zip_to_targz(self, zip_file):
-        from cStringIO import StringIO
         fd = StringIO()
-        # fd = tempfile.TemporaryFile()
         tar = tarfile.open(fileobj=fd, mode='w:gz')
-        with ZipFile(zip_file.name) as f:
-            for zip_info in f.infolist():
+        with ZipFile(zip_file) as zip_file:
+            for zip_info in zip_file.infolist():
                 tar_info = tarfile.TarInfo(name=zip_info.filename)
                 tar_info.size = zip_info.file_size
                 tar_info.mtime = time.mktime(list(zip_info.date_time) + [-1, -1, -1])
                 tar.addfile(tarinfo=tar_info, fileobj=f.open(zip_info.filename))
         return fd
 
-    def save_zip(self, request):
-        f = open('deploy.zip', 'wb')
-        f.write(decodestring(request.POST['filecontent']))
-        f.close()
-        return f
+    def read_zip(self, request):
+        fd = StringIO()
+        fd.write(decodestring(request.POST['filecontent']))
+        fd.seek(0)
+        return fd
 
-    def send_targz(self, app_name, targz_fd):
+    def deploy(self, app_name, tar_file):
         url = '{}/apps/{}/deploy'.format(settings.TSURU_HOST, app_name)
 
         headers = self.authorization
+        response = requests.post(url, files={'file': tar_file}, headers=headers)
 
-        response = requests.post(url, files={'file': targz_fd}, headers=headers)
-
-        targz_fd.close()
         if response.status_code < 200 or response.status_code >= 300:
-            raise Http404
+            user_response = {'error': 'ERROR {} - {}'.format(
+                response.status_code, response.content)}
+            return HttpResponseServerError(json.dumps(user_response))
+        return True
 
     def post(self, request, *args, **kwargs):
         app_name = kwargs['app_name']
-        zip_file = self.save_zip(request)
-        tar = self.zip_to_targz(zip_file)
-        self.send_targz(app_name, tar)
-        return redirect(reverse('app-deploys', args=[app_name]))
+        try:
+            zip_file = self.read_zip(request)
+            tar_file = self.zip_to_targz(zip_file)
+            sent = self.deploy(app_name, tar_file)
+        finally:
+            zip_file.close()
+            tar_file.close()
+        if sent:
+            return redirect(reverse('app-deploys', args=[app_name]))
+        else:
+            return sent
 
     def get(self, request, *args, **kwargs):
         app_name = kwargs['app_name']
@@ -108,8 +114,8 @@ class ListDeploy(LoginRequiredView):
         skip = (page * 20) - 20
         limit = page * 20
 
-        url = '{}/deploys?app={}&skip={}&limit={}'.format(settings.TSURU_HOST, app_name,
-                                                          skip, limit)
+        url = '{}/deploys?app={}&skip={}&limit={}'.format(
+            settings.TSURU_HOST, app_name, skip, limit)
         response = requests.get(url, headers=self.authorization)
 
         deploys = []
