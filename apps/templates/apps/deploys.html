@@ -121,6 +121,16 @@ $(".deploys .btn").on('click', function(ev) {
 
     });
 
+    var readFile = function(entry, callback) {
+        entry.file(function(file) {
+            var reader = new FileReader();
+            reader.onloadend = function(e) {
+                callback(entry.name, this.result);
+            };
+            reader.readAsText(file);
+        });
+    }
+
     var dropzone = document.getElementById('filedrag');
     dropzone.addEventListener('drop', function(e) {
         e.preventDefault();
@@ -129,23 +139,19 @@ $(".deploys .btn").on('click', function(ev) {
         for (var i = 0; i < length; i++) {
             var entry = e.dataTransfer.items[i].webkitGetAsEntry();
             if (entry.isFile) {
-                entry.file(function(file) {
-                    var reader = new FileReader();
-
-                    reader.onloadend = function(e) {
-                        zip.file(entry.name, this.result);
-                        console.log("z", zip);
-                    };
-
-                    reader.readAsText(file);
+                readFile(entry, function(name, result) {
+                    zip.file(name, result);
                 });
-
             } else if (entry.isDirectory) {
-                console.log(entry.name);
                 var dirReader = entry.createReader();
                 var entries = [];
+                var folder = zip.folder(entry.name);
                 dirReader.readEntries (function(results) {
-                    console.log("a", results);
+                    results.forEach(function(entry) {
+                        readFile(entry, function(name, result) {
+                            folder.file(name, result);
+                        });
+                    });
                 });
             }
         }
