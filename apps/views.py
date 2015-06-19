@@ -86,12 +86,8 @@ class ListDeploy(LoginRequiredView):
 
     def deploy(self, app_name, tar_file):
         url = '{}/apps/{}/deploy'.format(settings.TSURU_HOST, app_name)
-
-        headers = self.authorization
-        content_type = 'multipart/form-data; boundary={}'.format(app_name)
-        headers['Content-Type'] = content_type
-
-        response = requests.post(url, data=tar_file.read(), headers=headers)
+        response = requests.post(
+            url, files={'file': tar_file}, headers=self.authorization)
         if response.status_code < 200 or response.status_code >= 300:
             user_response = {'error': 'ERROR {} - {}'.format(
                 response.status_code, response.content)}
@@ -107,7 +103,7 @@ class ListDeploy(LoginRequiredView):
         finally:
             zip_file.close()
             tar_file.close()
-        if sent:
+        if sent is True:
             return redirect(reverse('app-deploys', args=[app_name]))
         else:
             return sent
