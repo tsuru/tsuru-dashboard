@@ -1,6 +1,7 @@
 import json
 import tarfile
 import time
+import tempfile
 from zipfile import ZipFile
 from base64 import decodestring
 
@@ -63,15 +64,16 @@ class ListDeploy(LoginRequiredView):
         return {'authorization': self.request.session.get('tsuru_token')}
 
     def zip_to_targz(self, zip_file):
-        tar = tarfile.open('deploy.tar.gz', 'w:gz')
+        fd = tempfile.TemporaryFile()
+        tar = tarfile.open(fileobj=fd, mode='w:gz')
         with ZipFile(zip_file.name) as f:
             for zip_info in f.infolist():
                 tar_info = tarfile.TarInfo(name=zip_info.filename)
                 tar_info.size = zip_info.file_size
                 tar_info.mtime = time.mktime(list(zip_info.date_time) + [-1, -1, -1])
                 tar.addfile(tarinfo=tar_info, fileobj=f.open(zip_info.filename))
-        tar.seek(0)
-        return tar
+        fd.seek(0)
+        return fd
 
     def save_zip(self, request):
         f = open('deploy.zip', 'wb')
