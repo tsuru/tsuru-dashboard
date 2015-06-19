@@ -118,6 +118,24 @@ $(".deploys .btn").on('click', function(ev) {
         var content = zip.generate({type: "base64"});
         var fileContent = document.getElementById("filecontent");
         fileContent.value = content;
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        var formData = new FormData($(this)[0]);
+         
+        $.ajax({
+            url: location.pathname,
+            type: 'POST',
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (returndata) {
+                console.log(returndata);
+            }
+        });
+
     });
 
     function Output(msg) {
