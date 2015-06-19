@@ -72,6 +72,7 @@ class ListDeploy(LoginRequiredView):
                 tar_info.size = zip_info.file_size
                 tar_info.mtime = time.mktime(list(zip_info.date_time) + [-1, -1, -1])
                 tar.addfile(tarinfo=tar_info, fileobj=f.open(zip_info.filename))
+        tar.close()
         fd.seek(0)
         return fd
 
