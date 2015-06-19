@@ -1,7 +1,7 @@
 import json
 import tarfile
 import time
-import tempfile
+from cStringIO import StringIO
 from zipfile import ZipFile
 from base64 import decodestring
 
@@ -64,22 +64,22 @@ class ListDeploy(LoginRequiredView):
         return {'authorization': self.request.session.get('tsuru_token')}
 
     def zip_to_targz(self, zip_file):
-        fd = tempfile.TemporaryFile()
+        fd = StringIO()
         tar = tarfile.open(fileobj=fd, mode='w:gz')
-        with ZipFile(zip_file.name) as f:
-            for zip_info in f.infolist():
+        with ZipFile(zip_file) as zip_file:
+            for zip_info in zip_file.infolist():
                 tar_info = tarfile.TarInfo(name=zip_info.filename)
                 tar_info.size = zip_info.file_size
                 tar_info.mtime = time.mktime(list(zip_info.date_time) + [-1, -1, -1])
-                tar.addfile(tarinfo=tar_info, fileobj=f.open(zip_info.filename))
+                tar.addfile(tarinfo=tar_info, fileobj=zip.open(zip_info.filename))
         fd.seek(0)
         return fd
 
     def save_zip(self, request):
-        f = open('deploy.zip', 'wb')
-        f.write(decodestring(request.POST['filecontent']))
-        f.close()
-        return f
+        fd = StringIO()
+        fd.write(decodestring(request.POST['filecontent']))
+        fd.seek(0)
+        return fd
 
     def send_targz(self, app_name, targz_fd):
         url = '{}/apps/{}/deploy'.format(settings.TSURU_HOST, app_name)
