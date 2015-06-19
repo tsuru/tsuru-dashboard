@@ -63,13 +63,15 @@ class ListDeploy(LoginRequiredView):
         return {'authorization': self.request.session.get('tsuru_token')}
 
     def zip_to_targz(self, zip_file):
+        tar = tarfile.open("deploy.tar.gz", "w:gz")
         with ZipFile(zip_file.name) as f:
-            with tarfile.open("deploy.tar.gz", "w:gz") as tar:
-                for zip_info in f.infolist():
-                    tar_info = tarfile.TarInfo(name=zip_info.filename)
-                    tar_info.size = zip_info.file_size
-                    tar_info.mtime = time.mktime(list(zip_info.date_time) + [-1, -1, -1])
-                    tar.addfile(tarinfo=tar_info, fileobj=f.open(zip_info.filename))
+            for zip_info in f.infolist():
+                tar_info = tarfile.TarInfo(name=zip_info.filename)
+                tar_info.size = zip_info.file_size
+                tar_info.mtime = time.mktime(list(zip_info.date_time) + [-1, -1, -1])
+                tar.addfile(tarinfo=tar_info, fileobj=f.open(zip_info.filename))
+        tar.seek(0)
+        return tar
 
     def save_zip(self, request):
         f = open("deploy.zip", "wb")
@@ -77,10 +79,21 @@ class ListDeploy(LoginRequiredView):
         f.close()
         return f
 
+    def send_targz(self, app_name, targz_fd):
+        url = "{0}/apps/{1}/deploy".format(settings.TSURU_HOST, app_name)
+        response = requests.post(url, files=targz_fd.read())
+        targz_fd.close()
+        if response.status_code < 200 or response.status_code >= 300:
+            user_response = {"error": "ERROR {0} - {1}".format(
+                response.status_code, response.content)}
+            raise HttpResponseServerError(json.dumps(user_response))
+
     def post(self, request, *args, **kwargs):
+        app_name = kwargs["app_name"]
         zip_file = self.save_zip(request)
-        self.zip_to_targz(zip_file)
-        return redirect(reverse('app-deploys', args=[kwargs["app_name"]]))
+        tar = self.zip_to_targz(zip_file)
+        self.send_targz(app_name, tar)
+        return redirect(reverse('app-deploys', args=[app_name]))
 
     def get(self, request, *args, **kwargs):
         app_name = kwargs["app_name"]
