@@ -1,5 +1,8 @@
 import json
 import tarfile
+import time
+from zipfile import ZipFile
+from base64 import decodestring
 
 import requests
 
@@ -15,8 +18,7 @@ from pygments import highlight
 from pygments.lexers import DiffLexer
 from pygments.formatters import HtmlFormatter
 
-from apps.forms import AppForm, AppAddTeamForm, RunForm, SetEnvForm,\
-    UploadFileForm
+from apps.forms import AppForm, AppAddTeamForm, RunForm, SetEnvForm
 from auth.views import LoginRequiredView, LoginRequiredMixin
 
 
@@ -60,16 +62,24 @@ class ListDeploy(LoginRequiredView):
     def authorization(self):
         return {'authorization': self.request.session.get('tsuru_token')}
 
-    def create_targz(self, request):
-        tar = tarfile.open("deploy.tar.gz", "w:gz")
+    def zip_to_targz(self, zip_file):
+        with ZipFile(zip_file.name) as f:
+            with tarfile.open("deploy.tar.gz", "w:gz") as tar:
+                for zip_info in f.infolist():
+                    tar_info = tarfile.TarInfo(name=zip_info.filename)
+                    tar_info.size = zip_info.file_size
+                    tar_info.mtime = time.mktime(list(zip_info.date_time) + [-1, -1, -1])
+                    tar.addfile(tarinfo=tar_info, fileobj=f.open(zip_info.filename))
 
-        for f in request.FILES.getlist('fileselect[]'):
-            tar.addfile(tarfile.TarInfo(f.name), f.read())
-
-        tar.close()
+    def save_zip(self, request):
+        f = open("deploy.zip", "wb")
+        f.write(decodestring(request.POST["filecontent"]))
+        f.close()
+        return f
 
     def post(self, request, *args, **kwargs):
-        self.create_targz(request)
+        zip_file = self.save_zip(request)
+        self.zip_to_targz(zip_file)
         return redirect(reverse('app-deploys', args=[kwargs["app_name"]]))
 
     def get(self, request, *args, **kwargs):
@@ -104,21 +114,6 @@ class ListDeploy(LoginRequiredView):
             context['previous'] = page - 1
 
         return TemplateResponse(request, self.template, context=context)
-
-
-class DeployUpload(LoginRequiredView):
-
-    @property
-    def authorization(self):
-        return {'authorization': self.request.session.get('tsuru_token')}
-
-    def post(self, request, *args, **kwargs):
-        form = UploadFileForm(request.POST, request.FILES)
-        if form.is_valid():
-            return HttpResponse('')
-        else:
-            response = {'error': 'no file found'}
-            return HttpResponseServerError(json.dumps(response))
 
 
 class ChangeUnit(LoginRequiredView):

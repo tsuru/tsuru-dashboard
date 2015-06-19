@@ -43,9 +43,9 @@ box-shadow: inset 0 3px 4px #888;
             <form id="upload" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 <input type="hidden" id="MAX_FILE_SIZE" name="MAX_FILE_SIZE" value="300000" />
+                <input type="hidden" id="filecontent" name="filecontent">
                 <input type="file" id="fileselect" name="fileselect[]" multiple="multiple" />
                 <div id="filedrag">drop files here</div>
-                <div id="messages"></div>
                 <div id="submitbutton">
                     <button type="submit">Deploy</button>
                 </div>
@@ -100,6 +100,7 @@ box-shadow: inset 0 3px 4px #888;
 {% block extra_js %}
 <script src="https://rawgit.com/enyo/dropzone/master/dist/dropzone.js"></script>
 <script src="{{ STATIC_URL }}js/confirmation.js"></script>
+<script src="https://stuk.github.io/jszip/dist/jszip.js"></script>
 <script type="text/javascript">
 $(".deploys .btn").on('click', function(ev) {
 		ev.preventDefault();
@@ -110,87 +111,68 @@ $(".deploys .btn").on('click', function(ev) {
         $.confirmation(".btn-rollback", ".remove-confirmation", appName);
 	});
 (function() {
-// getElementById
-function $id(id) {
-    return document.getElementById(id);
+    var zip = new JSZip();
+
+    var form = document.getElementById("upload");
+    form.addEventListener('submit', function(e) {
+        var content = zip.generate({type: "base64"});
+        var fileContent = document.getElementById("filecontent");
+        fileContent.value = content;
+
+    });
+
+    var dropzone = document.getElementById('filedrag');
+    dropzone.addEventListener('drop', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var length = e.dataTransfer.items.length;
+        for (var i = 0; i < length; i++) {
+            var entry = e.dataTransfer.items[i].webkitGetAsEntry();
+            if (entry.isFile) {
+                entry.file(function(file) {
+                    var reader = new FileReader();
+
+                    reader.onloadend = function(e) {
+                        zip.file(entry.name, this.result);
+                        console.log("z", zip);
+                    };
+
+                    reader.readAsText(file);
+                });
+
+            } else if (entry.isDirectory) {
+                console.log(entry.name);
+                var dirReader = entry.createReader();
+                var entries = [];
+                dirReader.readEntries (function(results) {
+                    console.log("a", results);
+                });
+            }
+        }
+    });
+/*
+function readDirectory(dirEntry, callback) {
+      var dirReader = dirEntry.createReader();
+        var entries = [];
+
+          // Call the reader.readEntries() until no more results are returned.
+          var readEntries = function() {
+                   dirReader.readEntries (function(results) {
+                                 if (!results.length) {
+                                         callback(entries);
+                                               } else {
+                                                       entries = entries.concat(toArray(results));
+                                                               readEntries();
+                                                                     }
+                                                                         }, onError);
+                     };
+
+            readEntries(); // Start reading dirs.
 }
-
-// output information
-function Output(msg) {
-    var m = $id("messages");
-    m.innerHTML = msg + m.innerHTML;
-}
-
-
-// file drag hover
-function FileDragHover(e) {
-    e.stopPropagation();
-    e.preventDefault();
-    e.target.className = (e.type == "dragover" ? "hover" : "");
-}
-
-
-// file selection
-function FileSelectHandler(e) {
-
-    // cancel event and hover styling
-    FileDragHover(e);
-
-    // fetch FileList object
-    var files = e.target.files || e.dataTransfer.files;
-
-    // process all File objects
-    for (var i = 0, f; f = files[i]; i++) {
-        ParseFile(f);
-    }
-
-}
-
-
-// output file information
-function ParseFile(file) {
-
-    Output(
-    "<p>File information: <strong>" + file.name +
-    "</strong> type: <strong>" + file.type +
-    "</strong> size: <strong>" + file.size +
-    "</strong> bytes</p>"
-    );
-
-}
-
-
-// initialize
-function Init() {
-
-var fileselect = $id("fileselect"),
-filedrag = $id("filedrag"),
-submitbutton = $id("submitbutton");
-
-// file select
-fileselect.addEventListener("change", FileSelectHandler, false);
-
-// is XHR2 available?
-var xhr = new XMLHttpRequest();
-if (xhr.upload) {
-
-// file drop
-filedrag.addEventListener("dragover", FileDragHover, false);
-filedrag.addEventListener("dragleave", FileDragHover, false);
-filedrag.addEventListener("drop", FileSelectHandler, false);
-filedrag.style.display = "block";
-
-// remove submit button
-// submitbutton.style.display = "none";
-}
-
-}
-
-// call initialization file
-if (window.File && window.FileList && window.FileReader) {
-Init();
-}
-
+*/
+    dropzone.addEventListener('dragover', function(e) {
+        e.preventDefault();
+    });
 
 })();
 </script>
