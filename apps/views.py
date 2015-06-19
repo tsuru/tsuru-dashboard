@@ -66,8 +66,8 @@ class ListDeploy(LoginRequiredView):
     def zip_to_targz(self, zip_file):
         fd = StringIO()
         tar = tarfile.open(fileobj=fd, mode='w:gz')
-        with ZipFile(zip_file) as zip_file:
-            for zip_info in zip_file.infolist():
+        with ZipFile(zip_file) as f:
+            for zip_info in f.infolist():
                 tar_info = tarfile.TarInfo(name=zip_info.filename)
                 tar_info.size = zip_info.file_size
                 tar_info.mtime = time.mktime(list(zip_info.date_time) + [-1, -1, -1])
