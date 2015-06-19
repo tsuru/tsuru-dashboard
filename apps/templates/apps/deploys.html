@@ -42,10 +42,10 @@ box-shadow: inset 0 3px 4px #888;
 		<div class="span12">
             <form id="upload" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
-                <input type="hidden" id="MAX_FILE_SIZE" name="MAX_FILE_SIZE" value="300000" />
                 <input type="hidden" id="filecontent" name="filecontent">
-                <input type="file" id="fileselect" name="fileselect[]" multiple="multiple" />
-                <div id="filedrag">drop files here</div>
+                <div id="filedrag">drop files here
+                </div>
+                <div id="files"></div>
                 <div id="submitbutton">
                     <button type="submit">Deploy</button>
                 </div>
@@ -118,8 +118,13 @@ $(".deploys .btn").on('click', function(ev) {
         var content = zip.generate({type: "base64"});
         var fileContent = document.getElementById("filecontent");
         fileContent.value = content;
-
     });
+
+    function Output(msg) {
+        var m = document.getElementById("files");
+        msg = "<p>" + msg + "</p>";
+        m.innerHTML = msg + m.innerHTML;
+    }
 
     var readFile = function(entry, callback) {
         entry.file(function(file) {
@@ -140,6 +145,7 @@ $(".deploys .btn").on('click', function(ev) {
             var entry = e.dataTransfer.items[i].webkitGetAsEntry();
             if (entry.isFile) {
                 readFile(entry, function(name, result) {
+                    Output(name);
                     zip.file(name, result);
                 });
             } else if (entry.isDirectory) {
