@@ -84,7 +84,15 @@ class ListDeploy(LoginRequiredView):
 
     def deploy(self, app_name, tar_file):
         url = '{}/apps/{}/deploy'.format(settings.TSURU_HOST, app_name)
-        response = requests.post(url, files={'file': tar_file}, headers=self.authorization)
+
+        def output_stream(response_chunk, *args, **kwargs):
+            print response_chunk.content
+
+        response = requests.post(
+            url,
+            headers=self.authorization,
+            files={'file': tar_file},
+            hooks={'response': output_stream})
 
         if response.status_code < 200 or response.status_code >= 300:
             user_response = {'error': 'ERROR {} - {}'.format(
