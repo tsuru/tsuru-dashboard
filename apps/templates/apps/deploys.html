@@ -5,29 +5,39 @@
 <link rel="stylesheet" href="{{ STATIC_URL }}css/deploys.css" />
 <link rel="stylesheet" href="https://rawgit.com/enyo/dropzone/master/dist/dropzone.css">
 <style>
+#submitbutton {
+    display: none;
+}
+
 #fileselect {
     display: block;
 }
 
-#filedrag
-{
-display: block;
-font-weight: bold;
-text-align: center;
-padding: 1em 0;
-margin: 1em 0;
-color: #555;
-border: 2px dashed #555;
-border-radius: 7px;
-cursor: default;
+#filedrag {
+    display: block;
+    font-weight: bold;
+    text-align: center;
+    padding: 1em 0;
+    margin: 1em 0;
+    color: #555;
+    border: 2px dashed #555;
+    border-radius: 7px;
+    cursor: default;
 }
 
-#filedrag.hover
-{
-color: #f00;
-border-color: #f00;
-border-style: solid;
-box-shadow: inset 0 3px 4px #888;
+#filedrag.hover {
+    color: #f00;
+    border-color: #f00;
+    border-style: solid;
+    box-shadow: inset 0 3px 4px #888;
+}
+
+#output {
+    color: #fff;
+    background-color: #333;
+    border-radius: 3px;
+    padding: 10px 20px;
+    display: none;
 }
 
 </style>
@@ -43,14 +53,14 @@ box-shadow: inset 0 3px 4px #888;
             <form id="upload" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 <input type="hidden" id="filecontent" name="filecontent">
-                <div id="filedrag">drop files here
+                <div id="filedrag">drop files here to deploy
                 </div>
                 <div id="files"></div>
                 <div id="submitbutton">
                     <button type="submit">Deploy</button>
                 </div>
             </form>
-            <div id="output"></div>
+            <div id="output">Wait until deploy is started.</div>
         </div>
     </div>
 	<div class="row-fluid">
@@ -117,8 +127,8 @@ $(".deploys .btn").on('click', function(ev) {
     var form = document.getElementById("upload");
     form.addEventListener('submit', function(e) {
         var content = zip.generate({type: "base64"});
-        var fileContent = document.getElementById("filecontent");
-        fileContent.value = content;
+        var fileContent = $("#filecontent");
+        fileContent.val(content);
 
         e.preventDefault();
         e.stopPropagation();
@@ -127,26 +137,17 @@ $(".deploys .btn").on('click', function(ev) {
 
         var xhr = new XMLHttpRequest();
         xhr.open('POST', location.pathname, true);
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === 4 && xhr.status === 200) {
-                // location.reload();
-                console.log('done');
-            }
-        };
+        xhr.onprogress = function () {
+          deployOutput(xhr.responseText);
+          }
         xhr.send(formData);
-
-        var knowContent = '';
-        function refresh() {
-            console.log('print', knowContent);
-            if (knowContent != xhr.responseText) {
-                knowContent = xhr.responseText;
-                $('#output').innerHTML = knowContent;
-            }
-            setTimeout(refresh, 1000);
-        }
-        refresh();
-
+        $("#output").css("display", "block");
     });
+
+    function deployOutput(msg) {
+        var m = document.getElementById("output");
+        m.innerHTML = msg;
+    }
 
     function Output(msg) {
         var m = document.getElementById("files");
@@ -166,6 +167,7 @@ $(".deploys .btn").on('click', function(ev) {
 
     var dropzone = document.getElementById('filedrag');
     dropzone.addEventListener('drop', function(e) {
+        $("#submitbutton").css("display", "block");
         e.preventDefault();
         e.stopPropagation();
         var length = e.dataTransfer.items.length;

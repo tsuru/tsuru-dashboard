@@ -1,4 +1,5 @@
 from django.conf.urls import patterns, url
+from django.views.decorators.csrf import csrf_exempt
 
 from apps import views
 
@@ -28,7 +29,7 @@ urlpatterns = patterns(
         views.MetricDetail.as_view(), name='metrics-app'),
     url(r'^(?P<app_name>[\w-]+)/metrics/$',
         views.Metrics.as_view(), name='app-metrics'),
-    url(r'^(?P<app_name>[\w-]+)/deploys/$', views.ListDeploy.as_view(), name='app-deploys'),
+    url(r'^(?P<app_name>[\w-]+)/deploys/$', csrf_exempt(views.ListDeploy.as_view()), name='app-deploys'),
     url(r'^(?P<app_name>[\w-]+)/deploys/(?P<deploy>[\s\w@\.-]+)/$',
         views.DeployInfo.as_view(), name='app-deploy'),
     url(r'^(?P<app_name>[\w-]+)/rollback/(?P<image>.+)/$',

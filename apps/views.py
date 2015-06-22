@@ -9,12 +9,12 @@ import requests
 
 from django.template.response import TemplateResponse
 from django.conf import settings
-from django.http import HttpResponse, HttpResponseServerError, \
-    Http404, StreamingHttpResponse
+from django.http import HttpResponse, HttpResponseServerError, Http404, StreamingHttpResponse
 from django.shortcuts import redirect
 from django.core.urlresolvers import reverse
 from django.views.generic import TemplateView
 from django.contrib import messages
+from django.views.decorators.http import condition
 
 from pygments import highlight
 from pygments.lexers import DiffLexer
@@ -84,33 +84,19 @@ class ListDeploy(LoginRequiredView):
         return fd
 
     def deploy(self, app_name, tar_file):
-        url = '{}/apps/{}/deploy'.format(settings.TSURU_HOST, app_name)
-        buf = StringIO()
-
-        def getting_stream(response_chunk, *args, **kwargs):
-            buf.write(response_chunk.content)
-
         def sending_stream():
-            yield '{} <br /> {}'.format(buf.getvalue(), ' '*1024)
+            url = '{}/apps/{}/deploy'.format(settings.TSURU_HOST, app_name)
+            r = requests.post(url, headers=self.authorization, files={'file': tar_file}, stream=True)
+            for line in r.iter_lines():
+                yield "{}<br>".format(line)
 
-        try:
-            return StreamingHttpResponse(sending_stream)
-        finally:
-            requests.post(
-                url,
-                headers=self.authorization,
-                files={'file': tar_file},
-                hooks={'response': getting_stream})
+        return StreamingHttpResponse(sending_stream())
 
     def post(self, request, *args, **kwargs):
         app_name = kwargs['app_name']
-        try:
-            zip_file = self.read_zip(request)
-            tar_file = self.zip_to_targz(zip_file)
-            return self.deploy(app_name, tar_file)
-        finally:
-            zip_file.close()
-            tar_file.close()
+        zip_file = self.read_zip(request)
+        tar_file = self.zip_to_targz(zip_file)
+        return self.deploy(app_name, tar_file)
 
     def get(self, request, *args, **kwargs):
         app_name = kwargs['app_name']
