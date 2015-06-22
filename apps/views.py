@@ -9,7 +9,8 @@ import requests
 
 from django.template.response import TemplateResponse
 from django.conf import settings
-from django.http import HttpResponse, HttpResponseServerError, Http404
+from django.http import HttpResponse, HttpResponseServerError, \
+    Http404, StreamingHttpResponse
 from django.shortcuts import redirect
 from django.core.urlresolvers import reverse
 from django.views.generic import TemplateView
@@ -84,35 +85,32 @@ class ListDeploy(LoginRequiredView):
 
     def deploy(self, app_name, tar_file):
         url = '{}/apps/{}/deploy'.format(settings.TSURU_HOST, app_name)
+        buf = StringIO()
 
-        def output_stream(response_chunk, *args, **kwargs):
-            print response_chunk.content
+        def getting_stream(response_chunk, *args, **kwargs):
+            buf.write(response_chunk.content)
 
-        response = requests.post(
-            url,
-            headers=self.authorization,
-            files={'file': tar_file},
-            hooks={'response': output_stream})
+        def sending_stream():
+            yield '{} <br /> {}'.format(buf.getvalue(), ' '*1024)
 
-        if response.status_code < 200 or response.status_code >= 300:
-            user_response = {'error': 'ERROR {} - {}'.format(
-                response.status_code, response.content)}
-            return HttpResponseServerError(json.dumps(user_response))
-        return True
+        try:
+            return StreamingHttpResponse(sending_stream)
+        finally:
+            requests.post(
+                url,
+                headers=self.authorization,
+                files={'file': tar_file},
+                hooks={'response': getting_stream})
 
     def post(self, request, *args, **kwargs):
         app_name = kwargs['app_name']
         try:
             zip_file = self.read_zip(request)
             tar_file = self.zip_to_targz(zip_file)
-            sent = self.deploy(app_name, tar_file)
+            return self.deploy(app_name, tar_file)
         finally:
             zip_file.close()
             tar_file.close()
-        if sent is True:
-            return redirect(reverse('app-deploys', args=[app_name]))
-        else:
-            return sent
 
     def get(self, request, *args, **kwargs):
         app_name = kwargs['app_name']
