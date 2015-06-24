@@ -1,5 +1,9 @@
 {% extends "apps/base.html" %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+{% endblock %}
+
 {% block navbar %}
     {% include "apps/navbar.html" with active="metrics" %}
 {% endblock %}
@@ -43,20 +47,13 @@
 <div class="container-fluid">
 	<div class="row-fluid">
 		<div class="span12">
-			<div class="widget">
-				<div class="title">
-					<spam class="icon">
-						<i class="icon-signal"></i>
-					</spam>
-					<h5>Metrics</h5>
-				</div>
-				<div class="content">
-						<div class="row-fluid">
-							<div class="span12" id="metrics">
-							</div>
-						</div>
-				</div>
-			</div>
+            <h3>Metrics</h3>
+            <div class="content">
+                <div class="row-fluid">
+                    <div class="span12" id="metrics">
+                    </div>
+                </div>
+            </div>
 		</div>
 	</div>
 {% endblock %}
