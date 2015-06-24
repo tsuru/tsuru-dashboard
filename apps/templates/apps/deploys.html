@@ -50,17 +50,7 @@
 {% block app-content %}
 	<div class="row-fluid">
 		<div class="span12">
-            <form id="upload" method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
-                <input type="hidden" id="filecontent" name="filecontent">
-                <div id="filedrag">drop files here to deploy
-                </div>
-                <div id="files"></div>
-                <div id="submitbutton">
-                    <button type="submit">Deploy</button>
-                </div>
-            </form>
-            <div id="output">Wait until deploy is started.</div>
+            <div id="filedrag">drop files here to deploy</div>
         </div>
     </div>
 	<div class="row-fluid">
@@ -91,21 +81,42 @@
 		</div>
 	</div>
 </div>
+
 <div id="confirmation" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-header">
+        <h3 id="myModalLabel">Are you sure?</h3>
+    </div>
+    <div class="modal-body">
+        <p>Are you sure you want to rollback your app? </p>
+        <p>Please type in the name of your app to confirm.</p>
+        <input type="text" placeholder="app's name" class="remove-confirmation" />
+    </div>
+    <div class="modal-footer">
+        <form method="get" action="rollback-url">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+            <button class="btn btn-danger btn-rollback" disabled="disabled">Rollback</button>
+        </form>
+    </div>
+</div>
+
+<div id="deploy" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-header">
-		<h3 id="myModalLabel">Are you sure?</h3>
+		<h3 id="myModalLabel">New deploy</h3>
 	</div>
 	<div class="modal-body">
-		<p>Are you sure you want to rollback your app? </p>
-		<p>Please type in the name of your app to confirm.</p>
-		<input type="text" placeholder="app's name" class="remove-confirmation" />
+        <div id="filedrag">drop files here to deploy</div>
+        <div id="files"></div>
+        <div id="output">Wait until deploy is started.</div>
 	</div>
 	<div class="modal-footer">
-		<form method="get" action="rollback-url">
+        <form id="upload" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="hidden" id="filecontent" name="filecontent">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-			<button class="btn btn-danger btn-rollback" disabled="disabled">Rollback</button>
+			<button type="submit" class="btn btn-danger btn-rollback">Start deploy</button>
 		</form>
-	</div>
+    </div>
+</div>
 {% endblock %}
 
 {% block extra_js %}
@@ -126,20 +137,25 @@ $(".deploys .btn").on('click', function(ev) {
 
     var form = document.getElementById("upload");
     form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
         var content = zip.generate({type: "base64"});
         var fileContent = $("#filecontent");
         fileContent.val(content);
 
-        e.preventDefault();
-        e.stopPropagation();
 
         var formData = new FormData($(this)[0]);
 
         var xhr = new XMLHttpRequest();
         xhr.open('POST', location.pathname, true);
-        xhr.onprogress = function () {
-          deployOutput(xhr.responseText);
-          }
+        xhr.onprogress = function() {
+            deployOutput(xhr.responseText);
+        }
+        xhr.onload = function() {
+            setTimeout(function() {
+                location.reload();
+            }, 2000);
+        }
         xhr.send(formData);
         $("#output").css("display", "block");
     });
@@ -165,8 +181,11 @@ $(".deploys .btn").on('click', function(ev) {
         });
     }
 
-    var dropzone = document.getElementById('filedrag');
+
+    var dropzone = document.getElementsByTagName('body')[0];
+
     dropzone.addEventListener('drop', function(e) {
+        $('#deploy').modal('show');
         $("#submitbutton").css("display", "block");
         e.preventDefault();
         e.stopPropagation();

@@ -14,7 +14,6 @@ from django.shortcuts import redirect
 from django.core.urlresolvers import reverse
 from django.views.generic import TemplateView
 from django.contrib import messages
-from django.views.decorators.http import condition
 
 from pygments import highlight
 from pygments.lexers import DiffLexer
@@ -83,20 +82,19 @@ class ListDeploy(LoginRequiredView):
         fd.seek(0)
         return fd
 
-    def deploy(self, app_name, tar_file):
+    def deploy(self, request, app_name, tar_file):
         def sending_stream():
             url = '{}/apps/{}/deploy'.format(settings.TSURU_HOST, app_name)
             r = requests.post(url, headers=self.authorization, files={'file': tar_file}, stream=True)
             for line in r.iter_lines():
                 yield "{}<br>".format(line)
-
         return StreamingHttpResponse(sending_stream())
 
     def post(self, request, *args, **kwargs):
         app_name = kwargs['app_name']
         zip_file = self.read_zip(request)
         tar_file = self.zip_to_targz(zip_file)
-        return self.deploy(app_name, tar_file)
+        return self.deploy(request, app_name, tar_file)
 
     def get(self, request, *args, **kwargs):
         app_name = kwargs['app_name']
