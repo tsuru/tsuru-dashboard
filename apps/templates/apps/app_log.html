@@ -1,5 +1,16 @@
 {% extends "apps/base.html" %}
 
+{% block extra_css %}
+<style>
+#output {
+    color: #fff;
+    background-color: #333;
+    border-radius: 3px;
+    padding: 10px 20px;
+}
+</style>
+{% endblock %}
+
 {% block navbar %}
     {% include "apps/navbar.html" with active="log" %}
 {% endblock %}
@@ -8,11 +19,13 @@
 <div class="container-fluid">
 	<div class="row-fluid">
 		<div class="span12">
+            <div id="output">
 			{% for log in logs %}
 			<p>
 			<strong>{{ log.Date }} [ {{ log.Source }} ][ {{ log.Unit }} ]:</strong> {{ log.Message }}
 			</p>
 			{% endfor %}
+            </div>
 		</div>
 	</div>
 </div>
