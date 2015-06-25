@@ -1,14 +1,7 @@
 {% extends "apps/base.html" %}
 
 {% block extra_css %}
-<style>
-table td, table th {
-    width: 230px;
-    overflow: hidden;
-    display: inline-block;
-    white-space: nowrap;
-}
-</style>
+<link rel="stylesheet" href="{{ STATIC_URL }}css/detail.css" />
 {% endblock %}
 
 {% block navbar %}
