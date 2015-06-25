@@ -441,16 +441,22 @@ class Run(LoginRequiredView):
         return [a['name'] for a in apps]
 
 
-class AppLog(LoginRequiredView):
-    template = 'apps/app_log.html'
+class AppLog(LoginRequiredView, TemplateView):
+    template_name = 'apps/app_log.html'
 
-    def get(self, request, app_name):
-        authorization = {'authorization': request.session.get('tsuru_token')}
+    @property
+    def authorization(self):
+        return {'authorization': self.request.session.get('tsuru_token')}
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(AppLog, self).get_context_data(*args, **kwargs)
+        app_name = kwargs['app_name']
         app_url = '{}/apps/{}'.format(settings.TSURU_HOST, app_name)
-        app = requests.get(app_url, headers=authorization).json()
-        log_url = '{}/apps/{}/log?lines=100'.format(settings.TSURU_HOST, app_name)
-        logs = requests.get(log_url, headers=authorization).json()
-        return TemplateResponse(request, self.template, {'logs': logs, 'app': app})
+        app = requests.get(app_url, headers=self.authorization).json()
+        context['app'] = app
+        # log_url = '{}/apps/{}/log?lines=100&follow=1'.format(settings.TSURU_HOST, app_name)
+        # logs = requests.get(log_url, headers=authorization).json()
+        return context
 
 
 class AppTeams(LoginRequiredView):
