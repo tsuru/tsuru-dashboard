@@ -441,6 +441,23 @@ class Run(LoginRequiredView):
         return [a['name'] for a in apps]
 
 
+class LogStream(LoginRequiredView):
+    @property
+    def authorization(self):
+        return {'authorization': self.request.session.get('tsuru_token')}
+
+    def get(self, request, *args, **kwargs):
+        app_name = kwargs['app_name']
+
+        def sending_stream():
+            url = '{}/apps/{}/log?lines=15&follow=1'.format(settings.TSURU_HOST, app_name)
+            r = requests.get(url, headers=self.authorization, stream=True)
+            for line in r.iter_lines():
+                yield line
+
+        return StreamingHttpResponse(sending_stream())
+
+
 class AppLog(LoginRequiredView, TemplateView):
     template_name = 'apps/app_log.html'
 

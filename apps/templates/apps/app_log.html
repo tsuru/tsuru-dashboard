@@ -30,3 +30,24 @@
 	</div>
 </div>
 {% endblock %}
+
+{% block extra_js %}
+
+<script src="{{ STATIC_URL }}/js/oboe-browser.min.js"></script>
+<script type="text/javascript">
+(function() {
+oboe(location.pathname + "stream/").done(function(things) {
+    $.each(things, function(i, data) {
+        deployOutput("<strong>" + data.Date + " - [" + data.Source + "][" + data.Unit + "]:</strong> " + data.Message);
+    });
+    window.scrollTo(0,document.body.scrollHeight);
+});
+
+
+    function deployOutput(msg) {
+        $("#output").append("<p>" + msg + "</p>");
+    }
+
+})();
+</script>
+{% endblock %}
