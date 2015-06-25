@@ -27,26 +27,37 @@ table td, table th {
 	</div>
 	<div class="row-fluid">
 		<div class="span10">
+            <div class="content settings-toggle">
             <h3>Environment variables</h3>
-				<div class="content">
-					<table class="table containers-app">
-                        <thead>
-						<tr>
-							<th>Name</th>
-							<th>Value</th>
-						</tr>
-                        </thead>
-                        <tbody>
-						{% for env in app.envs %}
-						<tr>
-							<td>{{ env.name }}</td>
-							<td>{% if env.public %}{{ env.value }}{% else %}******{% endif %}</td>
-						</tr>
-						{% endfor %}
-                        </tbody>
-					</table>
-				</div>
-			</div>
+            <p><a href=#>&#x25BC;</a> {{ app.envs|length }} enviroment variables</p>
+            <table class="table hide">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Value</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for env in app.envs %}
+                {% if env.public %}
+                <tr>
+                    <td>{{ env.name }}</td>
+                    <td>{{ env.value }}</td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+                {% for env in app.envs %}
+                {% if not env.public %}
+                <tr>
+                    <td>{{ env.name }}</td>
+                    <td>******</td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+                </tbody>
+            </table>
+            </div>
+		</div>
 	</div>
 	<div class="row-fluid">
 		<div class="span12">
@@ -121,5 +132,8 @@ var envs = {};
 	envs["{{ env.name }}"] = "{{ env.value }}";
 {% endfor %}
 $.detail(appName, envs);
+$(".settings-toggle").on("click", function() {
+    $("table", this).toggleClass("hide");
+});
 </script>
 {% endblock %}
