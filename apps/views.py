@@ -223,6 +223,13 @@ class AppDetail(LoginRequiredMixin, TemplateView):
 
         context['app']['service_instances'] = service_instances
 
+        units_by_status = {}
+        for unit in context['app']['units']:
+            if unit['Status'] not in units_by_status:
+                units_by_status[unit['Status']] = [unit]
+            else:
+                units_by_status[unit['Status']].append(unit)
+
         for container in self.get_containers(app_name):
             for index, unit in enumerate(context['app']['units']):
                 if unit['Name'] == container['ID']:
@@ -230,6 +237,7 @@ class AppDetail(LoginRequiredMixin, TemplateView):
                         'HostAddr': container['HostAddr'],
                         'HostPort': container['HostPort'],
                     })
+        context['units_by_status'] = units_by_status
         return context
 
 

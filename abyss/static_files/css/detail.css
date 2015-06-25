@@ -61,3 +61,7 @@
 .metrics-container {
 	display: none;
 }
+
+.hide {
+    display: none;
+}

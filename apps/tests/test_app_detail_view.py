@@ -19,8 +19,8 @@ class AppDetailTestCase(TestCase):
             "repository": "git@git.com:php.git",
             "state": "dead",
             "units": [
-                {"Ip": "10.10.10.10"},
-                {"Ip": "9.9.9.9"}
+                {"Ip": "10.10.10.10", "Status": "started"},
+                {"Ip": "9.9.9.9", "Status": "stopped"},
             ],
             "teams": ["tsuruteam", "crane"]
         }
@@ -42,6 +42,15 @@ class AppDetailTestCase(TestCase):
 
     def test_should_use_detail_template(self):
         self.assertIn("apps/details.html", self.response.template_name)
+
+    def test_units_by_status(self):
+        self.assertIn("units_by_status", self.response.context_data)
+
+        expected = {
+            'started': [{'Ip': '10.10.10.10', 'Status': 'started'}],
+            'stopped': [{'Ip': '9.9.9.9', 'Status': 'stopped'}],
+        }
+        self.assertDictEqual(expected, self.response.context_data['units_by_status'])
 
     @patch('requests.get')
     def test_get_containers(self, get):

@@ -10,26 +10,22 @@
 		<div class="span12">
             <h3>Units</h3>
             <div class="content">
-                <table class="table containers-app">
-                    <tr>
-                        <th>ID</th>
-                        <th>State</th>
-                        {% if request.session.is_admin %}
-                        <th>HostAddr</th>
-                        <th>HostPort</th>
-                        {% endif %}
-                    </tr>
-                    {% for unit in app.units %}
-                    <tr>
-                        <td>{{ unit.Name }}</td>
-                        <td>{{ unit.Status }}</td>
-                        {% if request.session.is_admin %}
-                        <td>{{ unit.HostAddr }}</td>
-                        <td>{{ unit.HostPort }}</td>
-                        {% endif %}
-                    </tr>
+                    {% for key, units in units_by_status.items %}
+                    <div class="units-toggle">
+                        <p><a href=#>&#x25BC;</a> {{ units|length }} {{ key }} units</p>
+                            <table class="table containers-app hide">
+                                {% for unit in units %}
+                                <tr>
+                                    <td>{{ unit.Name }}</td>
+                                    {% if request.session.is_admin %}
+                                    <td>{{ unit.HostAddr }}</td>
+                                    <td>{{ unit.HostPort }}</td>
+                                    {% endif %}
+                                </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
                     {% endfor %}
-                </table>
             </div>
         </div>
 	</div>
@@ -59,4 +55,13 @@
 	</div>
     {% endif %}
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script type="text/javascript">
+$(".units-toggle").on("click", function() {
+    $(".containers-app", this).toggleClass("hide");
+});
+
+</script>
 {% endblock %}
