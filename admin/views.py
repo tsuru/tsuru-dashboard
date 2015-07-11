@@ -174,7 +174,7 @@ class ListHealing(LoginRequiredView):
     def get(self, request):
         url = '{}/docker/healing'.format(settings.TSURU_HOST)
         response = requests.get(url, headers=self.authorization)
-        events = response.json()
+        events = response.json() or []
         formatted_events = []
         for event in events:
             event['FailingContainer']['ID'] = event['FailingContainer']['ID'][:12]
