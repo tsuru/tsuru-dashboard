@@ -15,6 +15,17 @@
             <div class="content">
                 <p><strong>Git URL:</strong> {{ app.repository }}</p>
                 <p><strong>Platform:</strong> {{ app.platform }}</p>
+                <p><strong>Pool:</strong> {{ app.pool }}</p>
+            </div>
+        </div>
+	</div>
+	<div class="row-fluid">
+		<div class="span12">
+            <h3>Plan</h3>
+            <div class="content">
+                <p><strong>Name:</strong> {{ app.plan.name }}</p>
+                <p><strong>Memory:</strong> {{ app.plan.memory|filesizeformat }}</p>
+                <p><strong>Swap:</strong> {{ app.plan.swap|filesizeformat }}</p>
             </div>
         </div>
 	</div>
