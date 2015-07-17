@@ -8,6 +8,29 @@
 {% block app-content %}
 	<div class="row-fluid">
 		<div class="span12">
+            {% if app.units.0.ProcessName %}
+            {% regroup app.units by ProcessName as process_list %}
+            {% for item in process_list %}
+                <h3>{{ item.grouper }}</h3>
+                <div class="content">
+                    {% regroup item.list by Status as units_by_status_group %}
+                    <div class="units-toggle">
+                        <p><a href=#>&#x25BC;</a> {{ units_by_status_group.0.list|length }} {{ units_by_status_group.0.grouper }} units</p>
+                        <table class="table containers-app hide">
+                            {% for unit in units_by_status_group.0.list %}
+                            <tr>
+                                <td>{{ unit.Name }}</td>
+                                {% if request.session.is_admin %}
+                                <td>{{ unit.HostAddr }}</td>
+                                <td>{{ unit.HostPort }}</td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+            {% endfor %}
+            {% else %}
             <h3>Units</h3>
             <div class="content">
                     {% for key, units in units_by_status.items %}
@@ -27,6 +50,7 @@
                         </div>
                     {% endfor %}
             </div>
+            {% endif %}
         </div>
 	</div>
 	{% if app.service_instances %}
