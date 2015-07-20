@@ -17,9 +17,7 @@ def token_is_valid(token):
     headers = {'authorization': token}
     url = "{0}/users/info".format(settings.TSURU_HOST)
     response = requests.get(url, headers=headers)
-    if response.status_code == 200:
-        return True
-    return False
+    return response.status_code == 200
 
 
 class LoginRequiredMixin(object):
