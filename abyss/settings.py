@@ -76,6 +76,7 @@ INSTALLED_APPS = (
     'admin',
     'autoscale',
     'dashboard',
+    'metrics',
 )
 
 TSURU_HOST = os.environ.get("TSURU_HOST", "http://localhost:8080")
