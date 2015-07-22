@@ -1,4 +1,24 @@
+from django.conf import settings
+
 import requests
+
+
+class MetricNotEnabled(Exception):
+    pass
+
+
+def get_backend(app):
+    if "envs" in app and "ELASTICSEARCH_HOST" in app["envs"]:
+        return ElasticSearch("ELASTICSEARCH_HOST", ".measure-tsuru-*", app["name"])
+
+    response = requests.get("{}/apps/tsuru-dashboard/metric/envs".format(
+        settings.TSURU_HOST,
+    ))
+    if response.status_code == 200:
+        data = response.json()
+        if "METRICS_ELASTICSEARCH_HOST" in data:
+            return ElasticSearch(data["METRICS_ELASTICSEARCH_HOST"], ".measure-tsuru-*", app["name"])
+    raise MetricNotEnabled
 
 
 class ElasticSearch(object):
@@ -44,10 +64,10 @@ class ElasticSearch(object):
         }
 
     def cpu_max(self):
-        return self.post(self.query(key="cpu_max"))
+        return self.process(self.post(self.query(key="cpu_max")))
 
     def mem_max(self):
-        return self.post(self.query(key="mem_max"))
+        return self.process(self.post(self.query(key="mem_max")))
 
     def units(self):
         return self.post(self.query(key="cpu_max"))

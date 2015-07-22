@@ -1,7 +1,38 @@
 from django.test import TestCase
-from metrics.backend import ElasticSearch
+from metrics.backend import ElasticSearch, get_backend, MetricNotEnabled
 
-from mock import patch
+from mock import patch, Mock
+
+
+class BackendTest(TestCase):
+    @patch("requests.get")
+    def test_envs_from_api(self, get_mock):
+        response_mock = Mock(status_code=200)
+        response_mock.json.return_value = {
+            "METRICS_BACKEND": "logstash",
+            "METRICS_ELASTICSEARCH_HOST": "http://easearch.com",
+            "METRICS_LOGSTASH_HOST": "logstash.com"
+        }
+        get_mock.return_value = response_mock
+
+        app = {"name": "appname"}
+
+        backend = get_backend(app)
+        self.assertIsInstance(backend, ElasticSearch)
+
+    def test_envs_from_app(self):
+        app = {"name": "appname", "envs": {"ELASTICSEARCH_HOST": "ble"}}
+
+        backend = get_backend(app)
+        self.assertIsInstance(backend, ElasticSearch)
+
+    @patch("requests.get")
+    def test_without_metrics(self, get_mock):
+        get_mock.return_value = Mock(status_code=404)
+        app = {}
+
+        with self.assertRaises(MetricNotEnabled):
+            get_backend(app)
 
 
 class ElasticSearchTest(TestCase):
@@ -11,11 +42,13 @@ class ElasticSearchTest(TestCase):
 
     @patch("requests.post")
     def test_cpu_max(self, post_mock):
+        self.es.process = Mock()
         self.es.cpu_max()
         post_mock.assert_called_with(self.es.url, data=self.es.query(key="cpu_max"))
 
     @patch("requests.post")
     def test_mem_max(self, post_mock):
+        self.es.process = Mock()
         self.es.mem_max()
         post_mock.assert_called_with(self.es.url, data=self.es.query(key="mem_max"))
 
