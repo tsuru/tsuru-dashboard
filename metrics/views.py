@@ -3,8 +3,6 @@ from django.conf import settings
 
 from auth.views import LoginRequiredView
 
-from metrics.backend import get_backend
-
 import json
 import requests
 
@@ -29,6 +27,7 @@ class Metric(LoginRequiredView):
         return envs
 
     def get(self, *args, **kwargs):
+        from metrics.backend import get_backend
         app_name = kwargs['app_name']
         app = self.get_app(app_name)
         app["envs"] = self.get_envs(self.request, app_name)

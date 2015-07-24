@@ -1,12 +1,81 @@
 from django.test import TestCase
+from django.test.client import RequestFactory
+from django.conf import settings
+
 from metrics.backend import ElasticSearch, get_backend, MetricNotEnabled
+from metrics import views
 
 from mock import patch, Mock
 import json
 
 
 class MetricViewTest(TestCase):
-    pass
+    def request(self):
+        request = RequestFactory().get("")
+        request.session = {"tsuru_token": "token"}
+        return request
+
+    @patch("requests.get")
+    def test_get_app(self, get_mock):
+        response_mock = Mock()
+        response_mock.json.return_value = {}
+        get_mock.return_value = response_mock
+
+        view = views.Metric()
+        view.request = self.request()
+        app = view.get_app("app_name")
+
+        self.assertDictEqual(app, {})
+        url = "{}/apps/app_name".format(settings.TSURU_HOST)
+        headers = {"authorization": "token"}
+        get_mock.assert_called_with(url, headers=headers)
+
+    @patch("requests.get")
+    def test_get_envs(self, get_mock):
+        env_mock = [{"name": "VAR", "value": "value"}]
+        response_mock = Mock()
+        response_mock.json.return_value = env_mock
+        get_mock.return_value = response_mock
+
+        view = views.Metric()
+        view.request = self.request()
+        envs = view.get_envs(self.request(), "app_name")
+
+        self.assertDictEqual(envs, {"VAR": "value"})
+        url = "{}/apps/app_name/env".format(settings.TSURU_HOST)
+        headers = {"authorization": "token"}
+        get_mock.assert_called_with(url, headers=headers)
+
+    @patch("metrics.backend.get_backend")
+    @patch("auth.views.token_is_valid")
+    def test_get(self, token_mock, get_backend_mock):
+        token_mock.return_value = True
+        backend_mock = Mock()
+        backend_mock.cpu_max.return_value = {}
+        get_backend_mock.return_value = backend_mock
+
+        v = views.Metric
+
+        original_get_app = v.get_app
+        v.get_app = Mock()
+        v.get_app.return_value = {}
+
+        original_get_envs = v.get_envs
+        v.get_envs = Mock()
+        v.get_envs.return_value = {}
+        view = v.as_view()
+
+        def cleanup():
+            v.get_app = original_get_app
+            v.get_envs = original_get_envs
+
+        self.addCleanup(cleanup)
+
+        response = view(self.request(), app_name="app_name")
+
+        self.assertEqual(response.status_code, 200)
+        get_backend_mock.assert_called_with({'envs': {}})
+        backend_mock.cpu_max.assert_called_with()
 
 
 class BackendTest(TestCase):
