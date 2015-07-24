@@ -2,6 +2,11 @@ from django.test import TestCase
 from metrics.backend import ElasticSearch, get_backend, MetricNotEnabled
 
 from mock import patch, Mock
+import json
+
+
+class MetricViewTest(TestCase):
+    pass
 
 
 class BackendTest(TestCase):
@@ -45,38 +50,38 @@ class ElasticSearchTest(TestCase):
         self.es.process = Mock()
         self.es.cpu_max()
         url = "{}/.measure-tsuru-*/{}/_search".format(self.es.url, "cpu_max")
-        post_mock.assert_called_with(url, data=self.es.query(key="cpu_max"))
+        post_mock.assert_called_with(url, data=json.dumps(self.es.query()))
 
     @patch("requests.post")
     def test_mem_max(self, post_mock):
         self.es.process = Mock()
         self.es.mem_max()
         url = "{}/.measure-tsuru-*/{}/_search".format(self.es.url, "mem_max")
-        post_mock.assert_called_with(url, data=self.es.query(key="mem_max"))
+        post_mock.assert_called_with(url, data=json.dumps(self.es.query()))
 
     @patch("requests.post")
     def test_units(self, post_mock):
         self.es.units()
         url = "{}/.measure-tsuru-*/{}/_search".format(self.es.url, "cpu_max")
-        post_mock.assert_called_with(url, data=self.es.query(key="cpu_max"))
+        post_mock.assert_called_with(url, data=json.dumps(self.es.query()))
 
     @patch("requests.post")
     def test_requests_min(self, post_mock):
         self.es.requests_min()
         url = "{}/.measure-tsuru-*/{}/_search".format(self.es.url, "response_time")
-        post_mock.assert_called_with(url, data=self.es.query(key="response_time"))
+        post_mock.assert_called_with(url, data=json.dumps(self.es.query()))
 
     @patch("requests.post")
     def test_response_time(self, post_mock):
         self.es.response_time()
         url = "{}/.measure-tsuru-*/{}/_search".format(self.es.url, "response_time")
-        post_mock.assert_called_with(url, data=self.es.query(key="response_time"))
+        post_mock.assert_called_with(url, data=json.dumps(self.es.query()))
 
     @patch("requests.post")
     def test_connections(self, post_mock):
         self.es.connections()
         url = "{}/.measure-tsuru-*/{}/_search".format(self.es.url, "connection")
-        post_mock.assert_called_with(url, data=self.es.query(key="connection"))
+        post_mock.assert_called_with(url, data=json.dumps(self.es.query()))
 
     def test_process(self):
         data = {

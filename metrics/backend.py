@@ -1,6 +1,7 @@
 from django.conf import settings
 
 import requests
+import json
 
 
 class MetricNotEnabled(Exception):
@@ -27,9 +28,9 @@ class ElasticSearch(object):
         self.app = app
         self.url = url
 
-    def post(self, data):
-        url = "{}/.measure-tsuru-*/{}/_search".format(self.url, data["type"])
-        data = requests.post(url, data=data)
+    def post(self, data, metric):
+        url = "{}/.measure-tsuru-*/{}/_search".format(self.url, metric)
+        data = requests.post(url, data=json.dumps(data))
         return data.json()
 
     def process(self, data):
@@ -65,27 +66,27 @@ class ElasticSearch(object):
         }
 
     def cpu_max(self):
-        query = self.query(key="cpu_max")
-        response = self.post(query)
+        query = self.query()
+        response = self.post(query, "cpu_max")
         process = self.process(response)
         return process
 
     def mem_max(self):
-        return self.process(self.post(self.query(key="mem_max")))
+        return self.process(self.post(self.query(), "mem_max"))
 
     def units(self):
-        return self.post(self.query(key="cpu_max"))
+        return self.post(self.query(), "cpu_max")
 
     def requests_min(self):
-        return self.post(self.query(key="response_time"))
+        return self.post(self.query(), "response_time")
 
     def response_time(self):
-        return self.post(self.query(key="response_time"))
+        return self.post(self.query(), "response_time")
 
     def connections(self):
-        return self.post(self.query(key="connection"))
+        return self.post(self.query(), "connection")
 
-    def query(self, key, date_range="", interval="1m", aggregation=None):
+    def query(self, date_range="1h/h", interval="1m", aggregation=None):
         query_filter = {
             "filtered": {
                 "filter": {
@@ -102,27 +103,23 @@ class ElasticSearch(object):
                 "avg": {"avg": {"field": "value"}}
             }
         return {
-            "index": self.index,
-            "type": key,
-            "body": {
-                "query": query_filter,
-                "aggs": {
-                    "range": {
-                        "date_range": {
-                            "field": "@timestamp",
-                            "ranges": [{
-                                "from": "now-" + date_range,
-                                "to": "now"
-                            }]
-                        },
-                        "aggs": {
-                            "date": {
-                                "date_histogram": {
-                                    "field": "@timestamp",
-                                    "interval": interval
-                                },
-                                "aggs": aggregation,
-                            }
+            "query": query_filter,
+            "aggs": {
+                "range": {
+                    "date_range": {
+                        "field": "@timestamp",
+                        "ranges": [{
+                            "from": "now-" + date_range,
+                            "to": "now"
+                        }]
+                    },
+                    "aggs": {
+                        "date": {
+                            "date_histogram": {
+                                "field": "@timestamp",
+                                "interval": interval
+                            },
+                            "aggs": aggregation,
                         }
                     }
                 }
