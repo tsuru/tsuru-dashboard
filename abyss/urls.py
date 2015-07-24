@@ -16,6 +16,7 @@ urlpatterns = patterns(
     (r'^healthcheck/', include('healthcheck.urls')),
     (r'^autoscale/', include('autoscale.urls')),
     (r'^dashboard/', include('dashboard.urls')),
+    (r'^metrics/', include('metrics.urls')),
 )
 
 urlpatterns += patterns(

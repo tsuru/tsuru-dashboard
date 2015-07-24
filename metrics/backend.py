@@ -9,7 +9,7 @@ class MetricNotEnabled(Exception):
 
 def get_backend(app):
     if "envs" in app and "ELASTICSEARCH_HOST" in app["envs"]:
-        return ElasticSearch("ELASTICSEARCH_HOST", ".measure-tsuru-*", app["name"])
+        return ElasticSearch(app["envs"]["ELASTICSEARCH_HOST"], ".measure-tsuru-*", app["name"])
 
     response = requests.get("{}/apps/tsuru-dashboard/metric/envs".format(
         settings.TSURU_HOST,
@@ -28,7 +28,8 @@ class ElasticSearch(object):
         self.url = url
 
     def post(self, data):
-        data = requests.post(self.url, data=data)
+        url = "{}/.measure-tsuru-*/{}/_search".format(self.url, data["type"])
+        data = requests.post(url, data=data)
         return data.json()
 
     def process(self, data):
@@ -64,7 +65,10 @@ class ElasticSearch(object):
         }
 
     def cpu_max(self):
-        return self.process(self.post(self.query(key="cpu_max")))
+        query = self.query(key="cpu_max")
+        response = self.post(query)
+        process = self.process(response)
+        return process
 
     def mem_max(self):
         return self.process(self.post(self.query(key="mem_max")))

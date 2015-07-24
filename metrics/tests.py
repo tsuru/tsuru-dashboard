@@ -44,33 +44,39 @@ class ElasticSearchTest(TestCase):
     def test_cpu_max(self, post_mock):
         self.es.process = Mock()
         self.es.cpu_max()
-        post_mock.assert_called_with(self.es.url, data=self.es.query(key="cpu_max"))
+        url = "{}/.measure-tsuru-*/{}/_search".format(self.es.url, "cpu_max")
+        post_mock.assert_called_with(url, data=self.es.query(key="cpu_max"))
 
     @patch("requests.post")
     def test_mem_max(self, post_mock):
         self.es.process = Mock()
         self.es.mem_max()
-        post_mock.assert_called_with(self.es.url, data=self.es.query(key="mem_max"))
+        url = "{}/.measure-tsuru-*/{}/_search".format(self.es.url, "mem_max")
+        post_mock.assert_called_with(url, data=self.es.query(key="mem_max"))
 
     @patch("requests.post")
     def test_units(self, post_mock):
         self.es.units()
-        post_mock.assert_called_with(self.es.url, data=self.es.query(key="cpu_max"))
+        url = "{}/.measure-tsuru-*/{}/_search".format(self.es.url, "cpu_max")
+        post_mock.assert_called_with(url, data=self.es.query(key="cpu_max"))
 
     @patch("requests.post")
     def test_requests_min(self, post_mock):
         self.es.requests_min()
-        post_mock.assert_called_with(self.es.url, data=self.es.query(key="response_time"))
+        url = "{}/.measure-tsuru-*/{}/_search".format(self.es.url, "response_time")
+        post_mock.assert_called_with(url, data=self.es.query(key="response_time"))
 
     @patch("requests.post")
     def test_response_time(self, post_mock):
         self.es.response_time()
-        post_mock.assert_called_with(self.es.url, data=self.es.query(key="response_time"))
+        url = "{}/.measure-tsuru-*/{}/_search".format(self.es.url, "response_time")
+        post_mock.assert_called_with(url, data=self.es.query(key="response_time"))
 
     @patch("requests.post")
     def test_connections(self, post_mock):
         self.es.connections()
-        post_mock.assert_called_with(self.es.url, data=self.es.query(key="connection"))
+        url = "{}/.measure-tsuru-*/{}/_search".format(self.es.url, "connection")
+        post_mock.assert_called_with(url, data=self.es.query(key="connection"))
 
     def test_process(self):
         data = {
