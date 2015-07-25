@@ -11,7 +11,7 @@ import json
 
 class MetricViewTest(TestCase):
     def request(self):
-        request = RequestFactory().get("")
+        request = RequestFactory().get("/ble/?metric=cpu_max")
         request.session = {"tsuru_token": "token"}
         return request
 
@@ -76,6 +76,19 @@ class MetricViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
         get_backend_mock.assert_called_with({'envs': {}})
         backend_mock.cpu_max.assert_called_with()
+
+    @patch("auth.views.token_is_valid")
+    def test_get_bad_request(self, token_mock):
+        request = RequestFactory().get("")
+        request.session = {"tsuru_token": "token"}
+        token_mock.return_value = True
+
+        v = views.Metric
+        view = v.as_view()
+
+        response = view(request, app_name="app_name")
+
+        self.assertEqual(response.status_code, 400)
 
 
 class BackendTest(TestCase):

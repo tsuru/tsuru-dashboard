@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseBadRequest
 from django.conf import settings
 
 from auth.views import LoginRequiredView
@@ -27,11 +27,16 @@ class Metric(LoginRequiredView):
         return envs
 
     def get(self, *args, **kwargs):
-        from metrics.backend import get_backend
+        metric = self.request.GET.get("metric")
+        if not metric:
+            return HttpResponseBadRequest()
+
         app_name = kwargs['app_name']
         app = self.get_app(app_name)
         app["envs"] = self.get_envs(self.request, app_name)
 
+        from metrics.backend import get_backend
         backend = get_backend(app)
-        data = backend.cpu_max()
+
+        data = getattr(backend, metric)()
         return HttpResponse(json.dumps(data))
