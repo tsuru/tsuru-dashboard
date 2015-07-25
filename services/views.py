@@ -27,10 +27,6 @@ class ServiceInstanceDetail(LoginRequiredView):
                 app_list.append(app['name'])
         return app_list
 
-    @property
-    def authorization(self):
-        return {'authorization': self.request.session.get('tsuru_token')}
-
     def get_instance(self, instance_name):
         url = "{0}/services/instances/{1}".format(settings.TSURU_HOST,
                                                   instance_name)

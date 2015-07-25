@@ -8,10 +8,6 @@ import requests
 
 
 class Metric(LoginRequiredView):
-    @property
-    def authorization(self):
-        return {'authorization': self.request.session.get('tsuru_token')}
-
     def get_app(self, app_name):
         url = '{}/apps/{}'.format(settings.TSURU_HOST, app_name)
         return requests.get(url, headers=self.authorization).json()

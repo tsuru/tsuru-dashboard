@@ -29,6 +29,18 @@ class LoginRequiredMixinTest(TestCase):
         response = StubView.as_view()(request)
         self.assertEqual('ok', response.content)
 
+    def test_authorization(self):
+        view = StubView()
+
+        request = RequestFactory().get('/')
+        request.session = {'tsuru_token': 'my beautiful token'}
+
+        view.request = request
+        headers = view.authorization
+
+        expected = {'authorization': 'my beautiful token'}
+        self.assertDictEqual(headers, expected)
+
 
 class StubView(LoginRequiredMixin, View):
 

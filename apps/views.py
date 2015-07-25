@@ -26,10 +26,6 @@ from auth.views import LoginRequiredView, LoginRequiredMixin
 class DeployInfo(LoginRequiredMixin, TemplateView):
     template_name = 'apps/deploy.html'
 
-    @property
-    def authorization(self):
-        return {'authorization': self.request.session.get('tsuru_token')}
-
     def get_context_data(self, *args, **kwargs):
         deploy_id = kwargs['deploy']
         context = super(DeployInfo, self).get_context_data(*args, **kwargs)
@@ -58,10 +54,6 @@ class DeployInfo(LoginRequiredMixin, TemplateView):
 
 class ListDeploy(LoginRequiredView):
     template = 'apps/deploys.html'
-
-    @property
-    def authorization(self):
-        return {'authorization': self.request.session.get('tsuru_token')}
 
     def zip_to_targz(self, zip_file):
         fd = StringIO()
@@ -145,10 +137,6 @@ class ChangeUnit(LoginRequiredView):
             data=str(units)
         )
 
-    @property
-    def authorization(self):
-        return {'authorization': self.request.session.get('tsuru_token')}
-
     def get_app(self, app_name):
         url = '{}/apps/{}'.format(settings.TSURU_HOST, app_name)
         return requests.get(url, headers=self.authorization).json()
@@ -172,10 +160,6 @@ class ChangeUnit(LoginRequiredView):
 
 class AppDetail(LoginRequiredMixin, TemplateView):
     template_name = 'apps/details.html'
-
-    @property
-    def authorization(self):
-        return {'authorization': self.request.session.get('tsuru_token')}
 
     def service_instances(self, app_name):
         tsuru_url = '{}/services/instances?app={}'.format(settings.TSURU_HOST, app_name)
@@ -442,10 +426,6 @@ class Run(LoginRequiredView):
 
 
 class LogStream(LoginRequiredView):
-    @property
-    def authorization(self):
-        return {'authorization': self.request.session.get('tsuru_token')}
-
     def get(self, request, *args, **kwargs):
         app_name = kwargs['app_name']
 
@@ -460,10 +440,6 @@ class LogStream(LoginRequiredView):
 
 class AppLog(LoginRequiredView, TemplateView):
     template_name = 'apps/app_log.html'
-
-    @property
-    def authorization(self):
-        return {'authorization': self.request.session.get('tsuru_token')}
 
     def get_context_data(self, *args, **kwargs):
         context = super(AppLog, self).get_context_data(*args, **kwargs)
@@ -547,10 +523,6 @@ class AppEnv(LoginRequiredView):
 class MetricDetail(LoginRequiredMixin, TemplateView):
     template_name = 'apps/metric_details.html'
 
-    @property
-    def authorization(self):
-        return {'authorization': self.request.session.get('tsuru_token')}
-
     def get_envs(self, app_name):
         url = '{}/apps/{}/env'.format(settings.TSURU_HOST, app_name)
         return requests.get(url, headers=self.authorization).json()
@@ -570,10 +542,6 @@ class MetricDetail(LoginRequiredMixin, TemplateView):
 
 
 class AppRollback(LoginRequiredView):
-    @property
-    def authorization(self):
-        return {'authorization': self.request.session.get('tsuru_token')}
-
     def get(self, request, app_name, image):
         url = '{}/apps/{}/deploy/rollback'.format(settings.TSURU_HOST, app_name)
         response = requests.post(url, headers=self.authorization, data={'image': image})
@@ -584,10 +552,6 @@ class AppRollback(LoginRequiredView):
 
 class Settings(LoginRequiredMixin, TemplateView):
     template_name = 'apps/settings.html'
-
-    @property
-    def authorization(self):
-        return {'authorization': self.request.session.get('tsuru_token')}
 
     def get_envs(self, app_name):
         url = '{}/apps/{}/env'.format(settings.TSURU_HOST, app_name)
@@ -611,10 +575,6 @@ class Settings(LoginRequiredMixin, TemplateView):
 
 class Metrics(LoginRequiredMixin, TemplateView):
     template_name = 'apps/metrics.html'
-
-    @property
-    def authorization(self):
-        return {'authorization': self.request.session.get('tsuru_token')}
 
     def get_envs(self, app_name):
         url = '{}/apps/{}/env'.format(settings.TSURU_HOST, app_name)

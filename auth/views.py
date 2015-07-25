@@ -21,6 +21,10 @@ def token_is_valid(token):
 
 
 class LoginRequiredMixin(object):
+    @property
+    def authorization(self):
+        return {'authorization': self.request.session.get('tsuru_token')}
+
     def dispatch(self, request, *args, **kwargs):
         token = request.session.get('tsuru_token')
         if not token or not token_is_valid(token):

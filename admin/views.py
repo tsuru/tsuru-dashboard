@@ -167,10 +167,6 @@ class DeployInfo(LoginRequiredView):
 
 
 class ListHealing(LoginRequiredView):
-    @property
-    def authorization(self):
-        return {'authorization': self.request.session.get('tsuru_token')}
-
     def get(self, request):
         url = '{}/docker/healing'.format(settings.TSURU_HOST)
         response = requests.get(url, headers=self.authorization)
