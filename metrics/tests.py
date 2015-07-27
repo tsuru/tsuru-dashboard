@@ -236,19 +236,19 @@ class ElasticSearchTest(TestCase):
             "data": [
                 {
                     "x": 1437507300000,
-                    "max": 97517568,
-                    "min": 97517568,
-                    "avg": 97517568
+                    "max": '97517568.00',
+                    "min": '97517568.00',
+                    "avg": '97517568.00'
                 },
                 {
                     "x": 1437507360000,
-                    "max": 97517568,
-                    "min": 97517568,
-                    "avg": 97517568
+                    "max": '97517568.00',
+                    "min": '97517568.00',
+                    "avg": '97517568.00'
                 }
             ],
-            "min": 97517568,
-            "max": 97517568
+            "min": '97517568.00',
+            "max": '97517568.00'
         }
         d = self.es.process(data)
         self.assertDictEqual(d, expected)
@@ -318,19 +318,19 @@ class ElasticSearchTest(TestCase):
             "data": [
                 {
                     "x": 1437507300000,
-                    "max": 93,
-                    "min": 93,
-                    "avg": 93
+                    "max": '93.00',
+                    "min": '93.00',
+                    "avg": '93.00'
                 },
                 {
                     "x": 1437507360000,
-                    "max": 93,
-                    "min": 93,
-                    "avg": 93
+                    "max": '93.00',
+                    "min": '93.00',
+                    "avg": '93.00'
                 }
             ],
-            "min": 93,
-            "max": 93
+            "min": '93.00',
+            "max": '93.00'
         }
         formatter = lambda x: x / (1024 * 1024)
         d = self.es.process(data, formatter=formatter)

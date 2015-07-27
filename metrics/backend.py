@@ -58,15 +58,14 @@ class ElasticSearch(object):
 
             d.append({
                 "x": bucket["key"],
-                "max": bucket_max,
-                "min": bucket_min,
-                "avg": bucket_avg,
+                "max": "{0:.2f}".format(bucket_max),
+                "min": "{0:.2f}".format(bucket_min),
+                "avg": "{0:.2f}".format(bucket_avg),
             })
-
         return {
             "data": d,
-            "min": min_value,
-            "max": max_value,
+            "min": "{0:.2f}".format(min_value or 0),
+            "max": "{0:.2f}".format(max_value),
         }
 
     def cpu_max(self, date_range=None, interval=None):
@@ -104,13 +103,13 @@ class ElasticSearch(object):
 
             d.append({
                 "x": bucket["key"],
-                "units": value,
+                "units": "{0:.2f}".format(value),
             })
 
         return {
             "data": d,
-            "min": min_value,
-            "max": max_value,
+            "min": "{0:.2f}".format(min_value or 0),
+            "max": "{0:.2f}".format(max_value),
         }
 
     def requests_min(self, date_range=None, interval=None):
