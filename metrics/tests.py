@@ -145,13 +145,15 @@ class ElasticSearchTest(TestCase):
     def test_units(self, post_mock):
         self.es.units()
         url = "{}/.measure-tsuru-*/{}/_search".format(self.es.url, "cpu_max")
-        post_mock.assert_called_with(url, data=json.dumps(self.es.query()))
+        aggregation = {"units": {"cardinality": {"field": "host"}}}
+        post_mock.assert_called_with(url, data=json.dumps(self.es.query(aggregation=aggregation)))
 
     @patch("requests.post")
     def test_requests_min(self, post_mock):
         self.es.requests_min()
         url = "{}/.measure-tsuru-*/{}/_search".format(self.es.url, "response_time")
-        post_mock.assert_called_with(url, data=json.dumps(self.es.query()))
+        aggregation = {"sum": {"sum": {"field": "count"}}}
+        post_mock.assert_called_with(url, data=json.dumps(self.es.query(aggregation=aggregation)))
 
     @patch("requests.post")
     def test_response_time(self, post_mock):
@@ -163,7 +165,8 @@ class ElasticSearchTest(TestCase):
     def test_connections(self, post_mock):
         self.es.connections()
         url = "{}/.measure-tsuru-*/{}/_search".format(self.es.url, "connection")
-        post_mock.assert_called_with(url, data=json.dumps(self.es.query()))
+        aggregation = {"connection": {"terms": {"field": "connection.raw"}}}
+        post_mock.assert_called_with(url, data=json.dumps(self.es.query(aggregation=aggregation)))
 
     def test_process(self):
         data = {
@@ -230,19 +233,19 @@ class ElasticSearchTest(TestCase):
             "data": [
                 {
                     "x": 1437507300000,
-                    "max": "93.00",
-                    "min": "93.00",
-                    "avg": "93.00"
+                    "max": 97517568,
+                    "min": 97517568,
+                    "avg": 97517568
                 },
                 {
                     "x": 1437507360000,
-                    "max": "93.00",
-                    "min": "93.00",
-                    "avg": "93.00"
+                    "max": 97517568,
+                    "min": 97517568,
+                    "avg": 97517568
                 }
             ],
-            "min": "93.00",
-            "max": "93.00"
+            "min": 97517568,
+            "max": 97517568
         }
         d = self.es.process(data)
         self.assertDictEqual(d, expected)

@@ -39,9 +39,9 @@ class ElasticSearch(object):
         max_value = 0
 
         for bucket in data["aggregations"]["range"]["buckets"][0]["date"]["buckets"]:
-            bucket_max = bucket["max"]["value"]# / (1024 * 1024)
-            bucket_min = bucket["min"]["value"]# / (1024 * 1024)
-            bucket_avg = bucket["avg"]["value"]# / (1024 * 1024)
+            bucket_max = bucket["max"]["value"]
+            bucket_min = bucket["min"]["value"]
+            bucket_avg = bucket["avg"]["value"]
 
             if min_value is None:
                 min_value = bucket_min
@@ -54,15 +54,15 @@ class ElasticSearch(object):
 
             d.append({
                 "x": bucket["key"],
-                "max": "{0:.2f}".format(bucket_max),
-                "min": "{0:.2f}".format(bucket_min),
-                "avg": "{0:.2f}".format(bucket_avg),
+                "max": bucket_max,
+                "min": bucket_min,
+                "avg": bucket_avg,
             })
 
         return {
             "data": d,
-            "min": "{0:.2f}".format(min_value),
-            "max": "{0:.2f}".format(max_value),
+            "min": min_value,
+            "max": max_value,
         }
 
     def cpu_max(self):
@@ -77,7 +77,7 @@ class ElasticSearch(object):
     def units(self):
         aggregation = {"units": {"cardinality": {"field": "host"}}}
         return self.units_process(self.post(self.query(aggregation=aggregation), "cpu_max"))
-    
+
     def units_process(self, data, formatter=None):
         d = []
         min_value = None
@@ -93,7 +93,7 @@ class ElasticSearch(object):
                 min_value = value
 
             if value > max_value:
-                max_value = value 
+                max_value = value
 
             d.append({
                 "x": bucket["key"],
@@ -125,7 +125,7 @@ class ElasticSearch(object):
                 min_value = value
 
             if value > max_value:
-                max_value = value 
+                max_value = value
 
             d.append({
                 "x": bucket["key"],
@@ -163,7 +163,7 @@ class ElasticSearch(object):
 
                 if size > max_value:
                     max_value = size
-                
+
                 obj[conn] = size
 
             d.append(obj)
