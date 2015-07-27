@@ -16,8 +16,8 @@
 			$.each(kinds, function(i, kind) {
 				var opts = {
 					appName: appName,
-					serie: "1min",
-					from: "1h",
+					serie: "1m",
+					from: "1h/h",
 					hover: false,
 					kind: kind,
 					envs: envs

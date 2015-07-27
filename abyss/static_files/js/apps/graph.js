@@ -35,6 +35,13 @@
 
 	var newGraph = function(opts) {
         var url ="/metrics/" + opts.appName + "/?metric=" + opts.kind;
+
+        if ("serie" in opts)
+            url += "&interval=" + opts["serie"];
+
+        if ("from" in opts)
+            url += "&date_range=" + opts["from"];
+
         $.getJSON(url, function(data) {
             buildGraph(opts, data);
 			//window.setTimeout(buildGraph, 60000, opts, data);
