@@ -252,3 +252,86 @@ class ElasticSearchTest(TestCase):
         }
         d = self.es.process(data)
         self.assertDictEqual(d, expected)
+
+    def test_process_custom_formatter(self):
+        data = {
+            "took": 86,
+            "timed_out": False,
+            "_shards": {
+                "total": 266,
+                "successful": 266,
+                "failed": 0
+            },
+            "hits": {
+                "total": 644073,
+                "max_score": 0,
+                "hits": []
+            },
+            "aggregations": {
+                "range": {
+                    "buckets": [
+                        {
+                            "key": "2015-07-21T19:35:00.000Z-2015-07-21T19:37:05.388Z",
+                            "from": 1437507300000,
+                            "from_as_string": "2015-07-21T19:35:00.000Z",
+                            "to": 1437507425388,
+                            "to_as_string": "2015-07-21T19:37:05.388Z",
+                            "doc_count": 18,
+                            "date": {
+                                "buckets": [
+                                    {
+                                        "key_as_string": "2015-07-21T19:35:00.000Z",
+                                        "key": 1437507300000,
+                                        "doc_count": 9,
+                                        "min": {
+                                            "value": 97517568
+                                        },
+                                        "max": {
+                                            "value": 97517568
+                                        },
+                                        "avg": {
+                                            "value": 97517568
+                                        }
+                                    },
+                                    {
+                                        "key_as_string": "2015-07-21T19:36:00.000Z",
+                                        "key": 1437507360000,
+                                        "doc_count": 9,
+                                        "min": {
+                                            "value": 97517568
+                                        },
+                                        "max": {
+                                            "value": 97517568
+                                        },
+                                        "avg": {
+                                            "value": 97517568
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+        expected = {
+            "data": [
+                {
+                    "x": 1437507300000,
+                    "max": 93,
+                    "min": 93,
+                    "avg": 93
+                },
+                {
+                    "x": 1437507360000,
+                    "max": 93,
+                    "min": 93,
+                    "avg": 93
+                }
+            ],
+            "min": 93,
+            "max": 93
+        }
+        formatter = lambda x: x / (1024 * 1024)
+        d = self.es.process(data, formatter=formatter)
+        self.assertDictEqual(d, expected)

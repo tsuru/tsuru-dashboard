@@ -34,14 +34,18 @@ class ElasticSearch(object):
         return data.json()
 
     def process(self, data, formatter=None):
+
+        if not formatter:
+            formatter = lambda x: x
+
         d = []
         min_value = None
         max_value = 0
 
         for bucket in data["aggregations"]["range"]["buckets"][0]["date"]["buckets"]:
-            bucket_max = bucket["max"]["value"]
-            bucket_min = bucket["min"]["value"]
-            bucket_avg = bucket["avg"]["value"]
+            bucket_max = formatter(bucket["max"]["value"])
+            bucket_min = formatter(bucket["min"]["value"])
+            bucket_avg = formatter(bucket["avg"]["value"])
 
             if min_value is None:
                 min_value = bucket_min
@@ -73,7 +77,8 @@ class ElasticSearch(object):
 
     def mem_max(self, date_range=None, interval=None):
         query = self.query(date_range=date_range, interval=interval)
-        return self.process(self.post(query, "mem_max"))
+        formatter = lambda x: x / (1024 * 1024)
+        return self.process(self.post(query, "mem_max"), formatter=formatter)
 
     def units(self, date_range=None, interval=None):
         aggregation = {"units": {"cardinality": {"field": "host"}}}
