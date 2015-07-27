@@ -34,5 +34,7 @@ class Metric(LoginRequiredView):
         from metrics.backend import get_backend
         backend = get_backend(app)
 
-        data = getattr(backend, metric)()
+        interval = self.request.GET.get("interval")
+        date_range = self.request.GET.get("date_range")
+        data = getattr(backend, metric)(date_range=date_range, interval=interval)
         return HttpResponse(json.dumps(data))

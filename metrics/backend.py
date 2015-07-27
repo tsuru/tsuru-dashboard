@@ -65,18 +65,20 @@ class ElasticSearch(object):
             "max": max_value,
         }
 
-    def cpu_max(self):
-        query = self.query()
+    def cpu_max(self, date_range=None, interval=None):
+        query = self.query(date_range=date_range, interval=interval)
         response = self.post(query, "cpu_max")
         process = self.process(response)
         return process
 
-    def mem_max(self):
-        return self.process(self.post(self.query(), "mem_max"))
+    def mem_max(self, date_range=None, interval=None):
+        query = self.query(date_range=date_range, interval=interval)
+        return self.process(self.post(query, "mem_max"))
 
-    def units(self):
+    def units(self, date_range=None, interval=None):
         aggregation = {"units": {"cardinality": {"field": "host"}}}
-        return self.units_process(self.post(self.query(aggregation=aggregation), "cpu_max"))
+        query = self.query(date_range=date_range, interval=interval, aggregation=aggregation)
+        return self.units_process(self.post(query, "cpu_max"))
 
     def units_process(self, data, formatter=None):
         d = []
@@ -106,9 +108,10 @@ class ElasticSearch(object):
             "max": max_value,
         }
 
-    def requests_min(self):
+    def requests_min(self, date_range=None, interval=None):
         aggregation = {"sum": {"sum": {"field": "count"}}}
-        return self.requests_min_process(self.post(self.query(aggregation=aggregation), "response_time"))
+        query = self.query(date_range=date_range, interval=interval, aggregation=aggregation)
+        return self.requests_min_process(self.post(query, "response_time"))
 
     def requests_min_process(self, data, formatter=None):
         d = []
@@ -138,12 +141,14 @@ class ElasticSearch(object):
             "max": max_value,
         }
 
-    def response_time(self):
-        return self.process(self.post(self.query(), "response_time"))
+    def response_time(self, date_range=None, interval=None):
+        query = self.query(date_range=date_range, interval=interval)
+        return self.process(self.post(query, "response_time"))
 
-    def connections(self):
+    def connections(self, date_range=None, interval=None):
         aggregation = {"connection": {"terms": {"field": "connection.raw"}}}
-        return self.connections_process(self.post(self.query(aggregation=aggregation), "connection"))
+        query = self.query(date_range=date_range, interval=interval, aggregation=aggregation)
+        return self.connections_process(self.post(query, "connection"))
 
     def connections_process(self, data, formatter=None):
         d = []
@@ -174,7 +179,13 @@ class ElasticSearch(object):
             "max": max_value,
         }
 
-    def query(self, date_range="1h/h", interval="1m", aggregation=None):
+    def query(self, date_range=None, interval=None, aggregation=None):
+        if not date_range:
+            date_range = "1h/h"
+
+        if not interval:
+            interval = "1m"
+
         query_filter = {
             "filtered": {
                 "filter": {
