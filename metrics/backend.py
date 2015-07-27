@@ -33,15 +33,15 @@ class ElasticSearch(object):
         data = requests.post(url, data=json.dumps(data))
         return data.json()
 
-    def process(self, data):
+    def process(self, data, formatter=None):
         d = []
         min_value = None
         max_value = 0
 
         for bucket in data["aggregations"]["range"]["buckets"][0]["date"]["buckets"]:
-            bucket_max = bucket["max"]["value"] / (1024 * 1024)
-            bucket_min = bucket["min"]["value"] / (1024 * 1024)
-            bucket_avg = bucket["avg"]["value"] / (1024 * 1024)
+            bucket_max = bucket["max"]["value"]# / (1024 * 1024)
+            bucket_min = bucket["min"]["value"]# / (1024 * 1024)
+            bucket_avg = bucket["avg"]["value"]# / (1024 * 1024)
 
             if min_value is None:
                 min_value = bucket_min
@@ -75,16 +75,16 @@ class ElasticSearch(object):
         return self.process(self.post(self.query(), "mem_max"))
 
     def units(self):
-        return self.post(self.query(), "cpu_max")
+        return self.process(self.post(self.query(), "cpu_max"))
 
     def requests_min(self):
-        return self.post(self.query(), "response_time")
+        return self.process(self.post(self.query(), "response_time"))
 
     def response_time(self):
-        return self.post(self.query(), "response_time")
+        return self.process(self.post(self.query(), "response_time"))
 
     def connections(self):
-        return self.post(self.query(), "connection")
+        return self.process(self.post(self.query(), "connection"))
 
     def query(self, date_range="1h/h", interval="1m", aggregation=None):
         query_filter = {
