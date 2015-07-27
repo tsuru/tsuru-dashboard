@@ -75,7 +75,36 @@ class ElasticSearch(object):
         return self.process(self.post(self.query(), "mem_max"))
 
     def units(self):
-        return self.process(self.post(self.query(), "cpu_max"))
+        aggregation = {"units": {"cardinality": {"field": "host"}}}
+        return self.units_process(self.post(self.query(aggregation=aggregation), "cpu_max"))
+    
+    def units_process(self, data, formatter=None):
+        d = []
+        min_value = None
+        max_value = 0
+
+        for bucket in data["aggregations"]["range"]["buckets"][0]["date"]["buckets"]:
+            value = bucket["units"]["value"]
+
+            if min_value is None:
+                min_value = value
+
+            if value < min_value:
+                min_value = value
+
+            if value > max_value:
+                max_value = value 
+
+            d.append({
+                "x": bucket["key"],
+                "units": value,
+            })
+
+        return {
+            "data": d,
+            "min": min_value,
+            "max": max_value,
+        }
 
     def requests_min(self):
         return self.process(self.post(self.query(), "response_time"))
@@ -104,6 +133,7 @@ class ElasticSearch(object):
             }
         return {
             "query": query_filter,
+            "size": 0,
             "aggs": {
                 "range": {
                     "date_range": {
