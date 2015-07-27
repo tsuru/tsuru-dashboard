@@ -107,7 +107,36 @@ class ElasticSearch(object):
         }
 
     def requests_min(self):
-        return self.process(self.post(self.query(), "response_time"))
+        aggregation = {"sum": {"sum": {"field": "count"}}}
+        return self.requests_min_process(self.post(self.query(aggregation=aggregation), "response_time"))
+
+    def requests_min_process(self, data, formatter=None):
+        d = []
+        min_value = None
+        max_value = 0
+
+        for bucket in data["aggregations"]["range"]["buckets"][0]["date"]["buckets"]:
+            value = bucket["sum"]["value"]
+
+            if min_value is None:
+                min_value = value
+
+            if value < min_value:
+                min_value = value
+
+            if value > max_value:
+                max_value = value 
+
+            d.append({
+                "x": bucket["key"],
+                "sum": value,
+            })
+
+        return {
+            "data": d,
+            "min": min_value,
+            "max": max_value,
+        }
 
     def response_time(self):
         return self.process(self.post(self.query(), "response_time"))
