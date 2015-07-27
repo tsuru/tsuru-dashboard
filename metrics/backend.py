@@ -142,7 +142,37 @@ class ElasticSearch(object):
         return self.process(self.post(self.query(), "response_time"))
 
     def connections(self):
-        return self.process(self.post(self.query(), "connection"))
+        aggregation = {"connection": {"terms": {"field": "connection.raw"}}}
+        return self.connections_process(self.post(self.query(aggregation=aggregation), "connection"))
+
+    def connections_process(self, data, formatter=None):
+        d = []
+        min_value = 0
+        max_value = 0
+
+        for bucket in data["aggregations"]["range"]["buckets"][0]["date"]["buckets"]:
+            obj = {}
+            obj["x"] = bucket["key"]
+
+            for doc in bucket["connection"]["buckets"]:
+                size = doc["doc_count"]
+                conn = doc["key"]
+
+                if size < min_value:
+                    min_value = size
+
+                if size > max_value:
+                    max_value = size
+                
+                obj[conn] = size
+
+            d.append(obj)
+
+        return {
+            "data": d,
+            "min": min_value,
+            "max": max_value,
+        }
 
     def query(self, date_range="1h/h", interval="1m", aggregation=None):
         query_filter = {
