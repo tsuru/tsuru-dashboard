@@ -1,16 +1,17 @@
 (function($, window){
 
 	var buildGraph = function(opts, result) {
+        var ykeys = Object.keys(result.data[0]).filter(function(value) { return value != "x" });
 		var options = {
 			element: opts["kind"],
 			pointSize: 0,
 			data: result.data,
 			xkey: 'x',
-			ykeys: ['max', 'min', 'avg'],
+			ykeys: ykeys,
 			ymax: result.max,
 			ymin: result.min,
 			smooth: false,
-			labels: ['max', 'min', 'avg']
+			labels: ykeys
 		};
 
 		if (!opts["hover"]) {
@@ -35,7 +36,6 @@
 	var newGraph = function(opts) {
         var url ="/metrics/" + opts.appName + "/?metric=" + opts.kind;
         $.getJSON(url, function(data) {
-        console.log(url, data);
             buildGraph(opts, data);
 			//window.setTimeout(buildGraph, 60000, opts, data);
         });
