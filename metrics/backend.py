@@ -8,13 +8,15 @@ class MetricNotEnabled(Exception):
     pass
 
 
-def get_backend(app):
+def get_backend(app, token):
     if "envs" in app and "ELASTICSEARCH_HOST" in app["envs"]:
         return ElasticSearch(app["envs"]["ELASTICSEARCH_HOST"], ".measure-tsuru-*", app["name"])
 
+    headers = {'authorization': token}
     response = requests.get("{}/apps/tsuru-dashboard/metric/envs".format(
         settings.TSURU_HOST,
-    ))
+    ), headers=headers)
+
     if response.status_code == 200:
         data = response.json()
         if "METRICS_ELASTICSEARCH_HOST" in data:
@@ -36,7 +38,9 @@ class ElasticSearch(object):
     def process(self, data, formatter=None):
 
         if not formatter:
-            formatter = lambda x: x
+            def default_formatter(x):
+                return x
+            formatter = default_formatter
 
         d = []
         min_value = None
@@ -76,8 +80,7 @@ class ElasticSearch(object):
 
     def mem_max(self, date_range=None, interval=None):
         query = self.query(date_range=date_range, interval=interval)
-        formatter = lambda x: x / (1024 * 1024)
-        return self.process(self.post(query, "mem_max"), formatter=formatter)
+        return self.process(self.post(query, "mem_max"), formatter=lambda x: x / (1024 * 1024))
 
     def units(self, date_range=None, interval=None):
         aggregation = {"units": {"cardinality": {"field": "host"}}}

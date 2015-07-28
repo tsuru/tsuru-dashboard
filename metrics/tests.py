@@ -77,7 +77,7 @@ class MetricViewTest(TestCase):
         response = view(request, app_name="app_name")
 
         self.assertEqual(response.status_code, 200)
-        get_backend_mock.assert_called_with({'envs': {}})
+        get_backend_mock.assert_called_with({'envs': {}}, 'token')
         backend_mock.cpu_max.assert_called_with(date_range=u'2h/h', interval=u'30m')
 
     @patch("auth.views.token_is_valid")
@@ -107,13 +107,13 @@ class BackendTest(TestCase):
 
         app = {"name": "appname"}
 
-        backend = get_backend(app)
+        backend = get_backend(app, 'token')
         self.assertIsInstance(backend, ElasticSearch)
 
     def test_envs_from_app(self):
         app = {"name": "appname", "envs": {"ELASTICSEARCH_HOST": "ble"}}
 
-        backend = get_backend(app)
+        backend = get_backend(app, 'token')
         self.assertIsInstance(backend, ElasticSearch)
 
     @patch("requests.get")
@@ -122,7 +122,7 @@ class BackendTest(TestCase):
         app = {}
 
         with self.assertRaises(MetricNotEnabled):
-            get_backend(app)
+            get_backend(app, 'token')
 
 
 class ElasticSearchTest(TestCase):
@@ -332,6 +332,5 @@ class ElasticSearchTest(TestCase):
             "min": '93.00',
             "max": '93.00'
         }
-        formatter = lambda x: x / (1024 * 1024)
-        d = self.es.process(data, formatter=formatter)
+        d = self.es.process(data, formatter=lambda x: x / (1024 * 1024))
         self.assertDictEqual(d, expected)

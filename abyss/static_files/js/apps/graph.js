@@ -43,6 +43,10 @@
             url += "&date_range=" + opts["from"];
 
         $.getJSON(url, function(data) {
+
+            if (data.data.length === 0)
+                return;
+
             buildGraph(opts, data);
 			//window.setTimeout(buildGraph, 60000, opts, data);
         });

@@ -32,7 +32,8 @@ class Metric(LoginRequiredView):
         app["envs"] = self.get_envs(self.request, app_name)
 
         from metrics.backend import get_backend
-        backend = get_backend(app)
+        token = self.request.session.get('tsuru_token')
+        backend = get_backend(app, token)
 
         interval = self.request.GET.get("interval")
         date_range = self.request.GET.get("date_range")
