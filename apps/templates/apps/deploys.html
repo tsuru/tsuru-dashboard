@@ -66,7 +66,7 @@
                         <a href="{% url 'app-deploy' app.name deploy.ID  %}">view info</a>
                         {% if deploy.CanRollback and forloop.counter0 %}
                         -
-                        <a href="#confirmation"
+                        <a class="rollback" href="#confirmation"
                         data-toggle="modal" app-name="{{ app.name }}" rollback-url="{% url 'app-rollback' app.name deploy.Image %}">roll back to here</a>
                         {% endif %}
                     </td>
@@ -124,7 +124,7 @@
 <script src="{{ STATIC_URL }}js/confirmation.js"></script>
 <script src="https://stuk.github.io/jszip/dist/jszip.js"></script>
 <script type="text/javascript">
-$(".deploys .btn").on('click', function(ev) {
+$(".deploys .rollback").on('click', function(ev) {
 		ev.preventDefault();
         var appName = $(this).attr("app-name")
 		var rollbackUrl = $(this).attr("rollback-url");
