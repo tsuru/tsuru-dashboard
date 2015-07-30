@@ -20,7 +20,7 @@ class HealingView(View):
     def get(self, request):
         authorization = {"authorization": request.session.get("tsuru_token")}
         url = "{}/docker/healing".format(settings.TSURU_HOST)
-        resp = requests.get(url, headers=authorization).json()
+        resp = requests.get(url, headers=authorization).json() or []
         healings = 0
         for healing in resp:
             end_time = healing['EndTime']
