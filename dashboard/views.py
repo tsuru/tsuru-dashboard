@@ -3,6 +3,7 @@ import re
 
 from datetime import datetime, timedelta
 
+from dateutil import parser
 from django.template.response import TemplateResponse
 from django.views.generic import View
 from django.conf import settings
@@ -25,7 +26,7 @@ class HealingView(View):
         for healing in resp:
             end_time = healing['EndTime']
             try:
-                end_time = datetime.strptime(end_time, "%Y-%m-%dT%H:%M:%S.%f-03:00")
+                end_time = parser.parse(end_time)
                 if (datetime.now() - end_time < timedelta(days=1)):
                     healings += 1
             except ValueError:
@@ -63,7 +64,7 @@ class DeploysView(View):
             timestamp = deploy['Timestamp']
             formated_timestamp = re.split("\.\d{0,5}", timestamp)
             formated_timestamp = "".join(formated_timestamp)
-            timestamp = datetime.strptime(formated_timestamp, "%Y-%m-%dT%H:%M:%S-03:00")
+            timestamp = parser.parse(formated_timestamp)
             if (datetime.now() - timestamp < timedelta(days=1)):
                 if deploy['Error']:
                     errored += 1
