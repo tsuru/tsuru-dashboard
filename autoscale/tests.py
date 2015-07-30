@@ -3,6 +3,9 @@ from django.core.urlresolvers import reverse
 
 from mock import patch
 
+import os
+import urllib
+
 
 class IndexTestCase(TestCase):
     @patch("auth.views.token_is_valid")
@@ -15,3 +18,21 @@ class IndexTestCase(TestCase):
 
             response = self.client.get(reverse("autoscale"))
             self.assertTemplateUsed(response, "autoscale/index.html")
+
+    @patch("auth.views.token_is_valid")
+    def test_service_url(self, token_is_valid):
+        token_is_valid.return_value = True
+
+        autoscale_dashboard_url = "http://localhost:123"
+        os.environ["AUTOSCALE_DASHBOARD_URL"] = autoscale_dashboard_url
+        session_engine = "django.contrib.sessions.backends.file"
+        token = "token/+12faslfkl12"
+
+        with self.settings(SESSION_ENGINE=session_engine):
+            session = self.client.session
+            session['tsuru_token'] = "beare {}".format(token)
+            session.save()
+
+            response = self.client.get(reverse("autoscale"))
+            expected = "{}?TSURU_TOKEN={}".format(autoscale_dashboard_url, urllib.quote(token))
+            self.assertEqual(response.context_data["service_url"], expected)
