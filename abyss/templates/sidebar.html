@@ -34,6 +34,13 @@
 					</a>
                 </li>
 				{% endif %}
+                {% if autoscale_enabled %}
+                    <li{% if active == "autoscale" %} class="active"{% endif %}>
+                        <a href="{% url 'autoscale' %}">
+                            <span>Auto scale</span>
+                        </a>
+                    </li>
+                {% endif %}
 			</ul>
 		</div> <!-- /container-user -->
 	</div> <!-- /inner -->

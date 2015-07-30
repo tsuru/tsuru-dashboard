@@ -3,8 +3,22 @@ from django.core.urlresolvers import reverse
 
 from mock import patch
 
+from autoscale.context_processors import autoscale_enabled
+
 import os
 import urllib
+
+
+class ContextProcesssorsTest(TestCase):
+    def test_autoscale_enabled(self):
+        os.environ["AUTOSCALE_DASHBOARD_URL"] = "http://localhost"
+        result = autoscale_enabled({})
+        self.assertTrue(result["autoscale_enabled"])
+
+    def test_autoscale_not_enabled(self):
+        del os.environ["AUTOSCALE_DASHBOARD_URL"]
+        result = autoscale_enabled({})
+        self.assertFalse(result["autoscale_enabled"])
 
 
 class IndexTestCase(TestCase):
