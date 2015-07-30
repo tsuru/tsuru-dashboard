@@ -25,7 +25,6 @@ $.ajax({
         kpiGroup.unlock();
     },
     error: function(jqXHR, textStatus, errorThrown) {
-        console.log(textStatus, errorThrown);
         kpiGroup.addKPI('error', {caption: 'error', value: 0});
         kpiGroup.unlock();
     }
@@ -44,7 +43,6 @@ $.ajax({
         healingKPI.unlock();
     },
     error: function(jqXHR, textStatus, errorThrown) {
-        console.log(textStatus, errorThrown);
         healingKPI.setValue(0);
         healingKPI.unlock();
     }
@@ -64,7 +62,6 @@ $.ajax({
         deployGauge.unlock();
     },
     error: function(jqXHR, textStatus, errorThrown) {
-        console.log(textStatus, errorThrown);
         deployGauge.setValue(0);
         deployGauge.unlock();
     }
