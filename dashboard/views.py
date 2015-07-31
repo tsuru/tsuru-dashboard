@@ -40,7 +40,7 @@ class HealingView(LoginRequiredView):
         return JsonResponse({"healing": healings}, safe=False)
 
 
-class CloudStatusView(View):
+class CloudStatusView(LoginRequiredView):
     def get(self, request):
         authorization = {"authorization": request.session.get("tsuru_token")}
         url = "{}/apps".format(settings.TSURU_HOST)
@@ -59,7 +59,7 @@ class CloudStatusView(View):
         return JsonResponse(data, safe=False)
 
 
-class DeploysView(View):
+class DeploysView(LoginRequiredView):
     def get(self, request):
         authorization = {"authorization": request.session.get("tsuru_token")}
         url = "{}/deploys?limit=250".format(settings.TSURU_HOST)
