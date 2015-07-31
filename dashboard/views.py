@@ -8,6 +8,7 @@ from django.template.response import TemplateResponse
 from django.views.generic import View
 from django.conf import settings
 from django.http import JsonResponse
+from pytz import utc
 
 from auth.views import LoginRequiredView
 
@@ -17,7 +18,7 @@ class DashboardView(LoginRequiredView):
         return TemplateResponse(request, 'dashboard/dashboard.html')
 
 
-class HealingView(View):
+class HealingView(LoginRequiredView):
     def get(self, request):
         authorization = {"authorization": request.session.get("tsuru_token")}
         url = "{}/docker/healing".format(settings.TSURU_HOST)
@@ -27,7 +28,12 @@ class HealingView(View):
             end_time = healing['EndTime']
             try:
                 end_time = parser.parse(end_time)
-                if (datetime.now() - end_time < timedelta(days=1)):
+                if not end_time.tzinfo:
+                    end_time = utc.localize(end_time)
+                else:
+                    end_time = end_time.astimezone(utc)
+                now = utc.localize(datetime.utcnow())
+                if (now - end_time < timedelta(days=1)):
                     healings += 1
             except ValueError:
                 pass
