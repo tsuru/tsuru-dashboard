@@ -120,9 +120,8 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="https://rawgit.com/enyo/dropzone/master/dist/dropzone.js"></script>
 <script src="{{ STATIC_URL }}js/confirmation.js"></script>
-<script src="https://stuk.github.io/jszip/dist/jszip.js"></script>
+<script src="{{ STATIC_URL }}js/jszip.js"></script>
 <script type="text/javascript">
 $(".deploys .rollback").on('click', function(ev) {
 		ev.preventDefault();
@@ -177,10 +176,9 @@ $(".deploys .rollback").on('click', function(ev) {
             reader.onloadend = function(e) {
                 callback(entry.name, this.result);
             };
-            reader.readAsText(file);
+            reader.readAsBinaryString(file);
         });
     }
-
 
     var dropzone = document.getElementsByTagName('body')[0];
 
@@ -195,7 +193,7 @@ $(".deploys .rollback").on('click', function(ev) {
             if (entry.isFile) {
                 readFile(entry, function(name, result) {
                     Output(name);
-                    zip.file(name, result);
+                    zip.file(name, result, {binary: true});
                 });
             } else if (entry.isDirectory) {
                 var dirReader = entry.createReader();
@@ -204,7 +202,7 @@ $(".deploys .rollback").on('click', function(ev) {
                 dirReader.readEntries (function(results) {
                     results.forEach(function(entry) {
                         readFile(entry, function(name, result) {
-                            folder.file(name, result);
+                            folder.file(name, result, {binary: true});
                         });
                     });
                 });
