@@ -108,3 +108,13 @@ class CreateAppViewTest(TestCase):
             data='{"platform": "django", "name": "myepe", "plan": {"name": "basic"}}',
             headers={'authorization': request.session['tsuru_token']}
         )
+
+    @patch('requests.get')
+    def test_pools(self, get_mock):
+        data = {"name": "myepe", "platform": "django", "plan": "basic"}
+        request = RequestFactory().post("/", data)
+        request.session = {'tsuru_token': 'tokentest'}
+
+        view = CreateApp()
+        pools = view.pools(request)
+        self.assertListEqual([('', '')], pools)

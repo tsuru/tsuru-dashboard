@@ -294,7 +294,7 @@ class CreateApp(LoginRequiredView):
         for team_list in response.json():
             for pool in team_list['Pools']:
                 pools.add(pool)
-        result = [(', ')]
+        result = [('', '')]
         result.extend([(p, p) for p in pools])
         return result
 
