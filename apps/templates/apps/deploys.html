@@ -191,16 +191,18 @@ $(".deploys .rollback").on('click', function(ev) {
         for (var i = 0; i < length; i++) {
             var entry = e.dataTransfer.items[i].webkitGetAsEntry();
             if (entry.isFile) {
+                Output(entry.name);
                 readFile(entry, function(name, result) {
-                    Output(name);
                     zip.file(name, result, {binary: true});
                 });
             } else if (entry.isDirectory) {
+                var dirName = entry.name + "/";
+                Output(dirName);
                 var dirReader = entry.createReader();
-                var entries = [];
                 var folder = zip.folder(entry.name);
                 dirReader.readEntries (function(results) {
                     results.forEach(function(entry) {
+                        Output(dirName + entry.name);
                         readFile(entry, function(name, result) {
                             folder.file(name, result, {binary: true});
                         });
