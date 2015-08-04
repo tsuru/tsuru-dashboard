@@ -2,6 +2,7 @@
 {% load filters_deploys %}
 
 {% block extra_css %}
+{{ block.super }}
 <link rel="stylesheet" href="{{ STATIC_URL }}css/deploys.css" />
 <link rel="stylesheet" href="https://rawgit.com/enyo/dropzone/master/dist/dropzone.css">
 <style>

@@ -12,3 +12,4 @@
 .venv
 htmlcov
 local_settings.py
+apps/tests/example.tar.gz
