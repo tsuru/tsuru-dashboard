@@ -27,6 +27,10 @@ from auth.views import LoginRequiredView, LoginRequiredMixin
 class DeployInfo(LoginRequiredMixin, TemplateView):
     template_name = 'apps/deploy.html'
 
+    def get_app(self, app_name):
+        url = '{}/apps/{}'.format(settings.TSURU_HOST, app_name)
+        return requests.get(url, headers=self.authorization).json()
+
     def get_context_data(self, *args, **kwargs):
         deploy_id = kwargs['deploy']
         context = super(DeployInfo, self).get_context_data(*args, **kwargs)
@@ -44,12 +48,8 @@ class DeployInfo(LoginRequiredMixin, TemplateView):
 
         context['deploy']['Diff'] = diff
 
-        class App(object):
-            def __init__(self, name):
-                self.name = name
-
         app_name = kwargs['app_name']
-        context['app'] = App(name=app_name)
+        context['app'] = self.get_app(app_name)
         return context
 
 
@@ -100,6 +100,10 @@ class ListDeploy(LoginRequiredView):
         tar_file = self.zip_to_targz(zip_file)
         return self.deploy(request, app_name, tar_file)
 
+    def get_app(self, app_name):
+        url = '{}/apps/{}'.format(settings.TSURU_HOST, app_name)
+        return requests.get(url, headers=self.authorization).json()
+
     def get(self, request, *args, **kwargs):
         app_name = kwargs['app_name']
 
@@ -118,12 +122,7 @@ class ListDeploy(LoginRequiredView):
 
         context = {}
         context['deploys'] = deploys
-
-        class App(object):
-            def __init__(self, name):
-                self.name = name
-
-        context['app'] = App(name=app_name)
+        context['app'] = self.get_app(app_name)
 
         if len(deploys) >= 20:
             context['next'] = page + 1

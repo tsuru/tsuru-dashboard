@@ -1,6 +1,7 @@
 {% extends "apps/base.html" %}
 
 {% block extra_css %}
+{{ block.super }}
 <link rel="stylesheet" href="{{ STATIC_URL }}css/abyss.widget.css" />
 <link rel="stylesheet" href="{{ STATIC_URL }}css/detail.css" />
 {% endblock %}

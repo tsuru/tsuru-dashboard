@@ -37,7 +37,9 @@ class ListDeployViewTest(TestCase):
         self.request = RequestFactory().get("/")
         self.request.session = {"tsuru_token": "admin"}
 
-        self.response = ListDeploy.as_view()(self.request, app_name="appname")
+        view = ListDeploy
+        view.get_app = Mock()
+        self.response = view.as_view()(self.request, app_name="appname")
 
         url = '{}/deploys?app=appname&skip=0&limit=20'.format(settings.TSURU_HOST)
         headers = {'authorization': 'admin'}
@@ -54,7 +56,9 @@ class ListDeployViewTest(TestCase):
         request = RequestFactory().get("/")
         request.session = {"tsuru_token": "admin"}
 
-        ListDeploy.as_view()(request, app_name="appname")
+        view = ListDeploy
+        view.get_app = Mock()
+        view.as_view()(request, app_name="appname")
 
         url = '{}/deploys?app=appname&skip=0&limit=20'.format(settings.TSURU_HOST)
         headers = {'authorization': 'admin'}
