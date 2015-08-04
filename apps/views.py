@@ -1,6 +1,7 @@
 import json
 import tarfile
-import time
+import datetime
+import calendar
 from cStringIO import StringIO
 from zipfile import ZipFile
 from base64 import decodestring
@@ -58,12 +59,23 @@ class ListDeploy(LoginRequiredView):
     def zip_to_targz(self, zip_file):
         fd = StringIO()
         tar = tarfile.open(fileobj=fd, mode='w:gz')
+        timeshift = int((datetime.datetime.now() - datetime.datetime.utcnow()).total_seconds())
+
         with ZipFile(zip_file) as f:
             for zip_info in f.infolist():
                 tar_info = tarfile.TarInfo(name=zip_info.filename)
                 tar_info.size = zip_info.file_size
-                tar_info.mtime = time.mktime(list(zip_info.date_time) + [-1, -1, -1])
-                tar.addfile(tarinfo=tar_info, fileobj=f.open(zip_info.filename))
+                tar_info.mtime = calendar.timegm(zip_info.date_time) - timeshift
+
+                if zip_info.filename.endswith("/"):
+                    tar_info.mode = 0755
+                    tar_info.type = tarfile.DIRTYPE
+                else:
+                    tar_info.mode = 0644
+                    tar_info.type = tarfile.REGTYPE
+
+                tar.addfile(tar_info, f.open(zip_info.filename))
+
         tar.close()
         fd.seek(0)
         return fd
