@@ -73,3 +73,7 @@ table td, table th {
     white-space: nowrap;
     text-overflow: ellipsis;
 }
+
+h1 {
+    display: inline-block;
+}
