@@ -66,14 +66,6 @@
     display: none;
 }
 
-table td, table th {
-    width: 230px;
-    overflow: hidden;
-    display: inline-block;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-}
-
 h1 {
     display: inline-block;
 }
