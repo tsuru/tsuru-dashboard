@@ -2,8 +2,12 @@
 {% load staticfiles %}
 
 {% block extra_css %}
-{{ block.super }}
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+<style>
+h1 {
+    display: inline-block;
+}
+</style>
 {% endblock %}
 
 {% block navbar %}
@@ -49,7 +53,6 @@
 <div class="container-fluid">
 	<div class="row-fluid">
 		<div class="span12">
-            <h3>Metrics</h3>
             <div class="content">
                 <div class="row-fluid">
                     <div class="span12" id="metrics">
