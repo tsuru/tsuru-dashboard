@@ -1,8 +1,9 @@
 import requests
 import json
 import re
+from dateutil import parser
 
-from datetime import datetime
+from pytz import utc
 
 from django.template.response import TemplateResponse
 from django.conf import settings
@@ -28,8 +29,15 @@ class ListNode(LoginRequiredView):
 
             for node in nodes:
                 dt = node["Metadata"].get("LastSuccess", "")
+
                 if dt:
-                    node["Metadata"]["LastSuccess"] = datetime.strptime(dt, "%Y-%m-%dT%H:%M:%S-03:00")
+                    last_success = parser.parse(node["Metadata"]["LastSuccess"])
+                    if last_success.tzinfo:
+                        last_success = last_success.astimezone(utc)
+                    else:
+                        last_success = utc.localize(last_success)
+                    node["Metadata"]["LastSuccess"] = last_success
+
                 nodes_by_pool = pools.get(node["Metadata"].get("pool"), [])
                 nodes_by_pool.append(node)
                 pools[node["Metadata"].get("pool")] = nodes_by_pool

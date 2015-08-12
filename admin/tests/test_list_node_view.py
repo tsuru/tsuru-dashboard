@@ -1,5 +1,5 @@
 from mock import patch, Mock
-from datetime import datetime
+from dateutil import parser
 
 from django.conf import settings
 from django.test import TestCase
@@ -10,6 +10,7 @@ from admin.views import ListNode
 
 class ListNodeViewTest(TestCase):
     def setUp(self):
+        self.maxDiff = None
         self.request = RequestFactory().get("/")
         self.request.session = {"tsuru_token": "admin"}
 
@@ -52,19 +53,16 @@ class ListNodeViewTest(TestCase):
         }
         get.return_value = response_mock
         response = ListNode.as_view()(self.request)
-        date = "2014-08-01T14:09:40-03:00"
+        date = parser.parse("2014-08-01T14:09:40-03:00")
         expected = {"theonepool": [
             {"Address": "http://128.0.0.1:4243",
-             "Metadata": {"LastSuccess": datetime.strptime(date, "%Y-%m-%dT%H:%M:%S-03:00"),
-                          "pool": "theonepool"},
+             "Metadata": {"LastSuccess": date, "pool": "theonepool"},
              "Status": "ready"},
             {"Address": "http://127.0.0.1:2375",
-                "Metadata": {"LastSuccess": datetime.strptime(date, "%Y-%m-%dT%H:%M:%S-03:00"),
-                             "pool": "theonepool"},
+                "Metadata": {"LastSuccess": date, "pool": "theonepool"},
              "Status": "ready"},
             {"Address": "http://myserver.com:2375",
-             "Metadata": {"LastSuccess": datetime.strptime(date, "%Y-%m-%dT%H:%M:%S-03:00"),
-                          "pool": "theonepool"},
+             "Metadata": {"LastSuccess": date, "pool": "theonepool"},
              "Status": "ready"},
         ]}
         self.assertEqual(expected, response.context_data["pools"])
