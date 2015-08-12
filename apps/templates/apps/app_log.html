@@ -1,4 +1,5 @@
 {% extends "apps/base.html" %}
+{% load staticfiles %}
 
 {% block extra_css %}
 {{ block.super }}
@@ -33,8 +34,7 @@
 {% endblock %}
 
 {% block extra_js %}
-
-<script src="{{ STATIC_URL }}/js/oboe-browser.min.js"></script>
+<script src="{% static "js/oboe-browser.min.js" %}"></script>
 <script type="text/javascript">
 (function() {
 oboe(location.pathname + "stream/").done(function(things) {

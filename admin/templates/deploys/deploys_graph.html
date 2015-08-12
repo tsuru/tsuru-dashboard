@@ -1,5 +1,7 @@
 {% extends "base.html" %}
+{% load staticfiles %}
 {% load filters_deploys %}
+
 {% block sidebar %}
 {% include "sidebar.html" with active="deploys" %}
 {% endblock %}
@@ -9,7 +11,7 @@
 {% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/nv.d3.css">
+<link rel="stylesheet" type="text/css" href="{% static "css/nv.d3.css" %}">
 {% endblock extra_css %}
 
 {% block content %}
@@ -23,8 +25,8 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{{ STATIC_URL }}js/d3.v3.min.js" charset="utf-8"></script>
-<script src="{{ STATIC_URL }}js/nv.d3.js"></script>
+<script src="{% static "js/d3.v3.min.js" %}" charset="utf-8"></script>
+<script src="{% static "js/nv.d3.js" %}"></script>
 <script>
 (function() {
     var deploysData = JSON.parse('{{ deploys | safe }}');

@@ -1,3 +1,4 @@
+{% load staticfiles %}
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -5,10 +6,10 @@
 		<meta charset="UTF-8" />
 		<meta name="description" content="tsuru web dashboard">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap.css" />
-		<link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap-responsive.css" />
-		<link rel="stylesheet" href="{{ STATIC_URL }}css/abyss.css" />
-        <link rel="icon" type="image/x-icon" href="{{ STATIC_URL }}img/favicon.ico" />
+        <link rel="stylesheet" href="{% static "css/bootstrap.css" %}">
+        <link rel="stylesheet" href="{% static "css/bootstrap-responsive.css" %}">
+        <link rel="stylesheet" href="{% static "css/abyss.css" %}">
+        <link rel="icon" type="image/x-icon" href="{% static "img/favicon.ico" %}">
 		{% block extra_css %}
 		{% endblock extra_css %}
 	</head>
@@ -16,7 +17,7 @@
 		<div class="row-fluid">
 			<div class="menu span12">
 				<div class="logo-tsuru">
-					<img src="{{ STATIC_URL}}img/brand.svg" alt="" />
+                    <img src="{% static "img/brand.svg" %}">
 				</div>
 				<div class="drop">
 					<a data-toggle="dropdown" class="dropdown-toggle" href="#">
@@ -47,8 +48,8 @@
 				{% endblock %}
 			</div>
 		</div>
-		<script src="{{ STATIC_URL}}js/jquery.min.js"></script>
-		<script src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
+        <script src="{% static "js/jquery.min.js" %}"></script>
+        <script src="{% static "js/bootstrap.min.js" %}"></script>
 		{% block extra_js %}
 		{% endblock %}
 	</body>

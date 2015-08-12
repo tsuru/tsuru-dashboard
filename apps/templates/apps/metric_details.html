@@ -1,4 +1,5 @@
 {% extends "apps/base.html" %}
+{% load staticfiles %}
 
 {% block extra_css %}
 {{ block.super }}
@@ -60,10 +61,10 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{{ STATIC_URL }}js/apps/graph.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
-<script src="{{ STATIC_URL }}js/apps/metrics.js"></script>
+<script src="{% static "js/apps/graph.js" %}"></script>
+<script src="{% static "js/apps/metrics.js" %}"></script>
 <script type="text/javascript">
 	var appName = "{{ app.name }}";
 	var envs = {};

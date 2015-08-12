@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load filters_deploys %}
+{% load staticfiles %}
 
 {% block sidebar %}
     {% include "sidebar.html" with active="deploys" %}
@@ -10,7 +11,7 @@
 {% endblock %}
 
 {% block extra_css %}
-	<link rel="stylesheet" href="{{ STATIC_URL }}css/deploys.css" />
+    <link rel="stylesheet" href="{% static "css/deploys.css" %}">
 {% endblock %}
 
 {% block content %}

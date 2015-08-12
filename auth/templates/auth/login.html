@@ -1,19 +1,20 @@
+{% load staticfiles %}
 <!DOCTYPE html>
 <html lang="en">
 	<head>
 		<title>tsuru web dashboard</title>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<link rel="stylesheet" href="{{ STATIC_URL}}css/bootstrap.min.css" />
-		<link rel="stylesheet" href="{{ STATIC_URL}}css/bootstrap-responsive.min.css" />
-		<link rel="stylesheet" href="{{ STATIC_URL}}css/abyss.css" />
-		<link rel="stylesheet" href="{{ STATIC_URL}}css/abyss.login.css" />
-        <link rel="icon" type="image/x-icon" href="{{ STATIC_URL }}img/favicon.ico" />
+        <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}" />
+        <link rel="stylesheet" href="{% static "css/bootstrap-responsive.min.css" %}" />
+        <link rel="stylesheet" href="{% static "css/abyss.css" %}" />
+        <link rel="stylesheet" href="{% static "css/abyss.login.css" %}" />
+        <link rel="icon" type="image/x-icon" href="{% static "img/favicon.ico" %}" />
 	</head>
 	<body>
 		<div class="container">
 			<div class="logo">
-				<img src="{{ STATIC_URL}}img/brand.svg" alt="" />
+                <img src="{% static "img/brand.svg" %}" />
 			</div>
 			{% if scheme_info.name == "oauth" %}
 			<form class="form-signin" action="" method="get">

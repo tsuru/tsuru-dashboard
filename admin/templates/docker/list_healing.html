@@ -1,12 +1,13 @@
 {% extends "base.html" %}
+{% load staticfiles %}
 
 {% block sidebar %}
 {% include "sidebar.html" with active="healing" %}
 {% endblock %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{{ STATIC_URL }}css/jquery.modal.css" />
-    <link rel="stylesheet" href="{{ STATIC_URL }}css/healings.css" />
+    <link rel="stylesheet" href="{% static "css/jquery.modal.css" %}">
+    <link rel="stylesheet" href="{% static "css/healings.css" %}">
 {% endblock %}
 
 {% block header %}
@@ -53,6 +54,6 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{{ STATIC_URL }}js/jquery.modal.js"></script>
-<script src="{{ STATIC_URL }}js/healing-modal.js"></script>
+<script src="{% static "js/jquery.modal.js" %}"></script>
+<script src="{% static "js/healing-modal.js" %}"></script>
 {% endblock %}

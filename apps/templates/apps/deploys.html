@@ -1,9 +1,10 @@
 {% extends "apps/base.html" %}
 {% load filters_deploys %}
+{% load staticfiles %}
 
 {% block extra_css %}
 {{ block.super }}
-<link rel="stylesheet" href="{{ STATIC_URL }}css/deploys.css" />
+<link rel="stylesheet" href="{% static "css/deploys.css" %}" />
 <link rel="stylesheet" href="https://rawgit.com/enyo/dropzone/master/dist/dropzone.css">
 <style>
 #submitbutton {
@@ -121,8 +122,8 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{{ STATIC_URL }}js/confirmation.js"></script>
-<script src="{{ STATIC_URL }}js/jszip.js"></script>
+<script src="{% static "js/confirmation.js" %}"></script>
+<script src="{% static "js/jszip.js" %}"></script>
 <script type="text/javascript">
 $(".deploys .rollback").on('click', function(ev) {
 		ev.preventDefault();

@@ -1,10 +1,11 @@
 {% extends "apps/base.html" %}
+{% load staticfiles %}
 
 {% block extra_css %}
 {{ block.super }}
-<link rel="stylesheet" href="{{ STATIC_URL }}css/abyss.widget.css" />
-<link rel="stylesheet" href="{{ STATIC_URL }}css/detail.css" />
-<link rel="stylesheet" href="{{ STATIC_URL }}css/morris.css">
+<link rel="stylesheet" href="{% static "css/abyss.widget.css" %}">
+<link rel="stylesheet" href="{% static "css/detail.css" %}">
+<link rel="stylesheet" href="{% static "css/morris.css" %}">
 {% endblock %}
 
 {% block navbar %}
@@ -25,11 +26,11 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{{ STATIC_URL }}js/apps/graph.js"></script>
-<script src="{{ STATIC_URL }}js/confirmation.js"></script>
-<script src="{{ STATIC_URL }}js/raphael-min.js"></script>
-<script src="{{STATIC_URL }}js/morris.min.js"></script>
-<script src="{{ STATIC_URL }}js/apps/detail.js"></script>
+<script src="{% static "js/apps/graph.js" %}"></script>
+<script src="{% static "js/confirmation.js" %}"></script>
+<script src="{% static "js/raphael-min.js" %}"></script>
+<script src="{% static "js/morris.min.js" %}"></script>
+<script src="{% static "js/apps/detail.js" %}"></script>
 <script type="text/javascript">
 var appName = "{{ app.name }}";
 var envs = {};

@@ -1,11 +1,12 @@
 {% extends "apps/base.html" %}
+{% load staticfiles %}
 {% load filters_deploys %}
 
 {% block extra_css %}
 {{ block.super }}
-<link rel="stylesheet" href="{{ STATIC_URL }}css/abyss.widget.css" />
-<link rel="stylesheet" href="{{ STATIC_URL }}css/detail.css" />
-<link rel="stylesheet" href="{{ STATIC_URL}}css/deploy-diff.css" />
+<link rel="stylesheet" href="{% static "css/abyss.widget.css" %}">
+<link rel="stylesheet" href="{% static "css/detail.css" %}">
+<link rel="stylesheet" href="{% static "css/deploy-diff.css" %}">
 {% endblock %}
 
 {% block navbar %}

@@ -1,4 +1,9 @@
 {% extends "apps/base.html" %}
+{% load staticfiles %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static "css/jquery-ui.css" %}">
+{% endblock extra_css %}
 
 {% block app-content %}
 	<div class="row-fluid">
@@ -29,8 +34,8 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{{ STATIC_URL }}js/jquery-ui.custom.js"></script>
-<script src="{{ STATIC_URL }}js/first_word.js"></script>
+<script src="{% static "js/jquery-ui.custom.js" %}"></script>
+<script src="{% static "js/first_word.js" %}"></script>
 
 <script>
 var team = [
@@ -43,7 +48,3 @@ $( "#autocomplete" ).autocomplete({
 });
 </script>
 {% endblock %}
-
-{% block extra_css %}
-<link rel="stylesheet" href="{{ STATIC_URL }}css/jquery-ui.css" />
-{% endblock extra_css %}

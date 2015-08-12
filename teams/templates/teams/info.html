@@ -1,8 +1,9 @@
 {% extends "base.html" %}
+{% load staticfiles %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{{ STATIC_URL }}css/abyss.widget.css" />
-<link rel="stylesheet" href="{{ STATIC_URL }}css/abyss.services.css" />
+<link rel="stylesheet" href="{% static "css/abyss.widget.css" %}" />
+<link rel="stylesheet" href="{% static "css/abyss.services.css" %}" />
 {% endblock %}
 
 {% block sidebar %}
@@ -104,7 +105,7 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{{ STATIC_URL }}js/confirmation.js"></script>
+<script src="{% static "js/confirmation.js" %}"></script>
 <script type="text/javascript">
 	$.confirmation(".btn-remove", ".remove-confirmation", '{{ team.name }}');
 </script>
