@@ -13,7 +13,7 @@ class AppAddTeamFormTest(TestCase):
 
     def test_team_field_should_have_CharField(self):
         field = forms.AppAddTeamForm.base_fields['team']
-        self.assertTrue(isinstance(field, CharField))
+        self.assertIsInstance(field, CharField)
 
     def test_team_field_should_have_at_most_60_characters(self):
         field = forms.AppAddTeamForm.base_fields['team']

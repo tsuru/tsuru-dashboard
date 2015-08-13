@@ -13,7 +13,7 @@ class RunFormTest(TestCase):
 
     def test_app_field_should_have_CharField(self):
         field = forms.RunForm.base_fields['app']
-        self.assertTrue(isinstance(field, CharField))
+        self.assertIsInstance(field, CharField)
 
     def test_app_field_should_have_at_most_60_characters(self):
         field = forms.RunForm.base_fields['app']
@@ -24,7 +24,7 @@ class RunFormTest(TestCase):
 
     def test_command_field_should_have_CharField(self):
         field = forms.RunForm.base_fields['command']
-        self.assertTrue(isinstance(field, CharField))
+        self.assertIsInstance(field, CharField)
 
     def test_command_field_should_have_at_most_1000_characters(self):
         field = forms.RunForm.base_fields['command']

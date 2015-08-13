@@ -40,7 +40,7 @@ class RunViewTest(TestCase):
 
     def test_form_in_context_should_has_a_instance_of_RunForm(self):
         form = self.response.context_data.get('form')
-        self.assertTrue(isinstance(form, RunForm))
+        self.assertIsInstance(form, RunForm)
 
     def test_get_request_run_url_should_return_404(self):
         response = self.client.get(reverse('run'))
@@ -65,8 +65,7 @@ class RunViewTest(TestCase):
         self.assertEqual("command runned",
                          response.context_data.get('message'))
         self.assertIn('form', response.context_data.keys())
-        self.assertTrue(isinstance(response.context_data.get('form'),
-                                   RunForm))
+        self.assertIsInstance(response.context_data.get('form'), RunForm)
 
     @patch('requests.post')
     def test_post_with_invalid_app_or_command_error_in_context(self, post):
@@ -79,8 +78,7 @@ class RunViewTest(TestCase):
         post.return_value = Mock(status_code=500, content='Error')
         response = Run().post(self.request_post)
         self.assertIn('form', response.context_data.keys())
-        self.assertTrue(isinstance(response.context_data.get('form'),
-                                   RunForm))
+        self.assertIsInstance(response.context_data.get('form'), RunForm)
 
     @patch('requests.post')
     def test_post_without_app_should_not_send_request_to_tsuru(self, post):
@@ -103,6 +101,6 @@ class RunViewTest(TestCase):
         response = Run().post(request)
         self.assertIn('form', response.context_data.keys())
         form = response.context_data.get('form')
-        self.assertTrue(isinstance(form, RunForm))
+        self.assertIsInstance(form, RunForm)
         self.assertEqual(u'This field is required.',
                          form.errors.get('app')[0])

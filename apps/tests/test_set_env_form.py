@@ -13,7 +13,7 @@ class SetEnvFormTest(TestCase):
 
     def test_env_field_should_have_CharField(self):
         field = forms.SetEnvForm.base_fields['env']
-        self.assertTrue(isinstance(field, CharField))
+        self.assertIsInstance(field, CharField)
 
     def test_env_field_should_have_at_most_1000_characters(self):
         field = forms.SetEnvForm.base_fields['env']

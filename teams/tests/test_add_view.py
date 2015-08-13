@@ -32,7 +32,7 @@ class TeamViewTest(TestCase):
 
     def test_form_in_context_should_has_a_instance_of_TeamForm(self):
         form = self.response.context_data.get('form')
-        self.assertTrue(isinstance(form, TeamForm))
+        self.assertIsInstance(form, TeamForm)
 
     def test_get_request_team_url_should_not_return_404(self):
         response = self.client.get(reverse('team-add'))

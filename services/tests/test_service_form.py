@@ -13,7 +13,7 @@ class ServiceFormTest(TestCase):
 
     def test_name_field_should_have_CharField(self):
         field = forms.ServiceForm.base_fields['name']
-        self.assertTrue(isinstance(field, CharField))
+        self.assertIsInstance(field, CharField)
 
     def test_name_field_should_have_at_most_50_characters(self):
         field = forms.ServiceForm.base_fields['name']

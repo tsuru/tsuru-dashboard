@@ -31,7 +31,7 @@ class KeyViewTest(TestCase):
 
     def test_form_in_context_should_has_a_instance_of_KeyForm(self):
         form = self.response.context_data.get('form')
-        self.assertTrue(isinstance(form, KeyForm))
+        self.assertIsInstance(form, KeyForm)
 
     def test_get_request_key_url_should_not_return_404(self):
         response = self.client.get(reverse('key'))
@@ -107,6 +107,6 @@ class KeyViewTest(TestCase):
         response = Key.as_view()(request)
         self.assertIn('form', response.context_data.keys())
         form = response.context_data.get('form')
-        self.assertTrue(isinstance(form, KeyForm))
+        self.assertIsInstance(form, KeyForm)
         self.assertEqual(u'This field is required.',
                          form.errors.get('key')[0])

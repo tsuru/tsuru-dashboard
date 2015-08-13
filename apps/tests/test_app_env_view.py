@@ -74,7 +74,7 @@ class AppEnvViewTest(TestCase):
 
     def test_form_in_context_should_has_a_instance_of_SetEnvForm(self):
         form = self.response.context_data.get('form')
-        self.assertTrue(isinstance(form, SetEnvForm))
+        self.assertIsInstance(form, SetEnvForm)
 
     def test_form_in_context_should_has_initial_app_name(self):
         form = self.response.context_data.get('form')
@@ -108,8 +108,7 @@ class AppEnvViewTest(TestCase):
         post.return_value = Mock(status_code=200)
         response = self.view.post(self.request_post, self.app_name)
         self.assertIn('form', response.context_data.keys())
-        self.assertTrue(isinstance(response.context_data.get('form'),
-                                   SetEnvForm))
+        self.assertIsInstance(response.context_data.get('form'), SetEnvForm)
 
     @patch('requests.post')
     def test_post_without_env_should_return_form_with_errors(self, post):
@@ -118,7 +117,7 @@ class AppEnvViewTest(TestCase):
         response = self.view.post(request, self.app_name)
         self.assertIn('form', response.context_data.keys())
         form = response.context_data.get('form')
-        self.assertTrue(isinstance(form, SetEnvForm))
+        self.assertIsInstance(form, SetEnvForm)
         self.assertEqual(u'This field is required.',
                          form.errors.get('env')[0])
 

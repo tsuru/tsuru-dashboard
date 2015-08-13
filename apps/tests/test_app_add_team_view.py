@@ -39,7 +39,7 @@ class AppAddTeamTestCase(TestCase):
 
     def test_form_in_context_should_has_a_instance_of_AppAddTeamForm(self):
         form = self.response.context_data.get('form')
-        self.assertTrue(isinstance(form, AppAddTeamForm))
+        self.assertIsInstance(form, AppAddTeamForm)
 
     def test_get_request_team_url_should_not_return_404(self):
         response = self.client.get(reverse('app-add-team',
@@ -74,16 +74,14 @@ class AppAddTeamTestCase(TestCase):
         put.return_value = Mock(status_code=200)
         response = AppAddTeam().post(self.request_post, self.app_name)
         self.assertIn('form', response.context_data.keys())
-        self.assertTrue(isinstance(response.context_data.get('form'),
-                                   AppAddTeamForm))
+        self.assertIsInstance(response.context_data.get('form'), AppAddTeamForm)
 
     @patch('requests.put')
     def test_post_with_invalid_data_should_return_context_with_form(self, put):
         put.return_value = Mock(content='Error', status_code=500)
         response = AppAddTeam().post(self.request_post, self.app_name)
         self.assertIn('form', response.context_data.keys())
-        self.assertTrue(isinstance(response.context_data.get('form'),
-                                   AppAddTeamForm))
+        self.assertIsInstance(response.context_data.get('form'), AppAddTeamForm)
 
     @patch('requests.put')
     def test_invalid_post_should_not_send_request_to_tsuru(self, put):
@@ -105,6 +103,5 @@ class AppAddTeamTestCase(TestCase):
         response = AppAddTeam().post(request, self.app_name)
         self.assertIn('form', response.context_data.keys())
         form = response.context_data.get('form')
-        self.assertTrue(isinstance(form, AppAddTeamForm))
-        self.assertEqual(u'This field is required.',
-                         form.errors.get('team')[0])
+        self.assertIsInstance(form, AppAddTeamForm)
+        self.assertEqual(u'This field is required.', form.errors.get('team')[0])
