@@ -10,16 +10,6 @@
     <div class="span12">
       <form action="" method="post">
         {% csrf_token %}
-        {% if message %}
-        <div class="alert alert-success">
-          {{ message }}
-        </div>
-        {% endif %}
-        {% if errors %}
-        <div class="alert alert-error">
-          {{ errors }}
-        </div>
-        {% endif %}
         <fieldset>
           <div class="clearfix control-group{% if form.errors.app %} error{% endif %}">
             <label for="{{ app_form.app.name }}">App</label>
