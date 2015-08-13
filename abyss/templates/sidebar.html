@@ -3,14 +3,14 @@
 		<div class="container-fluid">
 			<ul class="nav nav-pills">
 				<li{% if active == "apps" %} class="active"{% endif %}>
-				<a href="{% url 'list-app' %}">
-					<span>Apps</span>
-				</a>
+                    <a href="{% url 'list-app' %}">
+                        <span>Apps</span>
+                    </a>
 				</li>
 				<li{% if active == "services" %} class="active"{% endif %}>
-				<a href="{% url 'service-list' %}">
-					<span>Services</span>
-				</a>
+                    <a href="{% url 'service-list' %}">
+                        <span>Services</span>
+                    </a>
 				</li>
 				{% if request.session.is_admin %}
 				<li{% if active == "docker" %} class="active"{% endif %}>

@@ -8,6 +8,14 @@
 <h1>New app</h1>
 {% endblock %}
 
+{% block extra_css %}
+<style>
+    select {
+        float: left;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container-fluid">
 	<div class="row-fluid">
@@ -29,6 +37,7 @@
 						<label for="{{ app_form.teamOwner.name }}">Team</label>
                         {{ app_form.teamOwner }}
 						<span class="help-inline">{{ app_form.errors.teamOwner }}</span>
+                        <a class="btn add-team" data-toggle="modal" data-target="#add-team-modal" title="new team" href="#add-team">+</a>
 					</div>
 					<div class="clearfix control-group{% if app_form.errors.plan %} error{% endif %}">
 						<label for="{{ app_form.plan.name }}">Plan</label>
@@ -46,4 +55,47 @@
 		</div>
 	</div>
 </div>
+<div id="add-team-modal" class="add-team-modal fade modal">
+    <div class="container-fluid">
+        <h3>Create a team</h3>
+        <form id="add-team-form" action="{% url 'team-add' %}" method="post">
+            {% csrf_token %}
+            <fieldset>
+                <div class="clearfix control-group">
+                    <label>name</label>
+                    <input type="text" name="name">
+                    <span class="help-inline"></span>
+                </div>
+                <button class="btn primary add-team" type="submit">Create</button>
+            </fieldset>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $("button.add-team").on("click", function(e) {
+        e.preventDefault();
+        var form = $("#add-team-form");
+        var new_team = form.find("input[name='name']").val();
+        var form_data = form.serialize();
+        $.post(form.attr("action"), form_data, function(data){
+            $.get("/teams/", function(data) {
+                var teams = $(data).find(".teams li a");
+                $("#id_teamOwner").empty();
+                teams.each(function(index, item) {
+                    var team = $(item).text();
+                    var opt = $("<option/>");
+                    opt.attr({"value": team}).text(team);
+                    if (team === new_team) {
+                        opt.attr({"selected": true})
+                    }
+                    $("#id_teamOwner").append(opt);
+                });
+                $("#add-team-modal").modal("hide");
+            });
+        });
+    });
+</script>
 {% endblock %}

@@ -110,14 +110,81 @@ class CreateAppViewTest(TestCase):
         )
 
     @patch('requests.get')
-    def test_pools(self, get_mock):
-        data = {"name": "myepe", "platform": "django", "plan": "basic"}
-        request = RequestFactory().post("/", data)
+    def test_pools(self, get):
+        content = u"""[{"Pools": ["basic", "one"], "Team": "andrews"}]"""
+        m = Mock(status_code=200, content=content)
+        m.json.return_value = json.loads(content)
+        get.return_value = m
+        request = RequestFactory().get("/")
+        request.session = {'tsuru_token': 'tokentest'}
+
+        view = CreateApp()
+        pools = view.pools(request)
+        self.assertListEqual([("", ""), ('one', 'one'), ('basic', 'basic')], pools)
+
+    @patch("requests.get")
+    def test_pools_empty(self, get):
+        content = u"[]"
+        m = Mock(status_code=200, content=content)
+        m.json.return_value = json.loads(content)
+        get.return_value = m
+        request = RequestFactory().get("/")
         request.session = {'tsuru_token': 'tokentest'}
 
         view = CreateApp()
         pools = view.pools(request)
         self.assertListEqual([('', '')], pools)
+
+    @patch('requests.get')
+    def test_pools_new_api(self, get):
+        content = u"""{"pools_by_team": [{"Pools": ["one"], "Team": "admin"}],
+            "public_pools": [{"Default": "True", "Public": "True", "Name": "basic", "Teams": []}]}"""
+        m = Mock(status_code=200, content=content)
+        m.json.return_value = json.loads(content)
+        get.return_value = m
+        request = RequestFactory().get("/")
+        request.session = {"tsuru_token": "tokentest"}
+
+        view = CreateApp()
+        pools = view.pools(request)
+        self.assertEqual([("", ""), ('one', 'one'), ('basic', 'basic')], pools)
+
+    @patch('requests.get')
+    def test_teams(self, get):
+        content = u"""[{"name": "team1"}]"""
+        m = Mock(status_code=200, content=content)
+        m.json.return_value = json.loads(content)
+        get.return_value = m
+        request = RequestFactory().get("/")
+        request.session = {"tsuru_token": "tokentest"}
+
+        view = CreateApp()
+        teams = view.teams(request)
+        self.assertEqual([("", ""), ('team1', 'team1')], teams)
+
+    @patch('requests.get')
+    def test_teams_empty(self, get):
+        m = Mock(status_code=204)
+        get.return_value = m
+        request = RequestFactory().get("/")
+        request.session = {"tsuru_token": "tokentest"}
+
+        view = CreateApp()
+        teams = view.teams(request)
+        self.assertEqual([("", "")], teams)
+
+    @patch('requests.get')
+    def test_plans(self, get):
+        content = u"""[{"name": "plan1"}]"""
+        m = Mock(status_code=200, content=content)
+        m.json.return_value = json.loads(content)
+        get.return_value = m
+        request = RequestFactory().get("/")
+        request.session = {"tsuru_token": "tokentest"}
+
+        view = CreateApp()
+        plans = view.plans(request)
+        self.assertEqual(("", [("", ""), ('plan1', 'plan1')]), plans)
 
     @patch('requests.get')
     def test_plans_is_None(self, get_mock):

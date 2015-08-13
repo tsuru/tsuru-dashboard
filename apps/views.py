@@ -290,7 +290,16 @@ class CreateApp(LoginRequiredView):
         url = '{}/pools'.format(settings.TSURU_HOST)
         response = requests.get(url, headers=authorization)
         pools = set()
-        for team_list in response.json():
+        pools_json = response.json()
+        pools_by_team = pools_json
+
+        # backward compatibility
+        if isinstance(pools_json, dict):
+            pools_by_team = pools_json["pools_by_team"]
+            for pool in pools_json.get('public_pools', []):
+                pools.add(pool.get("Name", pool))
+
+        for team_list in pools_by_team:
             for pool in team_list['Pools']:
                 pools.add(pool)
         result = [('', '')]
@@ -300,10 +309,11 @@ class CreateApp(LoginRequiredView):
     def teams(self, request):
         authorization = {'authorization': request.session.get('tsuru_token')}
         url = '{}/teams'.format(settings.TSURU_HOST)
+        result = [("", "")]
         response = requests.get(url, headers=authorization)
-        teams = response.json()
-        result = [(', ')]
-        result.extend([(t['name'], t['name']) for t in teams])
+        if response.status_code != 204:
+            teams = response.json()
+            result.extend([(t['name'], t['name']) for t in teams])
         return result
 
     def platforms(self, request):
