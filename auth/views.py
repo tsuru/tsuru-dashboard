@@ -186,9 +186,9 @@ class Callback(View):
         return redirect('/auth/login')
 
 
-class Key(LoginRequiredMixin, FormView):
+class KeyAdd(LoginRequiredMixin, FormView):
     form_class = KeyForm
-    template_name = 'auth/key.html'
+    template_name = 'auth/key_add.html'
     success_url = '/auth/key/'
 
     def form_valid(self, form):
@@ -198,4 +198,4 @@ class Key(LoginRequiredMixin, FormView):
             messages.success(self.request, "The key was successfully added", fail_silently=True)
         else:
             messages.error(self.request, response.text, fail_silently=True)
-        return super(Key, self).form_valid(form)
+        return super(KeyAdd, self).form_valid(form)
