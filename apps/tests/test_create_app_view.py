@@ -118,3 +118,18 @@ class CreateAppViewTest(TestCase):
         view = CreateApp()
         pools = view.pools(request)
         self.assertListEqual([('', '')], pools)
+
+    @patch('requests.get')
+    def test_plans_is_None(self, get_mock):
+        response_mock = Mock()
+        response_mock.json.return_value = None
+        get_mock.return_value = response_mock
+
+        data = {"name": "myepe", "platform": "django", "plan": "basic"}
+        request = RequestFactory().post("/", data)
+        request.session = {'tsuru_token': 'tokentest'}
+
+        view = CreateApp()
+        default, plans = view.plans(request)
+        self.assertEqual(default, '')
+        self.assertListEqual([('', '')], plans)
