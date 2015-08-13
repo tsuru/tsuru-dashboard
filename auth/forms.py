@@ -72,4 +72,5 @@ class SignupForm(forms.Form):
 
 
 class KeyForm(forms.Form):
-    key = forms.CharField(max_length=2000)
+    name = forms.CharField()
+    key = forms.CharField(widget=forms.Textarea)

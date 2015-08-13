@@ -17,7 +17,7 @@ class KeyViewTest(TestCase):
         self.request = self.factory.get('/')
         self.request.session = {"tsuru_token": "admin"}
         self.response = Key.as_view()(self.request)
-        self.request_post = self.factory.post('/team/', {'key': 'test-key-qq'})
+        self.request_post = self.factory.post('/key/', {'key': 'test-key-qq', 'name': 'mykey'})
         self.request_post.session = {"tsuru_token": "admin"}
 
     def test_should_require_login_to_create_team(self):
@@ -47,7 +47,7 @@ class KeyViewTest(TestCase):
         self.assertEqual(1, post.call_count)
         post.assert_called_with(
             '%s/users/keys' % settings.TSURU_HOST,
-            data='{"key": "test-key-qq"}',
+            data='{"name": "mykey", "key": "test-key-qq"}',
             headers={'authorization':
                      self.request_post.session['tsuru_token']})
 
