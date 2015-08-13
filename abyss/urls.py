@@ -12,7 +12,6 @@ urlpatterns = patterns(
     (r'^apps/', include('apps.urls')),
     (r'^services/', include('services.urls')),
     (r'^teams/', include('teams.urls')),
-    (r'^quotas/', include('quotas.urls')),
     (r'^healthcheck/', include('healthcheck.urls')),
     (r'^autoscale/', include('autoscale.urls')),
     (r'^dashboard/', include('dashboard.urls')),

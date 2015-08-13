@@ -72,7 +72,6 @@ INSTALLED_APPS = (
     'apps',
     'services',
     'teams',
-    'quotas',
     'healthcheck',
     'admin',
     'autoscale',
