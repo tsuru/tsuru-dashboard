@@ -266,8 +266,10 @@ class CreateApp(LoginRequiredView):
         if form.is_valid():
             authorization = {'authorization': request.session.get('tsuru_token')}
 
-            data = form.data.dict()
-            if data.get('plan'):
+            # removing keys with empty values
+            data = {key: value for key, value in form.cleaned_data.items() if value}
+
+            if 'plan' in data:
                 data['plan'] = {'name': data['plan']}
 
             data = json.dumps(data)
@@ -279,7 +281,7 @@ class CreateApp(LoginRequiredView):
                 messages.success(request, u'App was successfully created', fail_silently=True)
                 return redirect(reverse('list-app'))
 
-            context['errors'] = response.content
+            messages.error(request, response.content, fail_silently=True)
 
         form.fields['plan'].initial = default
         context['app_form'] = form

@@ -47,9 +47,10 @@ class CreateAppViewTest(TestCase):
         app_form = response.context_data['app_form']
         self.assertIsInstance(app_form, forms.AppForm)
 
+    @patch("django.contrib.messages.error")
     @patch('requests.get')
     @patch('requests.post')
-    def test_post_with_invalid_name_should_return_500(self, post, get):
+    def test_post_with_invalid_name_should_return_500(self, post, get, error):
         content = u"""[{"Name":"python"},{"Name":"ruby"},{"Name":"static"}]"""
         m = Mock(status_code=200, content=content)
         m.json.return_value = json.loads(content)
@@ -64,9 +65,10 @@ class CreateAppViewTest(TestCase):
         view.plans = lambda r: ("small", [("small", "small")])
         view.teams = lambda r: []
         view.pools = lambda r: []
-        response = view.post(request)
 
-        self.assertEqual('Error', response.context_data.get("errors"))
+        view.post(request)
+
+        error.assert_called_with(request, u'Error', fail_silently=True)
 
     @patch('requests.get')
     def test_post_without_name_should_return_form_with_errors(self, get):
@@ -106,6 +108,28 @@ class CreateAppViewTest(TestCase):
         post.assert_called_with(
             url,
             data='{"platform": "django", "name": "myepe", "plan": {"name": "basic"}}',
+            headers={'authorization': request.session['tsuru_token']}
+        )
+
+    @patch('requests.get')
+    @patch('requests.post')
+    def test_post_should_send_to_tsuru_removing_empty_keys(self, post, get):
+        post.return_value = Mock(status_code=200)
+
+        data = {"name": "myepe", "platform": "django", "plan": ""}
+        request = RequestFactory().post("/", data)
+        request.session = {'tsuru_token': 'tokentest'}
+
+        view = CreateApp()
+        view.plans = lambda r: ("basic", [("basic", "basic")])
+        view.platforms = lambda r: [("django", "django")]
+        view.post(request)
+
+        self.assertEqual(1, post.call_count)
+        url = '{}/apps'.format(settings.TSURU_HOST)
+        post.assert_called_with(
+            url,
+            data='{"platform": "django", "name": "myepe"}',
             headers={'authorization': request.session['tsuru_token']}
         )
 
