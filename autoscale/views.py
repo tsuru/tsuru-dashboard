@@ -13,7 +13,11 @@ class Index(LoginRequiredMixin, TemplateView):
         context = super(Index, self).get_context_data(*args, **kwargs)
         token = self.request.session.get('tsuru_token').split(' ')[1]
         token = urllib.quote(token)
-        service_url = "{}?TSURU_TOKEN={}".format(os.environ.get("AUTOSCALE_DASHBOARD_URL"), token)
+        app = kwargs["app"]
+
+        service_url = "{}/app/{}?TSURU_TOKEN={}".format(
+            os.environ.get("AUTOSCALE_DASHBOARD_URL"), app, token)
+
         context["service_url"] = service_url
-        context["app"] = kwargs["app"]
+        context["app"] = app
         return context
