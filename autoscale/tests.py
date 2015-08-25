@@ -30,7 +30,7 @@ class IndexTestCase(TestCase):
             session['tsuru_token'] = "beare token"
             session.save()
 
-            response = self.client.get(reverse("autoscale"))
+            response = self.client.get(reverse("autoscale", args=["app"]))
             self.assertTemplateUsed(response, "autoscale/index.html")
 
     @patch("auth.views.token_is_valid")
@@ -47,6 +47,6 @@ class IndexTestCase(TestCase):
             session['tsuru_token'] = "beare {}".format(token)
             session.save()
 
-            response = self.client.get(reverse("autoscale"))
+            response = self.client.get(reverse("autoscale", args=["app"]))
             expected = "{}?TSURU_TOKEN={}".format(autoscale_dashboard_url, urllib.quote(token))
             self.assertEqual(response.context_data["service_url"], expected)

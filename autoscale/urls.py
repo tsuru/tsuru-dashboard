@@ -4,5 +4,5 @@ from autoscale.views import Index
 
 
 urlpatterns = [
-    url(r'^$', Index.as_view(), name='autoscale'),
+    url(r'^(?P<app>[\w-]+)/$', Index.as_view(), name='autoscale'),
 ]

@@ -15,4 +15,5 @@ class Index(LoginRequiredMixin, TemplateView):
         token = urllib.quote(token)
         service_url = "{}?TSURU_TOKEN={}".format(os.environ.get("AUTOSCALE_DASHBOARD_URL"), token)
         context["service_url"] = service_url
+        context["app"] = kwargs["app"]
         return context
