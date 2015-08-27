@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.core.urlresolvers import reverse
 
-from mock import patch
+from mock import patch, Mock
 
 from autoscale.context_processors import autoscale_enabled
 
@@ -23,7 +23,8 @@ class ContextProcesssorsTest(TestCase):
 
 class IndexTestCase(TestCase):
     @patch("auth.views.token_is_valid")
-    def test_index(self, token_is_valid):
+    @patch("requests.get")
+    def test_index(self, get_mock, token_is_valid):
         token_is_valid.return_value = True
         with self.settings(SESSION_ENGINE='django.contrib.sessions.backends.file'):
             session = self.client.session
@@ -34,7 +35,12 @@ class IndexTestCase(TestCase):
             self.assertTemplateUsed(response, "autoscale/index.html")
 
     @patch("auth.views.token_is_valid")
-    def test_service_url(self, token_is_valid):
+    @patch("requests.get")
+    def test_service_url(self, get_mock, token_is_valid):
+        response_mock = Mock()
+        response_mock.json.return_value = {"name": "app"}
+        get_mock.return_value = response_mock
+
         token_is_valid.return_value = True
 
         autoscale_dashboard_url = "http://localhost:123"
