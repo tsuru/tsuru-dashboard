@@ -12,7 +12,7 @@ class Index(LoginRequiredMixin, TemplateView):
     def get_context_data(self, *args, **kwargs):
         context = super(Index, self).get_context_data(*args, **kwargs)
         token = self.request.session.get('tsuru_token').split(' ')[1]
-        token = urllib.quote(token)
+        token = urllib.quote_plus(token)
         app = kwargs["app"]
 
         service_url = "{}/app/{}?TSURU_TOKEN={}".format(

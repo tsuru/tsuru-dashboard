@@ -49,5 +49,5 @@ class IndexTestCase(TestCase):
 
             response = self.client.get(reverse("autoscale", args=["app"]))
             expected = "{}/app/{}?TSURU_TOKEN={}".format(
-                autoscale_dashboard_url, "app", urllib.quote(token))
-            self.assertEqual(response.context_data["service_url"], expected)
+                autoscale_dashboard_url, "app", token)
+            self.assertEqual(urllib.unquote(response.context_data["service_url"]), expected)
