@@ -1,14 +1,10 @@
-{% extends "base.html" %}
+{% extends "apps/base.html" %}
 
-{% block sidebar %}
-{% include "sidebar.html" with active="apps" %}
+{% block navbar %}
+    {% include "apps/navbar.html" with active="autoscale" %}
 {% endblock %}
 
-{% block header %}
-<h1>Auto scale</h1>
-{% endblock %}
-
-{% block content %}
+{% block app-content %}
 <div class="container-fluid">
 	<div class="row-fluid">
 		<div class="span12">
