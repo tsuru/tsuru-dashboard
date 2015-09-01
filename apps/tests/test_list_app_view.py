@@ -17,7 +17,7 @@ class ListAppViewTest(TestCase):
         token_is_valid.return_value = True
         get.return_value = Mock(status_code=204)
         response = ListApp.as_view()(self.request)
-        self.assertEqual("apps/list.html", response.template_name)
+        self.assertIn("apps/list.html", response.template_name)
         self.assertListEqual([], response.context_data['apps'])
 
     @patch('requests.get')

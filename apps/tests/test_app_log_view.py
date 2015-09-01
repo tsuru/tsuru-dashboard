@@ -4,7 +4,6 @@ from django.test import TestCase
 from django.test.client import RequestFactory
 from django.core.urlresolvers import reverse
 
-from auth.views import LoginRequiredView
 from apps.views import AppLog
 
 
@@ -17,9 +16,6 @@ class AppLogViewTest(TestCase):
         self.request.session = {'tsuru_token': 'tokentest'}
         self.app_name = 'app-teste'
         self.response = AppLog.as_view()(self.request, app_name=self.app_name)
-
-    def test_should_require_login_to_set_env(self):
-        assert issubclass(AppLog, LoginRequiredView)
 
     def test_run_should_render_expected_template(self):
         self.assertIn('apps/app_log.html', self.response.template_name)

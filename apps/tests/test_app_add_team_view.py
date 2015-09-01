@@ -32,7 +32,7 @@ class AppAddTeamTestCase(TestCase):
         assert issubclass(AppAddTeam, LoginRequiredView)
 
     def test_should_render_expected_template(self):
-        self.assertEqual('apps/app_add_team.html', self.response.template_name)
+        self.assertIn('apps/app_add_team.html', self.response.template_name)
 
     def test_context_should_contain_form(self):
         self.assertIn('form', self.response.context_data.keys())

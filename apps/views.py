@@ -403,15 +403,21 @@ class RemoveApp(LoginRequiredView):
         return redirect(reverse('list-app'))
 
 
-class ListApp(LoginRequiredView):
-    def get(self, request):
-        authorization = {'authorization': request.session.get('tsuru_token')}
-        response = requests.get('{}/apps'.format(settings.TSURU_HOST),
-                                headers=authorization)
+class ListApp(LoginRequiredMixin, TemplateView):
+    template_name = "apps/list.html"
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(ListApp, self).get_context_data(*args, **kwargs)
+
+        url = "{}/apps".format(settings.TSURU_HOST)
+        response = requests.get(url, headers=self.authorization)
+
         apps = []
         if response.status_code != 204:
             apps = sorted(response.json(), key=lambda item: item['name'])
-        return TemplateResponse(request, 'apps/list.html', {'apps': apps})
+
+        context.update({"apps": apps})
+        return context
 
 
 class Run(LoginRequiredView):
@@ -461,7 +467,7 @@ class LogStream(LoginRequiredView):
         return StreamingHttpResponse(sending_stream())
 
 
-class AppLog(LoginRequiredView, TemplateView):
+class AppLog(LoginRequiredMixin, TemplateView):
     template_name = 'apps/app_log.html'
 
     def get_context_data(self, *args, **kwargs):
@@ -470,24 +476,25 @@ class AppLog(LoginRequiredView, TemplateView):
         app_url = '{}/apps/{}'.format(settings.TSURU_HOST, app_name)
         app = requests.get(app_url, headers=self.authorization).json()
         context['app'] = app
-        # log_url = '{}/apps/{}/log?lines=100&follow=1'.format(settings.TSURU_HOST, app_name)
-        # logs = requests.get(log_url, headers=authorization).json()
         return context
 
 
-class AppTeams(LoginRequiredView):
-    template = 'apps/app_team.html'
+class AppTeams(LoginRequiredMixin, TemplateView):
+    template_name = "apps/app_team.html"
 
-    def get(self, request, app_name):
-        authorization = {'authorization': request.session.get('tsuru_token')}
-        tsuru_url = '{}/apps/{}'.format(settings.TSURU_HOST, app_name)
-        response = requests.get(tsuru_url, headers=authorization)
+    def get_context_data(self, *args, **kwargs):
+        context = super(AppTeams, self).get_context_data(*args, **kwargs)
+
+        url = '{}/apps/{}'.format(settings.TSURU_HOST, kwargs["app_name"])
+        response = requests.get(url, headers=self.authorization)
 
         if response.status_code == 200:
-            app = response.json
-            return TemplateResponse(request, self.template, {'app': app})
-        return TemplateResponse(request, self.template,
-                                {'errors': response.content})
+            app = response.json()
+            context.update({"app": app})
+        else:
+            context.update({"errors": response.content})
+
+        return context 
 
 
 class AppEnv(LoginRequiredView):
