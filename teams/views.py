@@ -1,8 +1,9 @@
-from django.template.response import TemplateResponse
 from django.conf import settings
 from django.shortcuts import redirect
 from django.core.urlresolvers import reverse
 from django.contrib import messages
+from django.views.generic import TemplateView
+from django.template.response import TemplateResponse
 
 from auth.views import LoginRequiredView
 from teams.forms import TeamForm
@@ -37,25 +38,32 @@ class AddUser(LoginRequiredView):
         return redirect(reverse('team-info', args=[team_name]))
 
 
-class Info(LoginRequiredView):
-    def get(self, request, *args, **kwargs):
-        team_name = kwargs["team"]
-        url = "{0}/teams/{1}".format(settings.TSURU_HOST, team_name)
+class Info(LoginRequiredView, TemplateView):
+    template_name = "teams/info.html"
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(Info, self).get_context_data(*args, **kwargs)
+        url = "{0}/teams/{1}".format(settings.TSURU_HOST, kwargs["team"])
         response = requests.get(url, headers=self.authorization)
-        context = {"team": response.json()}
-        return TemplateResponse(request, "teams/info.html", context)
+        context.update({"team": response.json()})
+        return context
 
 
-class List(LoginRequiredView):
-    def get(self, request):
-        auth = {'authorization': request.session.get('tsuru_token')}
-        url = "{0}/teams".format(settings.TSURU_HOST)
-        response = requests.get(url, headers=auth)
-        if response.status_code == 204:
-            teams = []
-        else:
+class List(LoginRequiredView, TemplateView):
+    template_name = "teams/list.html"
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(List, self).get_context_data(*args, **kwargs)
+
+        url = "{}/teams".format(settings.TSURU_HOST)
+        response = requests.get(url, headers=self.authorization)
+
+        teams = []
+        if response.status_code != 204:
             teams = response.json()
-        return TemplateResponse(request, "teams/list.html", {'teams': teams})
+
+        context.update({"teams": teams})
+        return context
 
 
 class Remove(LoginRequiredView):

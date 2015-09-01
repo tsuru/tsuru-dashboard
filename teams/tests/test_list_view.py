@@ -20,7 +20,7 @@ class ListTeamViewTest(TestCase):
 
         response = List.as_view()(self.request)
 
-        self.assertEqual("teams/list.html", response.template_name)
+        self.assertIn("teams/list.html", response.template_name)
         expected = []
         self.assertListEqual(expected, response.context_data['teams'])
         get.assert_called_with(
@@ -35,7 +35,7 @@ class ListTeamViewTest(TestCase):
 
         response = List.as_view()(self.request)
 
-        self.assertEqual("teams/list.html", response.template_name)
+        self.assertIn("teams/list.html", response.template_name)
         expected = []
         self.assertListEqual(expected, response.context_data['teams'])
         get.assert_called_with(
