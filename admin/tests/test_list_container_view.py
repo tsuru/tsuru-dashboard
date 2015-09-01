@@ -19,15 +19,15 @@ class ListContainerViewTest(TestCase):
         self.response_mock = Mock()
         self.response_mock.status_code = 200
         self.response_mock.content = '{}'
-        self.response = ListContainer().get(self.request, self.address)
+        self.response = ListContainer.as_view()(self.request, address=self.address)
 
     @patch('requests.get')
     def test_request_get_to_tsuru_with_args_expected(self, get):
         get.return_value = Mock(status_code=200)
-        ListContainer().get(self.request, self.address)
+        ListContainer.as_view()(self.request, address=self.address)
+        url = "{}/docker/node/{}/containers".format(settings.TSURU_HOST, self.address)
         get.assert_called_with(
-            '%s/docker/node/%s/containers' % (settings.TSURU_HOST,
-                                              self.address),
+            url,
             headers={'authorization': self.request.session['tsuru_token']})
 
     @patch('requests.get')
@@ -35,8 +35,8 @@ class ListContainerViewTest(TestCase):
     def test_should_use_list_template(self, token_is_valid, get):
         token_is_valid.return_value = True
         get.return_value = Mock(status_code=204)
-        response = ListContainer.as_view()(self.request, self.address)
-        self.assertEqual("docker/list_container.html", response.template_name)
+        response = ListContainer.as_view()(self.request, address=self.address)
+        self.assertIn("docker/list_container.html", response.template_name)
         self.assertListEqual([], response.context_data['containers'])
 
     @patch('requests.get')
@@ -48,7 +48,7 @@ class ListContainerViewTest(TestCase):
         response_mock = Mock(status_code=200)
         response_mock.json.return_value = expected
         get.return_value = response_mock
-        response = ListContainer.as_view()(self.request, self.address)
+        response = ListContainer.as_view()(self.request, address=self.address)
         self.assertListEqual(expected, response.context_data["containers"])
 
     def test_get_request_run_url_should_not_return_404(self):

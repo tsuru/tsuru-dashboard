@@ -22,7 +22,7 @@ class ListNodeViewTest(TestCase):
         response_mock.json.return_value = {}
         get.return_value = response_mock
         response = ListNode.as_view()(self.request)
-        self.assertEqual("docker/list_node.html", response.template_name)
+        self.assertIn("docker/list_node.html", response.template_name)
         expected = {}
         self.assertEqual(expected, response.context_data["pools"])
         get.assert_called_with(

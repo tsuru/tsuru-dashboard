@@ -18,7 +18,7 @@ class ListDeployViewTest(TestCase):
         m = Mock(status_code=200, content=content)
         m.json.return_value = json.loads(content)
         get.return_value = m
-        self.response = ListDeploy().get(self.request)
+        self.response = ListDeploy.as_view()(self.request)
         self.response_mock = Mock()
 
     def test_context_should_contain_services(self):
@@ -34,7 +34,7 @@ class ListDeployViewTest(TestCase):
         request = RequestFactory().get("/?page=1")
         request.session = {"tsuru_token": "admin"}
         response = ListDeploy.as_view()(request)
-        self.assertEqual("deploys/list_deploys.html", response.template_name)
+        self.assertIn("deploys/list_deploys.html", response.template_name)
         self.assertIn('deploys', response.context_data.keys())
         get.assert_called_with(
             '{0}/deploys?service=&skip=0&limit=20'.format(settings.TSURU_HOST),
@@ -49,7 +49,7 @@ class ListDeployViewTest(TestCase):
         m.json.return_value = json.loads(content)
         get.return_value = m
         response = ListDeploy.as_view()(self.request)
-        self.assertEqual("deploys/list_deploys.html", response.template_name)
+        self.assertIn("deploys/list_deploys.html", response.template_name)
         self.assertListEqual([], response.context_data['deploys'])
         get.assert_called_with(
             '{0}/deploys?service=&skip=0&limit=20'.format(settings.TSURU_HOST),

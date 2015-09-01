@@ -1,6 +1,7 @@
 from django.template.response import TemplateResponse
 from django.conf import settings
 from django.shortcuts import redirect
+from django.views.generic import TemplateView
 from django.core.urlresolvers import reverse
 
 from auth.views import LoginRequiredView
@@ -9,17 +10,22 @@ import requests
 import json
 
 
-class ListService(LoginRequiredView):
-    def get(self, request):
-        url = "{0}/services/instances".format(settings.TSURU_HOST)
-        authorization = {'authorization': request.session.get('tsuru_token')}
-        services = requests.get(url, headers=authorization).json()
-        return TemplateResponse(request, "services/list.html", {'services': services})
+class ListService(LoginRequiredView, TemplateView):
+    template_name = "services/list.html"
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(ListService, self).get_context_data(*args, **kwargs)
+        url = "{}/services/instances".format(settings.TSURU_HOST)
+        services = requests.get(url, headers=self.authorization).json()
+        context.update({"services": services})
+        return context
 
 
-class ServiceInstanceDetail(LoginRequiredView):
+class ServiceInstanceDetail(LoginRequiredView, TemplateView):
+    template_name = "services/detail.html"
+
     def apps(self, instance):
-        url = "{0}/apps".format(settings.TSURU_HOST)
+        url = "{}/apps".format(settings.TSURU_HOST)
         response = requests.get(url, headers=self.authorization)
         app_list = []
         for app in response.json():
@@ -28,50 +34,50 @@ class ServiceInstanceDetail(LoginRequiredView):
         return app_list
 
     def get_instance(self, instance_name):
-        url = "{0}/services/instances/{1}".format(settings.TSURU_HOST,
-                                                  instance_name)
+        url = "{}/services/instances/{}".format(settings.TSURU_HOST, instance_name)
         response = requests.get(url, headers=self.authorization)
         return response.json()
 
-    def get(self, request, *args, **kwargs):
+    def get_context_data(self, *args, **kwargs):
+        context = super(ServiceInstanceDetail, self).get_context_data(*args, **kwargs)
         instance_name = kwargs["instance"]
         instance = self.get_instance(instance_name)
         apps = self.apps(instance)
-        return TemplateResponse(request, "services/detail.html",
-                                {'instance': instance, 'apps': apps})
+        context.update({"instance": instance, "apps": apps})
+        return context
 
 
 class ServiceAdd(LoginRequiredView):
     def post(self, request, *args, **kwargs):
         service_name = kwargs["service_name"]
-        authorization = {'authorization': request.session.get('tsuru_token')}
-        tsuru_url = '{0}/services/instances'.format(settings.TSURU_HOST)
-        data = {"name": request.POST["name"],
-                "team": request.POST["team"],
-                "service_name": service_name}
-        requests.post(tsuru_url,
-                      data=json.dumps(data),
-                      headers=authorization)
+        url = '{}/services/instances'.format(settings.TSURU_HOST)
+        data = {
+            "name": request.POST["name"],
+            "team": request.POST["team"],
+            "service_name": service_name,
+        }
+        requests.post(url, data=json.dumps(data), headers=self.authorization)
         return redirect(reverse('service-list'))
 
     def get(self, request, *args, **kwargs):
         service_name = kwargs["service_name"]
-        authorization = {'authorization': request.session.get('tsuru_token')}
-        response = requests.get("%s/teams" % settings.TSURU_HOST,
-                                headers=authorization)
+        url = "{}/teams".format(settings.TSURU_HOST)
+        response = requests.get(url, headers=self.authorization)
         teams = response.json()
-        return TemplateResponse(request, "services/add.html",
-                                {'service': {"name": service_name}, "teams": teams})
+        context = {
+            "service": {"name": service_name},
+            "teams": teams,
+        }
+        return TemplateResponse(request, "services/add.html", context)
 
 
 class Bind(LoginRequiredView):
     def post(self, request, *args, **kwargs):
         app = request.POST["app"]
         instance = kwargs["instance"]
-        authorization = {'authorization': request.session.get('tsuru_token')}
-        tsuru_url = '{0}/services/instances/{1}/{2}'.format(
+        tsuru_url = '{}/services/instances/{}/{}'.format(
             settings.TSURU_HOST, instance, app)
-        requests.put(tsuru_url, headers=authorization)
+        requests.put(tsuru_url, headers=self.authorization)
         return redirect(reverse('service-detail', args=[instance]))
 
 
@@ -79,19 +85,14 @@ class Unbind(LoginRequiredView):
     def get(self, request, *args, **kwargs):
         app = kwargs["app"]
         instance = kwargs["instance"]
-        authorization = {'authorization': request.session.get('tsuru_token')}
-        tsuru_url = '{0}/services/instances/{1}/{2}'.format(
-            settings.TSURU_HOST, instance, app)
-        requests.delete(tsuru_url, headers=authorization)
+        url = '{}/services/instances/{}/{}'.format(settings.TSURU_HOST, instance, app)
+        requests.delete(url, headers=self.authorization)
         return redirect(reverse('service-detail', args=[instance]))
 
 
 class ServiceRemove(LoginRequiredView):
     def get(self, request, *args, **kwargs):
         instance = kwargs["instance"]
-        authorization = {'authorization': request.session.get('tsuru_token')}
-        tsuru_url = '{0}/services/instances/{1}'.format(
-            settings.TSURU_HOST, instance)
-        requests.delete(tsuru_url,
-                        headers=authorization)
+        url = '{}/services/instances/{}'.format(settings.TSURU_HOST, instance)
+        requests.delete(url, headers=self.authorization)
         return redirect(reverse('service-list'))

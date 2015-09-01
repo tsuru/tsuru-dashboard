@@ -20,7 +20,7 @@ class ListHealingViewTest(TestCase):
         response_mock.json.return_value = []
         get.return_value = response_mock
         response = ListHealing.as_view()(self.request)
-        self.assertEqual("docker/list_healing.html", response.template_name)
+        self.assertIn("docker/list_healing.html", response.template_name)
         expected = []
         self.assertListEqual(expected, response.context_data["events"])
         get.assert_called_with(
@@ -36,7 +36,7 @@ class ListHealingViewTest(TestCase):
         response_mock.json.return_value = None
         get.return_value = response_mock
         response = ListHealing.as_view()(self.request)
-        self.assertEqual("docker/list_healing.html", response.template_name)
+        self.assertIn("docker/list_healing.html", response.template_name)
         expected = []
         self.assertListEqual(expected, response.context_data["events"])
         get.assert_called_with(

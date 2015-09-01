@@ -5,7 +5,7 @@ from dateutil import parser
 
 from pytz import utc
 
-from django.template.response import TemplateResponse
+from django.views.generic import TemplateView
 from django.conf import settings
 
 from pygments import highlight
@@ -17,11 +17,13 @@ from auth.views import LoginRequiredView
 addr_re = re.compile(r"^https?://(.*):\d{1,5}/?")
 
 
-class ListNode(LoginRequiredView):
-    def get(self, request):
-        authorization = {'authorization': request.session.get('tsuru_token')}
-        response = requests.get('%s/docker/node' % settings.TSURU_HOST,
-                                headers=authorization)
+class ListNode(LoginRequiredView, TemplateView):
+    template_name = "docker/list_node.html"
+
+    def get_context_data(self, *args, **kwargs):
+        url = "{}/docker/node".format(settings.TSURU_HOST)
+        response = requests.get(url, headers=self.authorization)
+
         pools = {}
         if response.status_code != 204:
             data = response.json()
@@ -42,34 +44,42 @@ class ListNode(LoginRequiredView):
                 nodes_by_pool.append(node)
                 pools[node["Metadata"].get("pool")] = nodes_by_pool
 
-        return TemplateResponse(request, "docker/list_node.html",
-                                {"pools": pools})
+        context = super(ListNode, self).get_context_data(*args, **kwargs)
+        context.update({"pools": pools})
+        return context
 
 
-class ListContainer(LoginRequiredView):
-    def get(self, request, address):
+class ListContainer(LoginRequiredView, TemplateView):
+    template_name = "docker/list_container.html"
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(ListContainer, self).get_context_data(*args, **kwargs)
+
+        address = kwargs["address"]
         address = address.replace("http://", "")
         address = address.split(":")[0]
-        authorization = {'authorization': request.session.get('tsuru_token')}
-        url = '%s/docker/node/%s/containers' % (settings.TSURU_HOST, address)
-        response = requests.get(url, headers=authorization)
+
+        url = "{}/docker/node/{}/containers".format(settings.TSURU_HOST, address)
+        response = requests.get(url, headers=self.authorization)
+
         if response.status_code == 204:
             containers = []
         else:
             containers = response.json()
-        return TemplateResponse(request, "docker/list_container.html",
-                                {'containers': containers, 'address': address})
+
+        context.update({"containers": containers, "address": address})
+        return context
 
 
-class ListDeploy(LoginRequiredView):
-    template = "deploys/list_deploys.html"
+class ListDeploy(LoginRequiredView, TemplateView):
+    template_name = "deploys/list_deploys.html"
 
-    def get(self, request):
-        context = {}
-        context['services'] = self._get_services(request)
-        service = request.GET.get('service', '')
+    def get_context_data(self, *args, **kwargs):
+        context = super(ListDeploy, self).get_context_data(*args, **kwargs)
+        context['services'] = self._get_services(self.request)
+        service = self.request.GET.get('service', '')
 
-        page = int(request.GET.get('page', '1'))
+        page = int(self.request.GET.get('page', '1'))
 
         skip = (page * 20) - 20
         limit = page * 20
@@ -77,8 +87,7 @@ class ListDeploy(LoginRequiredView):
         url = '{}/deploys?service={}&skip={}&limit={}'.format(settings.TSURU_HOST,
                                                               service, skip, limit)
 
-        authorization = {'authorization': request.session.get('tsuru_token')}
-        response = requests.get(url, headers=authorization)
+        response = requests.get(url, headers=self.authorization)
 
         if response.status_code == 204:
             deploys = []
@@ -94,7 +103,7 @@ class ListDeploy(LoginRequiredView):
         if page > 0:
             context['previous'] = page - 1
 
-        return TemplateResponse(request, self.template, context=context)
+        return context
 
     def _get_services(self, request):
         authorization = {"authorization": request.session.get("tsuru_token")}
@@ -104,23 +113,23 @@ class ListDeploy(LoginRequiredView):
         return [s["service"] for s in services if s.get("service")]
 
 
-class DeploysGraph(LoginRequiredView):
-    template = "deploys/deploys_graph.html"
+class DeploysGraph(LoginRequiredView, TemplateView):
+    template_name = "deploys/deploys_graph.html"
 
-    def get(self, request):
-        context = {}
-        authorization = {'authorization': request.session.get('tsuru_token')}
-        response = requests.get('%s/deploys' % (settings.TSURU_HOST),
-                                headers=authorization)
+    def get_context_data(self, *args, **kwargs):
+        context = super(DeploysGraph, self).get_context_data(*args, **kwargs)
+        response = requests.get(
+            "{}/deploys".format(settings.TSURU_HOST), headers=self.authorization)
+
         if response.status_code == 204:
             deploys = []
         else:
             deploys = response.json()
 
-        appFilter = request.GET.get('app', None)
-        appExclude = request.GET.get('appExclude', None)
-        minTime = request.GET.get('minTime', None)
-        maxTime = request.GET.get('maxTime', None)
+        appFilter = self.request.GET.get('app', None)
+        appExclude = self.request.GET.get('appExclude', None)
+        minTime = self.request.GET.get('minTime', None)
+        maxTime = self.request.GET.get('maxTime', None)
 
         deploysByApp = {}
         for deploy in reversed(deploys):
@@ -152,15 +161,16 @@ class DeploysGraph(LoginRequiredView):
             appEntry["values"] = values
 
         context['deploys'] = json.dumps([app for app in deploysByApp.values()])
-        return TemplateResponse(request, self.template, context=context)
+        return context
 
 
-class DeployInfo(LoginRequiredView):
-    def get(self, request, *args, **kwargs):
+class DeployInfo(LoginRequiredView, TemplateView):
+    template_name = "deploys/deploy_details.html"
+
+    def get_context_data(self, *args, **kwargs):
         deploy_id = kwargs["deploy"]
-        headers = {'authorization': request.session.get('tsuru_token')}
-        url = "{0}/deploys/{1}".format(settings.TSURU_HOST, deploy_id)
-        response = requests.get(url, headers=headers)
+        url = "{}/deploys/{}".format(settings.TSURU_HOST, deploy_id)
+        response = requests.get(url, headers=self.authorization)
         context = {"deploy": response.json()}
 
         diff = context["deploy"].get("Diff")
@@ -171,18 +181,24 @@ class DeployInfo(LoginRequiredView):
             diff = None
 
         context["deploy"]["Diff"] = diff
-        return TemplateResponse(request, "deploys/deploy_details.html", context)
+        return context
 
 
-class ListHealing(LoginRequiredView):
-    def get(self, request):
+class ListHealing(LoginRequiredView, TemplateView):
+    template_name = "docker/list_healing.html"
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(ListHealing, self).get_context_data(*args, **kwargs)
         url = '{}/docker/healing'.format(settings.TSURU_HOST)
         response = requests.get(url, headers=self.authorization)
         events = response.json() or []
         formatted_events = []
+
         for event in events:
             event['FailingContainer']['ID'] = event['FailingContainer']['ID'][:12]
             event['CreatedContainer']['ID'] = event['CreatedContainer']['ID'][:12]
             event['App'] = event['FailingContainer']['AppName']
             formatted_events.append(event)
-        return TemplateResponse(request, "docker/list_healing.html", {"events": formatted_events})
+
+        context.update({"events": formatted_events})
+        return context

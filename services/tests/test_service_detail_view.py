@@ -21,7 +21,7 @@ class ServiceInstanceDetailViewTest(TestCase):
         get.return_value = response_mock
         response = ServiceInstanceDetail.as_view()(self.request,
                                                    instance="instance")
-        self.assertEqual("services/detail.html", response.template_name)
+        self.assertIn("services/detail.html", response.template_name)
         self.assertDictEqual({u"Name": "instance"},
                              response.context_data['instance'])
         get.assert_called_with(
@@ -41,7 +41,7 @@ class ServiceInstanceDetailViewTest(TestCase):
         get.return_value = response_mock
         response = ServiceInstanceDetail.as_view()(self.request,
                                                    instance="instance")
-        self.assertEqual("services/detail.html", response.template_name)
+        self.assertIn("services/detail.html", response.template_name)
         self.assertIn("apps", response.context_data)
         expected = ["app1", "app2"]
         self.assertListEqual(expected, response.context_data["apps"])

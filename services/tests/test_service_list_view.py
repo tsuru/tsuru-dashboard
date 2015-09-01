@@ -20,7 +20,7 @@ class ListServiceViewTest(TestCase):
 
         response = ListService.as_view()(request)
 
-        self.assertEqual("services/list.html", response.template_name)
+        self.assertIn("services/list.html", response.template_name)
         self.assertDictEqual(expected, response.context_data['services'])
 
         url = '{}/services/instances'.format(settings.TSURU_HOST)

@@ -2,25 +2,24 @@ import requests
 
 from datetime import datetime, timedelta
 
-from dateutil import parser
-from django.template.response import TemplateResponse
 from django.conf import settings
 from django.http import JsonResponse
+from django.views.generic import TemplateView
+
 from pytz import utc
+from dateutil import parser
 
 from auth.views import LoginRequiredView
 
 
-class DashboardView(LoginRequiredView):
-    def get(self, request):
-        return TemplateResponse(request, 'dashboard/dashboard.html')
+class DashboardView(LoginRequiredView, TemplateView):
+    template_name = "dashboard/dashboard.html"
 
 
 class HealingView(LoginRequiredView):
     def get(self, request):
-        authorization = {"authorization": request.session.get("tsuru_token")}
         url = "{}/docker/healing".format(settings.TSURU_HOST)
-        resp = requests.get(url, headers=authorization).json() or []
+        resp = requests.get(url, headers=self.authorization).json() or []
         healings = 0
         for healing in resp:
             end_time = parser.parse(healing['EndTime'])
@@ -36,14 +35,13 @@ class HealingView(LoginRequiredView):
 
 class CloudStatusView(LoginRequiredView):
     def get(self, request):
-        authorization = {"authorization": request.session.get("tsuru_token")}
         url = "{}/apps".format(settings.TSURU_HOST)
-        apps = requests.get(url, headers=authorization).json()
+        apps = requests.get(url, headers=self.authorization).json()
         total_containers = 0
         for app in apps:
             total_containers += len(app['units'])
         url = "{}/docker/node".format(settings.TSURU_HOST)
-        nodes = requests.get(url, headers=authorization).json()
+        nodes = requests.get(url, headers=self.authorization).json()
         data = {
             "total_apps": len(apps),
             "containers_by_nodes": total_containers/len(nodes['nodes']),
@@ -55,9 +53,8 @@ class CloudStatusView(LoginRequiredView):
 
 class DeploysView(LoginRequiredView):
     def get(self, request):
-        authorization = {"authorization": request.session.get("tsuru_token")}
         url = "{}/deploys?limit=250".format(settings.TSURU_HOST)
-        deploys = requests.get(url, headers=authorization).json() or []
+        deploys = requests.get(url, headers=self.authorization).json() or []
         errored = 0
         last_deploys = 0
         for deploy in deploys:
