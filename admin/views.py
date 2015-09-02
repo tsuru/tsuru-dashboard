@@ -225,3 +225,61 @@ class ListHealing(LoginRequiredView, TemplateView):
 
         context.update({"events": formatted_events})
         return context
+
+
+class PoolInfo(LoginRequiredView, TemplateView):
+    template_name = "docker/pool_info.html"
+
+    def units_by_node(self, address):
+        address = address.replace("http://", "")
+        address = address.split(":")[0]
+
+        url = "{}/docker/node/{}/containers".format(settings.TSURU_HOST, address)
+        response = requests.get(url, headers=self.authorization)
+
+        if response.status_code == 204:
+            units = []
+        else:
+            units = response.json() or []
+
+        return len(units)
+
+    def node_last_success(self, date):
+        if date:
+            last_success = parser.parse(date)
+            if last_success.tzinfo:
+                last_success = last_success.astimezone(utc)
+            else:
+                last_success = utc.localize(last_success)
+            return last_success
+        return date
+
+    def nodes_by_pool(self, pool):
+        url = "{}/docker/node".format(settings.TSURU_HOST)
+        response = requests.get(url, headers=self.authorization)
+        pools = {}
+
+        if response.status_code != 204:
+            data = response.json()
+            nodes = data.get("nodes", [])
+
+            for node in nodes:
+                if node["Metadata"].get("pool", "") != pool:
+                    continue
+
+                dt = node["Metadata"].get("LastSuccess")
+                node["Metadata"]["LastSuccess"] = self.node_last_success(dt)
+
+                node["Units"] = self.units_by_node(node["Address"])
+
+                pool = node["Metadata"].get("pool")
+                nodes_by_pool = pools.get(pool, [])
+                nodes_by_pool.append(node)
+                pools[pool] = nodes_by_pool
+
+        return pools
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(PoolInfo, self).get_context_data(*args, **kwargs)
+        context.update({"pools": self.nodes_by_pool(kwargs["pool"])})
+        return context

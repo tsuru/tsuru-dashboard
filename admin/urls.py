@@ -5,6 +5,7 @@ from admin import views
 urlpatterns = patterns(
     '',
     url(r'^$', views.ListNode.as_view(), name='list-node'),
+    url(r'^pool/(?P<pool>[\w-]+)/$', views.PoolInfo.as_view(), name='pool-info'),
     url(r'^healing/$', views.ListHealing.as_view(), name='list-healing'),
     url(r'^(?P<address>[http://\w.:1-9-]+)/containers/$', views.ListContainer.as_view(),
         name='list-container'),
