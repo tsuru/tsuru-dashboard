@@ -20,6 +20,20 @@ addr_re = re.compile(r"^https?://(.*):\d{1,5}/?")
 class ListNode(LoginRequiredView, TemplateView):
     template_name = "docker/list_node.html"
 
+    def units_by_node(self, address):
+        address = address.replace("http://", "")
+        address = address.split(":")[0]
+
+        url = "{}/docker/node/{}/containers".format(settings.TSURU_HOST, address)
+        response = requests.get(url, headers=self.authorization)
+
+        if response.status_code == 204:
+            units = []
+        else:
+            units = response.json() or []
+
+        return len(units)
+
     def node_last_success(self, date):
         if date:
             last_success = parser.parse(date)
@@ -42,6 +56,8 @@ class ListNode(LoginRequiredView, TemplateView):
             for node in nodes:
                 dt = node["Metadata"].get("LastSuccess")
                 node["Metadata"]["LastSuccess"] = self.node_last_success(dt)
+
+                node["Units"] = self.units_by_node(node["Address"])
 
                 pool = node["Metadata"].get("pool")
                 nodes_by_pool = pools.get(pool, [])

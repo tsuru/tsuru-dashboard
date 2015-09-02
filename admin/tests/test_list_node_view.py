@@ -56,12 +56,15 @@ class ListNodeViewTest(TestCase):
         date = parser.parse("2014-08-01T14:09:40-03:00")
         expected = {"theonepool": [
             {"Address": "http://128.0.0.1:4243",
+             "Units": 2,
              "Metadata": {"LastSuccess": date, "pool": "theonepool"},
              "Status": "ready"},
             {"Address": "http://127.0.0.1:2375",
-                "Metadata": {"LastSuccess": date, "pool": "theonepool"},
+             "Units": 2,
+             "Metadata": {"LastSuccess": date, "pool": "theonepool"},
              "Status": "ready"},
             {"Address": "http://myserver.com:2375",
+             "Units": 2,
              "Metadata": {"LastSuccess": date, "pool": "theonepool"},
              "Status": "ready"},
         ]}

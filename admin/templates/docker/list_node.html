@@ -29,6 +29,7 @@ table td, table th {
                 <thead>
                 <tr>
                     <th>Host</th>
+                    <th>Units</th>
                     <th>Last success</th>
                     <th>Status</th>
                 </tr>
@@ -41,6 +42,7 @@ table td, table th {
                             {{ node.Address }}
                         </a>
                     </td>
+                    <td>{{ node.Units }}</td>
                     <td>{{ node.Metadata.LastSuccess|date:"Y/m/d H:i:s e" }}</td>
                     <td>{{ node.Status }}</td>
                 </tr>
