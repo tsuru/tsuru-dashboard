@@ -494,7 +494,7 @@ class AppTeams(LoginRequiredMixin, TemplateView):
         else:
             context.update({"errors": response.content})
 
-        return context 
+        return context
 
 
 class AppEnv(LoginRequiredView):

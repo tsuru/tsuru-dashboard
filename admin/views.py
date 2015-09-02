@@ -20,32 +20,39 @@ addr_re = re.compile(r"^https?://(.*):\d{1,5}/?")
 class ListNode(LoginRequiredView, TemplateView):
     template_name = "docker/list_node.html"
 
-    def get_context_data(self, *args, **kwargs):
+    def node_last_success(self, date):
+        if date:
+            last_success = parser.parse(date)
+            if last_success.tzinfo:
+                last_success = last_success.astimezone(utc)
+            else:
+                last_success = utc.localize(last_success)
+            return last_success
+        return date
+
+    def nodes_by_pool(self):
         url = "{}/docker/node".format(settings.TSURU_HOST)
         response = requests.get(url, headers=self.authorization)
-
         pools = {}
+
         if response.status_code != 204:
             data = response.json()
             nodes = data.get("nodes", [])
 
             for node in nodes:
-                dt = node["Metadata"].get("LastSuccess", "")
+                dt = node["Metadata"].get("LastSuccess")
+                node["Metadata"]["LastSuccess"] = self.node_last_success(dt)
 
-                if dt:
-                    last_success = parser.parse(node["Metadata"]["LastSuccess"])
-                    if last_success.tzinfo:
-                        last_success = last_success.astimezone(utc)
-                    else:
-                        last_success = utc.localize(last_success)
-                    node["Metadata"]["LastSuccess"] = last_success
-
-                nodes_by_pool = pools.get(node["Metadata"].get("pool"), [])
+                pool = node["Metadata"].get("pool")
+                nodes_by_pool = pools.get(pool, [])
                 nodes_by_pool.append(node)
-                pools[node["Metadata"].get("pool")] = nodes_by_pool
+                pools[pool] = nodes_by_pool
 
+        return pools
+
+    def get_context_data(self, *args, **kwargs):
         context = super(ListNode, self).get_context_data(*args, **kwargs)
-        context.update({"pools": pools})
+        context.update({"pools": self.nodes_by_pool()})
         return context
 
 
