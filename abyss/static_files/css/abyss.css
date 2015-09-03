@@ -127,3 +127,7 @@ select {
 .text-right-important {
 	text-align: right !important;
 }
+
+.search {
+    margin-top: 20px;
+}

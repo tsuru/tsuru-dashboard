@@ -1,5 +1,6 @@
 from mock import patch, Mock
 
+from django.conf import settings
 from django.test import TestCase
 from django.test.client import RequestFactory
 
@@ -21,15 +22,51 @@ class ListAppViewTest(TestCase):
         self.assertListEqual([], response.context_data['apps'])
 
     @patch('requests.get')
-    def teste_should_get_list_of_apps_from_tsuru(self, get):
-        expected = [{"framework": "python", "name": "pacote",
-                     "repository": "git@tsuru.com:pacote.git",
-                     "state": "creating"}]
+    def teste_list_apps(self, get):
+        expected = [{
+            "framework": "python",
+            "name": "pacote",
+            "repository": "git@tsuru.com:pacote.git",
+            "state": "creating"
+        }]
         response_mock = Mock(status_code=200)
         response_mock.json.return_value = expected
         get.return_value = response_mock
+
         response = ListApp.as_view()(self.request)
-        self.assertListEqual([{"framework": "python", "name": "pacote",
-                               "repository": "git@tsuru.com:pacote.git",
-                               "state": "creating"}],
-                             response.context_data["apps"])
+
+        expected = [{
+            "framework": "python",
+            "name": "pacote",
+            "repository": "git@tsuru.com:pacote.git",
+            "state": "creating",
+        }]
+        self.assertListEqual(expected, response.context_data["apps"])
+        url = "{}/apps".format(settings.TSURU_HOST)
+        get.assert_called_with(url, headers={'authorization': 'admin'})
+
+    @patch('requests.get')
+    def teste_list_apps_by_name(self, get):
+        expected = [{
+            "framework": "python",
+            "name": "pacote",
+            "repository": "git@tsuru.com:pacote.git",
+            "state": "creating"
+        }]
+        response_mock = Mock(status_code=200)
+        response_mock.json.return_value = expected
+        get.return_value = response_mock
+
+        request = RequestFactory().get("/?name=pacote")
+        request.session = {"tsuru_token": "admin"}
+        response = ListApp.as_view()(request)
+
+        expected = [{
+            "framework": "python",
+            "name": "pacote",
+            "repository": "git@tsuru.com:pacote.git",
+            "state": "creating",
+        }]
+        self.assertListEqual(expected, response.context_data["apps"])
+        url = "{}/apps?name=pacote".format(settings.TSURU_HOST)
+        get.assert_called_with(url, headers={'authorization': 'admin'})

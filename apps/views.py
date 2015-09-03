@@ -408,6 +408,10 @@ class ListApp(LoginRequiredMixin, TemplateView):
 
     def list_apps(self, name=None):
         url = "{}/apps".format(settings.TSURU_HOST)
+
+        if name:
+            url = "{}?name={}".format(url, name)
+
         response = requests.get(url, headers=self.authorization)
 
         apps = []
@@ -418,7 +422,7 @@ class ListApp(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, *args, **kwargs):
         context = super(ListApp, self).get_context_data(*args, **kwargs)
-        context.update({"apps": self.list_apps()})
+        context.update({"apps": self.list_apps(self.request.GET.get("name"))})
         return context
 
 
