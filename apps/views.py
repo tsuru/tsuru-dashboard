@@ -628,3 +628,19 @@ class Metrics(LoginRequiredMixin, TemplateView):
         context['app']['envs'] = self.get_envs(app_name)
 
         return context
+
+
+class Unlock(LoginRequiredView):
+    def get(self, request, *args, **kwargs):
+        app_name = self.kwargs['name']
+        response = requests.delete(
+            '{}/apps/{}/lock'.format(settings.TSURU_HOST, app_name),
+            headers=self.authorization
+        )
+
+        if response.status_code > 399:
+            messages.error(request, response.text, fail_silently=True)
+        else:
+            messages.success(request, u'App was successfully unlocked', fail_silently=True)
+
+        return redirect(reverse('app-settings', args=[app_name]))

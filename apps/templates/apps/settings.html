@@ -138,7 +138,7 @@
 		<input type="text" class="unlock-confirmation" />
 	</div>
 	<div class="modal-footer">
-		<form method="get" action="">
+        <form method="get" action="{% url "unlock-app"  app.name %}">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 			<button class="btn btn-unlock" disabled="disabled">Unlock app</button>
 		</form>

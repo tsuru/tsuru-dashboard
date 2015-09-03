@@ -13,6 +13,7 @@ urlpatterns = patterns(
         views.AppDetail.as_view(), name='detail-app'),
     url(r'^(?P<name>[\w-]+)/remove/$',
         views.RemoveApp.as_view(), name='remove_app'),
+    url(r'^(?P<name>[\w-]+)/unlock/$', views.Unlock.as_view(), name='unlock-app'),
     url(r'^(?P<app_name>[\w-]+)/log/stream/$', views.LogStream.as_view(), name='app-log-stream'),
     url(r'^(?P<app_name>[\w-]+)/log/$', views.AppLog.as_view(),
         name='app_log'),
