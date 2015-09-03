@@ -227,7 +227,7 @@ class AppDetail(LoginRequiredMixin, TemplateView):
 
         for container in self.get_containers(app_name):
             for index, unit in enumerate(context['app']['units']):
-                if unit['Name'] == container['ID']:
+                if unit['ID'] == container['ID']:
                     context['app']['units'][index].update({
                         'HostAddr': container['HostAddr'],
                         'HostPort': container['HostPort'],
