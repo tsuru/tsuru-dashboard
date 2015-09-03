@@ -25,7 +25,8 @@
 				<tr>
 					<td>
 						<a href="{% url 'detail-app' app.name %}" title="App Details">
-							{{ app.name }}
+                            {{ app.name }} 
+                            {% if  app.lock.Locked %}<i class="icon-lock"></i>{% endif %}
 						</a>
 					</td>
 				</tr>
@@ -34,4 +35,18 @@
 		</div>
 	</div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script type="text/javascript">
+var appName = "{{ app.name }}";
+var envs = {};
+{% for env in app.envs %}
+	envs["{{ env.name }}"] = "{{ env.value }}";
+{% endfor %}
+$.detail(appName, envs);
+$(".settings-toggle").on("click", function() {
+    $("table", this).toggleClass("hide");
+});
+</script>
 {% endblock %}
