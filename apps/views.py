@@ -406,9 +406,7 @@ class RemoveApp(LoginRequiredView):
 class ListApp(LoginRequiredMixin, TemplateView):
     template_name = "apps/list.html"
 
-    def get_context_data(self, *args, **kwargs):
-        context = super(ListApp, self).get_context_data(*args, **kwargs)
-
+    def list_apps(self, name=None):
         url = "{}/apps".format(settings.TSURU_HOST)
         response = requests.get(url, headers=self.authorization)
 
@@ -416,7 +414,11 @@ class ListApp(LoginRequiredMixin, TemplateView):
         if response.status_code != 204:
             apps = sorted(response.json(), key=lambda item: item['name'])
 
-        context.update({"apps": apps})
+        return apps
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(ListApp, self).get_context_data(*args, **kwargs)
+        context.update({"apps": self.list_apps()})
         return context
 
 
