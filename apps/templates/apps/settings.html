@@ -14,6 +14,18 @@
                 <p><strong>Platform:</strong> {{ app.platform }}</p>
                 <p><strong>Pool:</strong> {{ app.pool }}</p>
             </div>
+            {% if app.lock.Locked %}
+            <h3>App locked</h3>
+            <div class="content">
+                <p><strong>Reason:</strong> {{ app.lock.Reason }}</p>
+                <p><strong>Acquire date:</strong> {{ app.lock.AcquireDate }}</p>
+                {% if request.session.is_admin %}
+					<a class="btn" href="#unlock-confirmation" data-toggle="modal">
+						Unlock app
+                    </a>
+                {% endif %}
+            </div>
+            {% endif %}
         </div>
 	</div>
 	<div class="row-fluid">
@@ -89,7 +101,7 @@
 
 	<div class="row-fluid">
 		<div class="span12">
-            <h3>Delete App</h3>
+            <h3>Delete app</h3>
 				<div class="content">
 					<a class="btn btn-danger" href="#confirmation" data-toggle="modal"><i class="icon-remove icon-white"></i>
 						Delete app</a>
@@ -112,6 +124,23 @@
 		<form method="get" action="{% url 'remove_app' app.name %}">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 			<button class="btn btn-danger btn-remove" disabled="disabled">Delete app</button>
+		</form>
+	</div>
+</div>
+
+<div id="unlock-confirmation" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">Unlock {{ app.name }}</h3>
+	</div>
+	<div class="modal-body">
+		<p>Please type in the name of your application to confirm.</p>
+		<input type="text" class="unlock-confirmation" />
+	</div>
+	<div class="modal-footer">
+		<form method="get" action="">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+			<button class="btn btn-unlock" disabled="disabled">Unlock app</button>
 		</form>
 	</div>
 </div>

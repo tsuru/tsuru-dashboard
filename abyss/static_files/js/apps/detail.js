@@ -19,6 +19,7 @@
 
 		allGraphs(appName, envs);
 		$.confirmation(".btn-remove", ".remove-confirmation", appName);
+		$.confirmation(".btn-unlock", ".unlock-confirmation", appName);
 	};
 
 	$.detail = detail;
