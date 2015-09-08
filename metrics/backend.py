@@ -13,8 +13,8 @@ def get_backend(app, token):
         return ElasticSearch(app["envs"]["ELASTICSEARCH_HOST"], ".measure-tsuru-*", app["name"])
 
     headers = {'authorization': token}
-    url = "{}/apps/{}/metric/envs"
-    response = requests.get(url.format(app, settings.TSURU_HOST), headers=headers)
+    url = "{}/apps/{}/metric/envs".format(settings.TSURU_HOST, app)
+    response = requests.get(url, headers=headers)
 
     if response.status_code == 200:
         data = response.json()
