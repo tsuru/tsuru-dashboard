@@ -227,13 +227,18 @@ class AppDetail(LoginRequiredMixin, TemplateView):
 
         for container in self.get_containers(app_name):
             for index, unit in enumerate(context['app']['units']):
-                if unit['ID'] == container['ID']:
+                if self.id_or_name(unit) == container['ID']:
                     context['app']['units'][index].update({
                         'HostAddr': container['HostAddr'],
                         'HostPort': container['HostPort'],
                     })
         context['units_by_status'] = units_by_status
         return context
+
+    def id_or_name(self, unit):
+        if "ID" in unit:
+            return unit["ID"]
+        return unit["Name"]
 
 
 class CreateApp(LoginRequiredView):
