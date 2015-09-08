@@ -119,7 +119,7 @@ class BackendTest(TestCase):
     @patch("requests.get")
     def test_without_metrics(self, get_mock):
         get_mock.return_value = Mock(status_code=404)
-        app = {}
+        app = {"name": "appname"}
 
         with self.assertRaises(MetricNotEnabled):
             get_backend(app, 'token')
