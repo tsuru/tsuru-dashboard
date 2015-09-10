@@ -51,8 +51,7 @@
 
 {% block app-content %}
 	<div class="row-fluid">
-		<div class="span12">
-            <div id="filedrag">drop files here to deploy</div>
+		<div class="span12" id="deploy-box">
         </div>
     </div>
 	<div class="row-fluid">
@@ -124,6 +123,7 @@
 {% block extra_js %}
 <script src="{% static "js/confirmation.js" %}"></script>
 <script src="{% static "js/jszip.js" %}"></script>
+<script src="{% static "js/deploy.js" %}"></script>
 <script type="text/javascript">
 $(".deploys .rollback").on('click', function(ev) {
 		ev.preventDefault();

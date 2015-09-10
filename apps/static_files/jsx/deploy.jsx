@@ -3,8 +3,8 @@ var React = require('react');
 var DeployBox = React.createClass({
   render: function() {
     return (
-      <div className="deployBox">
-        deploy box
+      <div id="filedrag">
+        drop files here to deploy
       </div>
     );
   }

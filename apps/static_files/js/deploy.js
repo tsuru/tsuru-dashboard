@@ -4,8 +4,8 @@ var React = require('react');
 var DeployBox = React.createClass({displayName: "DeployBox",
   render: function() {
     return (
-      React.createElement("div", {className: "deployBox"}, 
-        "deploy box"
+      React.createElement("div", {id: "filedrag"}, 
+        "drop files here to deploy"
       )
     );
   }

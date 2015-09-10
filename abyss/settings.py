@@ -34,6 +34,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static_files'),
     'dashboard/static_files',
+    'apps/static_files',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
