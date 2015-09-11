@@ -5,8 +5,8 @@
   "main": "index.js",
   "dependencies": {},
   "devDependencies": {
-    "react": "^0.13.3",
     "browserify": "^11.0.1",
+    "react": "^0.13.3",
     "reactify": "^1.1.1"
   },
   "scripts": {
@@ -22,7 +22,7 @@
     "paas"
   ],
   "author": "tsuru",
-  "license": "BSD",
+  "license": "BSD-3-Clause",
   "bugs": {
     "url": "https://github.com/tsuru/tsuru-dashboard/issues"
   },
