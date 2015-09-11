@@ -17,3 +17,4 @@ node-deps:
 
 build-js: node-deps
 	@./node_modules/browserify/bin/cmd.js -t reactify -o apps/static_files/js/deploy.js apps/static_files/jsx/deploy.jsx
+	@./node_modules/browserify/bin/cmd.js -t reactify -o apps/static_files/js/list.js apps/static_files/jsx/list.jsx

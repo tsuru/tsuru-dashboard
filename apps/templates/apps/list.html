@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load staticfiles %}
 
 {% block sidebar %}
 {% include "sidebar.html" with active="apps" %}
@@ -14,7 +15,7 @@
 {% block content %}
 <div class="container-fluid">
 	<div class="row-fluid">
-		<div class="span12">
+		<div class="span12" id="list-container">
             <div class="search">
                 <form method="get">
                     <input type="text" name="name" placeholder="search apps by name">
@@ -38,15 +39,5 @@
 {% endblock %}
 
 {% block extra_js %}
-<script type="text/javascript">
-var appName = "{{ app.name }}";
-var envs = {};
-{% for env in app.envs %}
-	envs["{{ env.name }}"] = "{{ env.value }}";
-{% endfor %}
-$.detail(appName, envs);
-$(".settings-toggle").on("click", function() {
-    $("table", this).toggleClass("hide");
-});
-</script>
+<script src="{% static "js/list.js" %}"></script>
 {% endblock %}
