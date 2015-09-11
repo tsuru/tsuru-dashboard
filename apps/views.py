@@ -10,7 +10,7 @@ import requests
 
 from django.template.response import TemplateResponse
 from django.conf import settings
-from django.http import HttpResponse, HttpResponseServerError, Http404, StreamingHttpResponse
+from django.http import HttpResponse, HttpResponseServerError, Http404, StreamingHttpResponse, JsonResponse
 from django.shortcuts import redirect
 from django.core.urlresolvers import reverse
 from django.views.generic import TemplateView
@@ -429,6 +429,26 @@ class ListApp(LoginRequiredMixin, TemplateView):
         context = super(ListApp, self).get_context_data(*args, **kwargs)
         context.update({"apps": self.list_apps(self.request.GET.get("name"))})
         return context
+
+
+class ListAppJson(LoginRequiredView):
+    def list_apps(self, name=None):
+        url = "{}/apps".format(settings.TSURU_HOST)
+
+        if name:
+            url = "{}?name={}".format(url, name)
+
+        response = requests.get(url, headers=self.authorization)
+
+        apps = []
+        if response.status_code != 204:
+            apps = sorted(response.json(), key=lambda item: item['name'])
+
+        return apps
+
+    def get(self, *args, **kwargs):
+        app_list = {"apps": self.list_apps(self.request.GET.get("name"))}
+        return JsonResponse(app_list, safe=False)
 
 
 class Run(LoginRequiredView):

@@ -7,6 +7,7 @@ from apps import views
 urlpatterns = patterns(
     '',
     url(r'^$', views.ListApp.as_view(), name='list-app'),
+    url(r'^list.json$', views.ListAppJson.as_view(), name='list-app-json'),
     url(r'^create/$', views.CreateApp.as_view(), name='create-app'),
     url(r'^run/$', views.Run.as_view(), name='run'),
     url(r'^(?P<app_name>[\w-]+)/$',
