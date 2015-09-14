@@ -99,16 +99,13 @@ class ListDeploy(LoginRequiredView, TemplateView):
 
     def get_context_data(self, *args, **kwargs):
         context = super(ListDeploy, self).get_context_data(*args, **kwargs)
-        context['services'] = self._get_services(self.request)
-        service = self.request.GET.get('service', '')
 
         page = int(self.request.GET.get('page', '1'))
 
         skip = (page * 20) - 20
         limit = page * 20
 
-        url = '{}/deploys?service={}&skip={}&limit={}'.format(settings.TSURU_HOST,
-                                                              service, skip, limit)
+        url = '{}/deploys?skip={}&limit={}'.format(settings.TSURU_HOST, skip, limit)
 
         response = requests.get(url, headers=self.authorization)
 
@@ -118,7 +115,6 @@ class ListDeploy(LoginRequiredView, TemplateView):
             deploys = response.json()
 
         context['deploys'] = deploys
-        context['service'] = service
 
         if len(deploys) >= 20:
             context['next'] = page + 1
@@ -127,13 +123,6 @@ class ListDeploy(LoginRequiredView, TemplateView):
             context['previous'] = page - 1
 
         return context
-
-    def _get_services(self, request):
-        authorization = {"authorization": request.session.get("tsuru_token")}
-        response = requests.get("%s/services/instances" % settings.TSURU_HOST,
-                                headers=authorization)
-        services = response.json()
-        return [s["service"] for s in services if s.get("service")]
 
 
 class DeploysGraph(LoginRequiredView, TemplateView):

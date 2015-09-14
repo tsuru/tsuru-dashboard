@@ -21,9 +21,6 @@ class ListDeployViewTest(TestCase):
         self.response = ListDeploy.as_view()(self.request)
         self.response_mock = Mock()
 
-    def test_context_should_contain_services(self):
-        self.assertIn('services', self.response.context_data.keys())
-
     @patch('requests.get')
     @patch("auth.views.token_is_valid")
     def test_should_use_list_template(self, token_is_valid, get):
@@ -37,7 +34,7 @@ class ListDeployViewTest(TestCase):
         self.assertIn("deploys/list_deploys.html", response.template_name)
         self.assertIn('deploys', response.context_data.keys())
         get.assert_called_with(
-            '{0}/deploys?service=&skip=0&limit=20'.format(settings.TSURU_HOST),
+            '{0}/deploys?skip=0&limit=20'.format(settings.TSURU_HOST),
             headers={'authorization': 'admin'})
 
     @patch('requests.get')
@@ -52,5 +49,5 @@ class ListDeployViewTest(TestCase):
         self.assertIn("deploys/list_deploys.html", response.template_name)
         self.assertListEqual([], response.context_data['deploys'])
         get.assert_called_with(
-            '{0}/deploys?service=&skip=0&limit=20'.format(settings.TSURU_HOST),
+            '{0}/deploys?skip=0&limit=20'.format(settings.TSURU_HOST),
             headers={'authorization': 'admin'})

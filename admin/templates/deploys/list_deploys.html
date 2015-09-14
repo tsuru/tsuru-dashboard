@@ -18,16 +18,6 @@
 <div class="container-fluid">
 	<div class="row-fluid">
 		<div class="span12">
-			<form action="" method="get" id="filter">
-				<select id="listfilter" name="service">
-					<option value="">Select Service</option>
-					{% for srv in services %}
-					<option value="{{ srv }}"{% if service == srv %} selected{% endif %}>
-						{{ srv }}
-					</option>
-					{% endfor %}
-				</select>
-			</form>
 			<table class="deploys table" id="list">
 				<thead>
 					<tr>
