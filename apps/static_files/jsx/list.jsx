@@ -25,7 +25,7 @@ var App = React.createClass({
     return (
       <tr>
         <td>
-          <a href="{this.props.url}" title="App Details">
+          <a href={this.props.name} title="App Details">
             {this.props.name}
           </a>
         </td>

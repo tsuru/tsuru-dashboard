@@ -26,7 +26,7 @@ var App = React.createClass({displayName: "App",
     return (
       React.createElement("tr", null, 
         React.createElement("td", null, 
-          React.createElement("a", {href: "{this.props.url}", title: "App Details"}, 
+          React.createElement("a", {href: this.props.name, title: "App Details"}, 
             this.props.name
           )
         )
