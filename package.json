@@ -5,12 +5,17 @@
   "main": "index.js",
   "dependencies": {},
   "devDependencies": {
+    "babel": "^5.8.23",
     "browserify": "^11.0.1",
+    "chai": "^3.2.0",
+    "jsdom": "^3.1.2",
+    "mocha": "^2.3.2",
+    "mochify": "^2.13.0",
     "react": "^0.13.3",
     "reactify": "^1.1.1"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha --compilers jsx:./node_modules/babel/register.js apps/static_files/test/test.js"
   },
   "repository": {
     "type": "git",

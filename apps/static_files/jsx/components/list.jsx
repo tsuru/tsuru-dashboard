@@ -2,8 +2,7 @@ var React = require('react');
 
 var AppSearch = React.createClass({
   handleSubmit: function(e) {
-    e.preventDefault();
-    var name = React.findDOMNode(this.refs.name).value.trim();
+    var name = e.target.value.trim();
     if (!name) {
       return;
     }
@@ -82,7 +81,9 @@ var AppList = React.createClass({
   }
 });
 
-React.render(
-  <AppList url="/apps/list.json" />,
-  document.getElementById('list-container')
-);
+var List = {
+    AppSearch: AppSearch,
+    AppList: AppList
+}
+
+module.exports = List;
