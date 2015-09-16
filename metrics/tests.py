@@ -5,7 +5,7 @@ from django.conf import settings
 from metrics.backend import ElasticSearch, get_backend, MetricNotEnabled
 from metrics import views
 
-from mock import patch, Mock
+import mock
 import json
 
 
@@ -15,9 +15,9 @@ class MetricViewTest(TestCase):
         request.session = {"tsuru_token": "token"}
         return request
 
-    @patch("requests.get")
+    @mock.patch("requests.get")
     def test_get_app(self, get_mock):
-        response_mock = Mock()
+        response_mock = mock.Mock()
         response_mock.json.return_value = {}
         get_mock.return_value = response_mock
 
@@ -30,10 +30,10 @@ class MetricViewTest(TestCase):
         headers = {"authorization": "token"}
         get_mock.assert_called_with(url, headers=headers)
 
-    @patch("requests.get")
+    @mock.patch("requests.get")
     def test_get_envs(self, get_mock):
         env_mock = [{"name": "VAR", "value": "value"}]
-        response_mock = Mock()
+        response_mock = mock.Mock()
         response_mock.json.return_value = env_mock
         get_mock.return_value = response_mock
 
@@ -46,22 +46,22 @@ class MetricViewTest(TestCase):
         headers = {"authorization": "token"}
         get_mock.assert_called_with(url, headers=headers)
 
-    @patch("metrics.backend.get_backend")
-    @patch("auth.views.token_is_valid")
+    @mock.patch("metrics.backend.get_backend")
+    @mock.patch("auth.views.token_is_valid")
     def test_get(self, token_mock, get_backend_mock):
         token_mock.return_value = True
-        backend_mock = Mock()
+        backend_mock = mock.Mock()
         backend_mock.cpu_max.return_value = {}
         get_backend_mock.return_value = backend_mock
 
         v = views.Metric
 
         original_get_app = v.get_app
-        v.get_app = Mock()
+        v.get_app = mock.Mock()
         v.get_app.return_value = {}
 
         original_get_envs = v.get_envs
-        v.get_envs = Mock()
+        v.get_envs = mock.Mock()
         v.get_envs.return_value = {}
         view = v.as_view()
 
@@ -80,7 +80,7 @@ class MetricViewTest(TestCase):
         get_backend_mock.assert_called_with({'envs': {}}, 'token')
         backend_mock.cpu_max.assert_called_with(date_range=u'2h/h', interval=u'30m')
 
-    @patch("auth.views.token_is_valid")
+    @mock.patch("auth.views.token_is_valid")
     def test_get_bad_request(self, token_mock):
         request = RequestFactory().get("")
         request.session = {"tsuru_token": "token"}
@@ -95,9 +95,9 @@ class MetricViewTest(TestCase):
 
 
 class BackendTest(TestCase):
-    @patch("requests.get")
+    @mock.patch("requests.get")
     def test_envs_from_api(self, get_mock):
-        response_mock = Mock(status_code=200)
+        response_mock = mock.Mock(status_code=200)
         response_mock.json.return_value = {
             "METRICS_BACKEND": "logstash",
             "METRICS_ELASTICSEARCH_HOST": "http://easearch.com",
@@ -116,9 +116,9 @@ class BackendTest(TestCase):
         backend = get_backend(app, 'token')
         self.assertIsInstance(backend, ElasticSearch)
 
-    @patch("requests.get")
+    @mock.patch("requests.get")
     def test_without_metrics(self, get_mock):
-        get_mock.return_value = Mock(status_code=404)
+        get_mock.return_value = mock.Mock(status_code=404)
         app = {"name": "appname"}
 
         with self.assertRaises(MetricNotEnabled):
@@ -130,46 +130,115 @@ class ElasticSearchTest(TestCase):
         self.maxDiff = None
         self.es = ElasticSearch("http://url.com", "index", "app")
 
-    @patch("requests.post")
+    @mock.patch("requests.post")
     def test_cpu_max(self, post_mock):
-        self.es.process = Mock()
+        self.es.process = mock.Mock()
         self.es.cpu_max()
         url = "{}/.measure-tsuru-*/{}/_search".format(self.es.url, "cpu_max")
         post_mock.assert_called_with(url, data=json.dumps(self.es.query()))
 
-    @patch("requests.post")
+    @mock.patch("requests.post")
     def test_mem_max(self, post_mock):
-        self.es.process = Mock()
+        self.es.process = mock.Mock()
         self.es.mem_max()
         url = "{}/.measure-tsuru-*/{}/_search".format(self.es.url, "mem_max")
         post_mock.assert_called_with(url, data=json.dumps(self.es.query()))
 
-    @patch("requests.post")
+    @mock.patch("requests.post")
     def test_units(self, post_mock):
         self.es.units()
         url = "{}/.measure-tsuru-*/{}/_search".format(self.es.url, "cpu_max")
         aggregation = {"units": {"cardinality": {"field": "host"}}}
         post_mock.assert_called_with(url, data=json.dumps(self.es.query(aggregation=aggregation)))
 
-    @patch("requests.post")
+    @mock.patch("requests.post")
     def test_requests_min(self, post_mock):
         self.es.requests_min()
         url = "{}/.measure-tsuru-*/{}/_search".format(self.es.url, "response_time")
         aggregation = {"sum": {"sum": {"field": "count"}}}
         post_mock.assert_called_with(url, data=json.dumps(self.es.query(aggregation=aggregation)))
 
-    @patch("requests.post")
+    @mock.patch("requests.post")
     def test_response_time(self, post_mock):
         self.es.response_time()
         url = "{}/.measure-tsuru-*/{}/_search".format(self.es.url, "response_time")
         post_mock.assert_called_with(url, data=json.dumps(self.es.query()))
 
-    @patch("requests.post")
+    @mock.patch("requests.post")
     def test_connections(self, post_mock):
-        self.es.connections()
+        data = {
+            "took": 132,
+            "timed_out": False,
+            "_shards": {
+                "total": 380,
+                "successful": 380,
+                "failed": 0
+            },
+            "hits": {
+                "total": 478998,
+                "max_score": 0,
+                "hits": []
+            },
+            "aggregations": {
+                "range": {
+                    "buckets": [
+                        {
+                            "key": "2015-09-16T21:42:00.000Z-2015-09-16T21:47:05.700Z",
+                            "from": 1442439720000,
+                            "from_as_string": "2015-09-16T21:42:00.000Z",
+                            "to": 1442440025700,
+                            "to_as_string": "2015-09-16T21:47:05.700Z",
+                            "doc_count": 1,
+                            "date": {
+                                "buckets": [
+                                    {
+                                        "key_as_string": "2015-09-16T21:40:00.000Z",
+                                        "key": 1442439600000,
+                                        "doc_count": 1,
+                                        "connection": {
+                                            "doc_count_error_upper_bound": 0,
+                                            "sum_other_doc_count": 0,
+                                            "buckets": [
+                                                {
+                                                    "key": "tsuru.company.com:80",
+                                                    "doc_count": 50
+                                                },
+                                                {
+                                                    "key": "remote.something.com:8080",
+                                                    "doc_count": 13
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+        response = mock.Mock()
+        response.json.return_value = data
+        post_mock.return_value = response
+        result = self.es.connections()
+        expected = {"data": [{
+            "x": 1442439600000,
+            "tsuru.company.com:80": 50,
+            "remote.something.com:8080": 13,
+        }, {
+            "x": 1442439600000,
+            "tsuru.company.com:80": 50,
+            "remote.something.com:8080": 13,
+        }], "min": 13, "max": 50}
+        self.assertEqual(expected, result)
         url = "{}/.measure-tsuru-*/{}/_search".format(self.es.url, "connection")
-        aggregation = {"connection": {"terms": {"field": "connection.raw"}}}
-        post_mock.assert_called_with(url, data=json.dumps(self.es.query(aggregation=aggregation)))
+        legacy_aggregation = {"connection": {"terms": {"field": "connection.raw"}}}
+        aggregation = {"connection": {"terms": {"field": "value.raw"}}}
+        expected_calls = [
+            mock.call(url, data=json.dumps(self.es.query(aggregation=legacy_aggregation))),
+            mock.call(url, data=json.dumps(self.es.query(aggregation=aggregation))),
+        ]
+        self.assertEqual(expected_calls, post_mock.call_args_list)
 
     def test_process(self):
         data = {
