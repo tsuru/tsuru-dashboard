@@ -13,7 +13,7 @@ describe('AppSearch', function() {
     var that = this;
     var onSearch = function() { that.executed = true; }
     this.appSearch = TestUtils.renderIntoDocument(
-        React.createElement(List.AppSearch, {onSearchSubmit: onSearch})
+      React.createElement(List.AppSearch, {onSearchSubmit: onSearch})
     );
   });
 
@@ -35,12 +35,28 @@ describe('App', function() {
       global.window = document.parentWindow;
     }
     this.app = TestUtils.renderIntoDocument(
-        React.createElement(List.App, {name: "app-name"})
+      React.createElement(List.App, {name: "app-name"})
     );
   });
 
   it('should has injectable href', function () {
     var a = TestUtils.findRenderedDOMComponentWithTag(this.app, 'a');
     assert.equal('app-name', a.getDOMNode().getAttribute('href'));
+  });
+});
+
+describe('AppTable', function() {
+  before(function() {
+    var shallowRenderer = TestUtils.createRenderer();
+    var data = {apps: [{name: "app-name"}]}
+    shallowRenderer.render(React.createElement(List.AppTable, {data: data}));
+    this.table = shallowRenderer.getRenderOutput();
+  });
+
+  it('should be composed by a list of apps', function () {
+    var apps = this.table.props.children.filter(function(component) {
+      return TestUtils.isElementOfType(component, List.App);
+    });
+    assert.equal(1, apps.length);
   });
 });

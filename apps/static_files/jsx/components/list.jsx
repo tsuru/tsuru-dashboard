@@ -84,6 +84,7 @@ var AppList = React.createClass({
 var List = {
     AppSearch: AppSearch,
     AppList: AppList,
+    AppTable: AppTable,
     App: App
 }
 
