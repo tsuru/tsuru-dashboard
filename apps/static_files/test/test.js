@@ -30,18 +30,16 @@ describe('AppSearch', function() {
 
 describe('App', function() {
   before(function() {
-    if(!global.document){
-      global.document = require('jsdom').jsdom();
-      global.window = document.parentWindow;
-    }
-    this.app = TestUtils.renderIntoDocument(
-      React.createElement(List.App, {name: "app-name"})
-    );
+    var shallowRenderer = TestUtils.createRenderer();
+    var data = {apps: [{name: "app-name"}]}
+    shallowRenderer.render(React.createElement(List.App, {name: "app-name"}));
+    this.app = shallowRenderer.getRenderOutput();
   });
 
   it('should has injectable href', function () {
-    var a = TestUtils.findRenderedDOMComponentWithTag(this.app, 'a');
-    assert.equal('app-name', a.getDOMNode().getAttribute('href'));
+    var td = this.app.props.children;
+    var a = td.props.children;
+    assert.equal('app-name', a.props.href);
   });
 });
 
