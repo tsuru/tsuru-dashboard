@@ -84,7 +84,8 @@ var AppList = React.createClass({displayName: "AppList",
 
 var List = {
     AppSearch: AppSearch,
-    AppList: AppList
+    AppList: AppList,
+    App: App
 }
 
 module.exports = List;

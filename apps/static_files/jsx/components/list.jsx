@@ -83,7 +83,8 @@ var AppList = React.createClass({
 
 var List = {
     AppSearch: AppSearch,
-    AppList: AppList
+    AppList: AppList,
+    App: App
 }
 
 module.exports = List;
