@@ -53,17 +53,18 @@ var AppList = React.createClass({
     return {data: {apps: []}};
   },
   loadCommentsFromServer: function(name) {
-    $.ajax({
-      url: this.props.url + "?name=" + name,
-      dataType: 'json',
-      cache: false,
-      success: function(data) {
-        this.setState({data: data});
-      }.bind(this),
-      error: function(xhr, status, err) {
-        console.error(this.props.url, status, err.toString());
-      }.bind(this)
-    });
+    var that = this;
+    var request = new XMLHttpRequest();
+    request.open('GET', this.props.url + "?name=" + name, true);
+
+    request.onload = function() {
+      if (request.status >= 200 && request.status < 400) {
+        var data = JSON.parse(request.responseText);
+        that.setState({data: data});
+      }
+    };
+
+    request.send()
   },
   componentDidMount: function() {
     this.loadCommentsFromServer("");

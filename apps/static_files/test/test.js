@@ -1,7 +1,17 @@
 var assert = require("chai").assert,
     React = require("react"),
     TestUtils = require("react/addons").addons.TestUtils,
-    List = require("../jsx/components/list.jsx");
+    FakeXMLHttpRequest = require('fakexmlhttprequest');
+
+var requests = [];
+
+global.XMLHttpRequest = function() {
+    var r =  new FakeXMLHttpRequest(arguments)
+    requests.push(r)
+    return r
+}
+
+var List = require("../jsx/components/list.jsx");
 
 describe('AppSearch', function() {
   before(function() {
@@ -56,5 +66,74 @@ describe('AppTable', function() {
       return TestUtils.isElementOfType(component, List.App);
     });
     assert.equal(1, apps.length);
+  });
+});
+
+describe('AppList', function() {
+  before(function() {
+  });
+
+  it('should has initial state', function () {
+    if(!global.document){
+      global.document = require('jsdom').jsdom();
+      global.window = document.parentWindow;
+    }
+    this.list = TestUtils.renderIntoDocument(
+      React.createElement(List.AppList, {url: '/apps/list.json'})
+    );
+    assert.deepEqual({data: {apps: []}}, this.list.state);
+  });
+
+  it('should load apps on render', function () {
+    requests = [];
+    if(!global.document){
+      global.document = require('jsdom').jsdom();
+      global.window = document.parentWindow;
+    }
+    this.list = TestUtils.renderIntoDocument(
+      React.createElement(List.AppList, {url: '/apps/list.json'})
+    );
+    assert.lengthOf(requests, 1);
+    assert.equal(requests[0].method, 'GET');
+    assert.equal(requests[0].url, '/apps/list.json?name=');
+  });
+
+  it('should load apps on render', function () {
+    requests = [];
+    if(!global.document){
+      global.document = require('jsdom').jsdom();
+      global.window = document.parentWindow;
+    }
+    this.list = TestUtils.renderIntoDocument(
+      React.createElement(List.AppList, {url: '/apps/list.json'})
+    );
+    assert.lengthOf(requests, 1);
+    assert.equal(requests[0].method, 'GET');
+    assert.equal(requests[0].url, '/apps/list.json?name=');
+  });
+
+  it('should has app-list as className', function () {
+    var shallowRenderer = TestUtils.createRenderer();
+    var data = {apps: [{name: "app-name"}]}
+    shallowRenderer.render(React.createElement(List.AppList, {url: "/app/list.json"}));
+    var list = shallowRenderer.getRenderOutput();
+    assert.equal('app-list', list.props.className);
+  });
+
+  it('should be composed by AppSearch and AppTable', function () {
+    var shallowRenderer = TestUtils.createRenderer();
+    var data = {apps: [{name: "app-name"}]}
+    shallowRenderer.render(React.createElement(List.AppList, {url: "/app/list.json"}));
+    var list = shallowRenderer.getRenderOutput();
+
+    assert.lengthOf(list.props.children, 2);
+
+    var appSearch = list.props.children[0];
+    assert.isTrue(TestUtils.isElementOfType(appSearch, List.AppSearch));
+
+    var appTable = list.props.children[1];
+    var initialState = {data: {apps: []}};
+    assert.deepEqual(initialState, appTable.props);
+    assert.isTrue(TestUtils.isElementOfType(appTable, List.AppTable));
   });
 });
