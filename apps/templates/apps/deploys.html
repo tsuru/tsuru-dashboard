@@ -5,7 +5,7 @@
 {% block extra_css %}
 {{ block.super }}
 <link rel="stylesheet" href="{% static "css/deploys.css" %}" />
-<link rel="stylesheet" href="https://rawgit.com/enyo/dropzone/master/dist/dropzone.css">
+<link rel="stylesheet" href="{% static "css/dropzone.css" %}" />
 <style>
 #submitbutton {
     display: none;
@@ -101,22 +101,24 @@
 </div>
 
 <div id="deploy" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	<div class="modal-header">
-		<h3 id="myModalLabel">New deploy</h3>
-	</div>
-	<div class="modal-body">
-        <div id="filedrag">drop files here to deploy</div>
-        <div id="files"></div>
-        <div id="output">Wait until deploy is started.</div>
-	</div>
-	<div class="modal-footer">
-        <form id="upload" method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
+    <form id="upload" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <!--
+        <div class="modal-header">
+            <h3 id="myModalLabel">New deploy</h3>
+        </div>
+        <div class="modal-body">
+            <div id="filedrag">drop files here to deploy</div>
+            <div id="files"></div>
+            <div id="output">Wait until deploy is started.</div>
+        </div>
+        <div class="modal-footer">
             <input type="hidden" id="filecontent" name="filecontent">
-			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-			<button type="submit" class="btn btn-danger btn-rollback">Start deploy</button>
-		</form>
-    </div>
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+            <button type="submit" class="btn btn-danger btn-rollback">Start deploy</button>
+        </div>
+        --!>
+	</form>
 </div>
 {% endblock %}
 
@@ -126,14 +128,16 @@
 <script src="{% static "js/deploy.js" %}"></script>
 <script type="text/javascript">
 $(".deploys .rollback").on('click', function(ev) {
-		ev.preventDefault();
-        var appName = $(this).attr("app-name")
-		var rollbackUrl = $(this).attr("rollback-url");
-		var confirmationForm = $("#confirmation form");
-		confirmationForm.attr("action", rollbackUrl);
-        $.confirmation(".btn-rollback", ".remove-confirmation", appName);
-	});
+  ev.preventDefault();
+  var appName = $(this).attr("app-name")
+  var rollbackUrl = $(this).attr("rollback-url");
+  var confirmationForm = $("#confirmation form");
+  confirmationForm.attr("action", rollbackUrl);
+  $.confirmation(".btn-rollback", ".remove-confirmation", appName);
+});
+
 (function() {
+    /*
     var zip = new JSZip();
 
     var form = document.getElementById("upload");
@@ -181,9 +185,6 @@ $(".deploys .rollback").on('click', function(ev) {
             reader.readAsBinaryString(file);
         });
     }
-
-    var dropzone = document.getElementsByTagName('body')[0];
-
     dropzone.addEventListener('drop', function(e) {
         $('#deploy').modal('show');
         $("#submitbutton").css("display", "block");
@@ -213,6 +214,7 @@ $(".deploys .rollback").on('click', function(ev) {
             }
         }
     });
+*/
 /*
 function readDirectory(dirEntry, callback) {
       var dirReader = dirEntry.createReader();
@@ -232,11 +234,19 @@ function readDirectory(dirEntry, callback) {
 
             readEntries(); // Start reading dirs.
 }
-*/
+    */
+    var dropzone = document.getElementsByTagName('body')[0];
+
+    dropzone.addEventListener('drop', function(e) {
+        $('#deploy').modal('show');
+        $("#submitbutton").css("display", "block");
+        e.preventDefault();
+        e.stopPropagation();
+    });
+
     dropzone.addEventListener('dragover', function(e) {
         e.preventDefault();
     });
-
 })();
 </script>
 {% endblock %}
