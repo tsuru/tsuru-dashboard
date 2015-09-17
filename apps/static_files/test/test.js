@@ -70,9 +70,6 @@ describe('AppTable', function() {
 });
 
 describe('AppList', function() {
-  before(function() {
-  });
-
   it('should has initial state', function () {
     if(!global.document){
       global.document = require('jsdom').jsdom();
@@ -81,7 +78,7 @@ describe('AppList', function() {
     this.list = TestUtils.renderIntoDocument(
       React.createElement(List.AppList, {url: '/apps/list.json'})
     );
-    assert.deepEqual({data: []}, this.list.state);
+    assert.deepEqual({apps: [], cached: []}, this.list.state);
   });
 
   it('should load apps on render', function () {
@@ -95,7 +92,7 @@ describe('AppList', function() {
     );
     assert.lengthOf(requests, 1);
     assert.equal(requests[0].method, 'GET');
-    assert.equal(requests[0].url, '/apps/list.json?name=');
+    assert.equal(requests[0].url, '/apps/list.json');
   });
 
   it('should load apps on render', function () {
@@ -109,7 +106,7 @@ describe('AppList', function() {
     );
     assert.lengthOf(requests, 1);
     assert.equal(requests[0].method, 'GET');
-    assert.equal(requests[0].url, '/apps/list.json?name=');
+    assert.equal(requests[0].url, '/apps/list.json');
   });
 
   it('should has app-list as className', function () {

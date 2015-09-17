@@ -1,4 +1,5 @@
-var React = require('react');
+var React = require('react'),
+    fuzzy = require('fuzzy');
 
 var AppSearch = React.createClass({
   handleSubmit: function(e) {
@@ -50,33 +51,40 @@ var AppTable = React.createClass({
 
 var AppList = React.createClass({
   getInitialState: function() {
-    return {data: []};
+    return {cached: [], apps: []};
   },
-  loadCommentsFromServer: function(name) {
+  loadApps: function() {
     var that = this;
     var request = new XMLHttpRequest();
-    request.open('GET', this.props.url + "?name=" + name, true);
+    request.open('GET', this.props.url);
 
     request.onload = function() {
       if (request.status >= 200 && request.status < 400) {
         var data = JSON.parse(request.responseText);
-        that.setState({data: data.apps});
+        that.setState({cached: data.apps, apps: data.apps});
       }
     };
-
     request.send()
   },
-  componentDidMount: function() {
-    this.loadCommentsFromServer("");
+  appsByName: function(name) {
+    if (this.state.cached.length == 0 ) {
+      this.loadApps();
+      return;
+    } 
+    var options = {
+      extract: function(el) { return el.name }
+    };
+    var results = fuzzy.filter(name, this.state.cached, options);
+    this.setState({apps: results.map(function(el) { return el.original; })});
   },
-  handleSearchSubmit: function(name) {
-    this.loadCommentsFromServer(name);
+  componentDidMount: function() {
+    this.appsByName("");
   },
   render: function() {
     return (
       <div className="app-list">
-        <AppSearch onSearchSubmit={this.handleSearchSubmit} />
-        <AppTable data={this.state.data} />
+        <AppSearch onSearchSubmit={this.appsByName} />
+        <AppTable data={this.state.apps} />
       </div>
     );
   }
