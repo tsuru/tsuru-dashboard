@@ -31,11 +31,7 @@
                 <p><strong>Diff:</strong></p>{{ deploy.Diff|safe }}
                 {% endif %}
                 <p><strong>Log:</strong></p>
-                <div>
-                    <pre>
-                        {{ deploy.Log|escape }}
-                    </pre>
-                </div>
+                <div><pre>{{ deploy.Log|escape }}</pre></div>
             </div>
         </div>
     </div>
