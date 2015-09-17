@@ -56,7 +56,7 @@ describe('App', function() {
 describe('AppTable', function() {
   before(function() {
     var shallowRenderer = TestUtils.createRenderer();
-    var data = {apps: [{name: "app-name"}]}
+    var data = [{name: "app-name"}];
     shallowRenderer.render(React.createElement(List.AppTable, {data: data}));
     this.table = shallowRenderer.getRenderOutput();
   });
@@ -81,7 +81,7 @@ describe('AppList', function() {
     this.list = TestUtils.renderIntoDocument(
       React.createElement(List.AppList, {url: '/apps/list.json'})
     );
-    assert.deepEqual({data: {apps: []}}, this.list.state);
+    assert.deepEqual({data: []}, this.list.state);
   });
 
   it('should load apps on render', function () {
@@ -132,7 +132,7 @@ describe('AppList', function() {
     assert.isTrue(TestUtils.isElementOfType(appSearch, List.AppSearch));
 
     var appTable = list.props.children[1];
-    var initialState = {data: {apps: []}};
+    var initialState = {data: []};
     assert.deepEqual(initialState, appTable.props);
     assert.isTrue(TestUtils.isElementOfType(appTable, List.AppTable));
   });

@@ -35,7 +35,7 @@ var App = React.createClass({
 
 var AppTable = React.createClass({
   render: function() {
-    var appNodes = this.props.data.apps.map(function(app) {
+    var appNodes = this.props.data.map(function(app) {
       return (
         <App name={app.name} url={app.url}/>
       );
@@ -50,7 +50,7 @@ var AppTable = React.createClass({
 
 var AppList = React.createClass({
   getInitialState: function() {
-    return {data: {apps: []}};
+    return {data: []};
   },
   loadCommentsFromServer: function(name) {
     var that = this;
@@ -60,7 +60,7 @@ var AppList = React.createClass({
     request.onload = function() {
       if (request.status >= 200 && request.status < 400) {
         var data = JSON.parse(request.responseText);
-        that.setState({data: data});
+        that.setState({data: data.apps});
       }
     };
 
