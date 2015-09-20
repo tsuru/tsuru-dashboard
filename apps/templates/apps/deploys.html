@@ -6,42 +6,6 @@
 {{ block.super }}
 <link rel="stylesheet" href="{% static "css/deploys.css" %}" />
 <link rel="stylesheet" href="{% static "css/dropzone.css" %}" />
-<style>
-#submitbutton {
-    display: none;
-}
-
-#fileselect {
-    display: block;
-}
-
-#filedrag {
-    display: block;
-    font-weight: bold;
-    text-align: center;
-    padding: 1em 0;
-    margin: 1em 0;
-    color: #555;
-    border: 2px dashed #555;
-    border-radius: 7px;
-    cursor: default;
-}
-
-#filedrag.hover {
-    color: #f00;
-    border-color: #f00;
-    border-style: solid;
-    box-shadow: inset 0 3px 4px #888;
-}
-
-#output {
-    color: #fff;
-    background-color: #333;
-    border-radius: 3px;
-    padding: 10px 20px;
-}
-
-</style>
 {% endblock %}
 
 {% block navbar %}
