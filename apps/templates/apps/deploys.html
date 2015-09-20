@@ -39,7 +39,6 @@
     background-color: #333;
     border-radius: 3px;
     padding: 10px 20px;
-    display: none;
 }
 
 </style>
@@ -135,86 +134,6 @@ $(".deploys .rollback").on('click', function(ev) {
   confirmationForm.attr("action", rollbackUrl);
   $.confirmation(".btn-rollback", ".remove-confirmation", appName);
 });
-
-(function() {
-    /*
-    var zip = new JSZip();
-
-    var form = document.getElementById("upload");
-    form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        var content = zip.generate({type: "base64"});
-        var fileContent = $("#filecontent");
-        fileContent.val(content);
-
-
-        var formData = new FormData($(this)[0]);
-
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', location.pathname, true);
-        xhr.onprogress = function() {
-            deployOutput(xhr.responseText);
-        }
-        xhr.onload = function() {
-            setTimeout(function() {
-                location.reload();
-            }, 2000);
-        }
-        xhr.send(formData);
-        $("#output").css("display", "block");
-    });
-
-    function deployOutput(msg) {
-        var m = document.getElementById("output");
-        m.innerHTML = msg;
-    }
-
-    function Output(msg) {
-        var m = document.getElementById("files");
-        msg = "<p>" + msg + "</p>";
-        m.innerHTML = msg + m.innerHTML;
-    }
-
-    var readFile = function(entry, callback) {
-        entry.file(function(file) {
-            var reader = new FileReader();
-            reader.onloadend = function(e) {
-                callback(entry.name, this.result);
-            };
-            reader.readAsBinaryString(file);
-        });
-    }
-    dropzone.addEventListener('drop', function(e) {
-        $('#deploy').modal('show');
-        $("#submitbutton").css("display", "block");
-        e.preventDefault();
-        e.stopPropagation();
-        var length = e.dataTransfer.items.length;
-        for (var i = 0; i < length; i++) {
-            var entry = e.dataTransfer.items[i].webkitGetAsEntry();
-            if (entry.isFile) {
-                Output(entry.name);
-                readFile(entry, function(name, result) {
-                    zip.file(name, result, {binary: true});
-                });
-            } else if (entry.isDirectory) {
-                var dirName = entry.name + "/";
-                Output(dirName);
-                var dirReader = entry.createReader();
-                var folder = zip.folder(entry.name);
-                dirReader.readEntries (function(results) {
-                    results.forEach(function(entry) {
-                        Output(dirName + entry.name);
-                        readFile(entry, function(name, result) {
-                            folder.file(name, result, {binary: true});
-                        });
-                    });
-                });
-            }
-        }
-    });
-*/
 /*
 function readDirectory(dirEntry, callback) {
       var dirReader = dirEntry.createReader();
@@ -235,18 +154,5 @@ function readDirectory(dirEntry, callback) {
             readEntries(); // Start reading dirs.
 }
     */
-    var dropzone = document.getElementsByTagName('body')[0];
-
-    dropzone.addEventListener('drop', function(e) {
-        $('#deploy').modal('show');
-        $("#submitbutton").css("display", "block");
-        e.preventDefault();
-        e.stopPropagation();
-    });
-
-    dropzone.addEventListener('dragover', function(e) {
-        e.preventDefault();
-    });
-})();
 </script>
 {% endblock %}
