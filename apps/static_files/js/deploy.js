@@ -71,7 +71,6 @@ var DeployPopin = React.createClass({displayName: "DeployPopin",
     var that = this;
 
     $('#deploy').modal('show');
-    $("#submitbutton").css("display", "block");
 
     var length = e.dataTransfer.items.length;
     for (var i = 0; i < length; i++) {
@@ -126,8 +125,6 @@ var DeployPopin = React.createClass({displayName: "DeployPopin",
       reader.readAsBinaryString(file);
     });
   },
-  addZip: function() {
-  },
   getInitialState: function() {
     return {files: [], output: '', deploy: false, zip: new JSZip()};
   },
@@ -143,7 +140,6 @@ var DeployPopin = React.createClass({displayName: "DeployPopin",
     var xhr = new XMLHttpRequest();
     xhr.open('POST', location.pathname, true);
     xhr.onprogress = function() {
-      console.log("oie", xhr.responseText);
       that.setState({output: xhr.responseText});
     }
     xhr.onload = function() {
@@ -169,7 +165,7 @@ var DeployPopin = React.createClass({displayName: "DeployPopin",
             React.createElement("h3", {id: "myModalLabel"}, "New deploy")
         ), 
         React.createElement("div", {className: "modal-body"}, 
-            this.state.deploy ? '' : React.createElement(DeployBox, {addZip: this.addZip, addFile: this.addFile}), 
+            this.state.deploy ? '' : React.createElement(DeployBox, {addFile: this.addFile}), 
             this.state.files.length > 0 ? React.createElement(Files, {files: this.state.files}) : '', 
             this.state.output.length > 0 ? React.createElement(Output, {message: this.state.output}) : ''
         ), 

@@ -70,7 +70,6 @@ var DeployPopin = React.createClass({
     var that = this;
 
     $('#deploy').modal('show');
-    $("#submitbutton").css("display", "block");
 
     var length = e.dataTransfer.items.length;
     for (var i = 0; i < length; i++) {

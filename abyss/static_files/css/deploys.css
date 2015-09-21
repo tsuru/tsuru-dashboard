@@ -11,10 +11,6 @@
     text-align: right;
 }
 
-#submitbutton {
-    display: none;
-}
-
 #fileselect {
     display: block;
 }
