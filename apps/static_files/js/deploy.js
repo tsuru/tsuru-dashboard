@@ -192,15 +192,20 @@ var React = require('react'),
     DeployBox = Components.DeployBox,
     DeployPopin = Components.DeployPopin;
 
-React.render(
-  React.createElement(DeployBox, null),
-  document.getElementById('deploy-box')
-);
+var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+var isSafari = /Safari/.test(navigator.userAgent) && /Apple Computer/.test(navigator.vendor);
 
-React.render(
-  React.createElement(DeployPopin, null),
-  document.getElementById('deploy')
-);
+if (isChrome || isSafari) {
+  React.render(
+    React.createElement(DeployBox, null),
+    document.getElementById('deploy-box')
+  );
+
+  React.render(
+    React.createElement(DeployPopin, null),
+    document.getElementById('deploy')
+  );
+}
 
 },{"../components/deploy.jsx":1,"react":158}],3:[function(require,module,exports){
 // shim for using process in browser

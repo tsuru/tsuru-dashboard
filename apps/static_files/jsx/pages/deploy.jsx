@@ -3,12 +3,17 @@ var React = require('react'),
     DeployBox = Components.DeployBox,
     DeployPopin = Components.DeployPopin;
 
-React.render(
-  <DeployBox/>,
-  document.getElementById('deploy-box')
-);
+var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+var isSafari = /Safari/.test(navigator.userAgent) && /Apple Computer/.test(navigator.vendor);
 
-React.render(
-  <DeployPopin/>,
-  document.getElementById('deploy')
-);
+if (isChrome || isSafari) {
+  React.render(
+    <DeployBox/>,
+    document.getElementById('deploy-box')
+  );
+
+  React.render(
+    <DeployPopin/>,
+    document.getElementById('deploy')
+  );
+}
