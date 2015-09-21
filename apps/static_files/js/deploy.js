@@ -68,7 +68,6 @@ var Output = React.createClass({displayName: "Output",
 var DeployPopin = React.createClass({displayName: "DeployPopin",
   handleDrop: function(e) {
     this.preventDefault(e);
-    var that = this;
 
     $('#deploy').modal('show');
 
@@ -76,26 +75,24 @@ var DeployPopin = React.createClass({displayName: "DeployPopin",
     for (var i = 0; i < length; i++) {
       var entry = e.dataTransfer.items[i].webkitGetAsEntry();
       if (entry.isFile) {
-        that.addFile(entry);
+        this.addFile(entry);
       } else if (entry.isDirectory) {
-        that.addDir(entry);
+        this.addDir(entry);
       }
     }
   },
   addFile: function(entry) {
     var files = this.state.files;
-    var that = this;
 
     files.push(entry.name);
     this.setState({files: files});
 
     this.readFile(entry, function(name, result) {
-      that.state.zip.file(name, result, {binary: true});
-    });
+      this.state.zip.file(name, result, {binary: true});
+    }.bind(this));
   },
   addDir: function(entry) {
     var files = this.state.files;
-    var that = this;
 
     var dirName = entry.name + "/";
     files.push(dirName);
@@ -106,13 +103,13 @@ var DeployPopin = React.createClass({displayName: "DeployPopin",
     dirReader.readEntries (function(results) {
       results.forEach(function(entry) {
         files.push(dirName + entry.name);
-        that.setState({files: files});
+        this.setState({files: files});
 
-        that.readFile(entry, function(name, result) {
+        this.readFile(entry, function(name, result) {
           folder.file(name, result, {binary: true});
         });
-      });
-    });
+      }.bind(this));
+    }.bind(this));
   },
   readFile: function(entry, callback) {
     entry.file(function(file) {
@@ -130,7 +127,6 @@ var DeployPopin = React.createClass({displayName: "DeployPopin",
   },
   deploy: function() {
     this.setState({deploy: true, output: 'Wait until deploy is started.'});
-    var that = this;
 
     var content = this.state.zip.generate({type: "base64"});
 
@@ -140,8 +136,8 @@ var DeployPopin = React.createClass({displayName: "DeployPopin",
     var xhr = new XMLHttpRequest();
     xhr.open('POST', location.pathname, true);
     xhr.onprogress = function() {
-      that.setState({output: xhr.responseText});
-    }
+      this.setState({output: xhr.responseText});
+    }.bind(this);
     xhr.onload = function() {
         setTimeout(function() {
             location.reload();

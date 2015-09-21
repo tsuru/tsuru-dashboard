@@ -20,8 +20,7 @@ describe('AppSearch', function() {
       global.window = document.parentWindow;
     }
     this.executed = false;
-    var that = this;
-    var onSearch = function() { that.executed = true; }
+    var onSearch = function() { this.executed = true; }.bind(this);
     this.appSearch = TestUtils.renderIntoDocument(
       React.createElement(List.AppSearch, {onSearchSubmit: onSearch})
     );

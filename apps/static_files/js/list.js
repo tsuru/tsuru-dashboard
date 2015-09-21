@@ -55,16 +55,15 @@ var AppList = React.createClass({displayName: "AppList",
     return {cached: [], apps: []};
   },
   loadApps: function() {
-    var that = this;
     var request = new XMLHttpRequest();
     request.open('GET', this.props.url);
 
     request.onload = function() {
       if (request.status >= 200 && request.status < 400) {
         var data = JSON.parse(request.responseText);
-        that.setState({cached: data.apps, apps: data.apps});
+        this.setState({cached: data.apps, apps: data.apps});
       }
-    };
+    }.bind(this);
     request.send()
   },
   appsByName: function(name) {
