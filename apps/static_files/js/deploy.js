@@ -61,7 +61,10 @@ var Files = React.createClass({displayName: "Files",
 var Output = React.createClass({displayName: "Output",
   render: function() {
     return (
-      React.createElement("div", {id: "output", dangerouslySetInnerHTML: {__html: this.props.message}})
+      React.createElement("div", {id: "output"}, 
+        React.createElement("img", {src: "/static/img/ajax-loader.gif"}), 
+        React.createElement("div", {class: "messages", dangerouslySetInnerHTML: {__html: this.props.message}})
+      )
     )
   }
 });

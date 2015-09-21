@@ -60,7 +60,10 @@ var Files = React.createClass({
 var Output = React.createClass({
   render: function() {
     return (
-      <div id='output'dangerouslySetInnerHTML={{__html: this.props.message}} />
+      <div id='output'>
+        <img src="/static/img/ajax-loader.gif" />
+        <div class='messages' dangerouslySetInnerHTML={{__html: this.props.message}} />
+      </div>
     )
   }
 });
