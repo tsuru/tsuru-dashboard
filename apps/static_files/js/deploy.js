@@ -37,7 +37,8 @@ var CancelBtn = React.createClass({displayName: "CancelBtn",
       React.createElement("button", {disabled: this.props.disabled, 
               "data-dismiss": "modal", 
               "aria-hidden": "true", 
-              className: "btn"}, 
+              className: "btn", 
+              onClick: this.props.onClick}, 
         "Cancel"
       )
     )
@@ -69,6 +70,7 @@ var DeployPopin = React.createClass({displayName: "DeployPopin",
   handleDrop: function(e) {
     this.preventDefault(e);
 
+    $('#deploy').on('hide', this.cancel.bind(this));
     $('#deploy').modal('show');
 
     var length = e.dataTransfer.items.length;
@@ -125,6 +127,9 @@ var DeployPopin = React.createClass({displayName: "DeployPopin",
   getInitialState: function() {
     return {files: [], output: '', deploy: false, zip: new JSZip()};
   },
+  cancel: function() {
+    this.setState({files: [], zip: new JSZip()});
+  }, 
   deploy: function() {
     this.setState({deploy: true, output: 'Wait until deploy is started.'});
 
@@ -167,7 +172,7 @@ var DeployPopin = React.createClass({displayName: "DeployPopin",
         ), 
         React.createElement("div", {className: "modal-footer"}, 
             React.createElement("input", {type: "hidden", id: "filecontent", name: "filecontent"}), 
-            React.createElement(CancelBtn, {disabled: this.state.deploy}), 
+            React.createElement(CancelBtn, {disabled: this.state.deploy, onClick: this.cancel}), 
             React.createElement(StartDeployBtn, {deploy: this.deploy})
         )
       )

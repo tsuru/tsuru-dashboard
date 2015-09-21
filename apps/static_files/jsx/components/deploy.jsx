@@ -36,7 +36,8 @@ var CancelBtn = React.createClass({
       <button disabled={this.props.disabled}
               data-dismiss='modal'
               aria-hidden='true'
-              className='btn'>
+              className='btn'
+              onClick={this.props.onClick}>
         Cancel
       </button>
     )
@@ -68,6 +69,7 @@ var DeployPopin = React.createClass({
   handleDrop: function(e) {
     this.preventDefault(e);
 
+    $('#deploy').on('hide', this.cancel.bind(this));
     $('#deploy').modal('show');
 
     var length = e.dataTransfer.items.length;
@@ -124,6 +126,9 @@ var DeployPopin = React.createClass({
   getInitialState: function() {
     return {files: [], output: '', deploy: false, zip: new JSZip()};
   },
+  cancel: function() {
+    this.setState({files: [], zip: new JSZip()});
+  }, 
   deploy: function() {
     this.setState({deploy: true, output: 'Wait until deploy is started.'});
 
@@ -166,7 +171,7 @@ var DeployPopin = React.createClass({
         </div>
         <div className='modal-footer'>
             <input type='hidden' id='filecontent' name='filecontent' />
-            <CancelBtn disabled={this.state.deploy} />
+            <CancelBtn disabled={this.state.deploy} onClick={this.cancel} />
             <StartDeployBtn deploy={this.deploy} />
         </div>
       </div>
