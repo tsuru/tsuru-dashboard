@@ -151,33 +151,14 @@ class ElasticSearch(object):
         query = self.query(date_range=date_range, interval=interval)
         return self.process(self.post(query, "response_time"))
 
-    def connections_legacy(self, date_range, interval):
+    def connections(self, date_range=None, interval=None):
         aggregation = {"connection": {"terms": {"field": "connection.raw"}}}
         query = self.query(date_range=date_range, interval=interval, aggregation=aggregation)
         return self.connections_process(self.post(query, "connection"))
 
-    def connections(self, date_range=None, interval=None):
-        legacy_data = self.connections_legacy(date_range, interval)
-        aggregation = {"connection": {"terms": {"field": "value.raw"}}}
-        query = self.query(date_range=date_range, interval=interval, aggregation=aggregation)
-        data = self.connections_process(self.post(query, "connection"))
-        data["data"].extend(legacy_data["data"])
-
-        if data["min"] is None:
-            data["min"] = legacy_data["min"]
-        elif legacy_data["min"] is not None and legacy_data["min"] < data["min"]:
-            data["min"] = legacy_data["min"]
-
-        if data["max"] is None:
-            data["max"] = legacy_data["max"]
-        elif legacy_data["max"] is not None and legacy_data["max"] > data["max"]:
-            data["max"] = legacy_data["max"]
-
-        return data
-
     def connections_process(self, data, formatter=None):
         d = []
-        min_value = None
+        min_value = 0
         max_value = 0
 
         for bucket in data["aggregations"]["range"]["buckets"][0]["date"]["buckets"]:
@@ -188,7 +169,7 @@ class ElasticSearch(object):
                 size = doc["doc_count"]
                 conn = doc["key"]
 
-                if min_value is None or size < min_value:
+                if size < min_value:
                     min_value = size
 
                 if size > max_value:
