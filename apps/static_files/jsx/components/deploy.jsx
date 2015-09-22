@@ -11,17 +11,13 @@ var DeployBox = React.createClass({
 });
 
 var StartDeployBtn = React.createClass({
-  getInitialState: function() {
-    return {disabled: false};
-  },
   handleClick: function() {
-    this.setState({disabled: true});
     this.props.deploy();
   },
   render: function() {
     return (
       <button type='submit'
-              disabled={this.state.disabled}
+              disabled={this.props.disabled}
               className='btn btn-danger btn-rollback'
               onClick={this.handleClick}>
         Start deploy
@@ -48,7 +44,7 @@ var Files = React.createClass({
   render: function() {
     var files = this.props.files.map(function(file) {
       return (
-       <p>{file}</p> 
+       <p key={file}>{file}</p>
       );
     });
     return (
@@ -62,7 +58,7 @@ var Output = React.createClass({
     return (
       <div id='output'>
         <img src="/static/img/ajax-loader.gif" />
-        <div class='messages' dangerouslySetInnerHTML={{__html: this.props.message}} />
+        <div className='messages' dangerouslySetInnerHTML={{__html: this.props.message}} />
       </div>
     )
   }
@@ -72,46 +68,46 @@ var DeployPopin = React.createClass({
   handleDrop: function(e) {
     this.preventDefault(e);
 
-    $('#deploy').on('hide', this.cancel.bind(this));
+    $('#deploy').on('hide', this.cancel);
     $('#deploy').modal('show');
 
     var length = e.dataTransfer.items.length;
     for (var i = 0; i < length; i++) {
       var entry = e.dataTransfer.items[i].webkitGetAsEntry();
       if (entry.isFile) {
-        this.addFile(entry);
+        this.addFile(entry, this.state.zip);
       } else if (entry.isDirectory) {
-        this.addDir(entry);
+        this.addDir(entry, this.state.zip);
       }
     }
+    this.setState({disabled: false});
   },
-  addFile: function(entry) {
-    var files = this.state.files;
-
-    files.push(entry.name);
-    this.setState({files: files});
+  addFile: function(entry, zip) {
+    if (zip.root.length === 0) {
+        var files = this.state.files;
+        files.push(entry.fullPath);
+        this.setState({files: files});
+    }
 
     this.readFile(entry, function(name, result) {
-      this.state.zip.file(name, result, {binary: true});
-    }.bind(this));
+      zip.file(name, result, {binary: true});
+    });
   },
-  addDir: function(entry) {
+  addDir: function(entry, zip) {
     var files = this.state.files;
 
-    var dirName = entry.name + "/";
-    files.push(dirName);
+    files.push(entry.fullPath + "/*");
     this.setState({files: files});
 
     var dirReader = entry.createReader();
-    var folder = this.state.zip.folder(entry.name);
-    dirReader.readEntries (function(results) {
+    var folder = zip.folder(entry.name);
+    dirReader.readEntries(function(results) {
       results.forEach(function(entry) {
-        files.push(dirName + entry.name);
-        this.setState({files: files});
-
-        this.readFile(entry, function(name, result) {
-          folder.file(name, result, {binary: true});
-        });
+        if (entry.isFile) {
+          this.addFile(entry, folder);
+        } else {
+          this.addDir(entry, folder);
+        }
       }.bind(this));
     }.bind(this));
   },
@@ -127,13 +123,13 @@ var DeployPopin = React.createClass({
     });
   },
   getInitialState: function() {
-    return {files: [], output: '', deploy: false, zip: new JSZip()};
+    return {files: [], output: '', deploy: false, zip: new JSZip(), disabled: true};
   },
   cancel: function() {
     this.setState({files: [], zip: new JSZip()});
   }, 
   deploy: function() {
-    this.setState({deploy: true, output: 'Wait until deploy is started.'});
+    this.setState({deploy: true, output: 'Wait until deploy is started.', disabled: true, files: []});
 
     var content = this.state.zip.generate({type: "base64"});
 
@@ -175,7 +171,7 @@ var DeployPopin = React.createClass({
         <div className='modal-footer'>
             <input type='hidden' id='filecontent' name='filecontent' />
             <CancelBtn disabled={this.state.deploy} onClick={this.cancel} />
-            <StartDeployBtn deploy={this.deploy} />
+            <StartDeployBtn deploy={this.deploy} disabled={this.state.disabled} />
         </div>
       </div>
     );
