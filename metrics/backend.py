@@ -68,7 +68,7 @@ class ElasticSearch(object):
         return {
             "data": d,
             "min": "{0:.2f}".format(min_value or 0),
-            "max": "{0:.2f}".format(max_value),
+            "max": "{0:.2f}".format(max_value + 1),
         }
 
     def cpu_max(self, date_range=None, interval=None):

@@ -248,7 +248,7 @@ class ElasticSearchTest(TestCase):
                 }
             ],
             "min": '97517568.00',
-            "max": '97517568.00'
+            "max": '97517569.00'
         }
         d = self.es.process(data)
         self.assertDictEqual(d, expected)
@@ -330,7 +330,7 @@ class ElasticSearchTest(TestCase):
                 }
             ],
             "min": '93.00',
-            "max": '93.00'
+            "max": '94.00'
         }
         d = self.es.process(data, formatter=lambda x: x / (1024 * 1024))
         self.assertDictEqual(d, expected)
