@@ -196,6 +196,7 @@ class ElasticSearch(object):
             "filtered": {
                 "filter": {
                     "term": {
+                        "app": self.app,
                         "app.raw": self.app,
                     }
                 }
