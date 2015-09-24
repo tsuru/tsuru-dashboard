@@ -1,7 +1,10 @@
 var React = require('react'),
-    fuzzy = require('fuzzy');
+    fuzzy = require('fuzzy'),
+    PureRenderMixin = require('react/addons').addons.PureRenderMixin;
+
 
 var AppSearch = React.createClass({
+  mixins: [PureRenderMixin],
   handleSubmit: function(e) {
     var name = e.target.value.trim();
     if (!name) {
@@ -21,6 +24,7 @@ var AppSearch = React.createClass({
 });
 
 var App = React.createClass({
+  mixins: [PureRenderMixin],
   render: function() {
     return (
       <tr>
@@ -38,7 +42,7 @@ var AppTable = React.createClass({
   render: function() {
     var appNodes = this.props.data.map(function(app) {
       return (
-        <App name={app.name} url={app.url}/>
+        <App key={app.name} name={app.name} url={app.url}/>
       );
     });
     return (

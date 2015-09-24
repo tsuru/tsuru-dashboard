@@ -45,7 +45,7 @@ var Files = React.createClass({displayName: "Files",
   render: function() {
     var files = this.props.files.map(function(file) {
       return (
-       React.createElement("p", {key: file}, file) 
+       React.createElement("p", {key: file}, file)
       );
     });
     return (

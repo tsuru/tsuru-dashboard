@@ -16,23 +16,6 @@
 <div class="container-fluid">
 	<div class="row-fluid">
 		<div class="span12" id="list-container">
-            <div class="search">
-                <form method="get">
-                    <input type="text" name="name" placeholder="search apps by name">
-                </form>
-            </div>
-			<table class="table">
-			{% for app in apps %}
-				<tr>
-					<td>
-						<a href="{% url 'detail-app' app.name %}" title="App Details">
-                            {{ app.name }} 
-                            {% if  app.lock.Locked %}<i class="icon-lock"></i>{% endif %}
-						</a>
-					</td>
-				</tr>
-			{% endfor %}
-			</table>
 		</div>
 	</div>
 </div>
