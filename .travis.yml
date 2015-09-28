@@ -2,7 +2,5 @@ language: python
 sudo: false
 python:
   - "2.7"
-before_script:
-  - nvm use 4.1
 script:
   - make test
