@@ -1,5 +1,6 @@
 var React = require('react'),
     fuzzy = require('fuzzy'),
+    Loading = require('./loading.jsx'),
     PureRenderMixin = require('react/addons').addons.PureRenderMixin;
 
 
@@ -55,13 +56,15 @@ var AppTable = React.createClass({
 
 var AppList = React.createClass({
   getInitialState: function() {
-    return {cached: [], apps: []};
+    return {cached: [], apps: [], loading: false};
   },
   loadApps: function() {
+    this.setState({loading: true});
     var request = new XMLHttpRequest();
     request.open('GET', this.props.url);
 
     request.onload = function() {
+      this.setState({loading: false});
       if (request.status >= 200 && request.status < 400) {
         var data = JSON.parse(request.responseText);
         this.setState({cached: data.apps, apps: data.apps});
@@ -87,6 +90,7 @@ var AppList = React.createClass({
     return (
       <div className="app-list">
         <AppSearch onSearchSubmit={this.appsByName} />
+        {this.state.loading ? <Loading /> : ''}
         <AppTable data={this.state.apps} />
       </div>
     );

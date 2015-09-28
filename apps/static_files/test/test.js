@@ -11,7 +11,8 @@ global.XMLHttpRequest = function() {
     return r
 }
 
-var List = require("../jsx/components/list.jsx");
+var List = require("../jsx/components/list.jsx"),
+    Loading = require("../jsx/components/loading.jsx");
 
 describe('AppSearch', function() {
   before(function() {
@@ -69,45 +70,6 @@ describe('AppTable', function() {
 });
 
 describe('AppList', function() {
-  it('should has initial state', function () {
-    if(!global.document){
-      global.document = require('jsdom').jsdom();
-      global.window = document.parentWindow;
-    }
-    this.list = TestUtils.renderIntoDocument(
-      React.createElement(List.AppList, {url: '/apps/list.json'})
-    );
-    assert.deepEqual({apps: [], cached: []}, this.list.state);
-  });
-
-  it('should load apps on render', function () {
-    requests = [];
-    if(!global.document){
-      global.document = require('jsdom').jsdom();
-      global.window = document.parentWindow;
-    }
-    this.list = TestUtils.renderIntoDocument(
-      React.createElement(List.AppList, {url: '/apps/list.json'})
-    );
-    assert.lengthOf(requests, 1);
-    assert.equal(requests[0].method, 'GET');
-    assert.equal(requests[0].url, '/apps/list.json');
-  });
-
-  it('should load apps on render', function () {
-    requests = [];
-    if(!global.document){
-      global.document = require('jsdom').jsdom();
-      global.window = document.parentWindow;
-    }
-    this.list = TestUtils.renderIntoDocument(
-      React.createElement(List.AppList, {url: '/apps/list.json'})
-    );
-    assert.lengthOf(requests, 1);
-    assert.equal(requests[0].method, 'GET');
-    assert.equal(requests[0].url, '/apps/list.json');
-  });
-
   it('should has app-list as className', function () {
     var shallowRenderer = TestUtils.createRenderer();
     var data = {apps: [{name: "app-name"}]}
@@ -116,18 +78,21 @@ describe('AppList', function() {
     assert.equal('app-list', list.props.className);
   });
 
-  it('should be composed by AppSearch and AppTable', function () {
+  it('should be composed by AppSearch, Loading and AppTable', function () {
     var shallowRenderer = TestUtils.createRenderer();
     var data = {apps: [{name: "app-name"}]}
     shallowRenderer.render(React.createElement(List.AppList, {url: "/app/list.json"}));
     var list = shallowRenderer.getRenderOutput();
 
-    assert.lengthOf(list.props.children, 2);
+    assert.lengthOf(list.props.children, 3);
 
     var appSearch = list.props.children[0];
     assert.isTrue(TestUtils.isElementOfType(appSearch, List.AppSearch));
 
-    var appTable = list.props.children[1];
+    var loading = list.props.children[1];
+    assert.equal(loading, '');
+
+    var appTable = list.props.children[2];
     var initialState = {data: []};
     assert.deepEqual(initialState, appTable.props);
     assert.isTrue(TestUtils.isElementOfType(appTable, List.AppTable));
