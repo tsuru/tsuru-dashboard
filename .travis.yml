@@ -2,5 +2,7 @@ language: python
 sudo: false
 python:
   - "2.7"
+before_install:
+  - nvm list
 script:
   - make test
