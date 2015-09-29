@@ -65,7 +65,7 @@ var AppList = React.createClass({
 	  type: 'GET',
 	  url: this.props.url,
 	  success: function(data) {
-        this.setState({cached: data.apps, apps: data.apps});
+        this.setState({cached: data.apps, apps: data.apps, loading: false});
 	  }.bind(this)
 	});
   },

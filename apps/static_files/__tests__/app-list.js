@@ -40,7 +40,7 @@ describe('AppList', function() {
 
     $.ajax.mock.calls[2][0].success({apps: [{name: "appname"}, {name: "otherapp"}]});
 
-    expect({apps: [{name: "appname"}, {name: "otherapp"}], cached: [{name: "appname"}, {name: "otherapp"}], loading: true}).toEqual(list.state);
+    expect({apps: [{name: "appname"}, {name: "otherapp"}], cached: [{name: "appname"}, {name: "otherapp"}], loading: false}).toEqual(list.state);
 
 	var items = TestUtils.scryRenderedDOMComponentsWithTag(list, "a");
 	expect(items.length).toBe(2);
@@ -56,7 +56,7 @@ describe('AppList', function() {
 	var input = TestUtils.findRenderedDOMComponentWithTag(list, "input");
 	TestUtils.Simulate.change(input, {target: {value: "oth"}});
     
-    expect({apps: [{name: "other"}], cached: [{name: "appname"}, {name: "other"}], loading: true}).toEqual(list.state);
+    expect({apps: [{name: "other"}], cached: [{name: "appname"}, {name: "other"}], loading: false}).toEqual(list.state);
 
 	var items = TestUtils.scryRenderedDOMComponentsWithTag(list, "a");
 	expect(items.length).toBe(1);
