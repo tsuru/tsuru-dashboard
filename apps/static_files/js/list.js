@@ -8,17 +8,17 @@ var React = require('react'),
 
 var AppSearch = React.createClass({displayName: "AppSearch",
   mixins: [PureRenderMixin],
-  handleSubmit: function(e) {
+  handleChange: function(e) {
     var name = e.target.value.trim();
     if (!name) {
       return;
     }
-    this.props.onSearchSubmit(name);
+    this.props.search(name);
   },
   render: function() {
     return (
       React.createElement("div", {className: "search"}, 
-        React.createElement("form", {onChange: this.handleSubmit}, 
+        React.createElement("form", {onChange: this.handleChange}, 
           React.createElement("input", {type: "text", ref: "name", placeholder: "search apps by name"})
         )
       )
@@ -87,7 +87,7 @@ var AppList = React.createClass({displayName: "AppList",
   render: function() {
     return (
       React.createElement("div", {className: "app-list"}, 
-        React.createElement(AppSearch, {onSearchSubmit: this.appsByName}), 
+        React.createElement(AppSearch, {search: this.appsByName}), 
         this.state.loading ? React.createElement(Loading, null) : '', 
         React.createElement(AppTable, {data: this.state.apps})
       )

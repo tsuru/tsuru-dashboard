@@ -1,4 +1,5 @@
 jest.dontMock('../jsx/components/list.jsx');
+jest.dontMock('fuzzy');
 
 var React = require('react/addons'),
     List = require('../jsx/components/list.jsx'),
@@ -37,8 +38,27 @@ describe('AppList', function() {
       React.createElement(List.AppList, {url: 'http://localhost:80/apps/list.json'})
     );
 
-    $.ajax.mock.calls[2][0].success({apps: [{name: "appname"}]});
+    $.ajax.mock.calls[2][0].success({apps: [{name: "appname"}, {name: "otherapp"}]});
 
-    expect({apps: [{name: "appname"}], cached: [{name: "appname"}], loading: true}).toEqual(list.state);
+    expect({apps: [{name: "appname"}, {name: "otherapp"}], cached: [{name: "appname"}, {name: "otherapp"}], loading: true}).toEqual(list.state);
+
+	var items = TestUtils.scryRenderedDOMComponentsWithTag(list, "a");
+	expect(items.length).toBe(2);
+  });
+
+  it('should filter list by app name', function() {
+    var list = TestUtils.renderIntoDocument(
+      React.createElement(List.AppList, {url: 'http://localhost:80/apps/list.json'})
+    );
+
+    $.ajax.mock.calls[3][0].success({apps: [{name: "appname"}, {name: "other"}]});
+
+	var input = TestUtils.findRenderedDOMComponentWithTag(list, "input");
+	TestUtils.Simulate.change(input, {target: {value: "oth"}});
+    
+    expect({apps: [{name: "other"}], cached: [{name: "appname"}, {name: "other"}], loading: true}).toEqual(list.state);
+
+	var items = TestUtils.scryRenderedDOMComponentsWithTag(list, "a");
+	expect(items.length).toBe(1);
   });
 });

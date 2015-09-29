@@ -7,17 +7,17 @@ var React = require('react'),
 
 var AppSearch = React.createClass({
   mixins: [PureRenderMixin],
-  handleSubmit: function(e) {
+  handleChange: function(e) {
     var name = e.target.value.trim();
     if (!name) {
       return;
     }
-    this.props.onSearchSubmit(name);
+    this.props.search(name);
   },
   render: function() {
     return (
       <div className="search">
-        <form onChange={this.handleSubmit}>
+        <form onChange={this.handleChange}>
           <input type="text" ref="name" placeholder="search apps by name" />
         </form>
       </div>
@@ -86,7 +86,7 @@ var AppList = React.createClass({
   render: function() {
     return (
       <div className="app-list">
-        <AppSearch onSearchSubmit={this.appsByName} />
+        <AppSearch search={this.appsByName} />
         {this.state.loading ? <Loading /> : ''}
         <AppTable data={this.state.apps} />
       </div>
