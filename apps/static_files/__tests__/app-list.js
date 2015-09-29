@@ -61,4 +61,21 @@ describe('AppList', function() {
 	var items = TestUtils.scryRenderedDOMComponentsWithTag(list, "a");
 	expect(items.length).toBe(1);
   });
+
+  it('should list all on empty search', function() {
+    var list = TestUtils.renderIntoDocument(
+      React.createElement(List.AppList, {url: 'http://localhost:80/apps/list.json'})
+    );
+
+    $.ajax.mock.calls[4][0].success({apps: [{name: "appname"}, {name: "other"}]});
+
+	var input = TestUtils.findRenderedDOMComponentWithTag(list, "input");
+	TestUtils.Simulate.change(input, {target: {value: "oth"}});
+	TestUtils.Simulate.change(input, {target: {value: ""}});
+
+	expect({apps: [{name: "appname"}, {name: "other"}], cached: [{name: "appname"}, {name: "other"}], loading: false}).toEqual(list.state);
+
+	var items = TestUtils.scryRenderedDOMComponentsWithTag(list, "a");
+	expect(items.length).toBe(2);
+  });
 });

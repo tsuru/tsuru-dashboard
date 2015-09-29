@@ -10,9 +10,6 @@ var AppSearch = React.createClass({displayName: "AppSearch",
   mixins: [PureRenderMixin],
   handleChange: function(e) {
     var name = e.target.value.trim();
-    if (!name) {
-      return;
-    }
     this.props.search(name);
   },
   render: function() {
