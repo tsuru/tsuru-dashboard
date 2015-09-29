@@ -1,0 +1,6 @@
+.search input {
+  border: 1px solid #ccc;
+  border-radius: 0;
+  width: 99%;
+  padding: 8px;
+}

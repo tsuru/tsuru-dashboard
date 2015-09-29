@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 
+{% block extra_css %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static "css/apps/pages/list.css" %}">
+{% endblock %}
+
 {% block sidebar %}
 {% include "sidebar.html" with active="apps" %}
 {% endblock %}
