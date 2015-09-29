@@ -6,8 +6,8 @@ var React = require('react/addons'),
     AppList = List.AppList,
     TestUtils = React.addons.TestUtils;
 
-describe('Loading', function() {
-  it('should has app-list as className', function () {
+describe('AppList', function() {
+  it('should has app-list as className', function() {
     var list = TestUtils.renderIntoDocument(
       <AppList url="http://localhost:80/apps/list.json" />
     );
@@ -15,7 +15,7 @@ describe('Loading', function() {
     expect(list.getDOMNode("div").className).toEqual("app-list");
   });
 
-  it ('should be composed by AppSearch, Loading and AppTable', function () {
+  it ('should be composed by AppSearch, Loading and AppTable', function() {
     var list = TestUtils.renderIntoDocument(
       <AppList url="http://localhost:80/apps/list.json" />
     ).getDOMNode("div");
@@ -32,7 +32,7 @@ describe('Loading', function() {
     expect(appTable.className).toEqual("table");
   });
 
-  it('should load apps on render', function () {
+  it('should load apps on render', function() {
     var scope = nock('http://localhost:80')
                     .get('/apps/list.json')
                     .reply(200, {
