@@ -2,8 +2,8 @@ jest.dontMock('../jsx/components/list.jsx');
 
 var React = require('react/addons'),
     List = require('../jsx/components/list.jsx'),
-    nock = require('nock'),
     AppList = List.AppList,
+    $ = require('jquery'),
     TestUtils = React.addons.TestUtils;
 
 describe('AppList', function() {
@@ -33,15 +33,12 @@ describe('AppList', function() {
   });
 
   it('should load apps on render', function() {
-    var scope = nock('http://localhost:80')
-                    .get('/apps/list.json')
-                    .reply(200, {
-                      apps: [{name: "appname"}]
-                    });
-
     var list = TestUtils.renderIntoDocument(
       React.createElement(List.AppList, {url: 'http://localhost:80/apps/list.json'})
     );
-    expect({apps: [], cached: [], loading: true}).toEqual(list.state);
+
+    $.ajax.mock.calls[2][0].success({apps: [{name: "appname"}]});
+
+    expect({apps: [{name: "appname"}], cached: [{name: "appname"}], loading: true}).toEqual(list.state);
   });
 });

@@ -1,6 +1,7 @@
 var React = require('react'),
     fuzzy = require('fuzzy'),
     Loading = require('./loading.jsx'),
+	$ = require('jquery'),
     PureRenderMixin = require('react/addons').addons.PureRenderMixin;
 
 
@@ -60,17 +61,13 @@ var AppList = React.createClass({
   },
   loadApps: function() {
     this.setState({loading: true});
-    var request = new XMLHttpRequest();
-    request.open('GET', this.props.url);
-
-    request.onload = function() {
-      this.setState({loading: false});
-      if (request.status >= 200 && request.status < 400) {
-        var data = JSON.parse(request.responseText);
+	$.ajax({
+	  type: 'GET',
+	  url: this.props.url,
+	  success: function(data) {
         this.setState({cached: data.apps, apps: data.apps});
-      }
-    }.bind(this);
-    request.send()
+	  }.bind(this)
+	});
   },
   appsByName: function(name) {
     if (this.state.cached.length == 0 ) {
