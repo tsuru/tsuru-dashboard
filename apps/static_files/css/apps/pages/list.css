@@ -14,3 +14,7 @@
 i.icono-plus {
   color: #999;
 }
+
+.loader {
+  clear: both;
+}
