@@ -5,6 +5,7 @@
 {{ block.super }}
 <link rel="stylesheet" href="{% static "css/apps/pages/list.css" %}">
 <link rel="stylesheet" href="{% static "css/apps/components/loader.css" %}">
+<link rel="stylesheet" href="{% static "css/apps/components/icono.min.css" %}">
 {% endblock %}
 
 {% block sidebar %}
@@ -12,9 +13,6 @@
 {% endblock %}
 
 {% block header %}
-<div class="btn-group pull-right">
-	<a class="btn" title="new app" href="{% url 'create-app' %}">new app</a>
-</div>
 <h1>Apps</h1>
 {% endblock %}
 

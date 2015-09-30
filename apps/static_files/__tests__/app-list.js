@@ -42,7 +42,7 @@ describe('AppList', function() {
 
     expect({apps: [{name: "appname"}, {name: "otherapp"}], cached: [{name: "appname"}, {name: "otherapp"}], loading: false}).toEqual(list.state);
 
-	var items = TestUtils.scryRenderedDOMComponentsWithTag(list, "a");
+	var items = TestUtils.scryRenderedDOMComponentsWithTag(list, "td");
 	expect(items.length).toBe(2);
   });
 
@@ -58,7 +58,7 @@ describe('AppList', function() {
     
     expect({apps: [{name: "other"}], cached: [{name: "appname"}, {name: "other"}], loading: false}).toEqual(list.state);
 
-	var items = TestUtils.scryRenderedDOMComponentsWithTag(list, "a");
+	var items = TestUtils.scryRenderedDOMComponentsWithTag(list, "td");
 	expect(items.length).toBe(1);
   });
 
@@ -75,7 +75,7 @@ describe('AppList', function() {
 
 	expect({apps: [{name: "appname"}, {name: "other"}], cached: [{name: "appname"}, {name: "other"}], loading: false}).toEqual(list.state);
 
-	var items = TestUtils.scryRenderedDOMComponentsWithTag(list, "a");
+	var items = TestUtils.scryRenderedDOMComponentsWithTag(list, "td");
 	expect(items.length).toBe(2);
   });
 });

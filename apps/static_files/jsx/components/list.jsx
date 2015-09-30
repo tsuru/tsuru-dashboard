@@ -16,8 +16,18 @@ var AppSearch = React.createClass({
       <div className="search">
         <form onChange={this.handleChange}>
           <input type="text" ref="name" placeholder="search apps by name" />
+		  <AppAdd />
         </form>
       </div>
+    );
+  }
+});
+
+var AppAdd = React.createClass({
+  mixins: [PureRenderMixin],
+  render: function() {
+    return (
+	  <a title="new app" href="/apps/create/"><i className="icono-plus"></i></a>
     );
   }
 });

@@ -16,9 +16,19 @@ var AppSearch = React.createClass({displayName: "AppSearch",
     return (
       React.createElement("div", {className: "search"}, 
         React.createElement("form", {onChange: this.handleChange}, 
-          React.createElement("input", {type: "text", ref: "name", placeholder: "search apps by name"})
+          React.createElement("input", {type: "text", ref: "name", placeholder: "search apps by name"}), 
+		  React.createElement(AppAdd, null)
         )
       )
+    );
+  }
+});
+
+var AppAdd = React.createClass({displayName: "AppAdd",
+  mixins: [PureRenderMixin],
+  render: function() {
+    return (
+	  React.createElement("a", {title: "new app", href: "/apps/create/"}, React.createElement("i", {className: "icono-plus"}))
     );
   }
 });
