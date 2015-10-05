@@ -1,7 +1,6 @@
 # tsuru-dashboard
 
 [![Build Status](https://secure.travis-ci.org/tsuru/tsuru-dashboard.png?branch=master)](http://travis-ci.org/tsuru/tsuru-dashboard)
-[![Build Status](https://drone.io/github.com/tsuru/tsuru-dashboard/status.png)](https://drone.io/github.com/tsuru/tsuru-dashboard/latest)
 
 tsuru-dashboard is a Django-based project aimed at providing a Web-based dashboard for tsuru.
 
