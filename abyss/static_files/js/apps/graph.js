@@ -24,7 +24,7 @@
 
 	var buildContainer = function(opts) {
 		if ( $("#" + opts["kind"]).parents(".graph-container").length === 0 ) {
-			var label = opts["kind"];//getLabel(opts);
+			var label = opts["kind"];
 			var url = '/apps/' + opts["appName"] + '/metrics/details/?kind=' + opts["kind"] + '&from=' + opts["from"] + '&serie=' + opts["serie"];
 			var element = '<div class="graph-container"><h2>' + label + '</h2><a href="' + url + '"><div id="' + opts["kind"] + '"></div></a></div>';
 			$( '#metrics' ).append(element);
@@ -48,7 +48,7 @@
                 return;
 
             buildGraph(opts, data);
-			//window.setTimeout(buildGraph, 60000, opts, data);
+			window.setTimeout(buildGraph, 60000, opts, data);
         });
 	}
 
