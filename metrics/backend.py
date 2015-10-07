@@ -187,7 +187,7 @@ class ElasticSearch(object):
 
     def query(self, date_range=None, interval=None, aggregation=None):
         if not date_range:
-            date_range = "1h/h"
+            date_range = "1h"
 
         if not interval:
             interval = "1m"
