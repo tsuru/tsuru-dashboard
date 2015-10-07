@@ -87,25 +87,5 @@ $(".deploys .rollback").on('click', function(ev) {
   confirmationForm.attr("action", rollbackUrl);
   $.confirmation(".btn-rollback", ".remove-confirmation", appName);
 });
-/*
-function readDirectory(dirEntry, callback) {
-      var dirReader = dirEntry.createReader();
-        var entries = [];
-
-          // Call the reader.readEntries() until no more results are returned.
-          var readEntries = function() {
-                   dirReader.readEntries (function(results) {
-                                 if (!results.length) {
-                                         callback(entries);
-                                               } else {
-                                                       entries = entries.concat(toArray(results));
-                                                               readEntries();
-                                                                     }
-                                                                         }, onError);
-                     };
-
-            readEntries(); // Start reading dirs.
-}
-    */
 </script>
 {% endblock %}
