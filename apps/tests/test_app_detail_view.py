@@ -19,8 +19,8 @@ class AppDetailTestCase(TestCase):
             "repository": "git@git.com:php.git",
             "state": "dead",
             "units": [
-                {"Ip": "10.10.10.10", "Status": "started"},
-                {"Ip": "9.9.9.9", "Status": "stopped"},
+                {"Ip": "10.10.10.10", "Status": "started", "ProcessName": "web"},
+                {"Ip": "9.9.9.9", "Status": "stopped", "ProcessName": "worker"},
             ],
             "teams": ["tsuruteam", "crane"]
         }
@@ -47,8 +47,8 @@ class AppDetailTestCase(TestCase):
         self.assertIn("units_by_status", self.response.context_data)
 
         expected = {
-            'started': [{'Ip': '10.10.10.10', 'Status': 'started'}],
-            'stopped': [{'Ip': '9.9.9.9', 'Status': 'stopped'}],
+            'started': [{'Ip': '10.10.10.10', 'Status': 'started', 'ProcessName': 'web'}],
+            'stopped': [{'Ip': '9.9.9.9', 'Status': 'stopped', 'ProcessName': 'worker'}],
         }
         self.assertDictEqual(expected, self.response.context_data['units_by_status'])
 
@@ -103,3 +103,44 @@ class AppDetailTestCase(TestCase):
 
         with self.assertRaises(Http404):
             AppDetail.as_view()(request, app_name="app1")
+
+    def test_process_list(self):
+        app = {
+            "units": [
+                {"ProcessName": "web"},
+                {"ProcessName": "web"},
+                {"ProcessName": "web"},
+                {"ProcessName": "worker"},
+            ],
+        }
+        process_list = AppDetail().process_list(app)
+
+        expected = set(["web", "worker"])
+        self.assertEqual(expected, process_list)
+
+    def test_process_list_without_units(self):
+        app = {}
+        process_list = AppDetail().process_list(app)
+
+        expected = set()
+        self.assertEqual(expected, process_list)
+
+    def test_process_list_units_without_process_name(self):
+        app = {
+            "units": [
+                {"ip": "0.0.0.0"},
+                {"ip": "0.0.0.1"},
+                {"ip": "0.0.0.2"},
+                {"ip": "0.0.0.3"},
+            ],
+        }
+        process_list = AppDetail().process_list(app)
+
+        expected = set()
+        self.assertEqual(expected, process_list)
+
+    def test_process_list_in_context(self):
+        self.assertIn('process_list', self.response.context_data)
+
+        expected = set(["web", "worker"])
+        self.assertEqual(expected, self.response.context_data['process_list'])

@@ -233,7 +233,17 @@ class AppDetail(LoginRequiredMixin, TemplateView):
                         'HostPort': container['HostPort'],
                     })
         context['units_by_status'] = units_by_status
+        context['process_list'] = self.process_list(context['app'])
         return context
+
+    def process_list(self, app):
+        process = set()
+
+        for unit in app.get('units', []):
+            if 'ProcessName' in unit:
+                process.add(unit['ProcessName'])
+
+        return process
 
     def id_or_name(self, unit):
         if "ID" in unit:
