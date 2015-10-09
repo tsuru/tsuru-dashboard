@@ -13,7 +13,8 @@
     "jest-cli": "^0.5.8",
     "jquery": "^2.1.4",
     "nock": "^2.13.0",
-    "react": "^0.13.3",
+    "react": "^0.14.0",
+    "react-dom": "^0.14.0",
     "reactify": "^1.1.1"
   },
   "scripts": {
