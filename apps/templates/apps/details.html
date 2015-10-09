@@ -10,6 +10,7 @@
 {% block app-content %}
 	<div class="row-fluid">
 		<div class="span12">
+			<div id="resources"></div>
             {% if app.units.0.ProcessName %}
             {% regroup app.units by ProcessName as process_list %}
             {% for item in process_list %}
@@ -84,6 +85,7 @@
 {% endblock %}
 
 {% block extra_js %}
+{#<script src="{% static "js/resources.js" %}"></script>#}
 <script type="text/javascript">
 $(".units-toggle").on("click", function() {
     $(".containers-app", this).toggleClass("hide");
