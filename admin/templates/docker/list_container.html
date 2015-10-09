@@ -17,6 +17,7 @@
 					<th>ID</th>
 					<th>AppName</th>
 					<th>Type</th>
+					<th>Process name</th>
 					<th>IP</th>
 					<th>HostPort</th>
 					<th>Status</th>
@@ -26,6 +27,7 @@
 					<td>{{ container.ID|slice:":12" }}</td>
 					<td>{{ container.AppName }}</td>
 					<td>{{ container.Type }}</td>
+					<td>{{ container.ProcessName }}</td>
 					<td>{{ container.IP }}</td>
 					<td>{{ container.HostPort }}</td>
 					<td>{{ container.Status }}</td>
