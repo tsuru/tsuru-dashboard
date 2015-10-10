@@ -1,7 +1,8 @@
 var React = require('react'),
+    ReactDOM = require('react-dom'),
     Resources = require("../components/resources.jsx");
 
-React.render(
+ReactDOM.render(
   <Resources />,
   document.getElementById('resources')
 );
