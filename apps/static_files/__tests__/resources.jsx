@@ -1,8 +1,9 @@
 jest.dontMock('../jsx/components/resources.jsx');
 
-var React = require('react/addons'),
+var React = require('react'),
+    ReactDOM = require('react-dom'),
     Resources = require('../jsx/components/resources.jsx'),
-    TestUtils = React.addons.TestUtils;
+    TestUtils = require('react-addons-test-utils');
 
 describe('Resources', function() {
   it('should has resources as className', function() {
@@ -10,6 +11,6 @@ describe('Resources', function() {
       <Resources />
     );
     
-    expect(list.getDOMNode("div").className).toEqual("resources");
+    expect(ReactDOM.findDOMNode(list).className).toEqual("resources");
   });
 });

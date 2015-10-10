@@ -2,7 +2,7 @@ var React = require('react'),
     fuzzy = require('fuzzy'),
     Loading = require('./loading.jsx'),
 	$ = require('jquery'),
-    PureRenderMixin = require('react/addons').addons.PureRenderMixin;
+    PureRenderMixin = require('react-addons-pure-render-mixin');
 
 
 var AppSearch = React.createClass({
@@ -56,7 +56,7 @@ var AppTable = React.createClass({
     });
     return (
 	  <table className="table">
-        {appNodes}
+        <tbody>{appNodes}</tbody>
 	  </table>
     );
   }

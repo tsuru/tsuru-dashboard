@@ -1,11 +1,12 @@
 jest.dontMock('../jsx/components/list.jsx');
 jest.dontMock('fuzzy');
 
-var React = require('react/addons'),
+var React = require('react'),
+    ReactDOM = require('react-dom'),
     List = require('../jsx/components/list.jsx'),
     AppList = List.AppList,
     $ = require('jquery'),
-    TestUtils = React.addons.TestUtils;
+    TestUtils = require('react-addons-test-utils');
 
 describe('AppList', function() {
   it('should has app-list as className', function() {
@@ -13,23 +14,23 @@ describe('AppList', function() {
       <AppList url="http://localhost:80/apps/list.json" />
     );
     
-    expect(list.getDOMNode("div").className).toEqual("app-list");
+    expect(ReactDOM.findDOMNode(list).className).toEqual("app-list");
   });
 
   it ('should be composed by AppSearch, Loading and AppTable', function() {
     var list = TestUtils.renderIntoDocument(
       <AppList url="http://localhost:80/apps/list.json" />
-    ).getDOMNode("div");
+    );
 
-    expect(list.children.length).toEqual(3);
+    expect(ReactDOM.findDOMNode(list).children.length).toEqual(3);
 
-    var appSearch = list.children[0];
+    var appSearch = ReactDOM.findDOMNode(list).children[0];
     expect(appSearch.className).toEqual("search");
 
-    var loading = list.children[1];
+    var loading = ReactDOM.findDOMNode(list).children[1];
     expect(loading.textContent).toEqual('');
 
-    var appTable = list.children[2];
+    var appTable = ReactDOM.findDOMNode(list).children[2];
     expect(appTable.className).toEqual("table");
   });
 
