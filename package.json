@@ -12,7 +12,6 @@
     "fuzzy": "^0.1.0",
     "jest-cli": "^0.5.10",
     "jquery": "^2.1.4",
-    "nock": "^2.13.0",
     "react": "^0.14.0",
     "react-addons-pure-render-mixin": "^0.14.0",
     "react-addons-test-utils": "^0.14.0",
@@ -36,8 +35,7 @@
       "es6"
     ],
     "unmockedModulePathPatterns": [
-      "<rootDir>/node_modules/react",
-      "<rootDir>/node_modules/nock"
+      "<rootDir>/node_modules/react"
     ]
   },
   "repository": {
