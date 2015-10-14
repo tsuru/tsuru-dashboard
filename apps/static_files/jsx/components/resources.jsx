@@ -58,7 +58,7 @@ var Content = React.createClass({
   render: function() {
     return (
       <div className='resources-content'>
-        <p>{this.props.units.length} {this.props.units.0.Status} units</p>
+        <p>{this.props.units.length} started units</p>
         <div id="metrics">
           <Graph kind="cpu" />
         </div>
