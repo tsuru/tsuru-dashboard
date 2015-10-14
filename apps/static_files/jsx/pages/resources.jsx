@@ -3,6 +3,6 @@ var React = require('react'),
     Resources = require("../components/resources.jsx");
 
 ReactDOM.render(
-  <Resources />,
+  <Resources url="/apps/navegacional-status-code.json" />,
   document.getElementById('resources')
 );
