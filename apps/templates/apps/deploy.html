@@ -19,6 +19,7 @@
             <h3>Info</h3>
             <div class="content">
                 <p><strong>App:</strong> {{ deploy.App }}</p>
+                <p><strong>User:</strong> {{ deploy.User }}</p>
                 <p><strong>Duration:</strong> {{ deploy.Duration|time_to_string }}</p>
                 <p><strong>Timestamp:</strong> {{ deploy.Timestamp|string_to_date|date:" d-m-Y H:i:s " }}</p>
                 {% if deploy.Commit %}<p><strong>Last Commit:</strong> {{ deploy.Commit }}</p>{% endif %}
