@@ -53,7 +53,7 @@ class CloudStatusView(LoginRequiredView):
 
 class DeploysView(LoginRequiredView):
     def get(self, request):
-        url = "{}/deploys?limit=250".format(settings.TSURU_HOST)
+        url = "{}/deploys?limit=1000".format(settings.TSURU_HOST)
         deploys = requests.get(url, headers=self.authorization).json() or []
         errored = 0
         last_deploys = 0
