@@ -9,16 +9,15 @@ var React = require('react'),
 var AppSearch = React.createClass({displayName: "AppSearch",
   mixins: [PureRenderMixin],
   handleChange: function(e) {
+    e.preventDefault();
     var name = e.target.value.trim();
     this.props.search(name);
   },
   render: function() {
     return (
       React.createElement("div", {className: "search"}, 
-        React.createElement("form", {onChange: this.handleChange}, 
-          React.createElement("input", {type: "text", ref: "name", placeholder: "search apps by name"}), 
-		  React.createElement(AppAdd, null)
-        )
+        React.createElement("input", {type: "text", ref: "name", placeholder: "search apps by name", onChange: this.handleChange}), 
+		React.createElement(AppAdd, null)
       )
     );
   }
@@ -56,7 +55,7 @@ var AppTable = React.createClass({displayName: "AppTable",
       );
     });
     return (
-      React.createElement("table", {className: "table"}, 
+	  React.createElement("table", {className: "table"}, 
         React.createElement("tbody", null, appNodes)
 	  )
     );

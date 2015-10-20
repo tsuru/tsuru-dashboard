@@ -8,16 +8,15 @@ var React = require('react'),
 var AppSearch = React.createClass({
   mixins: [PureRenderMixin],
   handleChange: function(e) {
+    e.preventDefault();
     var name = e.target.value.trim();
     this.props.search(name);
   },
   render: function() {
     return (
       <div className="search">
-        <form onChange={this.handleChange}>
-          <input type="text" ref="name" placeholder="search apps by name" />
-		  <AppAdd />
-        </form>
+        <input type="text" ref="name" placeholder="search apps by name" onChange={this.handleChange} />
+		<AppAdd />
       </div>
     );
   }
