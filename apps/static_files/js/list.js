@@ -56,7 +56,7 @@ var AppTable = React.createClass({displayName: "AppTable",
       );
     });
     return (
-	  React.createElement("table", {className: "table"}, 
+      React.createElement("table", {className: "table"}, 
         React.createElement("tbody", null, appNodes)
 	  )
     );
