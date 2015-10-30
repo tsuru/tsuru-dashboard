@@ -55,15 +55,18 @@ class PoolInfoViewTest(TestCase):
             ],
         }
         get.return_value = response_mock
+        PoolInfo.units_by_node = Mock()
+        PoolInfo.units_by_node.return_value = {"started": 1, "stopped": 2}
+
         response = PoolInfo.as_view()(self.request, pool="mypool")
         date = parser.parse("2014-08-01T14:09:40-03:00")
         expected = {"mypool": [
             {"Address": "http://128.0.0.1:4243",
-             "Units": 2,
+             "Units": {"started": 1, "stopped": 2},
              "Metadata": {"LastSuccess": date, "pool": "mypool"},
              "Status": "ready"},
             {"Address": "http://127.0.0.1:2375",
-             "Units": 2,
+             "Units": {"started": 1, "stopped": 2},
              "Metadata": {"LastSuccess": date, "pool": "mypool"},
              "Status": "ready"},
         ]}

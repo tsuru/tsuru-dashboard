@@ -231,7 +231,15 @@ class PoolInfo(LoginRequiredView, TemplateView):
         else:
             units = response.json() or []
 
-        return len(units)
+        result = {}
+
+        for unit in units:
+            if not unit['Status'] in result:
+                result[unit['Status']] = 0
+
+            result[unit['Status']] += 1
+
+        return result
 
     def node_last_success(self, date):
         if date:
