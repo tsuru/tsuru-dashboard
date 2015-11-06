@@ -1,27 +1,68 @@
 var React = require('react'),
 	$ = require('jquery');
 
+var Resources = React.createClass({
+  getInitialState: function() {
+    return {app: null};
+  },
+  appInfo: function(url) {
+	$.ajax({
+	  type: 'GET',
+	  url: this.props.url,
+	  success: function(data) {
+        this.setState({app: data.app});
+	  }.bind(this)
+	});
+  },
+  componentDidMount: function() {
+    this.appInfo();
+  },
+  render: function() {
+    return (
+      <div className="resources">
+        {this.state.app === null ? "" : <Process app={this.state.app} />}
+      </div>
+    );
+  }
+});
+
+var ProcessTab = React.createClass({
+  onClick: function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    this.props.setActive(this.props.process);
+  },
+  render: function() {
+    return (
+      <li className={this.props.active ? "active" : ''}>
+        <a href="#" onClick={this.onClick}>{this.props.process}</a>
+      </li>
+    );
+  }
+});
+
 var ProcessTabs = React.createClass({
   getInitialState: function() {
     return {active: ""}; 
   },
-  activate: function(process) {
-    this.setState({active: process});  
+  setActive: function(process) {
+    this.setState({active: process});
+    this.props.setActive(process);
   },
-  componentDidMount: function() {
-    if (this.props.data.length > 0 && this.state.active === "") {
-      this.setState({active: this.props.data[0]});
+  componentDidUpdate: function() {
+    var keys = Object.keys(this.props.process);
+    if ((this.state.active === "") && keys.length > 0) {
+      this.setActive(keys[0]);
     }
   },
   render: function() {
-    var processList = this.props.data.map(function(process, index) {
-      return (
-        <ProcessTab key={process}
-                    name={process}
-                    active={process === this.state.active ? true : false}
-                    activate={this.activate} />
-      );
-    }.bind(this));
+    var processList = [];
+    for (process in this.props.process) {
+      processList.push(<ProcessTab key={process}
+                                   process={process}
+                                   active={process === this.state.active}
+                                   setActive={this.setActive} />);
+    };
     return (
       <ul className="nav nav-pills">
         {processList}
@@ -30,76 +71,112 @@ var ProcessTabs = React.createClass({
   }
 });
 
-var ProcessTab = React.createClass({
-  handleClick: function(e) {
-    e.preventDefault();
-    this.props.activate(this.props.name);
-  },
+var Tr = React.createClass({
   render: function() {
+    var unit = this.props.unit;
     return (
-      <li className={this.props.active ? "active" : ''}>
-        <a href="#" onClick={this.handleClick}>{this.props.name}</a>
-      </li>
-    );
-  }
-});
-
-var Graph = React.createClass({
-  render: function() {
-    return (
-      <div className="graph-container">
-        <h2>{this.props.kind}</h2>
+      <div>
+      <tr>
+        <td>{unit.ID}</td>
+        <td>{unit.HostAddr}</td>
+        <td>{unit.HostPort}</td>
+      </tr>
       </div>
     );
   }
 });
 
-var Content = React.createClass({
+var Trs = React.createClass({
   render: function() {
+    var units = this.props.units;
+    var trs = [];
+    for (i in units) {
+      trs.push(<Tr unit={units[i]} />);
+    }
+    return (
+      <div>{trs}</div>
+    );
+  }
+});
+
+var ProcessInfo = React.createClass({
+  getInitialState: function() {
+    return {hide: true};
+  },
+  onClick: function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    this.setState({hide: !this.state.hide});
+  },
+  render: function() {
+    var units = this.props.process;
+    var kind = this.props.kind;
+    var classNames = "table containers-app";
+    if (this.state.hide) 
+      classNames += " hide";
+    return (
+      <div className="units-toggle" onClick={this.onClick}>
+        <p><a href="#">&#x25BC;</a> {units.length} {kind} units</p>
+        <table className={classNames}>
+          <Trs units={this.props.process} />
+        </table>
+      </div>
+    );
+  }
+});
+
+var ProcessContent = React.createClass({
+  processByStatus: function() {
+    var status = {};
+    for (i in this.props.process) {
+      var unit = this.props.process[i]; 
+      if (!(unit.Status in status)) {
+        status[unit.Status] = [];
+      }
+      status[unit.Status].push(unit);
+    };
+    return status;
+  },
+  render: function() {
+    var info = [];
+    var process = this.processByStatus()
+    for (i in process) {
+        info.push(<ProcessInfo key={i} process={process[i]} kind={i} />);
+    };
     return (
       <div className='resources-content'>
-        <p>{this.props.units.length} started units</p>
-        <div id="metrics">
-          <Graph kind="cpu" />
-        </div>
+        {info}
       </div>
-    )
+    );
   }
 });
 
-var Resources = React.createClass({
+var Process = React.createClass({
   getInitialState: function() {
-    return {process: ["web", "worker"], app: {units: []}};
+    return {process: {}, active: null}; 
   },
-  appInfo: function(url) {
-	$.ajax({
-	  type: 'GET',
-	  url: this.props.url,
-	  success: function(data) {
-        this.setState({app: data.app});
-        this.loadProcess();
-	  }.bind(this)
-	});
+  setActive: function(process) {
+    this.setState({active: this.state.process[process]});
   },
-  loadProcess: function() {
-    var process = [];
-    this.state.app.units.forEach(function(v) {
-      if (process.indexOf(v) === -1)
-        process.push(v);
-    });
+  unitsByProcess: function() {
+    var process = {};
+    for (index in this.props.app.units) {
+      var unit = this.props.app.units[index];
+      if (!(unit.ProcessName in process)) {
+        process[unit.ProcessName] = [];
+      }
+      process[unit.ProcessName].push(unit);
+    }
     this.setState({process: process});
   },
-  getDefaultProps: function() {
-    return {state: "started"};
-  },
   componentDidMount: function() {
-    this.appInfo();
+    this.unitsByProcess();
   },
   render: function() {
     return (
-      <div className="resources">
-        <ProcessTabs data={this.state.process} />
-        <Content units={this.state.app.units} state={this.props.state} />
+      <div>
+        <ProcessTabs process={this.state.process} setActive={this.setActive} />
+        {this.state.active === null ? "" : <ProcessContent process={this.state.active} />}
       </div>
     );
   }
