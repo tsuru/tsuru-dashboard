@@ -39,21 +39,21 @@
 	padding: 10px 0;
 }
 
-#metrics div {
+#metrics div, #metrics-container div {
 	margin: 2px;
 	display: inline-block;
 }
 
-#metrics .graph-container {
+#metrics .graph-container, #metrics-container .graph-container {
 	border: #777 1px solid;
 }
 
-#metrics svg {
+#metrics svg, #metrics-container svg {
 	width: 285px;
 	height: 200px
 }
 
-#metrics h2 {
+#metrics h2, #metrics-container h2 {
 	font-size: 16px;
 	margin: 0 38px;
 }
