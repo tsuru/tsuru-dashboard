@@ -58,8 +58,9 @@
 	margin: 0 38px;
 }
 
-.metrics-container {
-	display: none;
+.graph-container .graph {
+    width: 285px;
+    height: 205px;
 }
 
 .hide {

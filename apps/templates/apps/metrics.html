@@ -36,18 +36,7 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static "js/apps/graph.js" %}"></script>
-<script src="{% static "js/confirmation.js" %}"></script>
 <script src="{% static "js/raphael-min.js" %}"></script>
 <script src="{% static "js/morris.min.js" %}"></script>
-<script src="{% static "js/apps/detail.js" %}"></script>
 <script src="{% static "js/metrics.js" %}"></script>
-<script type="text/javascript">
-var appName = "{{ app.name }}";
-var envs = {};
-{% for env in app.envs %}
-	envs["{{ env.name }}"] = "{{ env.value }}";
-{% endfor %}
-$.detail(appName, envs);
-</script>
 {% endblock %}
