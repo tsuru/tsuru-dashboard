@@ -80,12 +80,33 @@ module.exports = {
 },{"jquery":4,"react":161}],2:[function(require,module,exports){
 var React = require('react'),
     ReactDOM = require('react-dom'),
-    Metrics = require("../components/metrics.jsx").Metrics;
+    GraphContainer = require("../components/metrics.jsx").GraphContainer;
 
 var appName = window.location.pathname.split("/")[2];
+
+var queryString = function(key) {
+  var keys = {};
+  var items = window.location.search.substr(1).split("&");
+  $.each(items, function(i, item) {
+    var keyValue = item.split("=");
+    keys[keyValue[0]] = keyValue[1];
+  });
+  return keys[key];
+}
+
+$("select[name=from]").val(queryString("from"));
+$("select[name=serie]").val(queryString("serie"));
+$("input[name=kind]").val(queryString("kind"));
+
+var kind = queryString("kind");
+var interval = queryString("serie");
+var from = queryString("from");
+
 ReactDOM.render(
-  React.createElement(Metrics, {appName: appName}),
-  document.getElementById('metrics-container')
+  React.createElement("div", {className: "metrics"}, 
+    React.createElement(GraphContainer, {kind: kind, appName: appName, interval: interval, from: from})
+  ),
+  document.getElementById('metrics')
 );
 
 },{"../components/metrics.jsx":1,"react":161,"react-dom":5}],3:[function(require,module,exports){

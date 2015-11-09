@@ -25,3 +25,4 @@ build-js: node-deps
 	@./node_modules/browserify/bin/cmd.js -t reactify -o apps/static_files/js/resources.js apps/static_files/jsx/pages/resources.jsx
 	@./node_modules/browserify/bin/cmd.js -t reactify -o apps/static_files/js/list.js apps/static_files/jsx/pages/list.jsx
 	@./node_modules/browserify/bin/cmd.js -t reactify -o apps/static_files/js/metrics.js apps/static_files/jsx/pages/metrics.jsx
+	@./node_modules/browserify/bin/cmd.js -t reactify -o apps/static_files/js/metric.js apps/static_files/jsx/pages/metric.jsx

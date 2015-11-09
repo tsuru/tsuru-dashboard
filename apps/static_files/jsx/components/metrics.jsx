@@ -2,10 +2,19 @@ var React = require('react'),
 	$ = require('jquery');
 
 var GraphContainer = React.createClass({
+  getDefaultProps: function() {
+    return {
+      interval: "1m",
+      from: "1h/h",
+    }
+  },
   loadData: function() {
     var appName = this.props.appName;
     var kind = this.props.kind;
-    var url ="/metrics/" + appName + "/?metric=" + kind + "&interval=1m&from=1h/h";
+    var interval = this.props.interval;
+    var from = this.props.from;
+
+    var url ="/metrics/" + appName + "/?metric=" + kind + "&interval=" + interval + "&date_range=" + from;
     $.getJSON(url, function(data) {
       if (data.data.length === 0)
         return;
@@ -62,4 +71,7 @@ var Metrics = React.createClass({
   }
 });
 
-module.exports = Metrics;
+module.exports = {
+    Metrics: Metrics,
+    GraphContainer: GraphContainer,
+};
