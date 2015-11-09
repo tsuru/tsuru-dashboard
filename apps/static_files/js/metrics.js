@@ -13,25 +13,30 @@ var GraphContainer = React.createClass({displayName: "GraphContainer",
     new Morris.Line(options);
   },
   render: function() {
+    var kind = this.props.kind;
+    var appName = this.props.appName;
+    var url = "/apps/" + appName + "/metrics/details/?kind=" + kind + "&from=1h/h&serie=1m";
     return (
       React.createElement("div", {className: "graph-container"}, 
         React.createElement("h2", null, this.props.kind), 
-        React.createElement("a", {href: "#"}), 
-        React.createElement("a", {href: "#"}, React.createElement("div", {id: this.props.kind}))
+        React.createElement("a", {href: url}), 
+        React.createElement("a", {href: url}, React.createElement("div", {id: this.props.kind}))
       )
     );
   }
 });
+
 var Metrics = React.createClass({displayName: "Metrics",
   render: function() {
+    var appName = this.props.appName;
     return (
       React.createElement("div", {className: "metrics"}, 
-        React.createElement(GraphContainer, {kind: "units"}), 
-        React.createElement(GraphContainer, {kind: "cpu_max"}), 
-        React.createElement(GraphContainer, {kind: "mem_max"}), 
-        React.createElement(GraphContainer, {kind: "connections"}), 
-        React.createElement(GraphContainer, {kind: "requests_min"}), 
-        React.createElement(GraphContainer, {kind: "response_time"})
+        React.createElement(GraphContainer, {kind: "units", appName: appName}), 
+        React.createElement(GraphContainer, {kind: "cpu_max", appName: appName}), 
+        React.createElement(GraphContainer, {kind: "mem_max", appName: appName}), 
+        React.createElement(GraphContainer, {kind: "connections", appName: appName}), 
+        React.createElement(GraphContainer, {kind: "requests_min", appName: appName}), 
+        React.createElement(GraphContainer, {kind: "response_time", appName: appName})
       )
     );
   }
@@ -44,8 +49,9 @@ var React = require('react'),
     ReactDOM = require('react-dom'),
     Metrics = require("../components/metrics.jsx");
 
+var appName = window.location.pathname.split("/")[2];
 ReactDOM.render(
-  React.createElement(Metrics, null),
+  React.createElement(Metrics, {appName: appName}),
   document.getElementById('metrics-container')
 );
 
@@ -12594,6 +12600,7 @@ var HTMLDOMPropertyConfig = {
     icon: null,
     id: MUST_USE_PROPERTY,
     inputMode: MUST_USE_ATTRIBUTE,
+    integrity: null,
     is: MUST_USE_ATTRIBUTE,
     keyParams: MUST_USE_ATTRIBUTE,
     keyType: MUST_USE_ATTRIBUTE,
@@ -15669,6 +15676,7 @@ var registrationNameModules = ReactBrowserEventEmitter.registrationNameModules;
 // For quickly matching children type, to test if can be treated as content.
 var CONTENT_TYPES = { 'string': true, 'number': true };
 
+var CHILDREN = keyOf({ children: null });
 var STYLE = keyOf({ style: null });
 var HTML = keyOf({ __html: null });
 
@@ -16159,7 +16167,9 @@ ReactDOMComponent.Mixin = {
         }
         var markup = null;
         if (this._tag != null && isCustomComponent(this._tag, props)) {
-          markup = DOMPropertyOperations.createMarkupForCustomAttribute(propKey, propValue);
+          if (propKey !== CHILDREN) {
+            markup = DOMPropertyOperations.createMarkupForCustomAttribute(propKey, propValue);
+          }
         } else {
           markup = DOMPropertyOperations.createMarkupForProperty(propKey, propValue);
         }
@@ -16418,6 +16428,9 @@ ReactDOMComponent.Mixin = {
       } else if (isCustomComponent(this._tag, nextProps)) {
         if (!node) {
           node = ReactMount.getNode(this._rootNodeID);
+        }
+        if (propKey === CHILDREN) {
+          nextProp = null;
         }
         DOMPropertyOperations.setValueForAttribute(node, propKey, nextProp);
       } else if (DOMProperty.properties[propKey] || DOMProperty.isCustomAttribute(propKey)) {
@@ -19101,11 +19114,12 @@ if (process.env.NODE_ENV !== 'production') {
     var fakeNode = document.createElement('react');
     ReactErrorUtils.invokeGuardedCallback = function (name, func, a, b) {
       var boundFunc = func.bind(null, a, b);
-      fakeNode.addEventListener(name, boundFunc, false);
+      var evtType = 'react-' + name;
+      fakeNode.addEventListener(evtType, boundFunc, false);
       var evt = document.createEvent('Event');
-      evt.initEvent(name, false, false);
+      evt.initEvent(evtType, false, false);
       fakeNode.dispatchEvent(evt);
-      fakeNode.removeEventListener(name, boundFunc, false);
+      fakeNode.removeEventListener(evtType, boundFunc, false);
     };
   }
 }
@@ -23273,7 +23287,7 @@ module.exports = ReactUpdates;
 
 'use strict';
 
-module.exports = '0.14.1';
+module.exports = '0.14.2';
 },{}],90:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -25306,7 +25320,7 @@ module.exports = adler32;
 var canDefineProperty = false;
 if (process.env.NODE_ENV !== 'production') {
   try {
-    Object.defineProperty({}, 'x', {});
+    Object.defineProperty({}, 'x', { get: function () {} });
     canDefineProperty = true;
   } catch (x) {
     // IE will fail on defineProperty
