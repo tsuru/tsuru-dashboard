@@ -75,13 +75,11 @@ var Tr = React.createClass({
   render: function() {
     var unit = this.props.unit;
     return (
-      <div>
       <tr>
         <td>{unit.ID}</td>
         <td>{unit.HostAddr}</td>
         <td>{unit.HostPort}</td>
       </tr>
-      </div>
     );
   }
 });
@@ -91,10 +89,10 @@ var Trs = React.createClass({
     var units = this.props.units;
     var trs = [];
     for (i in units) {
-      trs.push(<Tr unit={units[i]} />);
+      trs.push(<Tr key={i} unit={units[i]} />);
     }
     return (
-      <div>{trs}</div>
+      <tbody>{trs}</tbody>
     );
   }
 });
@@ -118,7 +116,7 @@ var ProcessInfo = React.createClass({
       <div className="units-toggle" onClick={this.onClick}>
         <p><a href="#">&#x25BC;</a> {units.length} {kind} units</p>
         <table className={classNames}>
-          <Trs units={this.props.process} />
+          <Trs units={units} />
         </table>
       </div>
     );

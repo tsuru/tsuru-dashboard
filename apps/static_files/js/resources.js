@@ -77,12 +77,10 @@ var Tr = React.createClass({displayName: "Tr",
   render: function() {
     var unit = this.props.unit;
     return (
-      React.createElement("div", null, 
       React.createElement("tr", null, 
         React.createElement("td", null, unit.ID), 
         React.createElement("td", null, unit.HostAddr), 
         React.createElement("td", null, unit.HostPort)
-      )
       )
     );
   }
@@ -93,10 +91,10 @@ var Trs = React.createClass({displayName: "Trs",
     var units = this.props.units;
     var trs = [];
     for (i in units) {
-      trs.push(React.createElement(Tr, {unit: units[i]}));
+      trs.push(React.createElement(Tr, {key: i, unit: units[i]}));
     }
     return (
-      React.createElement("div", null, trs)
+      React.createElement("tbody", null, trs)
     );
   }
 });
@@ -120,7 +118,7 @@ var ProcessInfo = React.createClass({displayName: "ProcessInfo",
       React.createElement("div", {className: "units-toggle", onClick: this.onClick}, 
         React.createElement("p", null, React.createElement("a", {href: "#"}, "▼"), " ", units.length, " ", kind, " units"), 
         React.createElement("table", {className: classNames}, 
-          React.createElement(Trs, {units: this.props.process})
+          React.createElement(Trs, {units: units})
         )
       )
     );
