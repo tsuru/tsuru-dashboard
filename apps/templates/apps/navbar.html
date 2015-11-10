@@ -4,9 +4,6 @@
             <li{% if active == "resources" %} class="active"{% endif %}>
                 <a title="resources" href="{% url 'detail-app' app.name %}">resources</a>
             </li>
-            <li{% if active == "metrics" %} class="active"{% endif %}>
-                <a title="metrics" href="{% url 'app-metrics' app.name %}">metrics</a>
-            </li>
             <li{% if active == "deploys" %} class="active"{% endif %}>
                 <a title="deploys" href="{% url 'app-deploys' app.name %}">deploys</a>
             </li>

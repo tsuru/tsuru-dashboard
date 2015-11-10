@@ -1,5 +1,6 @@
 var React = require('react'),
-	$ = require('jquery');
+	$ = require('jquery'),
+    Metrics = require("../components/metrics.jsx").Metrics;
 
 var Resources = React.createClass({
   getInitialState: function() {
@@ -141,9 +142,11 @@ var ProcessContent = React.createClass({
     for (i in process) {
         info.push(<ProcessInfo key={i} process={process[i]} kind={i} />);
     };
+    var processName = this.props.process[0].ProcessName;
     return (
-      <div className='resources-content'>
+      <div className='resources-content' id="metrics-container">
         {info}
+        <Metrics appName={this.props.appName} processName={processName} />
       </div>
     );
   }
@@ -174,7 +177,7 @@ var Process = React.createClass({
     return (
       <div>
         <ProcessTabs process={this.state.process} setActive={this.setActive} />
-        {this.state.active === null ? "" : <ProcessContent process={this.state.active} />}
+        {this.state.active === null ? "" : <ProcessContent process={this.state.active} appName={this.props.app.name} />}
       </div>
     );
   }

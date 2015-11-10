@@ -2,10 +2,16 @@ var React = require('react'),
 	$ = require('jquery');
 
 var GraphContainer = React.createClass({
+  getInitialState: function() {
+    return {
+      morris: null,
+    }
+  },
   getDefaultProps: function() {
     return {
       interval: "1m",
       from: "1h/h",
+      processName: "",
     }
   },
   loadData: function() {
@@ -15,15 +21,25 @@ var GraphContainer = React.createClass({
     var from = this.props.from;
 
     var url ="/metrics/" + appName + "/?metric=" + kind + "&interval=" + interval + "&date_range=" + from;
-    $.getJSON(url, function(data) {
-      if (data.data.length === 0)
-        return;
 
+    if (this.props.processName !== "") {
+        url += "&process_name=" + this.props.processName;
+    }
+    $.getJSON(url, function(data) {
       this.renderGraph(data);
     }.bind(this));
   },
   renderGraph: function(result) {
-    var ykeys = Object.keys(result.data[0]).filter(function(value) { return value != "x" });
+    $("#" + this.props.kind).empty();
+
+    var ykeys;
+    if (result.data.length > 0) {
+        ykeys = Object.keys(result.data[0]).filter(function(value) { return value != "x" });
+    } else {
+        ykeys = ["y"];
+        result.data = [{"x": 0, "y": 0}];
+    }
+
     var options = {
       element: this.props.kind, 
 	  ykeys: ykeys,
@@ -38,10 +54,8 @@ var GraphContainer = React.createClass({
     };
     new Morris.Line(options);
   },
-  componentDidMount: function() {
-    this.loadData();
-  },
   render: function() {
+    this.loadData();
     var kind = this.props.kind;
     var appName = this.props.appName;
     var url = "/apps/" + appName + "/metrics/details/?kind=" + kind + "&from=1h/h&serie=1m";
@@ -60,10 +74,10 @@ var Metrics = React.createClass({
     var appName = this.props.appName;
     return (
       <div className="metrics">
-        <GraphContainer kind="units" appName={appName} />
-        <GraphContainer kind="cpu_max" appName={appName} />
-        <GraphContainer kind="mem_max" appName={appName} />
-        <GraphContainer kind="connections" appName={appName} />
+        <GraphContainer kind="cpu_max" appName={appName} processName={this.props.processName} />
+        <GraphContainer kind="mem_max" appName={appName} processName={this.props.processName} />
+        <GraphContainer kind="connections" appName={appName} processName={this.props.processName} />
+        <GraphContainer kind="units" appName={appName} processName={this.props.processName} />
         <GraphContainer kind="requests_min" appName={appName} />
         <GraphContainer kind="response_time" appName={appName} />
       </div>
