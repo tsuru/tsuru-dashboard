@@ -24,7 +24,7 @@ def get_backend(app, token):
 
 
 class ElasticSearch(object):
-    def __init__(self, url, index, app):
+    def __init__(self, url, index, app, process_name=None):
         self.index = index
         self.app = app
         self.url = url
@@ -71,19 +71,20 @@ class ElasticSearch(object):
             "max": "{0:.2f}".format(max_value + 1),
         }
 
-    def cpu_max(self, date_range=None, interval=None):
-        query = self.query(date_range=date_range, interval=interval)
+    def cpu_max(self, date_range=None, interval=None, process_name=None):
+        query = self.query(date_range=date_range, interval=interval, process_name=process_name)
         response = self.post(query, "cpu_max")
         process = self.process(response)
         return process
 
-    def mem_max(self, date_range=None, interval=None):
-        query = self.query(date_range=date_range, interval=interval)
+    def mem_max(self, date_range=None, interval=None, process_name=None):
+        query = self.query(date_range=date_range, interval=interval, process_name=process_name)
         return self.process(self.post(query, "mem_max"), formatter=lambda x: x / (1024 * 1024))
 
-    def units(self, date_range=None, interval=None):
+    def units(self, date_range=None, interval=None, process_name=None):
         aggregation = {"units": {"cardinality": {"field": "host"}}}
-        query = self.query(date_range=date_range, interval=interval, aggregation=aggregation)
+        query = self.query(date_range=date_range, interval=interval,
+                           process_name=process_name, aggregation=aggregation)
         return self.units_process(self.post(query, "cpu_max"))
 
     def units_process(self, data, formatter=None):
@@ -114,9 +115,10 @@ class ElasticSearch(object):
             "max": "{0:.2f}".format(max_value),
         }
 
-    def requests_min(self, date_range=None, interval=None):
+    def requests_min(self, date_range=None, interval=None, process_name=None):
         aggregation = {"sum": {"sum": {"field": "count"}}}
-        query = self.query(date_range=date_range, interval=interval, aggregation=aggregation)
+        query = self.query(date_range=date_range, interval=interval,
+                           process_name=process_name, aggregation=aggregation)
         return self.requests_min_process(self.post(query, "response_time"))
 
     def requests_min_process(self, data, formatter=None):
@@ -147,13 +149,14 @@ class ElasticSearch(object):
             "max": max_value,
         }
 
-    def response_time(self, date_range=None, interval=None):
-        query = self.query(date_range=date_range, interval=interval)
+    def response_time(self, date_range=None, interval=None, process_name=None):
+        query = self.query(date_range=date_range, interval=interval, process_name=process_name)
         return self.process(self.post(query, "response_time"))
 
-    def connections(self, date_range=None, interval=None):
+    def connections(self, date_range=None, interval=None, process_name=None):
         aggregation = {"connection": {"terms": {"field": "connection.raw"}}}
-        query = self.query(date_range=date_range, interval=interval, aggregation=aggregation)
+        query = self.query(date_range=date_range, interval=interval,
+                           process_name=process_name, aggregation=aggregation)
         return self.connections_process(self.post(query, "connection"))
 
     def connections_process(self, data, formatter=None):
@@ -185,21 +188,36 @@ class ElasticSearch(object):
             "max": max_value,
         }
 
-    def query(self, date_range=None, interval=None, aggregation=None):
+    def query(self, date_range=None, interval=None, aggregation=None, process_name=None):
         if not date_range:
             date_range = "1h"
 
         if not interval:
             interval = "1m"
 
-        query_filter = {
-            "filtered": {
-                "filter": {
+        f = {
+            "bool": {
+                "must": [{
                     "term": {
                         "app": self.app,
                         "app.raw": self.app,
                     }
-                }
+                }],
+            }
+        }
+
+        if process_name:
+            p = {
+                "term": {
+                    "process.raw": process_name,
+                    "process": process_name,
+                },
+            }
+            f["bool"]["must"].append(p)
+
+        query_filter = {
+            "filtered": {
+                "filter": f
             }
         }
         if not aggregation:

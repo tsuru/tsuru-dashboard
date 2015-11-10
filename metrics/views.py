@@ -27,6 +27,8 @@ class Metric(LoginRequiredView):
         if not metric:
             return HttpResponseBadRequest()
 
+        process_name = self.request.GET.get("process_name")
+
         app_name = kwargs['app_name']
         app = self.get_app(app_name)
         app["envs"] = self.get_envs(self.request, app_name)
@@ -37,5 +39,5 @@ class Metric(LoginRequiredView):
 
         interval = self.request.GET.get("interval")
         date_range = self.request.GET.get("date_range")
-        data = getattr(backend, metric)(date_range=date_range, interval=interval)
+        data = getattr(backend, metric)(date_range=date_range, interval=interval, process_name=process_name)
         return HttpResponse(json.dumps(data))

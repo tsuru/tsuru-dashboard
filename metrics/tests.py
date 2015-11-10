@@ -71,14 +71,14 @@ class MetricViewTest(TestCase):
 
         self.addCleanup(cleanup)
 
-        request = RequestFactory().get("/ble/?metric=cpu_max&date_range=2h/h&interval=30m")
+        request = RequestFactory().get("/ble/?metric=cpu_max&date_range=2h/h&interval=30m&process_name=web")
         request.session = {"tsuru_token": "token"}
 
         response = view(request, app_name="app_name")
 
         self.assertEqual(response.status_code, 200)
         get_backend_mock.assert_called_with({'envs': {}}, 'token')
-        backend_mock.cpu_max.assert_called_with(date_range=u'2h/h', interval=u'30m')
+        backend_mock.cpu_max.assert_called_with(date_range=u'2h/h', interval=u'30m', process_name="web")
 
     @patch("auth.views.token_is_valid")
     def test_get_bad_request(self, token_mock):
