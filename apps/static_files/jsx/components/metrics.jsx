@@ -49,7 +49,6 @@ var GraphContainer = React.createClass({
       data: result.data,
 	  ymax: result.max,
       ymin: result.min,
-	  hideHover: "always",
 	  labels: ykeys
     };
     new Morris.Line(options);
