@@ -125,6 +125,10 @@ var ProcessTab = React.createClass({displayName: "ProcessTab",
   onClick: function(e) {
     e.preventDefault();
     e.stopPropagation();
+
+    if (this.props.active)
+      return;
+
     this.props.setActive(this.props.process);
   },
   render: function() {
