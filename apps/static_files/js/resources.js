@@ -1,6 +1,5 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var React = require('react'),
-	$ = require('jquery');
+var React = require('react');
 
 var GraphContainer = React.createClass({displayName: "GraphContainer",
   getInitialState: function() {
@@ -27,32 +26,37 @@ var GraphContainer = React.createClass({displayName: "GraphContainer",
         url += "&process_name=" + this.props.processName;
     }
     $.getJSON(url, function(data) {
+      if (Object.keys(data.data).length === 0)
+		data.data = {x: [1,1]};
+
       this.renderGraph(data);
     }.bind(this));
   },
   renderGraph: function(result) {
-    $("#" + this.props.kind).empty();
-
-    var ykeys;
-    if (result.data.length > 0) {
-        ykeys = Object.keys(result.data[0]).filter(function(value) { return value != "x" });
-    } else {
-        ykeys = ["y"];
-        result.data = [{"x": 0, "y": 0}];
+    var $elem = $("#" + this.props.kind);
+    var d = [];
+    for (key in result.data) {
+      d.push({
+        data: result.data[key],
+        lines: {show: true, fill: true},
+        label: key
+      });
     }
-
+	console.log(d, result.data);
     var options = {
-      element: this.props.kind, 
-	  ykeys: ykeys,
-      pointSize: 0,
-      xkey: 'x',
-      smooth: false,
-      data: result.data,
-	  ymax: result.max,
-      ymin: result.min,
-	  labels: ykeys
+        xaxis: {
+            mode: "time"
+        },
+        grid: {
+		  hoverable: true,
+		},
+		tooltip: {
+		  show: true,
+		  content: "%x the %s was %y"
+        },
+        legend: {position: "sw"}
     };
-    new Morris.Line(options);
+    $.plot($elem, d, options);
   },
   render: function() {
     this.loadData();
@@ -90,7 +94,7 @@ module.exports = {
     GraphContainer: GraphContainer,
 };
 
-},{"jquery":5,"react":162}],2:[function(require,module,exports){
+},{"react":162}],2:[function(require,module,exports){
 (function (process){
 var React = require('react'),
 	$ = require('jquery'),

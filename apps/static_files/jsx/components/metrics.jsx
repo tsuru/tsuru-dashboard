@@ -1,5 +1,4 @@
-var React = require('react'),
-	$ = require('jquery');
+var React = require('react');
 
 var GraphContainer = React.createClass({
   getInitialState: function() {
@@ -26,32 +25,36 @@ var GraphContainer = React.createClass({
         url += "&process_name=" + this.props.processName;
     }
     $.getJSON(url, function(data) {
+      if (Object.keys(data.data).length === 0)
+        data.data = {x: [1,1]};
+
       this.renderGraph(data);
     }.bind(this));
   },
   renderGraph: function(result) {
-    $("#" + this.props.kind).empty();
-
-    var ykeys;
-    if (result.data.length > 0) {
-        ykeys = Object.keys(result.data[0]).filter(function(value) { return value != "x" });
-    } else {
-        ykeys = ["y"];
-        result.data = [{"x": 0, "y": 0}];
+    var $elem = $("#" + this.props.kind);
+    var d = [];
+    for (key in result.data) {
+      d.push({
+        data: result.data[key],
+        lines: {show: true, fill: true},
+        label: key
+      });
     }
-
     var options = {
-      element: this.props.kind, 
-	  ykeys: ykeys,
-      pointSize: 0,
-      xkey: 'x',
-      smooth: false,
-      data: result.data,
-	  ymax: result.max,
-      ymin: result.min,
-	  labels: ykeys
+        xaxis: {
+            mode: "time"
+        },
+        grid: {
+		  hoverable: true,
+		},
+		tooltip: {
+		  show: true,
+		  content: "%x the %s was %y"
+        },
+        legend: {position: "sw"}
     };
-    new Morris.Line(options);
+    $.plot($elem, d, options);
   },
   render: function() {
     this.loadData();
