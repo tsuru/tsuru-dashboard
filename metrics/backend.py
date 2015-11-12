@@ -41,7 +41,7 @@ class ElasticSearch(object):
                 return x
             formatter = default_formatter
 
-        d = []
+        result = {}
         min_value = None
         max_value = 0
 
@@ -59,14 +59,18 @@ class ElasticSearch(object):
             if bucket_max > max_value:
                 max_value = bucket_max
 
-            d.append({
-                "x": bucket["key"],
-                "max": "{0:.2f}".format(bucket_max),
-                "min": "{0:.2f}".format(bucket_min),
-                "avg": "{0:.2f}".format(bucket_avg),
-            })
+            if not result:
+                result = {
+                    "max": [],
+                    "min": [],
+                    "avg": [],
+                }
+            result["max"].append([bucket["key"], "{0:.2f}".format(bucket_max)])
+            result["min"].append([bucket["key"], "{0:.2f}".format(bucket_min)])
+            result["avg"].append([bucket["key"], "{0:.2f}".format(bucket_avg)])
+
         return {
-            "data": d,
+            "data": result,
             "min": "{0:.2f}".format(min_value or 0),
             "max": "{0:.2f}".format(max_value + 1),
         }
@@ -88,7 +92,7 @@ class ElasticSearch(object):
         return self.units_process(self.post(query, "cpu_max"))
 
     def units_process(self, data, formatter=None):
-        d = []
+        result = {}
         min_value = None
         max_value = 0
 
@@ -104,13 +108,13 @@ class ElasticSearch(object):
             if value > max_value:
                 max_value = value
 
-            d.append({
-                "x": bucket["key"],
-                "units": "{0:.2f}".format(value),
-            })
+            if not result:
+                result["units"] = []
+
+            result["units"].append([bucket["key"], "{0:.2f}".format(value)])
 
         return {
-            "data": d,
+            "data": result,
             "min": "{0:.2f}".format(min_value or 0),
             "max": "{0:.2f}".format(max_value),
         }
@@ -122,7 +126,7 @@ class ElasticSearch(object):
         return self.requests_min_process(self.post(query, "response_time"))
 
     def requests_min_process(self, data, formatter=None):
-        d = []
+        result = {}
         min_value = None
         max_value = 0
 
@@ -138,13 +142,12 @@ class ElasticSearch(object):
             if value > max_value:
                 max_value = value
 
-            d.append({
-                "x": bucket["key"],
-                "sum": value,
-            })
+            if not result:
+                result["requests"] = []
+            result["requests"].append([bucket["key"], value])
 
         return {
-            "data": d,
+            "data": result,
             "min": min_value,
             "max": max_value,
         }
@@ -160,17 +163,16 @@ class ElasticSearch(object):
         return self.connections_process(self.post(query, "connection"))
 
     def connections_process(self, data, formatter=None):
-        d = []
+        result = {}
         min_value = 0
         max_value = 0
 
         for bucket in data["aggregations"]["range"]["buckets"][0]["date"]["buckets"]:
-            obj = {}
-            obj["x"] = bucket["key"]
-
             for doc in bucket["connection"]["buckets"]:
                 size = doc["doc_count"]
                 conn = doc["key"]
+                if conn not in result:
+                    result[conn] = []
 
                 if size < min_value:
                     min_value = size
@@ -178,12 +180,10 @@ class ElasticSearch(object):
                 if size > max_value:
                     max_value = size
 
-                obj[conn] = size
-
-            d.append(obj)
+                result[conn].append([bucket["key"], size])
 
         return {
-            "data": d,
+            "data": result,
             "min": min_value,
             "max": max_value,
         }
