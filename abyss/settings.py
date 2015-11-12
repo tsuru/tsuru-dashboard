@@ -127,3 +127,13 @@ CACHES = {
         'LOCATION': 'tsuru_cache',
     }
 }
+
+RVN_CONFIG = os.environ.get("RAVEN_CONFIG")
+if RVN_CONFIG:
+    RAVEN_CONFIG = {
+        'dsn': RVN_CONFIG,
+    }
+
+    INSTALLED_APPS = INSTALLED_APPS + (
+        'raven.contrib.django.raven_compat',
+    )
