@@ -9,7 +9,7 @@ var GraphContainer = React.createClass({
   getDefaultProps: function() {
     return {
       interval: "1m",
-      from: "1h/h",
+      from: "1h",
       processName: "",
     }
   },
@@ -60,7 +60,7 @@ var GraphContainer = React.createClass({
     this.loadData();
     var kind = this.props.kind;
     var appName = this.props.appName;
-    var url = "/apps/" + appName + "/metrics/details/?kind=" + kind + "&from=1h/h&serie=1m";
+    var url = "/apps/" + appName + "/metrics/details/?kind=" + kind + "&from=1h&serie=1m";
     return (
       <div className="graph-container">
         <h2>{this.props.kind}</h2>
