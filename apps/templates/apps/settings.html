@@ -148,7 +148,9 @@
 
 {% block extra_js %}
 <script src="{% static "js/confirmation.js" %}"></script>
+<script src="{% static "js/apps/detail.js" %}"></script>
 <script type="text/javascript">
+$.detail(appName);
 var appName = "{{ app.name }}";
 $.detail(appName);
 $(".settings-toggle").on("click", function() {
