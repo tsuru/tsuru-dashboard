@@ -10,7 +10,7 @@ var GraphContainer = React.createClass({displayName: "GraphContainer",
   getDefaultProps: function() {
     return {
       interval: "1m",
-      from: "1h/h",
+      from: "1h",
       processName: "",
     }
   },
@@ -27,7 +27,7 @@ var GraphContainer = React.createClass({displayName: "GraphContainer",
     }
     $.getJSON(url, function(data) {
       if (Object.keys(data.data).length === 0)
-		data.data = {x: [1,1]};
+        data.data = {" ": [1,1]};
 
       this.renderGraph(data);
     }.bind(this));
@@ -42,7 +42,6 @@ var GraphContainer = React.createClass({displayName: "GraphContainer",
         label: key
       });
     }
-	console.log(d, result.data);
     var options = {
         xaxis: {
             mode: "time"
@@ -62,7 +61,7 @@ var GraphContainer = React.createClass({displayName: "GraphContainer",
     this.loadData();
     var kind = this.props.kind;
     var appName = this.props.appName;
-    var url = "/apps/" + appName + "/metrics/details/?kind=" + kind + "&from=1h/h&serie=1m";
+    var url = "/apps/" + appName + "/metrics/details/?kind=" + kind + "&from=1h&serie=1m";
     return (
       React.createElement("div", {className: "graph-container"}, 
         React.createElement("h2", null, this.props.kind), 

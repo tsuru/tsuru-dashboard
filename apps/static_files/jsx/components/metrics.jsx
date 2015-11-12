@@ -26,7 +26,7 @@ var GraphContainer = React.createClass({
     }
     $.getJSON(url, function(data) {
       if (Object.keys(data.data).length === 0)
-        data.data = {x: [1,1]};
+        data.data = {" ": [1,1]};
 
       this.renderGraph(data);
     }.bind(this));
