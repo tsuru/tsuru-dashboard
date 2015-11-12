@@ -7,12 +7,16 @@ from pytz import utc
 
 from django.views.generic import TemplateView
 from django.conf import settings
+from django.http import HttpResponse
+from django.core.urlresolvers import reverse
+from django.shortcuts import redirect
 
 from pygments import highlight
 from pygments.lexers import DiffLexer
 from pygments.formatters import HtmlFormatter
 
 from auth.views import LoginRequiredView
+
 
 addr_re = re.compile(r"^https?://(.*):\d{1,5}/?")
 
@@ -288,3 +292,28 @@ class PoolInfo(LoginRequiredView, TemplateView):
         context = super(PoolInfo, self).get_context_data(*args, **kwargs)
         context.update({"pools": self.nodes_by_pool(kwargs["pool"])})
         return context
+
+
+class NodeRemove(LoginRequiredView):
+    def get(self, request, *args, **kwargs):
+        address = self.kwargs['address']
+        pool = self.kwargs['pool']
+
+        no_rebalance = self.request.GET.get("no-rebalance", "false")
+        destroy = self.request.GET.get("destroy", "false")
+
+        data = {
+            "address": address,
+            "remove_iaas": destroy,
+        }
+
+        response = requests.delete(
+            '{}/docker/node?no-rebalance={}'.format(settings.TSURU_HOST, no_rebalance),
+            headers=self.authorization,
+            data=json.dumps(data)
+        )
+
+        if response.status_code > 399:
+            return HttpResponse(response.text, status=response.status_code)
+
+        return redirect(reverse('pool-info', args=[pool]))
