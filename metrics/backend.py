@@ -35,7 +35,6 @@ class ElasticSearch(object):
         return data.json()
 
     def process(self, data, formatter=None):
-
         if not formatter:
             def default_formatter(x):
                 return x
@@ -45,29 +44,30 @@ class ElasticSearch(object):
         min_value = None
         max_value = 0
 
-        for bucket in data["aggregations"]["range"]["buckets"][0]["date"]["buckets"]:
-            bucket_max = formatter(bucket["max"]["value"])
-            bucket_min = formatter(bucket["min"]["value"])
-            bucket_avg = formatter(bucket["avg"]["value"])
+        if data["aggregations"]["range"]["buckets"][0]["doc_count"] > 0:
+            for bucket in data["aggregations"]["range"]["buckets"][0]["date"]["buckets"]:
+                bucket_max = formatter(bucket["max"]["value"])
+                bucket_min = formatter(bucket["min"]["value"])
+                bucket_avg = formatter(bucket["avg"]["value"])
 
-            if min_value is None:
-                min_value = bucket_min
+                if min_value is None:
+                    min_value = bucket_min
 
-            if bucket_min < min_value:
-                min_value = bucket_min
+                if bucket_min < min_value:
+                    min_value = bucket_min
 
-            if bucket_max > max_value:
-                max_value = bucket_max
+                if bucket_max > max_value:
+                    max_value = bucket_max
 
-            if not result:
-                result = {
-                    "max": [],
-                    "min": [],
-                    "avg": [],
-                }
-            result["max"].append([bucket["key"], "{0:.2f}".format(bucket_max)])
-            result["min"].append([bucket["key"], "{0:.2f}".format(bucket_min)])
-            result["avg"].append([bucket["key"], "{0:.2f}".format(bucket_avg)])
+                if not result:
+                    result = {
+                        "max": [],
+                        "min": [],
+                        "avg": [],
+                    }
+                result["max"].append([bucket["key"], "{0:.2f}".format(bucket_max)])
+                result["min"].append([bucket["key"], "{0:.2f}".format(bucket_min)])
+                result["avg"].append([bucket["key"], "{0:.2f}".format(bucket_avg)])
 
         return {
             "data": result,
@@ -96,22 +96,23 @@ class ElasticSearch(object):
         min_value = None
         max_value = 0
 
-        for bucket in data["aggregations"]["range"]["buckets"][0]["date"]["buckets"]:
-            value = bucket["units"]["value"]
+        if data["aggregations"]["range"]["buckets"][0]["doc_count"] > 0:
+            for bucket in data["aggregations"]["range"]["buckets"][0]["date"]["buckets"]:
+                value = bucket["units"]["value"]
 
-            if min_value is None:
-                min_value = value
+                if min_value is None:
+                    min_value = value
 
-            if value < min_value:
-                min_value = value
+                if value < min_value:
+                    min_value = value
 
-            if value > max_value:
-                max_value = value
+                if value > max_value:
+                    max_value = value
 
-            if not result:
-                result["units"] = []
+                if not result:
+                    result["units"] = []
 
-            result["units"].append([bucket["key"], "{0:.2f}".format(value)])
+                result["units"].append([bucket["key"], "{0:.2f}".format(value)])
 
         return {
             "data": result,
@@ -130,21 +131,22 @@ class ElasticSearch(object):
         min_value = None
         max_value = 0
 
-        for bucket in data["aggregations"]["range"]["buckets"][0]["date"]["buckets"]:
-            value = bucket["sum"]["value"]
+        if data["aggregations"]["range"]["buckets"][0]["doc_count"] > 0:
+            for bucket in data["aggregations"]["range"]["buckets"][0]["date"]["buckets"]:
+                value = bucket["sum"]["value"]
 
-            if min_value is None:
-                min_value = value
+                if min_value is None:
+                    min_value = value
 
-            if value < min_value:
-                min_value = value
+                if value < min_value:
+                    min_value = value
 
-            if value > max_value:
-                max_value = value
+                if value > max_value:
+                    max_value = value
 
-            if not result:
-                result["requests"] = []
-            result["requests"].append([bucket["key"], value])
+                if not result:
+                    result["requests"] = []
+                result["requests"].append([bucket["key"], value])
 
         return {
             "data": result,
@@ -167,20 +169,21 @@ class ElasticSearch(object):
         min_value = 0
         max_value = 0
 
-        for bucket in data["aggregations"]["range"]["buckets"][0]["date"]["buckets"]:
-            for doc in bucket["connection"]["buckets"]:
-                size = doc["doc_count"]
-                conn = doc["key"]
-                if conn not in result:
-                    result[conn] = []
+        if data["aggregations"]["range"]["buckets"][0]["doc_count"] > 0:
+            for bucket in data["aggregations"]["range"]["buckets"][0]["date"]["buckets"]:
+                for doc in bucket["connection"]["buckets"]:
+                    size = doc["doc_count"]
+                    conn = doc["key"]
+                    if conn not in result:
+                        result[conn] = []
 
-                if size < min_value:
-                    min_value = size
+                    if size < min_value:
+                        min_value = size
 
-                if size > max_value:
-                    max_value = size
+                    if size > max_value:
+                        max_value = size
 
-                result[conn].append([bucket["key"], size])
+                    result[conn].append([bucket["key"], size])
 
         return {
             "data": result,
