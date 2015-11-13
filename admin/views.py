@@ -297,15 +297,14 @@ class PoolInfo(LoginRequiredView, TemplateView):
 class NodeRemove(LoginRequiredView):
     def get(self, request, *args, **kwargs):
         address = self.kwargs['address']
-        pool = self.kwargs['pool']
 
-        msg = "The value for '{}' parameter should be 'true' or 'false'"
+        msg = u"The value for '{}' parameter should be 'true' or 'false'"
 
         destroy = self.request.GET.get("destroy", "false")
         if destroy not in ["true", "false"]:
             return HttpResponse(msg.format("destroy"), status=400)
 
-        rebalance = self.request.GET.get("rebalance", "true")
+        rebalance = self.request.GET.get("rebalance", "false")
         if rebalance not in ["true", "false"]:
             return HttpResponse(msg.format("rebalance"), status=400)
         no_rebalance = "false" if rebalance == "true" else "true"
@@ -324,4 +323,4 @@ class NodeRemove(LoginRequiredView):
         if response.status_code > 399:
             return HttpResponse(response.text, status=response.status_code)
 
-        return redirect(reverse('pool-info', args=[pool]))
+        return redirect(reverse('list-node'))

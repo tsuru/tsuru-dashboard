@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load staticfiles %}
 
 {% block sidebar %}
 	{% include "sidebar.html" with active="docker" %}
@@ -36,5 +37,41 @@
 			</table>
 		</div>
 	</div>
+	<div class="row-fluid">
+		<div class="span12">
+	        <div class="content">
+			    <a class="btn btn-danger" href="#confirmation" data-toggle="modal">
+				    Delete node
+                </a>
+			</div>
+		</div>
+	</div>
 </div>
+
+<div id="confirmation" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <form method="get" action="{% url "node-remove" address %}">
+	    <div class="modal-header">
+		    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+		    <h3 id="myModalLabel">Are you sure?</h3>
+	    </div>
+	    <div class="modal-body">
+            <p>This action <strong>CANNOT</strong> be undone. This will permanently delete the <strong>{{ address }}</strong> node.</p>
+		    <p>Please type in the node address to confirm.</p>
+		    <input type="text" class="remove-confirmation" />
+            <label><input type="checkbox" value="true" name="rebalance" checked> rebalance?</label>
+            <label><input type="checkbox" value="true" name="destroy" checked> destroy machine (iaas)</label>
+	    </div>
+	    <div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+			<button class="btn btn-danger btn-remove" disabled="disabled">I understand the consequences, delete this node</button>
+	    </div>
+	</form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static "js/confirmation.js" %}"></script>
+<script type="text/javascript">
+  $.confirmation(".btn-remove", ".remove-confirmation", "{{ address }}");
+</script>
 {% endblock %}

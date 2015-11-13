@@ -28,12 +28,12 @@ class NodeRemoveViewTest(TestCase):
         self.session.save()
 
         response = self.client.get(
-            reverse("node-remove", kwargs={"pool": "theone", "address": "http://localhost:2345"}))
+            reverse("node-remove", kwargs={"address": "http://localhost:2345"}))
 
         self.assertEqual(302, response.status_code)
-        self.assertRedirects(response, reverse("pool-info", args=["theone"]))
+        self.assertRedirects(response, reverse("list-node"))
 
-        api_url = "http://localhost:8080/docker/node?no-rebalance=false"
+        api_url = "http://localhost:8080/docker/node?no-rebalance=true"
         headers = {'authorization': u'admin'}
         data = '{"remove_iaas": "false", "address": "http://localhost:2345"}'
         delete.assert_called_with(api_url, headers=headers, data=data)
@@ -51,11 +51,11 @@ class NodeRemoveViewTest(TestCase):
         self.session.save()
 
         url = "{}?rebalance=true&destroy=true".format(
-            reverse("node-remove", kwargs={"pool": "theone", "address": "http://localhost:2345"}))
+            reverse("node-remove", kwargs={"address": "http://localhost:2345"}))
         response = self.client.get(url)
 
         self.assertEqual(302, response.status_code)
-        self.assertRedirects(response, reverse("pool-info", args=["theone"]))
+        self.assertRedirects(response, reverse("list-node"))
 
         api_url = "http://localhost:8080/docker/node?no-rebalance=false"
         headers = {'authorization': u'admin'}
@@ -75,11 +75,11 @@ class NodeRemoveViewTest(TestCase):
         self.session.save()
 
         url = "{}?rebalance=false&destroy=false".format(
-            reverse("node-remove", kwargs={"pool": "theone", "address": "http://localhost:2345"}))
+            reverse("node-remove", kwargs={"address": "http://localhost:2345"}))
         response = self.client.get(url)
 
         self.assertEqual(302, response.status_code)
-        self.assertRedirects(response, reverse("pool-info", args=["theone"]))
+        self.assertRedirects(response, reverse("list-node"))
 
         api_url = "http://localhost:8080/docker/node?no-rebalance=true"
         headers = {'authorization': u'admin'}
@@ -98,7 +98,7 @@ class NodeRemoveViewTest(TestCase):
         self.session.save()
 
         url = "{}?rebalance=true&destroy=true".format(
-            reverse("node-remove", kwargs={"pool": "theone", "address": "http://localhost:2345"}))
+            reverse("node-remove", kwargs={"address": "http://localhost:2345"}))
         response = self.client.get(url)
 
         self.assertEqual(404, response.status_code)
@@ -122,7 +122,7 @@ class NodeRemoveViewTest(TestCase):
         self.session.save()
 
         url = "{}?rebalance=another&destroy=false".format(
-            reverse("node-remove", kwargs={"pool": "theone", "address": "http://localhost:2345"}))
+            reverse("node-remove", kwargs={"address": "http://localhost:2345"}))
         response = self.client.get(url)
 
         self.assertEqual(400, response.status_code)
@@ -141,7 +141,7 @@ class NodeRemoveViewTest(TestCase):
         self.session.save()
 
         url = "{}?rebalance=true&destroy=another".format(
-            reverse("node-remove", kwargs={"pool": "theone", "address": "http://localhost:2345"}))
+            reverse("node-remove", kwargs={"address": "http://localhost:2345"}))
         response = self.client.get(url)
 
         self.assertEqual(400, response.status_code)
