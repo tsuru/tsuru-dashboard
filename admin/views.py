@@ -299,8 +299,16 @@ class NodeRemove(LoginRequiredView):
         address = self.kwargs['address']
         pool = self.kwargs['pool']
 
-        no_rebalance = self.request.GET.get("no-rebalance", "false")
+        msg = "The value for '{}' parameter should be 'true' or 'false'"
+
         destroy = self.request.GET.get("destroy", "false")
+        if destroy not in ["true", "false"]:
+            return HttpResponse(msg.format("destroy"), status=400)
+
+        rebalance = self.request.GET.get("rebalance", "true")
+        if rebalance not in ["true", "false"]:
+            return HttpResponse(msg.format("rebalance"), status=400)
+        no_rebalance = "false" if rebalance == "true" else "true"
 
         data = {
             "address": address,
