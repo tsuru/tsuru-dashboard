@@ -103,7 +103,7 @@
 		<div class="span12">
             <h3>Delete app</h3>
 				<div class="content">
-					<a class="btn btn-danger" href="#confirmation" data-toggle="modal"><i class="icon-remove icon-white"></i>
+					<a class="btn btn-danger" href="#confirmation" data-toggle="modal">
 						Delete app</a>
 				</div>
 			</div>
@@ -115,7 +115,7 @@
 		<h3 id="myModalLabel">Are you sure?</h3>
 	</div>
 	<div class="modal-body">
-		<p>with {{ app.name }} This action CANNOT be undone. This will delete the <strong>{{ app.name }}</strong></p>
+            <p>This action <strong>CANNOT</strong> be undone. This will permanently delete the <strong>{{ app.name }}</strong> application.</p>
 
 		<p>Please type in the name of your application to confirm.</p>
 		<input type="text" class="remove-confirmation" />
@@ -123,7 +123,7 @@
 	<div class="modal-footer">
 		<form method="get" action="{% url 'remove_app' app.name %}">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-			<button class="btn btn-danger btn-remove" disabled="disabled">Delete app</button>
+			<button class="btn btn-danger btn-remove" disabled="disabled">I understand the consequences, delete this application</button>
 		</form>
 	</div>
 </div>
@@ -148,11 +148,10 @@
 
 {% block extra_js %}
 <script src="{% static "js/confirmation.js" %}"></script>
-<script src="{% static "js/apps/detail.js" %}"></script>
 <script type="text/javascript">
-$.detail(appName);
 var appName = "{{ app.name }}";
-$.detail(appName);
+$.confirmation(".btn-remove", ".remove-confirmation", appName);
+$.confirmation(".btn-unlock", ".unlock-confirmation", appName);
 $(".settings-toggle").on("click", function() {
     $("table", this).toggleClass("hide");
 });
