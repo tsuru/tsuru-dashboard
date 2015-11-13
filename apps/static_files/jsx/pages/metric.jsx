@@ -24,7 +24,7 @@ var from = queryString("from");
 
 ReactDOM.render(
   <div className="metrics">
-    <GraphContainer kind={kind} appName={appName} interval={interval} from={from} />
+    <GraphContainer kind={kind} appName={appName} interval={interval} from={from} legend={true} />
   </div>,
   document.getElementById('metrics')
 );

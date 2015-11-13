@@ -12,6 +12,7 @@ var GraphContainer = React.createClass({displayName: "GraphContainer",
       interval: "1m",
       from: "1h",
       processName: "",
+      legend: false
     }
   },
   loadData: function() {
@@ -53,7 +54,10 @@ var GraphContainer = React.createClass({displayName: "GraphContainer",
 		  show: true,
 		  content: "%x the %s was %y"
         },
-        legend: {position: "sw"}
+        legend: {
+          position: "sw",
+          show: this.props.legend
+        }
     };
     $.plot($elem, d, options);
   },
