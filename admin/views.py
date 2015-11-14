@@ -7,7 +7,7 @@ from pytz import utc
 
 from django.views.generic import TemplateView
 from django.conf import settings
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 
@@ -193,8 +193,13 @@ class DeployInfo(LoginRequiredView, TemplateView):
 
     def get_context_data(self, *args, **kwargs):
         deploy_id = kwargs["deploy"]
+
         url = "{}/deploys/{}".format(settings.TSURU_HOST, deploy_id)
         response = requests.get(url, headers=self.authorization)
+
+        if response.status_code > 399:
+            raise Http404("Deploy does not exist")
+
         context = {"deploy": response.json()}
 
         diff = context["deploy"].get("Diff")
