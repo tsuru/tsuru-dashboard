@@ -5,10 +5,10 @@ from django.conf import settings
 from django.test import TestCase
 from django.test.client import RequestFactory
 
-from admin.views import ListNode
+from admin.views import PoolList
 
 
-class ListNodeViewTest(TestCase):
+class PoolListViewTest(TestCase):
     def setUp(self):
         self.maxDiff = None
         self.request = RequestFactory().get("/")
@@ -21,8 +21,8 @@ class ListNodeViewTest(TestCase):
         response_mock = Mock()
         response_mock.json.return_value = {}
         get.return_value = response_mock
-        response = ListNode.as_view()(self.request)
-        self.assertIn("docker/list_node.html", response.template_name)
+        response = PoolList.as_view()(self.request)
+        self.assertIn("admin/pool_list.html", response.template_name)
         expected = {}
         self.assertEqual(expected, response.context_data["pools"])
         get.assert_called_with(
@@ -52,10 +52,10 @@ class ListNodeViewTest(TestCase):
             ],
         }
         get.return_value = response_mock
-        ListNode.units_by_node = Mock()
-        ListNode.units_by_node.return_value = {"started": 2, "stopped": 2}
+        PoolList.units_by_node = Mock()
+        PoolList.units_by_node.return_value = {"started": 2, "stopped": 2}
 
-        response = ListNode.as_view()(self.request)
+        response = PoolList.as_view()(self.request)
         date = parser.parse("2014-08-01T14:09:40-03:00")
         expected = {"theonepool": [
             {"Address": "http://128.0.0.1:4243",

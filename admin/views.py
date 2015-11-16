@@ -21,8 +21,8 @@ from auth.views import LoginRequiredView
 addr_re = re.compile(r"^https?://(.*):\d{1,5}/?")
 
 
-class ListNode(LoginRequiredView, TemplateView):
-    template_name = "docker/list_node.html"
+class PoolList(LoginRequiredView, TemplateView):
+    template_name = "admin/pool_list.html"
 
     def units_by_node(self, address):
         address = address.replace("http://", "")
@@ -79,7 +79,7 @@ class ListNode(LoginRequiredView, TemplateView):
         return pools
 
     def get_context_data(self, *args, **kwargs):
-        context = super(ListNode, self).get_context_data(*args, **kwargs)
+        context = super(PoolList, self).get_context_data(*args, **kwargs)
         context.update({"pools": self.nodes_by_pool()})
         return context
 
@@ -328,4 +328,4 @@ class NodeRemove(LoginRequiredView):
         if response.status_code > 399:
             return HttpResponse(response.text, status=response.status_code)
 
-        return redirect(reverse('list-node'))
+        return redirect(reverse('pool-list'))

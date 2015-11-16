@@ -31,7 +31,7 @@ class NodeRemoveViewTest(TestCase):
             reverse("node-remove", kwargs={"address": "http://localhost:2345"}))
 
         self.assertEqual(302, response.status_code)
-        self.assertRedirects(response, reverse("list-node"))
+        self.assertRedirects(response, reverse("pool-list"))
 
         api_url = "http://localhost:8080/docker/node?no-rebalance=true"
         headers = {'authorization': u'admin'}
@@ -55,7 +55,7 @@ class NodeRemoveViewTest(TestCase):
         response = self.client.get(url)
 
         self.assertEqual(302, response.status_code)
-        self.assertRedirects(response, reverse("list-node"))
+        self.assertRedirects(response, reverse("pool-list"))
 
         api_url = "http://localhost:8080/docker/node?no-rebalance=false"
         headers = {'authorization': u'admin'}
@@ -79,7 +79,7 @@ class NodeRemoveViewTest(TestCase):
         response = self.client.get(url)
 
         self.assertEqual(302, response.status_code)
-        self.assertRedirects(response, reverse("list-node"))
+        self.assertRedirects(response, reverse("pool-list"))
 
         api_url = "http://localhost:8080/docker/node?no-rebalance=true"
         headers = {'authorization': u'admin'}

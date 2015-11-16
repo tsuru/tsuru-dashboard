@@ -14,7 +14,7 @@
 				</li>
 				{% if request.session.is_admin %}
 				<li{% if active == "docker" %} class="active"{% endif %}>
-					<a href="{% url 'list-node' %}">
+					<a href="{% url 'pool-list' %}">
 						<span>Hosts</span>
 					</a>
 				</li>
