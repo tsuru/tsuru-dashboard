@@ -84,11 +84,11 @@ class PoolList(LoginRequiredView, TemplateView):
         return context
 
 
-class ListContainer(LoginRequiredView, TemplateView):
-    template_name = "docker/list_container.html"
+class NodeInfo(LoginRequiredView, TemplateView):
+    template_name = "admin/node_info.html"
 
     def get_context_data(self, *args, **kwargs):
-        context = super(ListContainer, self).get_context_data(*args, **kwargs)
+        context = super(NodeInfo, self).get_context_data(*args, **kwargs)
 
         address = kwargs["address"]
         address = address.replace("http://", "")
