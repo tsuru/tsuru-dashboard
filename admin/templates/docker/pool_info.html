@@ -39,7 +39,7 @@ table td, table th {
                 {% for node in nodes %}
                 <tr>
                     <td>
-                        <a href="{% url 'pool-info' node.Address %}" title="Containers List">
+                        <a href="{% url 'node-info' node.Address %}" title="Containers List">
                             {{ node.Address }}
                         </a>
                     </td>
