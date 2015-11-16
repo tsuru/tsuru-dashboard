@@ -1,10 +1,11 @@
 from django.conf.urls import patterns, url
+from django.views.decorators.cache import cache_page
 
 from admin import views
 
 urlpatterns = patterns(
     '',
-    url(r'^$', views.PoolList.as_view(), name='pool-list'),
+    url(r'^$', cache_page(60 * 5)(views.PoolList.as_view()), name='pool-list'),
     url(r'^pool/(?P<pool>[\w-]+)/$', views.PoolInfo.as_view(), name='pool-info'),
     url(r'^healing/$', views.ListHealing.as_view(), name='list-healing'),
     url(r'^(?P<address>[http://\w.:1-9-]+)/containers/$', views.ListContainer.as_view(),
