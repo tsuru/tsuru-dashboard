@@ -6,3 +6,4 @@ pytz==2015.4
 Pygments==2.0.2
 gevent==1.0.2
 raven==4.2.3
+httpretty==0.8.10
