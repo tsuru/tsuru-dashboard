@@ -87,22 +87,39 @@ class PoolList(LoginRequiredView, TemplateView):
 class NodeInfo(LoginRequiredView, TemplateView):
     template_name = "admin/node_info.html"
 
-    def get_context_data(self, *args, **kwargs):
-        context = super(NodeInfo, self).get_context_data(*args, **kwargs)
+    def get_containers(self, node_address):
+        node_address = node_address.replace("http://", "")
+        node_address = node_address.split(":")[0]
 
-        address = kwargs["address"]
-        address = address.replace("http://", "")
-        address = address.split(":")[0]
-
-        url = "{}/docker/node/{}/containers".format(settings.TSURU_HOST, address)
+        url = "{}/docker/node/{}/containers".format(settings.TSURU_HOST, node_address)
         response = requests.get(url, headers=self.authorization)
 
         if response.status_code == 204:
-            containers = []
-        else:
-            containers = response.json()
+            return []
 
-        context.update({"containers": containers, "address": address})
+        return response.json()
+
+    def get_node(self, address):
+        url = "{}/docker/node".format(settings.TSURU_HOST)
+        response = requests.get(url, headers=self.authorization)
+
+        if response.status_code != 204:
+            data = response.json()
+            nodes = data.get("nodes", [])
+
+            for node in nodes:
+                if node["Address"] == address:
+                    return node
+
+        return None
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(NodeInfo, self).get_context_data(*args, **kwargs)
+        context.update({
+            "containers": self.get_containers(kwargs["address"]),
+            "address": kwargs["address"],
+            "node": self.get_node(kwargs["address"]),
+        })
         return context
 
 

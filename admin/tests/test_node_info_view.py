@@ -1,57 +1,127 @@
-from mock import patch, Mock
+from mock import patch
 
 from django.test import TestCase
 from django.test.client import RequestFactory
 from django.core.urlresolvers import reverse
 from django.conf import settings
 
+import httpretty
+import json
+
 from admin.views import NodeInfo
 
 
 class NodeInfoViewTest(TestCase):
-    @patch("requests.get")
-    def setUp(self, get):
-        get.return_value = Mock(status_code=200)
+    @patch("auth.views.token_is_valid")
+    def setUp(self, token_is_valid):
+        token_is_valid.return_value = True
+        httpretty.enable()
+
         self.factory = RequestFactory()
         self.request = self.factory.get('/')
         self.request.session = {'tsuru_token': 'tokentest'}
-        self.address = 'cittavld1182.globoi.com'
-        self.response_mock = Mock()
-        self.response_mock.status_code = 200
-        self.response_mock.content = '{}'
+
+        self.address = 'http://127.0.0.2:4243'
+
+        url = "{}/docker/node/{}/containers".format(settings.TSURU_HOST, '127.0.0.2')
+        self.containers = [
+            {"id": "blabla", "type": "python", "appname": "myapp", "hostaddr": "http://127.0.0.2:4243"}
+        ]
+        httpretty.register_uri(
+            httpretty.GET,
+            url,
+            body=json.dumps(self.containers),
+            status=200
+        )
+
+        url = "{}/docker/node".format(settings.TSURU_HOST, self.address)
+        self.nodes = {
+            "nodes": [
+                {
+                    "Status": "ready",
+                    "Metadata": {
+                        "pool": "tsuru1",
+                        "iaas": "ec2",
+                        "LastSuccess": "2015-11-16T18:44:36-02:00",
+                    },
+                    "Address": "http://127.0.0.2:4243"
+                },
+                {
+                    "Status": "ready",
+                    "Metadata": {
+                        "pool": "tsuru2",
+                        "iaas": "ec2",
+                        "LastSuccess": "2015-11-16T18:44:36-02:00",
+                    },
+                    "Address": "http://127.0.0.3:4243"
+                },
+            ]
+        }
+        httpretty.register_uri(
+            httpretty.GET,
+            url,
+            body=json.dumps(self.nodes),
+            status=200
+        )
         self.response = NodeInfo.as_view()(self.request, address=self.address)
 
-    @patch('requests.get')
-    def test_request_get_to_tsuru_with_args_expected(self, get):
-        get.return_value = Mock(status_code=200)
-        NodeInfo.as_view()(self.request, address=self.address)
-        url = "{}/docker/node/{}/containers".format(settings.TSURU_HOST, self.address)
-        get.assert_called_with(
-            url,
-            headers={'authorization': self.request.session['tsuru_token']})
+    def tearDown(self):
+        httpretty.disable()
+        httpretty.reset()
 
-    @patch('requests.get')
-    @patch("auth.views.token_is_valid")
-    def test_should_use_list_template(self, token_is_valid, get):
-        token_is_valid.return_value = True
-        get.return_value = Mock(status_code=204)
-        response = NodeInfo.as_view()(self.request, address=self.address)
-        self.assertIn("admin/node_info.html", response.template_name)
-        self.assertListEqual([], response.context_data['containers'])
+    def test_should_use_list_template(self):
+        self.assertIn("admin/node_info.html", self.response.template_name)
 
-    @patch('requests.get')
-    def teste_should_get_list_of_containers_from_tsuru(self, get):
-        get.return_value = Mock(status_code=200)
-        expected = [{"id": "blabla", "type": "python",
-                     "appname": "myapp",
-                     "hostaddr": "http://cittavld1182.globoi.com"}]
-        response_mock = Mock(status_code=200)
-        response_mock.json.return_value = expected
-        get.return_value = response_mock
-        response = NodeInfo.as_view()(self.request, address=self.address)
-        self.assertListEqual(expected, response.context_data["containers"])
+    def teste_should_get_list_of_containers_from_tsuru(self):
+        self.assertListEqual(self.containers, self.response.context_data["containers"])
+
+    def teste_should_get_node_info_from_tsuru(self):
+        self.assertDictEqual(self.nodes["nodes"][0], self.response.context_data["node"])
 
     def test_get_request_run_url_should_not_return_404(self):
-        response = self.client.get(reverse('node-info',
-                                   args=[self.address.replace("http://", "")]))
+        response = self.client.get(reverse('node-info', args=[self.address.replace("http://", "")]))
         self.assertNotEqual(404, response.status_code)
+
+    @patch("auth.views.token_is_valid")
+    def teste_should_get_list_of_containers_empty_list(self, token_is_valid):
+        httpretty.reset()
+        token_is_valid.return_value = True
+
+        url = "{}/docker/node/{}/containers".format(settings.TSURU_HOST, '127.0.0.2')
+        httpretty.register_uri(
+            httpretty.GET,
+            url,
+            status=204
+        )
+
+        url = "{}/docker/node".format(settings.TSURU_HOST, self.address)
+        httpretty.register_uri(
+            httpretty.GET,
+            url,
+            body=json.dumps(self.nodes),
+            status=200
+        )
+        response = NodeInfo.as_view()(self.request, address=self.address)
+        self.assertListEqual([], response.context_data["containers"])
+
+    @patch("auth.views.token_is_valid")
+    def teste_should_get_empty_node(self, token_is_valid):
+        httpretty.reset()
+        token_is_valid.return_value = True
+
+        url = "{}/docker/node/{}/containers".format(settings.TSURU_HOST, '127.0.0.2')
+        httpretty.register_uri(
+            httpretty.GET,
+            url,
+            body=json.dumps(self.containers),
+            status=200
+        )
+
+        url = "{}/docker/node".format(settings.TSURU_HOST, self.address)
+        httpretty.register_uri(
+            httpretty.GET,
+            url,
+            status=204
+        )
+        response = NodeInfo.as_view()(self.request, address=self.address)
+        self.assertFalse(response.context_data["node"])
