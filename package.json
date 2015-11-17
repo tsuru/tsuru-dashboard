@@ -10,7 +10,7 @@
     "browserify": "^11.0.1",
     "fakexmlhttprequest": "0.0.1",
     "fuzzy": "^0.1.0",
-    "jest-cli": "^0.5.10",
+    "jest-cli": "^0.7.1",
     "jquery": "^2.1.4",
     "react": "^0.14.1",
     "react-addons-pure-render-mixin": "^0.14.1",
@@ -24,15 +24,12 @@
   "jest": {
     "scriptPreprocessor": "<rootDir>/node_modules/babel-jest",
     "testFileExtensions": [
-      "es6",
       "js",
       "jsx"
     ],
     "moduleFileExtensions": [
       "js",
-      "json",
-      "jsx",
-      "es6"
+      "jsx"
     ],
     "unmockedModulePathPatterns": [
       "<rootDir>/node_modules/react"
