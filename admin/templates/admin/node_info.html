@@ -6,35 +6,52 @@
 {% endblock %}
 
 {% block header %}
-	<h1>Admin/Containers - {{ address }}</h1>
+    <h1>{{ node.Metadata.pool }} - {{ address }} - {{ node.Status }}</h1>
 {% endblock %}
 
 {% block content %}
 <div class="container-fluid">
 	<div class="row-fluid">
 		<div class="span12">
-			<table class="table">
-				<tr>
-					<th>ID</th>
-					<th>AppName</th>
-					<th>Type</th>
-					<th>Process name</th>
-					<th>IP</th>
-					<th>HostPort</th>
-					<th>Status</th>
-				</tr>
-				{% for container in containers %}
-				<tr>
-					<td>{{ container.ID|slice:":12" }}</td>
-					<td>{{ container.AppName }}</td>
-					<td>{{ container.Type }}</td>
-					<td>{{ container.ProcessName }}</td>
-					<td>{{ container.IP }}</td>
-					<td>{{ container.HostPort }}</td>
-					<td>{{ container.Status }}</td>
-				</tr>
-				{% endfor %}
-			</table>
+            <ul class="nav nav-pills">
+                <li class="active"><a data-toggle="tab"  href="#containers">Containers</a></li>
+                <li><a data-toggle="tab" href="#metadata">Metadata</a></li>
+            </ul>
+            <div class="tab-content">
+                <div id="containers"  class="tab-pane fade in active">
+                    <table class="table">
+                        <tr>
+                            <th>ID</th>
+                            <th>AppName</th>
+                            <th>Type</th>
+                            <th>Process name</th>
+                            <th>IP</th>
+                            <th>HostPort</th>
+                            <th>Status</th>
+                        </tr>
+                        {% for container in containers %}
+                        <tr>
+                            <td>{{ container.ID|slice:":12" }}</td>
+                            <td>{{ container.AppName }}</td>
+                            <td>{{ container.Type }}</td>
+                            <td>{{ container.ProcessName }}</td>
+                            <td>{{ container.IP }}</td>
+                            <td>{{ container.HostPort }}</td>
+                            <td>{{ container.Status }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+                <div id="metadata" class="tab-pane fade">
+                    <table class="table">
+                    {% for k, v in node.Metadata.items %}
+                        <tr>
+                            <td><strong>{{ k }}</strong></td><td>{{ v }}</td>
+                        </tr>
+                    {% endfor %}
+                    </table>
+                </div>
+            </div>
 		</div>
 	</div>
 	<div class="row-fluid">
