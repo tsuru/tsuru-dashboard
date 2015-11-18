@@ -14,8 +14,11 @@ var Template = React.createClass({
 var Register = React.createClass({
   render: function() {
     return (
-      <div className="register">
-        <label>Register an already created node: <input type="checkbox" /></label>
+      <div className="register" onClick={this.props.onClick}>
+        <label>
+          Register an already created node: 
+          <input type="checkbox" />
+        </label>
       </div>
     );
   }
@@ -46,12 +49,15 @@ var NodeCreate = React.createClass({
   getInitialState: function() {
     return {templates: [], register: false, metadata: []};
   },
+  registerToggle: function() {
+      this.setState({register: !this.state.register});
+  },
   render: function() {
     return (
       <div className="node-create">
         <h1>Create Node</h1>
         {this.state.templates.length > 0 ? <Template templates={this.state.templates} /> : ""}
-        <Register register={this.state.register} />
+        <Register register={this.state.register} onClick={this.registerToggle} />
         <Meta metatada={this.state.metadata} />
       </div>
     );

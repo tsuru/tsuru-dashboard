@@ -23,5 +23,20 @@ describe('NodeCreate', function() {
     expect(nodeCreate.state.metadata.length).toBe(0);
     expect(nodeCreate.state.register).toBeFalsy();
   });
+
+  it('change register state on click', function() {
+    var nodeCreate = TestUtils.renderIntoDocument(
+      <NodeCreate />
+    );
+    var register = TestUtils.findRenderedDOMComponentWithClass(nodeCreate, "register");
+
+    expect(nodeCreate.state.register).toBeFalsy();
+
+    TestUtils.Simulate.click(register);
+    expect(nodeCreate.state.register).toBeTruthy();
+
+    TestUtils.Simulate.click(register);
+    expect(nodeCreate.state.register).toBeFalsy();
+  });
 });
 
