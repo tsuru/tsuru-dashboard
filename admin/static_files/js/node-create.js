@@ -45,15 +45,15 @@ var MetaItem = React.createClass({displayName: "MetaItem",
 
 var NodeCreate = React.createClass({displayName: "NodeCreate",
   getInitialState: function() {
-    return {};
+    return {templates: [], register: false, metadata: []};
   },
   render: function() {
     return (
       React.createElement("div", {className: "node-create"}, 
         React.createElement("h1", null, "Create Node"), 
-        React.createElement(Template, null), 
-        React.createElement(Register, null), 
-        React.createElement(Meta, null)
+        this.state.templates.length > 0 ? React.createElement(Template, {templates: this.state.templates}) : "", 
+        React.createElement(Register, {register: this.state.register}), 
+        React.createElement(Meta, {metatada: this.state.metadata})
       )
     );
   }

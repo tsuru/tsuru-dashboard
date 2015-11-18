@@ -13,4 +13,15 @@ describe('NodeCreate', function() {
     
     expect(ReactDOM.findDOMNode(nodeCreate).className).toEqual("node-create");
   });
+
+  it('should initial state', function() {
+    var nodeCreate = TestUtils.renderIntoDocument(
+      <NodeCreate />
+    );
+  
+    expect(nodeCreate.state.templates.length).toBe(0);
+    expect(nodeCreate.state.metadata.length).toBe(0);
+    expect(nodeCreate.state.register).toBeFalsy();
+  });
 });
+
