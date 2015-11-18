@@ -20,7 +20,7 @@ describe('NodeCreate', function() {
     );
   
     expect(nodeCreate.state.templates.length).toBe(0);
-    expect(nodeCreate.state.metadata.length).toBe(0);
+    expect(nodeCreate.state.metadata).toEqual({});
     expect(nodeCreate.state.register).toBeFalsy();
   });
 
@@ -31,12 +31,15 @@ describe('NodeCreate', function() {
     var register = TestUtils.findRenderedDOMComponentWithClass(nodeCreate, "register");
 
     expect(nodeCreate.state.register).toBeFalsy();
+    expect(nodeCreate.state.metadata).toEqual({});
 
     TestUtils.Simulate.click(register);
     expect(nodeCreate.state.register).toBeTruthy();
+    expect(nodeCreate.state.metadata).toEqual({"address": ""});
 
     TestUtils.Simulate.click(register);
     expect(nodeCreate.state.register).toBeFalsy();
+    expect(nodeCreate.state.metadata).toEqual({});
   });
 
   it('don"t show template select on empty templates', function() {

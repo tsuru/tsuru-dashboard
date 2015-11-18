@@ -47,10 +47,25 @@ var MetaItem = React.createClass({
 
 var NodeCreate = React.createClass({
   getInitialState: function() {
-    return {templates: [], register: false, metadata: []};
+    return {templates: [], register: false, metadata: {}};
   },
   registerToggle: function() {
-      this.setState({register: !this.state.register});
+    if (!this.state.register) {
+        this.addMetadata("address", "");
+    } else {
+        this.removeMetadata("address");
+    }
+    this.setState({register: !this.state.register});
+  },
+  addMetadata: function(key, value) {
+    var metadata = this.state.metadata; 
+    metadata[key] = value;
+    this.setState({metadata: metadata});
+  },
+  removeMetadata: function(key) {
+    var metadata = this.state.metadata; 
+    delete metadata[key];
+    this.setState({metadata: metadata});
   },
   render: function() {
     return (
