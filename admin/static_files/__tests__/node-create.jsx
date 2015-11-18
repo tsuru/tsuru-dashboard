@@ -38,5 +38,14 @@ describe('NodeCreate', function() {
     TestUtils.Simulate.click(register);
     expect(nodeCreate.state.register).toBeFalsy();
   });
+
+  it('don"t show template select on empty templates', function() {
+    var nodeCreate = TestUtils.renderIntoDocument(
+      <NodeCreate />
+    );
+    var templates = TestUtils.scryRenderedDOMComponentsWithClass(nodeCreate, "template");
+
+    expect(templates.length).toBe(0);
+  });
 });
 
