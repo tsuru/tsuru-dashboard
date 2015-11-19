@@ -56,6 +56,21 @@ var MetaItem = React.createClass({displayName: "MetaItem",
   }
 });
 
+var Button = React.createClass({displayName: "Button",
+  getDefaultProps: function() {
+    return {disabled: false}
+  },
+  render: function() {
+    return (
+      React.createElement("button", {type: "submit", 
+              disabled: this.props.disabled, 
+              className: "btn"}, 
+        "Create node" 
+      )
+    );
+  }
+});
+
 var NodeCreate = React.createClass({displayName: "NodeCreate",
   getInitialState: function() {
     return {templates: [], register: false, metadata: {}};
@@ -84,7 +99,8 @@ var NodeCreate = React.createClass({displayName: "NodeCreate",
         React.createElement("h1", null, "Create Node"), 
         this.state.templates.length > 0 ? React.createElement(Template, {templates: this.state.templates}) : "", 
         React.createElement(Register, {register: this.state.register, onClick: this.registerToggle}), 
-        React.createElement(Meta, {metadata: this.state.metadata})
+        React.createElement(Meta, {metadata: this.state.metadata}), 
+        React.createElement(Button, null)
       )
     );
   }

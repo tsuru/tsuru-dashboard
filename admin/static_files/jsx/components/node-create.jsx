@@ -55,6 +55,21 @@ var MetaItem = React.createClass({
   }
 });
 
+var Button = React.createClass({
+  getDefaultProps: function() {
+    return {disabled: false}
+  },
+  render: function() {
+    return (
+      <button type='submit'
+              disabled={this.props.disabled}
+              className='btn'>
+        Create node 
+      </button>
+    );
+  }
+});
+
 var NodeCreate = React.createClass({
   getInitialState: function() {
     return {templates: [], register: false, metadata: {}};
@@ -84,6 +99,7 @@ var NodeCreate = React.createClass({
         {this.state.templates.length > 0 ? <Template templates={this.state.templates} /> : ""}
         <Register register={this.state.register} onClick={this.registerToggle} />
         <Meta metadata={this.state.metadata} />
+        <Button />
       </div>
     );
   }

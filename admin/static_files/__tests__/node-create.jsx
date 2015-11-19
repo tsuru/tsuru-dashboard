@@ -80,5 +80,13 @@ describe('NodeCreate', function() {
     expect(value.attributes["value"].value).toEqual("");
   });
 
-});
+  it('create button', function() {
+    var nodeCreate = TestUtils.renderIntoDocument(
+      <NodeCreate />
+    );
+    var button = TestUtils.findRenderedDOMComponentWithTag(nodeCreate, "button");
 
+    expect(button.textContent).toEqual("Create node");
+  });
+
+});
