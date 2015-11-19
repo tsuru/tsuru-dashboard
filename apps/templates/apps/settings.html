@@ -43,7 +43,7 @@
             <div class="content">
             <h3>Environment variables</h3>
             <p class="settings-toggle"><a href=#>&#x25BC;</a> {{ app.envs|length }} enviroment variables</p>
-            <table class="table hide">
+            <table class="table hide settings-content">
                 <thead>
                 <tr>
                     <th>Name</th>
@@ -153,7 +153,7 @@ var appName = "{{ app.name }}";
 $.confirmation(".btn-remove", ".remove-confirmation", appName);
 $.confirmation(".btn-unlock", ".unlock-confirmation", appName);
 $(".settings-toggle").on("click", function() {
-    $("table", this).toggleClass("hide");
+    $(".settings-content").toggleClass("hide");
 });
 </script>
 {% endblock %}

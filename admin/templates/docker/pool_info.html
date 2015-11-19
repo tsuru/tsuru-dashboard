@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load staticfiles %}
 
 {% block extra_css %}
 <style>
@@ -55,4 +56,8 @@ table td, table th {
     </div>
     {% endfor %}
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static "js/node-create.js" %}"></script>
 {% endblock %}
