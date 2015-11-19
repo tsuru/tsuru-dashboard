@@ -27,8 +27,15 @@ var Register = React.createClass({displayName: "Register",
 
 var Meta = React.createClass({displayName: "Meta",
   render: function() {
+    var items = [];
+    var keys = Object.keys(this.props.metadata);
+    keys.forEach(function(key) {
+      var value = this.props.metadata[key];
+      items.push(React.createElement(MetaItem, {key: key, value: value}));
+    }.bind(this));
     return (
       React.createElement("div", {className: "meta"}, 
+        items, 
         React.createElement(MetaItem, null)
       )
     );
@@ -74,7 +81,7 @@ var NodeCreate = React.createClass({displayName: "NodeCreate",
         React.createElement("h1", null, "Create Node"), 
         this.state.templates.length > 0 ? React.createElement(Template, {templates: this.state.templates}) : "", 
         React.createElement(Register, {register: this.state.register, onClick: this.registerToggle}), 
-        React.createElement(Meta, {metatada: this.state.metadata})
+        React.createElement(Meta, {metadata: this.state.metadata})
       )
     );
   }

@@ -50,5 +50,16 @@ describe('NodeCreate', function() {
 
     expect(templates.length).toBe(0);
   });
+
+  it('metadata items', function() {
+    var nodeCreate = TestUtils.renderIntoDocument(
+      <NodeCreate />
+    );
+    nodeCreate.addMetadata("key", "value");
+    nodeCreate.addMetadata("anotherkey", "v");
+    var items = TestUtils.scryRenderedDOMComponentsWithClass(nodeCreate, "meta-item");
+
+    expect(items.length).toEqual(3);
+  });
 });
 

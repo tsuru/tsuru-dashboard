@@ -26,8 +26,15 @@ var Register = React.createClass({
 
 var Meta = React.createClass({
   render: function() {
+    var items = [];
+    var keys = Object.keys(this.props.metadata);
+    keys.forEach(function(key) {
+      var value = this.props.metadata[key];
+      items.push(<MetaItem key={key} value={value} />);
+    }.bind(this));
     return (
       <div className="meta">
+        {items}
         <MetaItem />
       </div>
     );
@@ -73,7 +80,7 @@ var NodeCreate = React.createClass({
         <h1>Create Node</h1>
         {this.state.templates.length > 0 ? <Template templates={this.state.templates} /> : ""}
         <Register register={this.state.register} onClick={this.registerToggle} />
-        <Meta metatada={this.state.metadata} />
+        <Meta metadata={this.state.metadata} />
       </div>
     );
   }
