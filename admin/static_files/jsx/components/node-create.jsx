@@ -30,7 +30,7 @@ var Meta = React.createClass({
     var keys = Object.keys(this.props.metadata);
     keys.forEach(function(key) {
       var value = this.props.metadata[key];
-      items.push(<MetaItem key={key} value={value} />);
+      items.push(<MetaItem key={key} metaKey={key} metaValue={value} />);
     }.bind(this));
     return (
       <div className="meta">
@@ -42,11 +42,14 @@ var Meta = React.createClass({
 });
 
 var MetaItem = React.createClass({
+  getDefaultProps: function() {
+    return {metaKey: "", metaValue: ""}
+  },
   render: function() {
     return (
       <div className="meta-item">
-        <label>Key: <input type="text" /></label>
-        <label>Value: <input type="text" /></label>
+        <label>Key: <input type="text" value={this.props.metaKey} /></label>
+        <label>Value: <input type="text" value={this.props.metaValue} /></label>
       </div>
     );
   }

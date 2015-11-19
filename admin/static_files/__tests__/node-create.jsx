@@ -60,6 +60,25 @@ describe('NodeCreate', function() {
     var items = TestUtils.scryRenderedDOMComponentsWithClass(nodeCreate, "meta-item");
 
     expect(items.length).toEqual(3);
+
+    var item = ReactDOM.findDOMNode(items[0]);
+    var key = item.childNodes[0].childNodes[1];
+    expect(key.attributes["value"].value).toEqual("key");
+    var value = item.childNodes[1].childNodes[1];
+    expect(value.attributes["value"].value).toEqual("value");
+
+    var item = ReactDOM.findDOMNode(items[1]);
+    var key = item.childNodes[0].childNodes[1];
+    expect(key.attributes["value"].value).toEqual("anotherkey");
+    var value = item.childNodes[1].childNodes[1];
+    expect(value.attributes["value"].value).toEqual("v");
+
+    var item = ReactDOM.findDOMNode(items[2]);
+    var key = item.childNodes[0].childNodes[1];
+    expect(key.attributes["value"].value).toEqual("");
+    var value = item.childNodes[1].childNodes[1];
+    expect(value.attributes["value"].value).toEqual("");
   });
+
 });
 
