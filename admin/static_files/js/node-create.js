@@ -46,11 +46,13 @@ var MetaItem = React.createClass({displayName: "MetaItem",
   getDefaultProps: function() {
     return {metaKey: "", metaValue: ""}
   },
+  onChange: function() {
+  },
   render: function() {
     return (
       React.createElement("div", {className: "meta-item"}, 
-        React.createElement("label", null, "Key: ", React.createElement("input", {type: "text", value: this.props.metaKey})), 
-        React.createElement("label", null, "Value: ", React.createElement("input", {type: "text", value: this.props.metaValue}))
+        React.createElement("label", null, "Key: ", React.createElement("input", {type: "text", defaultValue: this.props.metaKey, onChange: this.onChange})), 
+        React.createElement("label", null, "Value: ", React.createElement("input", {type: "text", defaultValue: this.props.metaValue, onChange: this.onChange}))
       )
     );
   }

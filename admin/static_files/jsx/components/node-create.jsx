@@ -45,11 +45,13 @@ var MetaItem = React.createClass({
   getDefaultProps: function() {
     return {metaKey: "", metaValue: ""}
   },
+  onChange: function() {
+  },
   render: function() {
     return (
       <div className="meta-item">
-        <label>Key: <input type="text" value={this.props.metaKey} /></label>
-        <label>Value: <input type="text" value={this.props.metaValue} /></label>
+        <label>Key: <input type="text" defaultValue={this.props.metaKey} onChange={this.onChange} /></label>
+        <label>Value: <input type="text" defaultValue={this.props.metaValue} onChange={this.onChange} /></label>
       </div>
     );
   }
