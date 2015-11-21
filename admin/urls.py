@@ -15,4 +15,5 @@ urlpatterns = patterns(
     url(r'^deploys/graph$', views.DeploysGraph.as_view(), name='deploys-graph'),
     url(r'^deploys/(?P<deploy>[\s\w@\.-]+)/$', views.DeployInfo.as_view(), name='deploy-info'),
     url(r'^healing/$', views.ListHealing.as_view(), name='list-healing'),
+    url(r'^templates.json$', views.TemplateListJson.as_view(), name='template-list-json'),
 )

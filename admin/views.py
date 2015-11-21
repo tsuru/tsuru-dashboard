@@ -3,17 +3,16 @@ import json
 import re
 from dateutil import parser
 
-from pytz import utc
-
 from django.views.generic import TemplateView
 from django.conf import settings
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, Http404, JsonResponse
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 
 from pygments import highlight
 from pygments.lexers import DiffLexer
 from pygments.formatters import HtmlFormatter
+from pytz import utc
 
 from auth.views import LoginRequiredView
 
@@ -346,3 +345,10 @@ class NodeRemove(LoginRequiredView):
             return HttpResponse(response.text, status=response.status_code)
 
         return redirect(reverse('pool-list'))
+
+
+class TemplateListJson(LoginRequiredView):
+
+    def get(self, *args, **kwargs):
+        templates = self.client.templates.list()
+        return JsonResponse(templates, safe=False)
