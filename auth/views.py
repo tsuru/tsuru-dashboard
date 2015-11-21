@@ -1,5 +1,6 @@
 import json
 import requests
+from tsuruclient import client
 
 from django.conf import settings
 from django.template.response import TemplateResponse
@@ -21,6 +22,13 @@ def token_is_valid(token):
 
 
 class LoginRequiredMixin(object):
+
+    @property
+    def client(self):
+        target = settings.TSURU_HOST
+        token = self.request.session.get('tsuru_token')
+        return client.Client(target, token)
+
     @property
     def authorization(self):
         return {'authorization': self.request.session.get('tsuru_token')}

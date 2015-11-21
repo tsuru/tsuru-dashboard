@@ -3,6 +3,7 @@ from django.test import TestCase
 from django.test.client import RequestFactory
 from django.core.urlresolvers import reverse
 from django.views.generic.base import View
+from django.conf import settings
 
 from auth.views import LoginRequiredMixin
 
@@ -40,6 +41,18 @@ class LoginRequiredMixinTest(TestCase):
 
         expected = {'authorization': 'my beautiful token'}
         self.assertDictEqual(headers, expected)
+
+    def test_client(self):
+        view = StubView()
+
+        request = RequestFactory().get('/')
+        request.session = {'tsuru_token': 'my beautiful token'}
+
+        view.request = request
+        client = view.client
+
+        self.assertEqual(client.templates.target, settings.TSURU_HOST)
+        self.assertEqual(client.templates.token, "my beautiful token")
 
 
 class StubView(LoginRequiredMixin, View):
