@@ -46,13 +46,13 @@ class LoginRequiredMixinTest(TestCase):
         view = StubView()
 
         request = RequestFactory().get('/')
-        request.session = {'tsuru_token': 'my beautiful token'}
+        request.session = {'tsuru_token': 'type mytoken'}
 
         view.request = request
         client = view.client
 
         self.assertEqual(client.templates.target, settings.TSURU_HOST)
-        self.assertEqual(client.templates.token, "my beautiful token")
+        self.assertEqual(client.templates.token, "mytoken")
 
 
 class StubView(LoginRequiredMixin, View):

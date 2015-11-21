@@ -26,7 +26,7 @@ class LoginRequiredMixin(object):
     @property
     def client(self):
         target = settings.TSURU_HOST
-        token = self.request.session.get('tsuru_token')
+        token = self.request.session.get('tsuru_token').split(" ")[-1]
         return client.Client(target, token)
 
     @property
