@@ -129,10 +129,37 @@ var CancelBtn = React.createClass({
   }
 });
 
+var Iaas = React.createClass({
+  getInitialState: function() {
+    return {iaas: this.props.iaas};
+  },
+  onChange: function(e) {
+    this.props.setIaas(e.target.value);
+  },
+  componentWillReceiveProps: function(nextProps) {
+    this.setState({iaas: nextProps.iaas});
+  },
+  render: function() {
+    return (
+      <div className="iaas">
+        <label>Iaas name: <input type="text" value={this.state.iaas} onChange={this.onChange} /></label>
+      </div>
+    );
+  }
+});
+
 var NodeCreate = React.createClass({
   getInitialState: function() {
     function idMaker() { var initial = 0; return function() { initial++; return initial}}
-    return {templates: [], register: false, metadata: [], id: 0, getId: idMaker(), disabled: false};
+    return {
+      templates: [],
+      iaas: "",
+      register: false,
+      metadata: [],
+      id: 0,
+      getId: idMaker(),
+      disabled: false
+     };
   },
   cancel: function() {
     this.setState({metadata: [], register: false});
@@ -209,6 +236,7 @@ var NodeCreate = React.createClass({
   selectTemplate: function(templateName) {
     this.state.templates.forEach(function(template) {
       if (template.Name === templateName) {
+        this.setIaas(template.IaaSName);
         template.Data.forEach(function(metaData) {
           this.addMetadata(metaData.Name, metaData.Value);
         }.bind(this));
@@ -217,8 +245,14 @@ var NodeCreate = React.createClass({
   },
   addNode: function() {
 	this.setState({disabled: true});
-    var url = "/node/add/?register" + this.state.register;
-    var data = this.state.metadata;
+    var url = "/admin/node/add/?register=" + this.state.register;
+    var data = {};
+    this.state.metadata.forEach(function(metadata) {
+      data[metadata.key] = metadata.value;
+	});
+    if (this.state.iaas.length > 0) {
+      data["iaas"] = this.state.iaas;
+    }
     $.ajax({
       type: "POST",
       url: url,
@@ -227,6 +261,9 @@ var NodeCreate = React.createClass({
   		location.reload();
       }.bind(this)
     }); 
+  },
+  setIaas: function(iaas) {
+    this.setState({iaas: iaas});
   },
   render: function() {
     return (
@@ -237,6 +274,7 @@ var NodeCreate = React.createClass({
         <div className='modal-body'>
           {this.state.templates.length > 0 ? <Template templates={this.state.templates} selectTemplate={this.selectTemplate} /> : ""}
           <Register register={this.state.register} onClick={this.registerToggle} />
+ 	      <Iaas iaas={this.state.iaas} />
           <Meta metadata={this.state.metadata} removeMetadata={this.removeMetadata} editMetadata={this.editMetadata} />
         </div>
         <div className='modal-footer'>
