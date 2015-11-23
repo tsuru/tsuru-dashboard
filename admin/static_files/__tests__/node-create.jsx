@@ -59,7 +59,7 @@ describe('NodeCreate', function() {
     nodeCreate.addMetadata("anotherkey", "v");
     var items = TestUtils.scryRenderedDOMComponentsWithClass(nodeCreate, "meta-item");
 
-    expect(items.length).toEqual(3);
+    expect(items.length).toEqual(2);
 
     var item = ReactDOM.findDOMNode(items[0]);
     var key = item.childNodes[0].childNodes[1];
