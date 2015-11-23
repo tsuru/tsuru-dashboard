@@ -201,7 +201,6 @@ var NodeCreate = React.createClass({
   },
   componentDidMount: function() {
     this.loadTemplates();
-    this.addMetadata("", "");
   },
   selectTemplate: function(templateName) {
     this.state.templates.forEach(function(template) {
