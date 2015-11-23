@@ -20,7 +20,7 @@ describe('NodeCreate', function() {
     );
   
     expect(nodeCreate.state.templates.length).toBe(0);
-    expect(nodeCreate.state.metadata).toEqual({});
+    expect(nodeCreate.state.metadata).toEqual([{id: 1, key: '', value: ''}]);
     expect(nodeCreate.state.register).toBeFalsy();
   });
 
@@ -31,15 +31,15 @@ describe('NodeCreate', function() {
     var register = TestUtils.findRenderedDOMComponentWithClass(nodeCreate, "register");
 
     expect(nodeCreate.state.register).toBeFalsy();
-    expect(nodeCreate.state.metadata).toEqual({});
+    expect(nodeCreate.state.metadata).toEqual([{id: 1, key: '', value: ''}]);
 
     TestUtils.Simulate.click(register);
     expect(nodeCreate.state.register).toBeTruthy();
-    expect(nodeCreate.state.metadata).toEqual({"address": ""});
+    expect(nodeCreate.state.metadata).toEqual([{id: 1, key: '', value: ''}, {id: 2, key: "address", value: ""}]);
 
     TestUtils.Simulate.click(register);
     expect(nodeCreate.state.register).toBeFalsy();
-    expect(nodeCreate.state.metadata).toEqual({});
+    expect(nodeCreate.state.metadata).toEqual([{id: 1, key: '', value: ''}]);
   });
 
   it('don"t show template select on empty templates', function() {
@@ -61,32 +61,23 @@ describe('NodeCreate', function() {
 
     expect(items.length).toEqual(3);
 
-    var item = ReactDOM.findDOMNode(items[0]);
+    var item = ReactDOM.findDOMNode(items[1]);
     var key = item.childNodes[0].childNodes[1];
     expect(key.attributes["value"].value).toEqual("key");
     var value = item.childNodes[1].childNodes[1];
     expect(value.attributes["value"].value).toEqual("value");
 
-    var item = ReactDOM.findDOMNode(items[1]);
+    var item = ReactDOM.findDOMNode(items[2]);
     var key = item.childNodes[0].childNodes[1];
     expect(key.attributes["value"].value).toEqual("anotherkey");
     var value = item.childNodes[1].childNodes[1];
     expect(value.attributes["value"].value).toEqual("v");
 
-    var item = ReactDOM.findDOMNode(items[2]);
+    var item = ReactDOM.findDOMNode(items[0]);
     var key = item.childNodes[0].childNodes[1];
     expect(key.attributes["value"].value).toEqual("");
     var value = item.childNodes[1].childNodes[1];
     expect(value.attributes["value"].value).toEqual("");
-  });
-
-  it('create button', function() {
-    var nodeCreate = TestUtils.renderIntoDocument(
-      <NodeCreate />
-    );
-    var button = TestUtils.findRenderedDOMComponentWithTag(nodeCreate, "button");
-
-    expect(button.textContent).toEqual("Create node");
   });
 
 });
