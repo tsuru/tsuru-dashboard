@@ -23,10 +23,22 @@ table td, table th {
 
 {% block content %}
 <div class="container-fluid">
+    <div class="span12">
+        <div class="content">
+            <a class="btn" href="#node-create" data-toggle="modal">
+                Create node</a>
+        </div>
+	</div>
     {% for key, nodes in pools.items %}
     <div class="row-fluid">
         <div class="span12">
-            <div id="node-create"></div>
+            <div id="node-create"
+                 class="modal hide fade"
+                 tabindex="-1"
+                 role="dialog" 
+                 aria-labelledby="myModalLabel"
+                 aria-hidden="true">
+            </div>
         </div>
         <div class="span12">
             <h3>{{ key }}</h3>
@@ -63,5 +75,6 @@ table td, table th {
 {% endblock %}
 
 {% block extra_js %}
-{#<script src="{% static "js/node-create.js" %}"></script>#}
+<script src="{% static "js/confirmation.js" %}"></script>
+<script src="{% static "js/node-create.js" %}"></script>
 {% endblock %}

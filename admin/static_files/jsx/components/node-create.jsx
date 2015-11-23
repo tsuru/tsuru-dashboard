@@ -98,12 +98,13 @@ var MetaItem = React.createClass({
 
 var Button = React.createClass({
   getDefaultProps: function() {
-    return {disabled: false}
+    return {disabled: false, onClick: function(){}, type:"button"}
   },
   render: function() {
     return (
       <button type={this.props.type}
               disabled={this.props.disabled}
+              onClick={this.props.onClick}
               className='btn'>
         {this.props.text}
       </button>
@@ -111,10 +112,26 @@ var Button = React.createClass({
   }
 });
 
+var CancelBtn = React.createClass({
+  render: function() {
+    return (
+      <button data-dismiss='modal'
+              aria-hidden='true'
+              className='btn'
+              onClick={this.props.onClick}>
+        Cancel
+      </button>
+    )
+  }
+});
+
 var NodeCreate = React.createClass({
   getInitialState: function() {
     function idMaker() { var initial = 0; return function() { initial++; return initial}}
     return {templates: [], register: false, metadata: [], id: 0, getId: idMaker()};
+  },
+  cancel: function() {
+    this.setState({metadata: [], register: false});
   },
   registerToggle: function() {
     if (!this.state.register) {
@@ -198,14 +215,19 @@ var NodeCreate = React.createClass({
   render: function() {
     return (
       <div className="node-create">
-        <h1>Create Node</h1>
-        {this.state.templates.length > 0 ? <Template templates={this.state.templates} selectTemplate={this.selectTemplate} /> : ""}
-        <Register register={this.state.register} onClick={this.registerToggle} />
-        <Meta metadata={this.state.metadata} removeMetadata={this.removeMetadata} editMetadata={this.editMetadata} />
-        <form onSubmit={this.add}>
-        <Button text="New metadata" type="submit" />
-        </form>
-        <Button text="Create node" type="submit" />
+        <div className='modal-header'>
+          <h3 id='myModalLabel'>Create node</h3>
+        </div>
+        <div className='modal-body'>
+          {this.state.templates.length > 0 ? <Template templates={this.state.templates} selectTemplate={this.selectTemplate} /> : ""}
+          <Register register={this.state.register} onClick={this.registerToggle} />
+          <Meta metadata={this.state.metadata} removeMetadata={this.removeMetadata} editMetadata={this.editMetadata} />
+        </div>
+        <div className='modal-footer'>
+          <CancelBtn onClick={this.cancel} />
+          <Button text="Add metadata" onClick={this.add} />
+          <Button text="Create node" />
+        </div>
       </div>
     );
   }

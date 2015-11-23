@@ -99,12 +99,13 @@ var MetaItem = React.createClass({displayName: "MetaItem",
 
 var Button = React.createClass({displayName: "Button",
   getDefaultProps: function() {
-    return {disabled: false}
+    return {disabled: false, onClick: function(){}, type:"button"}
   },
   render: function() {
     return (
       React.createElement("button", {type: this.props.type, 
               disabled: this.props.disabled, 
+              onClick: this.props.onClick, 
               className: "btn"}, 
         this.props.text
       )
@@ -112,10 +113,26 @@ var Button = React.createClass({displayName: "Button",
   }
 });
 
+var CancelBtn = React.createClass({displayName: "CancelBtn",
+  render: function() {
+    return (
+      React.createElement("button", {"data-dismiss": "modal", 
+              "aria-hidden": "true", 
+              className: "btn", 
+              onClick: this.props.onClick}, 
+        "Cancel"
+      )
+    )
+  }
+});
+
 var NodeCreate = React.createClass({displayName: "NodeCreate",
   getInitialState: function() {
     function idMaker() { var initial = 0; return function() { initial++; return initial}}
     return {templates: [], register: false, metadata: [], id: 0, getId: idMaker()};
+  },
+  cancel: function() {
+    this.setState({metadata: [], register: false});
   },
   registerToggle: function() {
     if (!this.state.register) {
@@ -199,14 +216,19 @@ var NodeCreate = React.createClass({displayName: "NodeCreate",
   render: function() {
     return (
       React.createElement("div", {className: "node-create"}, 
-        React.createElement("h1", null, "Create Node"), 
-        this.state.templates.length > 0 ? React.createElement(Template, {templates: this.state.templates, selectTemplate: this.selectTemplate}) : "", 
-        React.createElement(Register, {register: this.state.register, onClick: this.registerToggle}), 
-        React.createElement(Meta, {metadata: this.state.metadata, removeMetadata: this.removeMetadata, editMetadata: this.editMetadata}), 
-        React.createElement("form", {onSubmit: this.add}, 
-        React.createElement(Button, {text: "New metadata", type: "submit"})
+        React.createElement("div", {className: "modal-header"}, 
+          React.createElement("h3", {id: "myModalLabel"}, "Create node")
         ), 
-        React.createElement(Button, {text: "Create node", type: "submit"})
+        React.createElement("div", {className: "modal-body"}, 
+          this.state.templates.length > 0 ? React.createElement(Template, {templates: this.state.templates, selectTemplate: this.selectTemplate}) : "", 
+          React.createElement(Register, {register: this.state.register, onClick: this.registerToggle}), 
+          React.createElement(Meta, {metadata: this.state.metadata, removeMetadata: this.removeMetadata, editMetadata: this.editMetadata})
+        ), 
+        React.createElement("div", {className: "modal-footer"}, 
+          React.createElement(CancelBtn, {onClick: this.cancel}), 
+          React.createElement(Button, {text: "Add metadata", onClick: this.add}), 
+          React.createElement(Button, {text: "Create node"})
+        )
       )
     );
   }
