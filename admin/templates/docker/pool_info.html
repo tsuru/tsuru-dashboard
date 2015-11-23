@@ -10,6 +10,7 @@ table td, table th {
     white-space: nowrap;
 }
 </style>
+<link rel="stylesheet" href="{% static "css/pages/node-create.css" %}">
 {% endblock %}
 
 {% block sidebar %}
@@ -24,6 +25,9 @@ table td, table th {
 <div class="container-fluid">
     {% for key, nodes in pools.items %}
     <div class="row-fluid">
+        <div class="span12">
+            <div id="node-create"></div>
+        </div>
         <div class="span12">
             <h3>{{ key }}</h3>
             <table class="table">
@@ -59,5 +63,5 @@ table td, table th {
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static "js/node-create.js" %}"></script>
+{#<script src="{% static "js/node-create.js" %}"></script>#}
 {% endblock %}

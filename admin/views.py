@@ -352,3 +352,10 @@ class TemplateListJson(LoginRequiredView):
     def get(self, *args, **kwargs):
         templates = self.client.templates.list()
         return JsonResponse(templates, safe=False)
+
+
+class NodeAdd(LoginRequiredView):
+
+    def post(self, *args, **kwargs):
+        self.client.nodes.create(self.request.POST.dict())
+        return HttpResponse()
