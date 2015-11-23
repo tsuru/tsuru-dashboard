@@ -357,5 +357,7 @@ class TemplateListJson(LoginRequiredView):
 class NodeAdd(LoginRequiredView):
 
     def post(self, *args, **kwargs):
-        self.client.nodes.create(self.request.POST.dict())
+        register = self.request.GET.get("register", "false")
+        register = True if register == "true" else False
+        self.client.nodes.create(register=register, **self.request.POST.dict())
         return HttpResponse()

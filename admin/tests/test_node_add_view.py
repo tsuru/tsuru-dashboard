@@ -10,14 +10,20 @@ from admin.views import NodeAdd
 
 
 class NodeAddViewTest(TestCase):
-    @patch("auth.views.token_is_valid")
-    def setUp(self, token_is_valid):
-        token_is_valid.return_value = True
+    def setUp(self):
         httpretty.enable()
 
-        self.factory = RequestFactory()
-        self.request = self.factory.post('/', data={"key": "value"})
-        self.request.session = {'tsuru_token': 'tokentest'}
+    def tearDown(self):
+        httpretty.disable()
+        httpretty.reset()
+
+    @patch("auth.views.token_is_valid")
+    def test_view_register_false(self, token_is_valid):
+        token_is_valid.return_value = True
+
+        factory = RequestFactory()
+        request = factory.post('/?register=false', data={"key": "value"})
+        request.session = {'tsuru_token': 'tokentest'}
 
         url = "{}/docker/node".format(settings.TSURU_HOST)
         httpretty.register_uri(
@@ -26,11 +32,31 @@ class NodeAddViewTest(TestCase):
             body="{}",
             status=200
         )
-        self.response = NodeAdd.as_view()(self.request)
 
-    def tearDown(self):
-        httpretty.disable()
-        httpretty.reset()
+        response = NodeAdd.as_view()(request)
 
-    def test_view(self):
-        self.assertEqual(self.response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("register", httpretty.last_request().querystring)
+        self.assertEqual("false", httpretty.last_request().querystring["register"][0])
+
+    @patch("auth.views.token_is_valid")
+    def test_view_register_true(self, token_is_valid):
+        token_is_valid.return_value = True
+
+        factory = RequestFactory()
+        request = factory.post('/?register=true', data={"key": "value"})
+        request.session = {'tsuru_token': 'tokentest'}
+
+        url = "{}/docker/node".format(settings.TSURU_HOST)
+        httpretty.register_uri(
+            httpretty.POST,
+            url,
+            body="{}",
+            status=200
+        )
+
+        response = NodeAdd.as_view()(request)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("register", httpretty.last_request().querystring)
+        self.assertEqual("true", httpretty.last_request().querystring["register"][0])
