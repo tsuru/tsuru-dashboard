@@ -1,0 +1,16 @@
+.meta-item {
+    clear: both;
+}
+
+.meta-item label {
+    margin-right: 30px;
+    float: left;
+}
+
+.node-create input, .node-create select {
+    margin-left: 10px;
+}
+
+.node-create form {
+    clear: both;
+}
