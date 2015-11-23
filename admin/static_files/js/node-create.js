@@ -114,9 +114,13 @@ var Button = React.createClass({displayName: "Button",
 });
 
 var CancelBtn = React.createClass({displayName: "CancelBtn",
+  getDefaultProps: function() {
+    return {disabled: false}
+  },
   render: function() {
     return (
       React.createElement("button", {"data-dismiss": "modal", 
+			  disabled: this.props.disabled, 
               "aria-hidden": "true", 
               className: "btn", 
               onClick: this.props.onClick}, 
@@ -129,7 +133,7 @@ var CancelBtn = React.createClass({displayName: "CancelBtn",
 var NodeCreate = React.createClass({displayName: "NodeCreate",
   getInitialState: function() {
     function idMaker() { var initial = 0; return function() { initial++; return initial}}
-    return {templates: [], register: false, metadata: [], id: 0, getId: idMaker()};
+    return {templates: [], register: false, metadata: [], id: 0, getId: idMaker(), disabled: false};
   },
   cancel: function() {
     this.setState({metadata: [], register: false});
@@ -202,7 +206,6 @@ var NodeCreate = React.createClass({displayName: "NodeCreate",
   },
   componentDidMount: function() {
     this.loadTemplates();
-    this.addMetadata("", "");
   },
   selectTemplate: function(templateName) {
     this.state.templates.forEach(function(template) {
@@ -212,6 +215,19 @@ var NodeCreate = React.createClass({displayName: "NodeCreate",
         }.bind(this));
       }
     }.bind(this));
+  },
+  addNode: function() {
+	this.setState({disabled: true});
+    var url = "/node/add/?register" + this.state.register;
+    var data = this.state.metadata;
+    $.ajax({
+      type: "POST",
+      url: url,
+      data: data,
+      success: function() {
+  		location.reload();
+      }.bind(this)
+    }); 
   },
   render: function() {
     return (
@@ -225,9 +241,9 @@ var NodeCreate = React.createClass({displayName: "NodeCreate",
           React.createElement(Meta, {metadata: this.state.metadata, removeMetadata: this.removeMetadata, editMetadata: this.editMetadata})
         ), 
         React.createElement("div", {className: "modal-footer"}, 
-          React.createElement(CancelBtn, {onClick: this.cancel}), 
-          React.createElement(Button, {text: "Add metadata", onClick: this.add}), 
-          React.createElement(Button, {text: "Create node"})
+          React.createElement(CancelBtn, {onClick: this.cancel, disabled: this.state.disabled}), 
+          React.createElement(Button, {text: "Add metadata", onClick: this.add, disabled: this.state.disabled}), 
+          React.createElement(Button, {text: "Create node", onClick: this.addNode, disabled: this.state.disabled})
         )
       )
     );

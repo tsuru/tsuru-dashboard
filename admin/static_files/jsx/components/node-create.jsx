@@ -113,9 +113,13 @@ var Button = React.createClass({
 });
 
 var CancelBtn = React.createClass({
+  getDefaultProps: function() {
+    return {disabled: false}
+  },
   render: function() {
     return (
       <button data-dismiss='modal'
+			  disabled={this.props.disabled}
               aria-hidden='true'
               className='btn'
               onClick={this.props.onClick}>
@@ -128,7 +132,7 @@ var CancelBtn = React.createClass({
 var NodeCreate = React.createClass({
   getInitialState: function() {
     function idMaker() { var initial = 0; return function() { initial++; return initial}}
-    return {templates: [], register: false, metadata: [], id: 0, getId: idMaker()};
+    return {templates: [], register: false, metadata: [], id: 0, getId: idMaker(), disabled: false};
   },
   cancel: function() {
     this.setState({metadata: [], register: false});
@@ -211,6 +215,19 @@ var NodeCreate = React.createClass({
       }
     }.bind(this));
   },
+  addNode: function() {
+	this.setState({disabled: true});
+    var url = "/node/add/?register" + this.state.register;
+    var data = this.state.metadata;
+    $.ajax({
+      type: "POST",
+      url: url,
+      data: data,
+      success: function() {
+  		location.reload();
+      }.bind(this)
+    }); 
+  },
   render: function() {
     return (
       <div className="node-create">
@@ -223,9 +240,9 @@ var NodeCreate = React.createClass({
           <Meta metadata={this.state.metadata} removeMetadata={this.removeMetadata} editMetadata={this.editMetadata} />
         </div>
         <div className='modal-footer'>
-          <CancelBtn onClick={this.cancel} />
-          <Button text="Add metadata" onClick={this.add} />
-          <Button text="Create node" />
+          <CancelBtn onClick={this.cancel} disabled={this.state.disabled} />
+          <Button text="Add metadata" onClick={this.add} disabled={this.state.disabled} />
+          <Button text="Create node" onClick={this.addNode} disabled={this.state.disabled} />
         </div>
       </div>
     );
