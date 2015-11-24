@@ -7,4 +7,4 @@ Pygments==2.0.2
 gevent==1.1b6
 raven==4.2.3
 httpretty==0.8.10
-tsuruclient==0.2.0
+tsuruclient==0.2.1
