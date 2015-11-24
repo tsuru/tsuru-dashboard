@@ -5,7 +5,7 @@ from dateutil import parser
 
 from django.views.generic import TemplateView
 from django.conf import settings
-from django.http import HttpResponse, Http404, JsonResponse
+from django.http import HttpResponse, Http404, JsonResponse, StreamingHttpResponse
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 
@@ -361,3 +361,13 @@ class NodeAdd(LoginRequiredView):
         register = True if register == "true" else False
         self.client.nodes.create(register=register, **self.request.POST.dict())
         return HttpResponse()
+
+
+class PoolRebalance(LoginRequiredView):
+
+    def post(self, *args, **kwargs):
+        def sending_stream():
+            r = self.client.pools.rebalance(pool=kwargs["pool"])
+            for line in r.iter_lines():
+                yield "{}<br>".format(line)
+        return StreamingHttpResponse(sending_stream())
