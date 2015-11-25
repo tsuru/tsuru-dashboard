@@ -13,4 +13,13 @@ describe('OptionMenu', function() {
 
     expect(ReactDOM.findDOMNode(optionsMenu).className).toEqual("options-menu");
   });
+
+  it('options items', function() {
+    var optionsMenu = TestUtils.renderIntoDocument(
+      <OptionsMenu items={["about", "docs"]} />
+    );
+
+    var items = TestUtils.scryRenderedDOMComponentsWithClass(optionsMenu, 'options-item');
+    expect(items.length).toBe(2);
+  });
 });
