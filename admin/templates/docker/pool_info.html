@@ -89,6 +89,7 @@
 {% block extra_js %}
 <script src="{% static "js/confirmation.js" %}"></script>
 <script src="{% static "js/node-create.js" %}"></script>
+{#<script src="{% static "js/pool-rebalance.js" %}"></script>#}
 <script type="text/javascript">
   $.confirmation(".btn-rebalance", ".rebalance-confirmation", "{{ pool }}");
 </script>
