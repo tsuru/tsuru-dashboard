@@ -15,7 +15,10 @@ var AppSearch = React.createClass({
   render: function() {
     return (
       <div className="search">
-        <input type="text" ref="name" placeholder="search apps by name" onChange={this.handleChange} />
+        <input type="text"
+               ref="name"
+               placeholder="search apps by name"
+               onChange={this.handleChange} />
 		<AppAdd />
       </div>
     );
@@ -63,7 +66,7 @@ var AppTable = React.createClass({
 
 var AppList = React.createClass({
   getInitialState: function() {
-    return {cached: [], apps: [], loading: false};
+    return {cached: [], apps: [], loading: false, term: ""};
   },
   loadApps: function() {
     this.setState({loading: true});
@@ -72,10 +75,21 @@ var AppList = React.createClass({
 	  url: this.props.url,
 	  success: function(data) {
         this.setState({cached: data.apps, apps: data.apps, loading: false});
+
+        if (this.state.term.length > 0) {
+          this.appsByName(this.state.term);
+          this.setState({term: ''});
+        }
+
 	  }.bind(this)
 	});
   },
   appsByName: function(name) {
+    if (this.state.loading) {
+        this.setState({term: name});    
+        return;
+    }
+
     if (this.state.cached.length == 0 ) {
       this.loadApps();
       return;
