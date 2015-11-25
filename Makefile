@@ -21,4 +21,7 @@ node-deps:
 	@npm install .
 
 build-js: node-deps
+	@bash -c 'for i in `git status --porcelain | awk "/.*jsx.pages.*.jsx/{print \\$$2}"`; do A=`echo $$i | sed s/jsx/js/g | sed s/pages.//g`; ./node_modules/browserify/bin/cmd.js -t reactify -o $$A $$i; done'
+
+rebuild-all-js: node-deps
 	@bash -c 'for i in `find . -regex ".*jsx/pages/.*.jsx"`; do A=`echo $$i | sed s/jsx/js/g | sed s/pages.//g`; ./node_modules/browserify/bin/cmd.js -t reactify -o $$A $$i; done'
