@@ -1,4 +1,4 @@
-from django.utils.unittest import TestCase
+from django.test import TestCase
 from django.forms import EmailField
 from django.forms.widgets import PasswordInput
 

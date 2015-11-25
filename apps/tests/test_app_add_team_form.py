@@ -1,4 +1,4 @@
-from django.utils.unittest import TestCase
+from django.test import TestCase
 from django.forms import CharField
 
 from apps import forms
