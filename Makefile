@@ -21,10 +21,4 @@ node-deps:
 	@npm install .
 
 build-js: node-deps
-	@./node_modules/browserify/bin/cmd.js -t reactify -o apps/static_files/js/deploy.js apps/static_files/jsx/pages/deploy.jsx
-	@./node_modules/browserify/bin/cmd.js -t reactify -o apps/static_files/js/resources.js apps/static_files/jsx/pages/resources.jsx
-	@./node_modules/browserify/bin/cmd.js -t reactify -o apps/static_files/js/list.js apps/static_files/jsx/pages/list.jsx
-	@./node_modules/browserify/bin/cmd.js -t reactify -o apps/static_files/js/metrics.js apps/static_files/jsx/pages/metrics.jsx
-	@./node_modules/browserify/bin/cmd.js -t reactify -o apps/static_files/js/metric.js apps/static_files/jsx/pages/metric.jsx
-	@./node_modules/browserify/bin/cmd.js -t reactify -o admin/static_files/js/node-create.js admin/static_files/jsx/pages/node-create.jsx
-	@./node_modules/browserify/bin/cmd.js -t reactify -o admin/static_files/js/pool-rebalance.js admin/static_files/jsx/pages/pool-rebalance.jsx
+	@bash -c 'for i in `find . -regex ".*jsx/pages/.*.jsx"`; do A=`echo $$i | sed s/jsx/js/g | sed s/pages.//g`; ./node_modules/browserify/bin/cmd.js -t reactify -o $$A $$i; done'
