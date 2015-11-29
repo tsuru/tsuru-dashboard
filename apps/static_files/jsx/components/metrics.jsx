@@ -1,11 +1,6 @@
 var React = require('react');
 
 var GraphContainer = React.createClass({
-  getInitialState: function() {
-    return {
-      morris: null,
-    }
-  },
   getDefaultProps: function() {
     return {
       interval: "1m",
