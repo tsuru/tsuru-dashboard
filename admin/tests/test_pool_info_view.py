@@ -1,6 +1,8 @@
 from mock import patch, Mock
 from dateutil import parser
 
+import httpretty
+
 from django.conf import settings
 from django.test import TestCase
 from django.test.client import RequestFactory
@@ -10,9 +12,14 @@ from admin.views import PoolInfo
 
 class PoolInfoViewTest(TestCase):
     def setUp(self):
+        httpretty.enable()
         self.maxDiff = None
         self.request = RequestFactory().get("/")
         self.request.session = {"tsuru_token": "admin"}
+
+    def tearDown(self):
+        httpretty.disable()
+        httpretty.reset()
 
     @patch("requests.get")
     @patch("auth.views.token_is_valid")

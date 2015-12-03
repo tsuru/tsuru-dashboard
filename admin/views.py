@@ -31,9 +31,12 @@ class PoolList(LoginRequiredView, TemplateView):
         response = requests.get(url, headers=self.authorization)
 
         if response.status_code == 204:
-            units = []
-        else:
-            units = response.json() or []
+            return {}
+
+        if response.status_code > 399:
+            return {}
+
+        units = response.json() or []
 
         result = {}
 
@@ -94,6 +97,9 @@ class NodeInfo(LoginRequiredView, TemplateView):
         response = requests.get(url, headers=self.authorization)
 
         if response.status_code == 204:
+            return []
+
+        if response.status_code > 399:
             return []
 
         return response.json()
@@ -260,10 +266,12 @@ class PoolInfo(LoginRequiredView, TemplateView):
         response = requests.get(url, headers=self.authorization)
 
         if response.status_code == 204:
-            units = []
-        else:
-            units = response.json() or []
+            return {}
 
+        if response.status_code > 399:
+            return {}
+
+        units = response.json() or []
         result = {}
 
         for unit in units:

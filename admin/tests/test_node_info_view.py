@@ -105,6 +105,28 @@ class NodeInfoViewTest(TestCase):
         self.assertListEqual([], response.context_data["containers"])
 
     @patch("auth.views.token_is_valid")
+    def teste_should_get_list_of_containers_on_error(self, token_is_valid):
+        httpretty.reset()
+        token_is_valid.return_value = True
+
+        url = "{}/docker/node/{}/containers".format(settings.TSURU_HOST, '127.0.0.2')
+        httpretty.register_uri(
+            httpretty.GET,
+            url,
+            status=500
+        )
+
+        url = "{}/docker/node".format(settings.TSURU_HOST, self.address)
+        httpretty.register_uri(
+            httpretty.GET,
+            url,
+            body=json.dumps(self.nodes),
+            status=200
+        )
+        response = NodeInfo.as_view()(self.request, address=self.address)
+        self.assertListEqual([], response.context_data["containers"])
+
+    @patch("auth.views.token_is_valid")
     def teste_should_get_empty_node(self, token_is_valid):
         httpretty.reset()
         token_is_valid.return_value = True
