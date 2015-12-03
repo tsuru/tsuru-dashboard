@@ -12,7 +12,6 @@
                         <span>Services</span>
                     </a>
 				</li>
-				{% if request.session.is_admin %}
 				<li{% if active == "docker" %} class="active"{% endif %}>
 					<a href="{% url 'pool-list' %}">
 						<span>Hosts</span>
@@ -33,7 +32,6 @@
                         <span>Dashboard</span>
 					</a>
                 </li>
-				{% endif %}
 			</ul>
 		</div> <!-- /container-user -->
 	</div> <!-- /inner -->

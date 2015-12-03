@@ -177,9 +177,6 @@ class AppDetail(LoginRequiredMixin, TemplateView):
         return requests.get(tsuru_url, headers=self.authorization).json()
 
     def get_containers(self, app_name):
-        if not self.request.session.get('is_admin'):
-            return []
-
         url = '{}/docker/node/apps/{}/containers'.format(settings.TSURU_HOST, app_name)
         response = requests.get(url, headers=self.authorization)
 
@@ -445,9 +442,6 @@ class ListAppJson(LoginRequiredView):
 class AppDetailJson(LoginRequiredView):
 
     def get_containers(self, app_name):
-        if not self.request.session.get('is_admin'):
-            return []
-
         url = '{}/docker/node/apps/{}/containers'.format(settings.TSURU_HOST, app_name)
         response = requests.get(url, headers=self.authorization)
 

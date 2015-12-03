@@ -55,8 +55,7 @@ class LoginViewTest(TestCase):
     @patch("requests.post")
     def test_should_set_token_in_the_session(self, post):
         response_mock = Mock(status_code=200)
-        response_mock.json.return_value = {"token": "my beautiful token",
-                                           "is_admin": True}
+        response_mock.json.return_value = {"token": "my beautiful token"}
         post.return_value = response_mock
         data = {"username": "valid@email.com", "password": "123456"}
         request = RequestFactory().post("/", data)
@@ -68,8 +67,7 @@ class LoginViewTest(TestCase):
     @patch("requests.post")
     def test_should_set_username_in_the_session(self, post):
         response_mock = Mock(status_code=200)
-        response_mock.json.return_value = {"token": "my beautiful token",
-                                           "is_admin": True}
+        response_mock.json.return_value = {"token": "my beautiful token"}
         post.return_value = response_mock
         data = {"username": "valid@email.com", "password": "123456"}
         request = RequestFactory().post("/", data)
@@ -78,33 +76,9 @@ class LoginViewTest(TestCase):
         self.assertEqual(data["username"], request.session["username"])
 
     @patch("requests.post")
-    def test_should_set_is_admin_in_the_session(self, post):
-        response_mock = Mock(status_code=200)
-        response_mock.json.return_value = {"token": "my beautiful token",
-                                           "is_admin": True}
-        post.return_value = response_mock
-        data = {"username": "valid@email.com", "password": "123456"}
-        request = RequestFactory().post("/", data)
-        request.session = {}
-        Login.as_view()(request)
-        self.assertTrue(request.session["is_admin"])
-
-    @patch("requests.post")
-    def test_should_set_is_admin_to_false_when_its_missing(self, post):
-        response_mock = Mock(status_code=200)
-        response_mock.json.return_value = {"token": "my beautiful token"}
-        post.return_value = response_mock
-        data = {"username": "valid@email.com", "password": "123456"}
-        request = RequestFactory().post("/", data)
-        request.session = {}
-        Login.as_view()(request)
-        self.assertFalse(request.session["is_admin"])
-
-    @patch("requests.post")
     def test_redirect_to_team_creation_when_login_is_successful(self, post):
         response_mock = Mock(status_code=200)
-        response_mock.json.return_value = {"token": "my beautiful token",
-                                           "is_admin": True}
+        response_mock.json.return_value = {"token": "my beautiful token"}
         post.return_value = response_mock
         data = {"username": "valid@email.com", "password": "123456"}
         request = RequestFactory().post("/", data)
@@ -116,8 +90,7 @@ class LoginViewTest(TestCase):
     @patch("requests.post")
     def test_redirect_to_team_creation_settings_false(self, post):
         response_mock = Mock(status_code=200)
-        response_mock.json.return_value = {"token": "my beautiful token",
-                                           "is_admin": True}
+        response_mock.json.return_value = {"token": "my beautiful token"}
         post.return_value = response_mock
         data = {"username": "valid@email.com", "password": "123456"}
         request = RequestFactory().post("/", data)
@@ -129,8 +102,7 @@ class LoginViewTest(TestCase):
     @patch("requests.post")
     def test_redirect_to_apps(self, post):
         response_mock = Mock(status_code=200)
-        response_mock.json.return_value = {"token": "my beautiful token",
-                                           "is_admin": True}
+        response_mock.json.return_value = {"token": "my beautiful token"}
         post.return_value = response_mock
         data = {"username": "valid@email.com", "password": "123456"}
         request = RequestFactory().post("/", data)

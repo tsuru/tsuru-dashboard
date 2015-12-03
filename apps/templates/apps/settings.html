@@ -19,11 +19,9 @@
             <div class="content">
                 <p><strong>Reason:</strong> {{ app.lock.Reason }}</p>
                 <p><strong>Acquire date:</strong> {{ app.lock.AcquireDate }}</p>
-                {% if request.session.is_admin %}
 					<a class="btn" href="#unlock-confirmation" data-toggle="modal">
 						Unlock app
                     </a>
-                {% endif %}
             </div>
             {% endif %}
         </div>

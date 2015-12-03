@@ -32,13 +32,16 @@ class AppDetailTestCase(TestCase):
         service_instances_mock.return_value = [{"service": "mongodb", "instances": ["mymongo"]}]
 
         self.old_service_instances = AppDetail.service_instances
+        self.old_get_containers = AppDetail.get_containers
         AppDetail.service_instances = service_instances_mock
+        AppDetail.get_containers = lambda x, y: []
 
         self.response = AppDetail.as_view()(request, app_name="app1")
         self.request = request
 
     def tearDown(self):
         AppDetail.service_instances = self.old_service_instances
+        AppDetail.get_containers = self.old_get_containers
 
     def test_should_use_detail_template(self):
         self.assertIn("apps/details.html", self.response.template_name)
@@ -60,8 +63,9 @@ class AppDetailTestCase(TestCase):
         get.return_value = response_mock
 
         request = RequestFactory().get("/")
-        request.session = {"is_admin": True, "tsuru_token": "admin"}
+        request.session = {"tsuru_token": "admin"}
 
+        AppDetail.get_containers = self.old_get_containers
         app_detail = AppDetail()
         app_detail.request = request
         envs = app_detail.get_containers("appname")

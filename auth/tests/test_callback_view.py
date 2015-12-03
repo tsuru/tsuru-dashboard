@@ -12,7 +12,7 @@ class CallbackViewTest(TestCase):
     @mock.patch("requests.post")
     def test_callback(self, post_mock):
         response_mock = mock.Mock(status_code=200)
-        response_mock.json.return_value = {"is_admin": True, "token": "xpto"}
+        response_mock.json.return_value = {"token": "xpto"}
 
         post_mock.return_value = response_mock
 
@@ -26,7 +26,6 @@ class CallbackViewTest(TestCase):
         self.assertEqual(response.url, "/apps")
 
         self.assertEqual(request.session["tsuru_token"], "type xpto")
-        self.assertEqual(request.session["is_admin"], True)
 
         expected_url = 'http://localhost:8080/auth/login'
         expected_data = json.dumps({
