@@ -3,7 +3,6 @@ var db = new EmbeddedDashboard();
 // get kpi group data and set update
 var kpiGroup = new KPIGroupComponent();
 kpiGroup.setDimensions(12, 2);
-kpiGroup.lock();
 $.ajax({
     url: "/dashboard/cloud_status",
     success: function(data) {
@@ -23,47 +22,33 @@ $.ajax({
             caption: 'Units by node',
             value: data.containers_by_nodes,
         });
-        kpiGroup.unlock();
-        db.addComponent(kpiGroup);
-    },
-    error: function(jqXHR, textStatus, errorThrown) {
-        kpiGroup.addKPI('error', {caption: 'error', value: 0});
-        kpiGroup.unlock();
     }
 });
+db.addComponent(kpiGroup);
 
 // healing data and set update
 var healingKPI = new KPIComponent();
 healingKPI.setDimensions(6, 3);
 healingKPI.setCaption("Healings (last 24h)");
-healingKPI.lock();
 $.ajax({
     url: "/dashboard/healing_status",
     success: function(data) {
         healingKPI.setValue(data.healing);
-        healingKPI.unlock();
-        db.addComponent(healingKPI);
-    },
-    error: function(jqXHR, textStatus, errorThrown) {
-        healingKPI.setValue(0);
-        healingKPI.unlock();
     }
 });
+db.addComponent(healingKPI);
 
 // deploy data and set update
 var deployGauge = new GaugeComponent();
 deployGauge.setDimensions(6, 3);
 deployGauge.setCaption("Deploys with error (last 24h)");
 deployGauge.lock();
+
 $.ajax({
     url: "/dashboard/deploys",
     success: function(data) {
         deployGauge.setLimits(0, data.last_deploys);
-        deployGauge.setValue(data.errored);
-        deployGauge.unlock();
-    },
-    error: function(jqXHR, textStatus, errorThrown) {
-        deployGauge.setValue(0);
+        deployGauge.setValue(data.errored, {});
         deployGauge.unlock();
     }
 });
