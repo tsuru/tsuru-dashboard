@@ -22,6 +22,7 @@
 						<span>Deploys</span>
 					</a>
 			    	</li>
+                {% if request.session.permissions.healing %}
 				<li{% if active == "healing" %} class="active"{% endif %}>
 					<a href="{% url 'list-healing' %}">
 						<span>Healing</span>
@@ -32,6 +33,7 @@
                         <span>Dashboard</span>
 					</a>
                 </li>
+                {% endif %}
 			</ul>
 		</div> <!-- /container-user -->
 	</div> <!-- /inner -->
