@@ -38,19 +38,45 @@ class HealingView(LoginRequiredView):
 
 
 class CloudStatusView(LoginRequiredView):
-    def get(self, request):
+    def total_apps_and_containers(self):
         url = "{}/apps".format(settings.TSURU_HOST)
-        apps = requests.get(url, headers=self.authorization).json()
+        response = requests.get(url, headers=self.authorization)
         total_containers = 0
+
+        if response.status_code != 200:
+            return 0, total_containers
+
+        apps = response.json()
         for app in apps:
             total_containers += len(app['units'])
+
+        return len(apps), total_containers
+
+    def total_nodes(self):
         url = "{}/docker/node".format(settings.TSURU_HOST)
-        nodes = requests.get(url, headers=self.authorization).json()
+        response = requests.get(url, headers=self.authorization)
+
+        if response.status_code != 200:
+            return 0
+
+        nodes = response.json()
+        return len(nodes['nodes'])
+
+    def containers_by_nodes(self, containers, nodes):
+        if containers <= 0 or nodes <= 0:
+            return 0
+        return containers/nodes
+
+    def get(self, request):
+        total_apps, total_containers = self.total_apps_and_containers()
+        total_nodes = self.total_nodes()
+        containers_by_nodes = self.containers_by_nodes(total_containers, total_nodes)
+
         data = {
-            "total_apps": len(apps),
-            "containers_by_nodes": total_containers/len(nodes['nodes']),
+            "total_apps": total_apps,
+            "containers_by_nodes": containers_by_nodes,
             "total_containers": total_containers,
-            "total_nodes": len(nodes['nodes'])
+            "total_nodes": total_nodes,
         }
         return JsonResponse(data, safe=False)
 
