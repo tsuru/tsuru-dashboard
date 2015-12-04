@@ -74,6 +74,23 @@ class AppDetailTestCase(TestCase):
         url = '{}/docker/node/apps/appname/containers'.format(settings.TSURU_HOST)
         get.assert_called_with(url, headers={'authorization': 'admin'})
 
+    @patch('requests.get')
+    def test_get_containers_forbidden(self, get):
+        response_mock = Mock(status_code=403)
+        get.return_value = response_mock
+
+        request = RequestFactory().get("/")
+        request.session = {"tsuru_token": "admin"}
+
+        AppDetail.get_containers = self.old_get_containers
+        app_detail = AppDetail()
+        app_detail.request = request
+        envs = app_detail.get_containers("appname")
+
+        self.assertEqual([], envs)
+        url = '{}/docker/node/apps/appname/containers'.format(settings.TSURU_HOST)
+        get.assert_called_with(url, headers={'authorization': 'admin'})
+
     def test_should_get_the_app_info_from_tsuru(self):
         self.assertDictEqual(self.expected, self.response.context_data["app"])
 

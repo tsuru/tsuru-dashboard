@@ -183,6 +183,9 @@ class AppDetail(LoginRequiredMixin, TemplateView):
         if response.status_code == 204:
             return []
 
+        if response.status_code == 403:
+            return []
+
         data = response.json()
         if not data:
             return []
@@ -446,6 +449,9 @@ class AppDetailJson(LoginRequiredView):
         response = requests.get(url, headers=self.authorization)
 
         if response.status_code == 204:
+            return []
+
+        if response.status_code == 403:
             return []
 
         data = response.json()
