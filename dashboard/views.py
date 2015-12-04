@@ -19,9 +19,13 @@ class DashboardView(LoginRequiredView, TemplateView):
 class HealingView(LoginRequiredView):
     def get(self, request):
         url = "{}/docker/healing".format(settings.TSURU_HOST)
-        resp = requests.get(url, headers=self.authorization).json() or []
+        response = requests.get(url, headers=self.authorization)
+
+        if response.status_code != 200:
+            return JsonResponse({"healing": 0})
+
         healings = 0
-        for healing in resp:
+        for healing in response.json():
             end_time = parser.parse(healing['EndTime'])
             if end_time.tzinfo:
                 end_time = end_time.astimezone(utc)

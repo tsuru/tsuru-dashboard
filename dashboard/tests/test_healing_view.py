@@ -56,7 +56,7 @@ class HealingViewTest(TestCase):
     @patch("auth.views.token_is_valid")
     def test_get_filtering(self, token_is_valid, get):
         token_is_valid.return_value = True
-        resp = Mock()
+        resp = Mock(status_code=200)
         resp.json.return_value = [
             {"EndTime": "2012-03-31T12:10:15Z"},
             {"EndTime": "2012-03-31T09:02:15-0300"},
@@ -74,3 +74,18 @@ class HealingViewTest(TestCase):
         self.assertEqual(200, response.status_code)
         result = json.loads(response.content)
         self.assertEqual({"healing": 5}, result)
+
+    @patch("requests.get")
+    @patch("auth.views.token_is_valid")
+    def test_get_with_error(self, token_is_valid, get):
+        token_is_valid.return_value = True
+        resp = Mock(status_code=403)
+        get.return_value = resp
+
+        request = self.factory.get("/dashboard/healing_status")
+        request.session = {"tsuru_token": "sometoken"}
+        response = HealingView.as_view()(request)
+        self.assertEqual(200, response.status_code)
+
+        result = json.loads(response.content)
+        self.assertEqual({"healing": 0}, result)
