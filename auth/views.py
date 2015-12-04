@@ -21,6 +21,16 @@ def token_is_valid(token):
     return response.status_code == 200
 
 
+def get_permissions(token):
+    headers = {"authorization": token}
+    permissions = {}
+
+    url = "{}/docker/healing".format(settings.TSURU_HOST)
+    response = requests.get(url, headers=headers)
+    permissions["healing"] = response.status_code != 403
+    return permissions
+
+
 class LoginRequiredMixin(object):
 
     @property
@@ -125,13 +135,12 @@ class Login(FormView):
         if response.status_code == 200:
             result = response.json()
             self.request.session['username'] = username
-            self.request.session['tsuru_token'] = "type {0}".format(
-                result['token'])
-
+            self.request.session['tsuru_token'] = "type {0}".format(result['token'])
+            self.request.session['permissions'] = get_permissions(result['token'])
             return super(Login, self).form_valid(form)
-        else:
-            form.add_error(None, response.content)
-            return super(Login, self).form_invalid(form)
+
+        form.add_error(None, response.content)
+        return super(Login, self).form_invalid(form)
 
 
 class Logout(View):
@@ -174,15 +183,6 @@ class Signup(View):
 
 
 class Callback(View):
-    def get_permissions(self, token):
-        headers = {"authorization": token}
-        permissions = {}
-
-        url = "{}/docker/healing".format(settings.TSURU_HOST)
-        response = requests.get(url, headers=headers)
-        permissions["healing"] = response.status_code != 403
-        return permissions
-
     def get(self, request):
         code = request.GET.get("code")
         redirect_url = "http://{}/auth/callback/".format(request.META.get('HTTP_HOST'))
@@ -195,7 +195,7 @@ class Callback(View):
         if response.status_code == 200:
             result = response.json()
             self.request.session['tsuru_token'] = "type {}".format(result['token'])
-            self.request.session['permissions'] = self.get_permissions(result['token'])
+            self.request.session['permissions'] = get_permissions(result['token'])
             next_url = self.request.session["next_url"]
             return redirect(next_url)
         return redirect('/auth/login')

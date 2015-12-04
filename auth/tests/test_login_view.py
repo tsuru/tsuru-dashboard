@@ -6,11 +6,18 @@ from django.core.urlresolvers import reverse
 
 from mock import Mock, patch
 
+import httpretty
+
 from auth.forms import LoginForm
 from auth.views import Login
 
 
 class LoginViewTest(TestCase):
+    def setUp(self):
+        httpretty.enable()
+        url = "{}/docker/healing".format(settings.TSURU_HOST)
+        httpretty.register_uri(httpretty.GET, url, status=403)
+
     @patch("requests.get")
     def test_login_get(self, get_mock):
         request = RequestFactory().get("/")
@@ -61,8 +68,18 @@ class LoginViewTest(TestCase):
         request = RequestFactory().post("/", data)
         request.session = {}
         Login.as_view()(request)
-        self.assertEqual("type my beautiful token",
-                         request.session["tsuru_token"])
+        self.assertEqual("type my beautiful token", request.session["tsuru_token"])
+
+    @patch("requests.post")
+    def test_set_permissions_in_session(self, post):
+        response_mock = Mock(status_code=200)
+        response_mock.json.return_value = {"token": "my beautiful token"}
+        post.return_value = response_mock
+        data = {"username": "valid@email.com", "password": "123456"}
+        request = RequestFactory().post("/", data)
+        request.session = {}
+        Login.as_view()(request)
+        self.assertDictEqual({"healing": False}, request.session["permissions"])
 
     @patch("requests.post")
     def test_should_set_username_in_the_session(self, post):
