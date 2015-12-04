@@ -3,6 +3,7 @@ var db = new EmbeddedDashboard();
 // get kpi group data and set update
 var kpiGroup = new KPIGroupComponent();
 kpiGroup.setDimensions(12, 2);
+kpiGroup.lock();
 $.ajax({
     url: "/dashboard/cloud_status",
     success: function(data) {
@@ -23,13 +24,13 @@ $.ajax({
             value: data.containers_by_nodes,
         });
         kpiGroup.unlock();
+        db.addComponent(kpiGroup);
     },
     error: function(jqXHR, textStatus, errorThrown) {
         kpiGroup.addKPI('error', {caption: 'error', value: 0});
         kpiGroup.unlock();
     }
 });
-db.addComponent(kpiGroup);
 
 // healing data and set update
 var healingKPI = new KPIComponent();
@@ -41,13 +42,13 @@ $.ajax({
     success: function(data) {
         healingKPI.setValue(data.healing);
         healingKPI.unlock();
+        db.addComponent(healingKPI);
     },
     error: function(jqXHR, textStatus, errorThrown) {
         healingKPI.setValue(0);
         healingKPI.unlock();
     }
 });
-db.addComponent(healingKPI);
 
 // deploy data and set update
 var deployGauge = new GaugeComponent();
