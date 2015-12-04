@@ -174,6 +174,15 @@ class Signup(View):
 
 
 class Callback(View):
+    def get_permissions(self, token):
+        headers = {"authorization": token}
+        permissions = {}
+
+        url = "{}/docker/healing".format(settings.TSURU_HOST)
+        response = requests.get(url, headers=headers)
+        permissions["healing"] = response.status_code != 403
+        return permissions
+
     def get(self, request):
         code = request.GET.get("code")
         redirect_url = "http://{}/auth/callback/".format(request.META.get('HTTP_HOST'))
@@ -181,12 +190,12 @@ class Callback(View):
             "code": code,
             "redirectUrl": redirect_url,
         }
-        url = '{0}/auth/login'.format(settings.TSURU_HOST)
+        url = '{}/auth/login'.format(settings.TSURU_HOST)
         response = requests.post(url, data=json.dumps(data))
         if response.status_code == 200:
             result = response.json()
-            self.request.session['tsuru_token'] = "type {0}".format(
-                result['token'])
+            self.request.session['tsuru_token'] = "type {}".format(result['token'])
+            self.request.session['permissions'] = self.get_permissions(result['token'])
             next_url = self.request.session["next_url"]
             return redirect(next_url)
         return redirect('/auth/login')
