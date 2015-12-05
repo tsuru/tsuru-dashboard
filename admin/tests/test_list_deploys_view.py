@@ -1,6 +1,6 @@
 import json
-
-from mock import patch, Mock
+import httpretty
+import mock
 
 from django.conf import settings
 from django.test import TestCase
@@ -10,44 +10,35 @@ from admin.views import ListDeploy
 
 
 class ListDeployViewTest(TestCase):
-    @patch('requests.get')
-    def setUp(self, get):
-        self.request = RequestFactory().get("/")
+    def setUp(self):
+        self.request = RequestFactory().get("/?page=2")
         self.request.session = {"tsuru_token": "admin"}
-        content = u"""[{"Name":"mymongo"},{"Name":"yourssql"}]"""
-        m = Mock(status_code=200, content=content)
-        m.json.return_value = json.loads(content)
-        get.return_value = m
-        self.response = ListDeploy.as_view()(self.request)
-        self.response_mock = Mock()
 
-    @patch('requests.get')
-    @patch("auth.views.token_is_valid")
-    def test_should_use_list_template(self, token_is_valid, get):
+    @httpretty.activate
+    @mock.patch("auth.views.token_is_valid")
+    def test_should_use_list_template(self, token_is_valid):
         token_is_valid.return_value = True
-        response_mock = Mock()
-        response_mock.json.return_value = []
-        get.return_value = response_mock
-        request = RequestFactory().get("/?page=1")
-        request.session = {"tsuru_token": "admin"}
-        response = ListDeploy.as_view()(request)
+
+        url = '{}/deploys?skip=0&limit=20'.format(settings.TSURU_HOST)
+        body = json.dumps(range(10000))
+        httpretty.register_uri(httpretty.GET, url, body=body, status=200)
+
+        response = ListDeploy.as_view()(self.request)
+
         self.assertIn("deploys/list_deploys.html", response.template_name)
         self.assertIn('deploys', response.context_data.keys())
-        get.assert_called_with(
-            '{0}/deploys?skip=0&limit=20'.format(settings.TSURU_HOST),
-            headers={'authorization': 'admin'})
+        self.assertEqual(3, response.context_data["next"])
+        self.assertEqual(1, response.context_data["previous"])
 
-    @patch('requests.get')
-    @patch("auth.views.token_is_valid")
-    def test_should_return_empty_list_when_status_is_204(self, token_is_valid, get):
+    @httpretty.activate
+    @mock.patch("auth.views.token_is_valid")
+    def test_should_return_empty_list_when_status_is_204(self, token_is_valid):
         token_is_valid.return_value = True
-        content = u"""[{"Name":"mymongo"},{"Name":"yourssql"}]"""
-        m = Mock(status_code=204, content=content)
-        m.json.return_value = json.loads(content)
-        get.return_value = m
+
+        url = '{}/deploys?skip=0&limit=20'.format(settings.TSURU_HOST)
+        httpretty.register_uri(httpretty.GET, url, status=204)
+
         response = ListDeploy.as_view()(self.request)
+
         self.assertIn("deploys/list_deploys.html", response.template_name)
         self.assertListEqual([], response.context_data['deploys'])
-        get.assert_called_with(
-            '{0}/deploys?skip=0&limit=20'.format(settings.TSURU_HOST),
-            headers={'authorization': 'admin'})
