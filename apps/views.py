@@ -176,22 +176,6 @@ class AppDetail(LoginRequiredMixin, TemplateView):
         tsuru_url = '{}/services/instances?app={}'.format(settings.TSURU_HOST, app_name)
         return requests.get(tsuru_url, headers=self.authorization).json()
 
-    def get_containers(self, app_name):
-        url = '{}/docker/node/apps/{}/containers'.format(settings.TSURU_HOST, app_name)
-        response = requests.get(url, headers=self.authorization)
-
-        if response.status_code == 204:
-            return []
-
-        if response.status_code == 403:
-            return []
-
-        data = response.json()
-        if not data:
-            return []
-
-        return data
-
     def get_context_data(self, *args, **kwargs):
         context = super(AppDetail, self).get_context_data(*args, **kwargs)
         app_name = kwargs['app_name']
@@ -217,38 +201,7 @@ class AppDetail(LoginRequiredMixin, TemplateView):
                 )
 
         context['app']['service_instances'] = service_instances
-
-        units_by_status = {}
-        for unit in context['app']['units']:
-            if unit['Status'] not in units_by_status:
-                units_by_status[unit['Status']] = [unit]
-            else:
-                units_by_status[unit['Status']].append(unit)
-
-        for container in self.get_containers(app_name):
-            for index, unit in enumerate(context['app']['units']):
-                if self.id_or_name(unit) == container['ID']:
-                    context['app']['units'][index].update({
-                        'HostAddr': container['HostAddr'],
-                        'HostPort': container['HostPort'],
-                    })
-        context['units_by_status'] = units_by_status
-        context['process_list'] = self.process_list(context['app'])
         return context
-
-    def process_list(self, app):
-        process = set()
-
-        for unit in app.get('units', []):
-            if 'ProcessName' in unit:
-                process.add(unit['ProcessName'])
-
-        return process
-
-    def id_or_name(self, unit):
-        if "ID" in unit:
-            return unit["ID"]
-        return unit["Name"]
 
 
 class CreateApp(LoginRequiredView):
