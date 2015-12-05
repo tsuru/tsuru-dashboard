@@ -211,13 +211,10 @@ class PoolInfo(LoginRequiredView, TemplateView):
         url = "{}/docker/node/{}/containers".format(settings.TSURU_HOST, address)
         response = requests.get(url, headers=self.authorization)
 
-        if response.status_code == 204:
+        if response.status_code != 200:
             return {}
 
-        if response.status_code > 399:
-            return {}
-
-        units = response.json() or []
+        units = response.json()
         result = {}
 
         for unit in units:
