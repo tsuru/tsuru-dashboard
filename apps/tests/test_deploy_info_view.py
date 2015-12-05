@@ -1,4 +1,5 @@
 import copy
+import json
 
 from django.test import TestCase
 from django.test.client import RequestFactory
@@ -7,6 +8,8 @@ from django.conf import settings
 from apps.views import DeployInfo
 
 from mock import patch, Mock
+
+import httpretty
 
 
 class InfoViewTest(TestCase):
@@ -22,16 +25,20 @@ class InfoViewTest(TestCase):
                      u'Error': u'',
                      u'Diff': u'test_diff'}
 
-    @patch("requests.get")
+    @httpretty.activate
     @patch("auth.views.token_is_valid")
-    def test_view(self, token_is_valid, get):
+    def test_view(self, token_is_valid):
         token_is_valid.return_value = True
-        response_mock = Mock()
-        response_mock.json.return_value = copy.deepcopy(self.data)
-        get.return_value = response_mock
+
+        url = '{}/deploys/{}'.format(settings.TSURU_HOST, "53e143cb874ccb1f68000001")
+        body = json.dumps(self.data)
+        httpretty.register_uri(httpretty.GET, url, body=body)
+
+        url = '{}/apps/{}'.format(settings.TSURU_HOST, "app_name")
+        body = json.dumps({"name": "app_name"})
+        httpretty.register_uri(httpretty.GET, url, body=body)
 
         view = DeployInfo
-        view.get_app = Mock()
         response = view.as_view()(
             self.request,
             deploy="53e143cb874ccb1f68000001",
@@ -43,8 +50,6 @@ class InfoViewTest(TestCase):
         self.assertEqual("apps/deploy.html", response.template_name[0])
         self.assertDictEqual(expected, response.context_data['deploy'])
         self.assertIn('app', response.context_data.keys())
-        url = '{0}/deploys/{1}'.format(settings.TSURU_HOST, "53e143cb874ccb1f68000001")
-        get.assert_called_with(url, headers={'authorization': 'admin'})
 
     @patch("requests.get")
     @patch("auth.views.token_is_valid")
