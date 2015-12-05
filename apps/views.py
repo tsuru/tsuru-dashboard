@@ -401,10 +401,7 @@ class AppDetailJson(LoginRequiredView):
         url = '{}/docker/node/apps/{}/containers'.format(settings.TSURU_HOST, app_name)
         response = requests.get(url, headers=self.authorization)
 
-        if response.status_code == 204:
-            return []
-
-        if response.status_code == 403:
+        if response.status_code != 200:
             return []
 
         data = response.json()
