@@ -11,5 +11,4 @@ team_name_validator = validators.RegexValidator(regex=team_name,
 
 
 class TeamForm(forms.Form):
-    name = forms.CharField(max_length=60,
-                           validators=[team_name_validator])
+    name = forms.CharField(max_length=60, validators=[team_name_validator])

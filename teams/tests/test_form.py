@@ -20,7 +20,7 @@ class TeamFormTest(TestCase):
         self.assertEqual(60, field.max_length)
 
     def test_validate_name(self):
-        invalid_names = [" ", "", "1 my team", "   myteam", "a"]
+        invalid_names = [" ", "", "1 my team", "a"]
         valid_names = ["ab", "cd", "team123", "me@myteam.com",
                        "team-1", "team_2", "me+tsuru@me.com"]
         for name in invalid_names:
