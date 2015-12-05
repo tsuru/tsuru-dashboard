@@ -156,57 +156,6 @@ class ListDeploy(LoginRequiredView, TemplateView):
         return context
 
 
-class DeploysGraph(LoginRequiredView, TemplateView):
-    template_name = "deploys/deploys_graph.html"
-
-    def get_context_data(self, *args, **kwargs):
-        context = super(DeploysGraph, self).get_context_data(*args, **kwargs)
-        response = requests.get(
-            "{}/deploys".format(settings.TSURU_HOST), headers=self.authorization)
-
-        if response.status_code == 204:
-            deploys = []
-        else:
-            deploys = response.json()
-
-        appFilter = self.request.GET.get('app', None)
-        appExclude = self.request.GET.get('appExclude', None)
-        minTime = self.request.GET.get('minTime', None)
-        maxTime = self.request.GET.get('maxTime', None)
-
-        deploysByApp = {}
-        for deploy in reversed(deploys):
-            if deploy["Duration"] == 0:
-                continue
-
-            minutes = deploy["Duration"] / (1000 * 1000 * 1000.0 * 60)
-            appName = deploy["App"]
-
-            if appFilter and not re.search(appFilter, appName):
-                continue
-            if appExclude and re.search(appExclude, appName):
-                continue
-            if minTime and minutes < int(minTime):
-                continue
-            if maxTime and minutes > int(maxTime):
-                continue
-
-            appEntry = deploysByApp.get(appName)
-            if appEntry is None:
-                appEntry = {}
-                appEntry["key"] = appName
-                deploysByApp[appName] = appEntry
-            values = appEntry.get("values", [])
-            values.append({
-                "x": deploy["Timestamp"],
-                "y": minutes,
-            })
-            appEntry["values"] = values
-
-        context['deploys'] = json.dumps([app for app in deploysByApp.values()])
-        return context
-
-
 class DeployInfo(LoginRequiredView, TemplateView):
     template_name = "deploys/deploy_details.html"
 
