@@ -33,9 +33,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static_files'),
-    'dashboard/static_files',
-    'apps/static_files',
-    'admin/static_files',
+    'tsuru_dashboard/dashboard/static_files',
+    'tsuru_dashboard/apps/static_files',
+    'tsuru_dashboard/admin/static_files',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
