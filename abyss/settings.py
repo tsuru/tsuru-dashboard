@@ -45,7 +45,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.static",
     "django.core.context_processors.tz",
     "django.contrib.messages.context_processors.messages",
-    "autoscale.context_processors.autoscale_enabled",
+    "tsuru_dashboard.autoscale.context_processors.autoscale_enabled",
 )
 
 MIDDLEWARE_CLASSES = (
@@ -69,15 +69,16 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'auth',
-    'apps',
-    'services',
-    'teams',
-    'healthcheck',
-    'admin',
-    'autoscale',
-    'dashboard',
-    'metrics',
+
+    'tsuru_dashboard.auth',
+    'tsuru_dashboard.apps',
+    'tsuru_dashboard.services',
+    'tsuru_dashboard.teams',
+    'tsuru_dashboard.healthcheck',
+    'tsuru_dashboard.admin',
+    'tsuru_dashboard.autoscale',
+    'tsuru_dashboard.dashboard',
+    'tsuru_dashboard.metrics',
 )
 
 TSURU_HOST = os.environ.get("TSURU_HOST", "http://localhost:8080")

@@ -7,15 +7,15 @@ from abyss.views import IndexView
 urlpatterns = patterns(
     '',
     (r'^$', IndexView.as_view()),
-    (r'^admin/', include('admin.urls')),
-    (r'^auth/', include('auth.urls')),
-    (r'^apps/', include('apps.urls')),
-    (r'^services/', include('services.urls')),
-    (r'^teams/', include('teams.urls')),
-    (r'^healthcheck/', include('healthcheck.urls')),
-    (r'^autoscale/', include('autoscale.urls')),
-    (r'^dashboard/', include('dashboard.urls')),
-    (r'^metrics/', include('metrics.urls')),
+    (r'^admin/', include('tsuru_dashboard.admin.urls')),
+    (r'^auth/', include('tsuru_dashboard.auth.urls')),
+    (r'^apps/', include('tsuru_dashboard.apps.urls')),
+    (r'^services/', include('tsuru_dashboard.services.urls')),
+    (r'^teams/', include('tsuru_dashboard.teams.urls')),
+    (r'^healthcheck/', include('tsuru_dashboard.healthcheck.urls')),
+    (r'^autoscale/', include('tsuru_dashboard.autoscale.urls')),
+    (r'^dashboard/', include('tsuru_dashboard.dashboard.urls')),
+    (r'^metrics/', include('tsuru_dashboard.metrics.urls')),
 )
 
 urlpatterns += patterns(

@@ -1,6 +1,6 @@
 from django.http import HttpResponseRedirect
 
-from auth.views import LoginRequiredView
+from tsuru_dashboard.auth.views import LoginRequiredView
 
 
 class IndexView(LoginRequiredView):

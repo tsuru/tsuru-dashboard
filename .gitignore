@@ -12,6 +12,6 @@
 .venv
 htmlcov
 local_settings.py
-apps/tests/example.tar.gz
+tsuru_dashboard/apps/tests/example.tar.gz
 node_modules
 coverage
