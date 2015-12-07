@@ -89,7 +89,8 @@ class ListDeploy(LoginRequiredView):
 
     def deploy(self, request, app_name, tar_file):
         def sending_stream():
-            url = '{}/apps/{}/deploy'.format(settings.TSURU_HOST, app_name)
+            origin = 'drag-and-drop'
+            url = '{}/apps/{}/deploy?origin={}'.format(settings.TSURU_HOST, app_name, origin)
             r = requests.post(url, headers=self.authorization, files={'file': tar_file}, stream=True)
             for line in r.iter_lines():
                 yield "{}<br>".format(line)
@@ -613,7 +614,8 @@ class MetricDetail(LoginRequiredMixin, TemplateView):
 
 class AppRollback(LoginRequiredView):
     def get(self, request, app_name, image):
-        url = '{}/apps/{}/deploy/rollback'.format(settings.TSURU_HOST, app_name)
+        origin = "rollback"
+        url = '{}/apps/{}/deploy/rollback?origin={}'.format(settings.TSURU_HOST, app_name, origin)
         response = requests.post(url, headers=self.authorization, data={'image': image})
         if response.status_code == 200:
             return redirect(reverse('app-deploys', args=[app_name]))
