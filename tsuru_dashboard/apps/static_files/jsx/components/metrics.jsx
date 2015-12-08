@@ -39,7 +39,8 @@ var GraphContainer = React.createClass({
     }
     var options = {
         xaxis: {
-            mode: "time"
+            mode: "time",
+            timezone: "browser"
         },
         grid: {
 		  hoverable: true,
