@@ -2,7 +2,7 @@ import os
 
 from django.conf.urls import patterns, include
 
-from abyss.views import IndexView
+from tsuru_dashboard.dashboard.views import IndexView
 
 urlpatterns = patterns(
     '',

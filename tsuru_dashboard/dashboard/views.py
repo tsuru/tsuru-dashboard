@@ -3,7 +3,7 @@ import requests
 from datetime import datetime, timedelta
 
 from django.conf import settings
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from django.views.generic import TemplateView
 
 from pytz import utc
@@ -99,3 +99,8 @@ class DeploysView(LoginRequiredView):
                     errored += 1
                 last_deploys += 1
         return JsonResponse({"last_deploys": last_deploys, "errored": errored}, safe=False)
+
+
+class IndexView(LoginRequiredView):
+    def get(self, request):
+        return HttpResponseRedirect("/apps")
