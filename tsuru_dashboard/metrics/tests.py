@@ -94,7 +94,7 @@ class MetricViewTest(TestCase):
         self.assertEqual(response.status_code, 400)
 
 
-class BackendTest(TestCase):
+class GetBackendTest(TestCase):
     @patch("requests.get")
     def test_envs_from_api(self, get_mock):
         response_mock = Mock(status_code=200)
@@ -105,13 +105,13 @@ class BackendTest(TestCase):
         }
         get_mock.return_value = response_mock
 
-        app = {"name": "appname"}
+        app = {"name": "appname", "units": [{"ProcessName": "web"}]}
 
         backend = get_backend(app, 'token')
         self.assertIsInstance(backend, ElasticSearch)
 
     def test_envs_from_app(self):
-        app = {"name": "appname", "envs": {"ELASTICSEARCH_HOST": "ble"}}
+        app = {"name": "appname", "envs": {"ELASTICSEARCH_HOST": "ble"}, "units": [{"ID": "id"}]}
 
         backend = get_backend(app, 'token')
         self.assertIsInstance(backend, ElasticSearch)

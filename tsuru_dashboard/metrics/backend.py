@@ -8,18 +8,27 @@ class MetricNotEnabled(Exception):
     pass
 
 
+def metrics_from_api(app):
+    for unit in app.get("units", []):
+        if "ProcessName" in unit:
+            return True
+    return False
+
+
 def get_backend(app, token):
-    if "envs" in app and "ELASTICSEARCH_HOST" in app["envs"]:
-        return ElasticSearch(app["envs"]["ELASTICSEARCH_HOST"], ".measure-tsuru-*", app["name"])
+    if metrics_from_api(app):
+        headers = {'authorization': token}
+        url = "{}/apps/{}/metric/envs".format(settings.TSURU_HOST, app["name"])
+        response = requests.get(url, headers=headers)
 
-    headers = {'authorization': token}
-    url = "{}/apps/{}/metric/envs".format(settings.TSURU_HOST, app["name"])
-    response = requests.get(url, headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            if "METRICS_ELASTICSEARCH_HOST" in data:
+                return ElasticSearch(data["METRICS_ELASTICSEARCH_HOST"], ".measure-tsuru-*", app["name"])
+    else:
+        if "envs" in app and "ELASTICSEARCH_HOST" in app["envs"]:
+            return ElasticSearch(app["envs"]["ELASTICSEARCH_HOST"], ".measure-tsuru-*", app["name"])
 
-    if response.status_code == 200:
-        data = response.json()
-        if "METRICS_ELASTICSEARCH_HOST" in data:
-            return ElasticSearch(data["METRICS_ELASTICSEARCH_HOST"], ".measure-tsuru-*", app["name"])
     raise MetricNotEnabled
 
 
