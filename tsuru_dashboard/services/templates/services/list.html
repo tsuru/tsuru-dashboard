@@ -22,7 +22,7 @@
                 {% for instance in service.instances %}
                 <tr>
                     <td>
-                        <a href="{% url 'service-detail' instance %}">{{ instance }}</a>
+                        <a href="{% url 'service-detail' service.service instance %}">{{ instance }}</a>
                     </td>
                 </tr>
                 {% endfor %}

@@ -17,15 +17,12 @@ class BindViewTest(TestCase):
         request = RequestFactory().post("/", {"app": app})
         request.session = {"tsuru_token": "admin"}
         instance = "service"
-        response = Bind.as_view()(request,
-                                  instance=instance)
+        service = "service"
+
+        response = Bind.as_view()(request, service=service, instance=instance)
+
         self.assertEqual(302, response.status_code)
-        url = reverse('service-detail', args=[instance])
+        url = reverse('service-detail', args=[service, instance])
         self.assertEqual(url, response.items()[1][1])
-        put.assert_called_with(
-            '{0}/services/instances/{1}/{2}'.format(
-                settings.TSURU_HOST,
-                instance,
-                app
-            ),
-            headers={'authorization': 'admin'})
+        url = '{}/services/{}/instances/{}/{}'.format(settings.TSURU_HOST, service, instance, app)
+        put.assert_called_with(url, headers={'authorization': 'admin'})

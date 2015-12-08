@@ -17,15 +17,12 @@ class UnbindViewTest(TestCase):
         request.session = {"tsuru_token": "admin"}
         instance = "instance"
         app = "app"
-        response = Unbind.as_view()(request,
-                                    instance=instance,
-                                    app=app)
+        service = "service"
+
+        response = Unbind.as_view()(request, service=service, instance=instance, app=app)
+
         self.assertEqual(302, response.status_code)
-        url = reverse('service-detail', args=[instance])
+        url = reverse('service-detail', args=[service, instance])
         self.assertEqual(url, response.items()[1][1])
-        delete.assert_called_with(
-            '{0}/services/instances/{1}/{2}'.format(
-                settings.TSURU_HOST,
-                instance, app
-            ),
-            headers={'authorization': 'admin'})
+        url = '{}/services/{}/instances/{}/{}'.format(settings.TSURU_HOST, service, instance, app)
+        delete.assert_called_with(url, headers={'authorization': 'admin'})

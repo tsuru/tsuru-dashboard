@@ -34,14 +34,14 @@
 								{{ app }}
 							</div>
 							<div class="span8">
-								<a class="btn btn-primary" href="{% url 'unbind' instance.Name app %}">Unbind</a>
+								<a class="btn btn-primary" href="{% url 'unbind' instance.ServiceName instance.Name app %}">Unbind</a>
 							</div>
 						</div>
 						</li>
 						{% endfor %}
 						<li>
 						<div class="row-fluid">
-							<form action="{% url 'bind' instance.Name %}" method="post">
+							<form action="{% url 'bind' instance.ServiceName instance.Name %}" method="post">
 								<div class="span3">
 									{% csrf_token %}
 									<select name="app">
@@ -90,7 +90,7 @@
 		<input type="text" class="remove-confirmation" />
 	</div>
 	<div class="modal-footer">
-		<form method="get" action="{% url 'service-remove' instance.Name %}">
+		<form method="get" action="{% url 'service-remove' instance.ServiceName instance.Name %}">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 			<button class="btn btn-danger btn-remove" disabled="disabled">Delete instance</button>
 		</form>

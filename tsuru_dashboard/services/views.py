@@ -33,15 +33,16 @@ class ServiceInstanceDetail(LoginRequiredView, TemplateView):
                 app_list.append(app['name'])
         return app_list
 
-    def get_instance(self, instance_name):
-        url = "{}/services/instances/{}".format(settings.TSURU_HOST, instance_name)
+    def get_instance(self, service_name, instance_name):
+        url = "{}/services/{}/instances/{}".format(settings.TSURU_HOST, service_name, instance_name)
         response = requests.get(url, headers=self.authorization)
         return response.json()
 
     def get_context_data(self, *args, **kwargs):
         context = super(ServiceInstanceDetail, self).get_context_data(*args, **kwargs)
         instance_name = kwargs["instance"]
-        instance = self.get_instance(instance_name)
+        service_name = kwargs["service"]
+        instance = self.get_instance(service_name, instance_name)
         apps = self.apps(instance)
         context.update({"instance": instance, "apps": apps})
         return context
@@ -75,24 +76,32 @@ class Bind(LoginRequiredView):
     def post(self, request, *args, **kwargs):
         app = request.POST["app"]
         instance = kwargs["instance"]
-        tsuru_url = '{}/services/instances/{}/{}'.format(
-            settings.TSURU_HOST, instance, app)
-        requests.put(tsuru_url, headers=self.authorization)
-        return redirect(reverse('service-detail', args=[instance]))
+        service = kwargs["service"]
+
+        url = '{}/services/{}/instances/{}/{}'.format(settings.TSURU_HOST, service, instance, app)
+        requests.put(url, headers=self.authorization)
+
+        return redirect(reverse('service-detail', args=[service, instance]))
 
 
 class Unbind(LoginRequiredView):
     def get(self, request, *args, **kwargs):
         app = kwargs["app"]
         instance = kwargs["instance"]
-        url = '{}/services/instances/{}/{}'.format(settings.TSURU_HOST, instance, app)
+        service = kwargs["service"]
+
+        url = '{}/services/{}/instances/{}/{}'.format(settings.TSURU_HOST, service, instance, app)
         requests.delete(url, headers=self.authorization)
-        return redirect(reverse('service-detail', args=[instance]))
+
+        return redirect(reverse('service-detail', args=[service, instance]))
 
 
 class ServiceRemove(LoginRequiredView):
     def get(self, request, *args, **kwargs):
         instance = kwargs["instance"]
-        url = '{}/services/instances/{}'.format(settings.TSURU_HOST, instance)
+        service = kwargs["service"]
+
+        url = '{}/services/{}/instances/{}'.format(settings.TSURU_HOST, service, instance)
         requests.delete(url, headers=self.authorization)
+
         return redirect(reverse('service-list'))
