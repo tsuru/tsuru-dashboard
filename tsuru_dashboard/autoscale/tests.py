@@ -25,7 +25,11 @@ class IndexTestCase(TestCase):
     @patch("tsuru_dashboard.auth.views.token_is_valid")
     @patch("requests.get")
     def test_index(self, get_mock, token_is_valid):
+        response_mock = Mock(status_code=200)
+        response_mock.json.return_value = {"name": "appname"}
+        get_mock.return_value = response_mock
         token_is_valid.return_value = True
+
         with self.settings(SESSION_ENGINE='django.contrib.sessions.backends.file'):
             session = self.client.session
             session['tsuru_token'] = "beare token"
@@ -37,7 +41,7 @@ class IndexTestCase(TestCase):
     @patch("tsuru_dashboard.auth.views.token_is_valid")
     @patch("requests.get")
     def test_service_url(self, get_mock, token_is_valid):
-        response_mock = Mock()
+        response_mock = Mock(status_code=200)
         response_mock.json.return_value = {"name": "app"}
         get_mock.return_value = response_mock
 
@@ -57,3 +61,18 @@ class IndexTestCase(TestCase):
             expected = "{}/app/{}?TSURU_TOKEN={}".format(
                 autoscale_dashboard_url, "app", token)
             self.assertEqual(urllib.unquote(response.context_data["service_url"]), expected)
+
+    @patch("tsuru_dashboard.auth.views.token_is_valid")
+    @patch("requests.get")
+    def test_app_not_found(self, get_mock, token_is_valid):
+        response_mock = Mock(status_code=404)
+        get_mock.return_value = response_mock
+        token_is_valid.return_value = True
+
+        with self.settings(SESSION_ENGINE='django.contrib.sessions.backends.file'):
+            session = self.client.session
+            session['tsuru_token'] = "beare token"
+            session.save()
+
+            response = self.client.get(reverse("autoscale", args=["app"]))
+            self.assertEqual(response.status_code, 404)

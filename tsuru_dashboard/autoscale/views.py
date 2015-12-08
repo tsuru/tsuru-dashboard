@@ -1,5 +1,6 @@
 from django.views.generic import TemplateView
 from django.conf import settings
+from django.http import Http404
 
 from tsuru_dashboard.auth.views import LoginRequiredMixin
 
@@ -14,7 +15,12 @@ class Index(LoginRequiredMixin, TemplateView):
 
     def get_app(self, app_name):
         url = '{}/apps/{}'.format(settings.TSURU_HOST, app_name)
-        return requests.get(url, headers=self.authorization).json()
+        response = requests.get(url, headers=self.authorization)
+
+        if response.status_code != 200:
+            raise Http404()
+
+        return response.json()
 
     def get_context_data(self, *args, **kwargs):
         context = super(Index, self).get_context_data(*args, **kwargs)
