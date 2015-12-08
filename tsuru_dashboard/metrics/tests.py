@@ -316,3 +316,79 @@ class ElasticSearchTest(TestCase):
         }
         d = self.es.process(data, formatter=lambda x: x / (1024 * 1024))
         self.assertDictEqual(d, expected)
+
+    def test_process_no_aggregation(self):
+        data = {
+            "took": 1,
+            "timed_out": False,
+            "_shards": {
+                "total": 0,
+                "successful": 0,
+                "failed": 0
+            },
+            "hits": {
+                "total": 0,
+                "max_score": 0,
+                "hits": []
+            }
+        }
+        expected = {'data': {}, 'max': '1.00', 'min': '0.00'}
+        d = self.es.process(data, formatter=lambda x: x / (1024 * 1024))
+        self.assertDictEqual(d, expected)
+
+    def test_unit_process_no_aggregation(self):
+        data = {
+            "took": 1,
+            "timed_out": False,
+            "_shards": {
+                "total": 0,
+                "successful": 0,
+                "failed": 0
+            },
+            "hits": {
+                "total": 0,
+                "max_score": 0,
+                "hits": []
+            }
+        }
+        expected = {'data': {}, 'max': '0.00', 'min': '0.00'}
+        d = self.es.units_process(data, formatter=lambda x: x / (1024 * 1024))
+        self.assertDictEqual(d, expected)
+
+    def test_request_min_process_no_aggregation(self):
+        data = {
+            "took": 1,
+            "timed_out": False,
+            "_shards": {
+                "total": 0,
+                "successful": 0,
+                "failed": 0
+            },
+            "hits": {
+                "total": 0,
+                "max_score": 0,
+                "hits": []
+            }
+        }
+        expected = {'data': {}, 'max': 0, 'min': None}
+        d = self.es.requests_min_process(data, formatter=lambda x: x / (1024 * 1024))
+        self.assertDictEqual(d, expected)
+
+    def test_connections_process_no_aggregation(self):
+        data = {
+            "took": 1,
+            "timed_out": False,
+            "_shards": {
+                "total": 0,
+                "successful": 0,
+                "failed": 0
+            },
+            "hits": {
+                "total": 0,
+                "max_score": 0,
+                "hits": []
+            }
+        }
+        expected = {'data': {}, 'max': 0, 'min': 0}
+        d = self.es.connections_process(data, formatter=lambda x: x / (1024 * 1024))
+        self.assertDictEqual(d, expected)

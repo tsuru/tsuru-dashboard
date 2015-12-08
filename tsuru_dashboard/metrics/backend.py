@@ -31,8 +31,8 @@ class ElasticSearch(object):
 
     def post(self, data, metric):
         url = "{}/.measure-tsuru-*/{}/_search".format(self.url, metric)
-        data = requests.post(url, data=json.dumps(data))
-        return data.json()
+        result = requests.post(url, data=json.dumps(data))
+        return result.json()
 
     def process(self, data, formatter=None):
         if not formatter:
@@ -44,7 +44,7 @@ class ElasticSearch(object):
         min_value = None
         max_value = 0
 
-        if data["aggregations"]["range"]["buckets"][0]["doc_count"] > 0:
+        if "aggregations" in data and data["aggregations"]["range"]["buckets"][0]["doc_count"] > 0:
             for bucket in data["aggregations"]["range"]["buckets"][0]["date"]["buckets"]:
                 bucket_max = formatter(bucket["max"]["value"])
                 bucket_min = formatter(bucket["min"]["value"])
@@ -96,7 +96,7 @@ class ElasticSearch(object):
         min_value = None
         max_value = 0
 
-        if data["aggregations"]["range"]["buckets"][0]["doc_count"] > 0:
+        if "aggregations" in data and data["aggregations"]["range"]["buckets"][0]["doc_count"] > 0:
             for bucket in data["aggregations"]["range"]["buckets"][0]["date"]["buckets"]:
                 value = bucket["units"]["value"]
 
@@ -131,7 +131,7 @@ class ElasticSearch(object):
         min_value = None
         max_value = 0
 
-        if data["aggregations"]["range"]["buckets"][0]["doc_count"] > 0:
+        if "aggregations" in data and data["aggregations"]["range"]["buckets"][0]["doc_count"] > 0:
             for bucket in data["aggregations"]["range"]["buckets"][0]["date"]["buckets"]:
                 value = bucket["sum"]["value"]
 
@@ -169,7 +169,7 @@ class ElasticSearch(object):
         min_value = 0
         max_value = 0
 
-        if data["aggregations"]["range"]["buckets"][0]["doc_count"] > 0:
+        if "aggregations" in data and data["aggregations"]["range"]["buckets"][0]["doc_count"] > 0:
             for bucket in data["aggregations"]["range"]["buckets"][0]["date"]["buckets"]:
                 for doc in bucket["connection"]["buckets"]:
                     size = doc["doc_count"]
