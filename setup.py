@@ -13,7 +13,7 @@ setup(
     include_package_data=True,
     install_requires=[
         "Django>=1.9",
-        "request>=2.8.1",
+        "requests>=2.8.1",
         "python-dateutil>=2.4.2", 
         "pytz>=2015.4",
         "Pygments>=2.0.2",

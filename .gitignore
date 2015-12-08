@@ -15,3 +15,6 @@ local_settings.py
 tsuru_dashboard/apps/tests/example.tar.gz
 node_modules
 coverage
+build
+dist
+tsuru_dashboard.egg-info
