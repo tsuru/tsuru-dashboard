@@ -14,7 +14,7 @@ setup(
     install_requires=[
         "Django>=1.9",
         "requests>=2.8.1",
-        "python-dateutil>=2.4.2", 
+        "python-dateutil>=2.4.2",
         "pytz>=2015.4",
         "Pygments>=2.0.2",
         "tsuruclient>=0.2.1",
