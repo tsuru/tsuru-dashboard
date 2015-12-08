@@ -1,0 +1,2 @@
+include MANIFEST.in
+recursive-include tsuru_dashboard *.html *.css *.js *.png *.svg *.gif *.ico
