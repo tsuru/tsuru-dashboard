@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.test.client import RequestFactory
-from django.conf import settings
 
+from tsuru_dashboard import settings
 from tsuru_dashboard.teams.views import Info
 
 from mock import patch, Mock

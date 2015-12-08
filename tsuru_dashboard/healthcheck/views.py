@@ -1,5 +1,6 @@
 from django.http import HttpResponse
-from django.conf import settings
+
+from tsuru_dashboard import settings
 
 import requests
 

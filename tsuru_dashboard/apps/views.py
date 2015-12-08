@@ -9,7 +9,6 @@ from base64 import decodestring
 import requests
 
 from django.template.response import TemplateResponse
-from django.conf import settings
 from django.http import HttpResponse, HttpResponseServerError, Http404, StreamingHttpResponse, JsonResponse
 from django.shortcuts import redirect
 from django.core.urlresolvers import reverse
@@ -20,6 +19,7 @@ from pygments import highlight
 from pygments.lexers import DiffLexer
 from pygments.formatters import HtmlFormatter
 
+from tsuru_dashboard import settings
 from tsuru_dashboard.auth.views import LoginRequiredView, LoginRequiredMixin
 
 from .forms import AppForm, AppAddTeamForm, RunForm, SetEnvForm

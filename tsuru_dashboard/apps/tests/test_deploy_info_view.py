@@ -3,8 +3,8 @@ import json
 
 from django.test import TestCase
 from django.test.client import RequestFactory
-from django.conf import settings
 
+from tsuru_dashboard import settings
 from tsuru_dashboard.apps.views import DeployInfo
 
 from mock import patch, Mock

@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.core.urlresolvers import reverse
-from django.conf import settings
 
+from tsuru_dashboard import settings
 from tsuru_dashboard.auth.forms import PasswordRecoveryForm
 
 from mock import patch, Mock

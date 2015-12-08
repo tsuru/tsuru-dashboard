@@ -1,10 +1,10 @@
 from mock import patch, Mock
 from dateutil import parser
 
-from django.conf import settings
 from django.test import TestCase
 from django.test.client import RequestFactory
 
+from tsuru_dashboard import settings
 from tsuru_dashboard.admin.views import PoolList
 
 import json

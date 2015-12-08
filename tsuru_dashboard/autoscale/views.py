@@ -1,7 +1,7 @@
 from django.views.generic import TemplateView
-from django.conf import settings
 from django.http import Http404
 
+from tsuru_dashboard import settings
 from tsuru_dashboard.auth.views import LoginRequiredMixin
 
 import os

@@ -3,8 +3,8 @@ from django.test import TestCase
 from django.test.client import RequestFactory
 from django.core.urlresolvers import reverse
 from django.views.generic.base import View
-from django.conf import settings
 
+from tsuru_dashboard import settings
 from tsuru_dashboard.auth.views import LoginRequiredMixin
 
 from mock import patch, Mock

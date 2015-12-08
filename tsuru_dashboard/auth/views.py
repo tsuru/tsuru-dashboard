@@ -2,7 +2,7 @@ import json
 import requests
 from tsuruclient import client
 
-from django.conf import settings
+from tsuru_dashboard import settings
 from django.template.response import TemplateResponse
 from django.shortcuts import redirect
 from django.views.generic.base import View, TemplateView

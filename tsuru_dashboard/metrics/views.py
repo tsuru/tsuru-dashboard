@@ -1,6 +1,6 @@
 from django.http import HttpResponse, HttpResponseBadRequest
-from django.conf import settings
 
+from tsuru_dashboard import settings
 from tsuru_dashboard.auth.views import LoginRequiredView
 
 import json

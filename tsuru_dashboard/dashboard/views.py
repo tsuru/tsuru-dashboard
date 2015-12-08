@@ -2,13 +2,13 @@ import requests
 
 from datetime import datetime, timedelta
 
-from django.conf import settings
 from django.http import JsonResponse, HttpResponseRedirect
 from django.views.generic import TemplateView
 
 from pytz import utc
 from dateutil import parser
 
+from tsuru_dashboard import settings
 from tsuru_dashboard.auth.views import LoginRequiredView
 
 

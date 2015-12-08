@@ -1,4 +1,4 @@
-from django.conf import settings
+from tsuru_dashboard import settings
 
 import requests
 import json

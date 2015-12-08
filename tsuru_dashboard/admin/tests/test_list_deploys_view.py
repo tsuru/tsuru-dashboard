@@ -2,10 +2,10 @@ import json
 import httpretty
 import mock
 
-from django.conf import settings
 from django.test import TestCase
 from django.test.client import RequestFactory
 
+from tsuru_dashboard import settings
 from tsuru_dashboard.admin.views import ListDeploy
 
 

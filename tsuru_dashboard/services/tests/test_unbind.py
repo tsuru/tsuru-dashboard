@@ -1,8 +1,8 @@
 from django.test import TestCase
 from django.test.client import RequestFactory
-from django.conf import settings
 from django.core.urlresolvers import reverse
 
+from tsuru_dashboard import settings
 from tsuru_dashboard.services.views import Unbind
 
 from mock import patch, Mock

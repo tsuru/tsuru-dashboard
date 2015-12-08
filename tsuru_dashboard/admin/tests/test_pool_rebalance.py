@@ -2,10 +2,10 @@ from mock import patch
 
 from django.test import TestCase
 from django.test.client import RequestFactory
-from django.conf import settings
 
 import httpretty
 
+from tsuru_dashboard import settings
 from tsuru_dashboard.admin.views import PoolRebalance
 
 

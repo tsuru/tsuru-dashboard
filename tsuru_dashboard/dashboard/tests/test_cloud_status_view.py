@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.test import client
-from django.conf import settings
 
+from tsuru_dashboard import settings
 from tsuru_dashboard.auth.views import LoginRequiredView
 from tsuru_dashboard.dashboard import views
 

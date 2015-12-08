@@ -1,10 +1,10 @@
-from django.conf import settings
 from django.shortcuts import redirect
 from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.views.generic import TemplateView
 from django.template.response import TemplateResponse
 
+from tsuru_dashboard import settings
 from tsuru_dashboard.auth.views import LoginRequiredView
 
 from .forms import TeamForm

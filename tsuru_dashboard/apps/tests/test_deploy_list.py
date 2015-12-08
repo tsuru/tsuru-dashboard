@@ -4,9 +4,9 @@ import os.path
 import subprocess
 
 from django.test import TestCase
-from django.conf import settings
 from django.test.client import RequestFactory
 
+from tsuru_dashboard import settings
 from tsuru_dashboard.apps.views import ListDeploy
 
 

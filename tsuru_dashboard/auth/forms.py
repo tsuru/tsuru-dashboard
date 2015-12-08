@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import widgets
-from django.conf import settings
+from tsuru_dashboard import settings
 
 import requests
 

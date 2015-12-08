@@ -4,10 +4,10 @@ import mock
 import httpretty
 import json
 
-from django.conf import settings
 from django.test import TestCase
 from django.test.client import RequestFactory
 
+from tsuru_dashboard import settings
 from tsuru_dashboard.admin.views import PoolInfo
 
 

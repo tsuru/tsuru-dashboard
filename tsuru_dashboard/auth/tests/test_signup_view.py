@@ -1,8 +1,8 @@
-from django.conf import settings
 from django.test import TestCase
 from django.test.client import RequestFactory
 from mock import Mock, patch
 
+from tsuru_dashboard import settings
 from tsuru_dashboard.auth.forms import SignupForm
 from tsuru_dashboard.auth.views import Signup
 

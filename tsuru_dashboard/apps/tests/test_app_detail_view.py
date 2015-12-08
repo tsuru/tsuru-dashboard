@@ -1,8 +1,8 @@
 from django.test import TestCase
 from django.test.client import RequestFactory
 from django.http import Http404
-from django.conf import settings
 
+from tsuru_dashboard import settings
 from tsuru_dashboard.apps.views import AppDetail
 
 from mock import patch, Mock

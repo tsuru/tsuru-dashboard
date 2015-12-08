@@ -1,12 +1,12 @@
 from django.test import TestCase
 from django.test.client import RequestFactory
-from django.conf import settings
 
 import mock
 import httpretty
 
 import json
 
+from tsuru_dashboard import settings
 from tsuru_dashboard.auth.views import Callback
 
 

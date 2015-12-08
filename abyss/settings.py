@@ -60,10 +60,6 @@ ROOT_URLCONF = 'abyss.urls'
 
 WSGI_APPLICATION = 'abyss.wsgi.application'
 
-TEMPLATE_DIRS = (
-    os.path.join(BASE_DIR, "templates"),
-)
-
 INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -80,8 +76,6 @@ INSTALLED_APPS = (
     'tsuru_dashboard.dashboard',
     'tsuru_dashboard.metrics',
 )
-
-TSURU_HOST = os.environ.get("TSURU_HOST", "http://localhost:8080")
 
 SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
 

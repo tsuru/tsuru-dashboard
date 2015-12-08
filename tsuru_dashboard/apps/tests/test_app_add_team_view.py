@@ -4,9 +4,9 @@ from mock import patch, Mock
 
 from django.test import TestCase
 from django.test.client import RequestFactory
-from django.conf import settings
 from django.core.urlresolvers import reverse
 
+from tsuru_dashboard import settings
 from tsuru_dashboard.apps.views import AppAddTeam
 from tsuru_dashboard.auth.views import LoginRequiredView
 from tsuru_dashboard.apps.forms import AppAddTeamForm

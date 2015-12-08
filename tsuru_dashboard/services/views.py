@@ -1,9 +1,9 @@
 from django.template.response import TemplateResponse
-from django.conf import settings
 from django.shortcuts import redirect
 from django.views.generic import TemplateView
 from django.core.urlresolvers import reverse
 
+from tsuru_dashboard import settings
 from tsuru_dashboard.auth.views import LoginRequiredView
 
 import requests

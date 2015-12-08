@@ -1,11 +1,11 @@
 # coding: utf-8
 from mock import patch, Mock
 
-from django.conf import settings
 from django.test import TestCase
 from django.test.client import RequestFactory
 from django.core.urlresolvers import reverse
 
+from tsuru_dashboard import settings
 from tsuru_dashboard.auth.views import LoginRequiredView
 from tsuru_dashboard.apps.views import AppEnv
 from tsuru_dashboard.apps.forms import SetEnvForm

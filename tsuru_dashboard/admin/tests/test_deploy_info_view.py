@@ -2,9 +2,9 @@ import copy
 
 from django.test import TestCase
 from django.test.client import RequestFactory
-from django.conf import settings
 from django.http import Http404
 
+from tsuru_dashboard import settings
 from tsuru_dashboard.admin.views import DeployInfo
 
 from mock import patch, Mock

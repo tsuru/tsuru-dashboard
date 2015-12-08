@@ -4,7 +4,6 @@ import re
 from dateutil import parser
 
 from django.views.generic import TemplateView
-from django.conf import settings
 from django.http import HttpResponse, Http404, JsonResponse, StreamingHttpResponse
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
@@ -14,6 +13,7 @@ from pygments.lexers import DiffLexer
 from pygments.formatters import HtmlFormatter
 from pytz import utc
 
+from tsuru_dashboard import settings
 from tsuru_dashboard.auth.views import LoginRequiredView
 
 

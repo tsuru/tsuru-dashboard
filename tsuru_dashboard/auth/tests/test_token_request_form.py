@@ -1,6 +1,6 @@
 from django.test import TestCase
-from django.conf import settings
 
+from tsuru_dashboard import settings
 from tsuru_dashboard.auth.forms import TokenRequestForm
 
 from mock import patch, Mock
