@@ -61,8 +61,8 @@ class PoolInfoViewTest(TestCase):
         body = json.dumps(data)
         httpretty.register_uri(httpretty.GET, url, body=body, status=200)
 
-        for address in ["128.0.0.1", "myserver.com", "127.0.0.1"]:
-            url = "{}/docker/node/{}/containers".format(settings.TSURU_HOST, address)
+        for addr in ["http://128.0.0.1:4243", "http://myserver.com:2375", "http://127.0.0.1:2375"]:
+            url = "{}/docker/node/{}/containers".format(settings.TSURU_HOST, addr)
             body = json.dumps([{"Status": "started"}, {"Status": "stopped"}])
             httpretty.register_uri(httpretty.GET, url, body=body, status=200)
 
@@ -110,8 +110,8 @@ class PoolInfoViewTest(TestCase):
         body = json.dumps(data)
         httpretty.register_uri(httpretty.GET, url, body=body, status=200)
 
-        for address in ["128.0.0.1", "myserver.com", "127.0.0.1"]:
-            url = "{}/docker/node/{}/containers".format(settings.TSURU_HOST, address)
+        for addr in ["http://128.0.0.1:4243", "http://myserver.com:2375", "http://127.0.0.1:2375"]:
+            url = "{}/docker/node/{}/containers".format(settings.TSURU_HOST, addr)
             body = json.dumps([{"Status": "started"}, {"Status": "stopped"}])
             httpretty.register_uri(httpretty.GET, url, body=body, status=403)
 

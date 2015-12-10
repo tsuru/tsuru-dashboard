@@ -23,7 +23,7 @@ class NodeInfoViewTest(TestCase):
 
         self.address = 'http://127.0.0.2:4243'
 
-        url = "{}/docker/node/{}/containers".format(settings.TSURU_HOST, '127.0.0.2')
+        url = "{}/docker/node/{}/containers".format(settings.TSURU_HOST, 'http://127.0.0.2:4243')
         self.containers = [
             {"id": "blabla", "type": "python", "appname": "myapp", "hostaddr": "http://127.0.0.2:4243"}
         ]
@@ -87,7 +87,7 @@ class NodeInfoViewTest(TestCase):
         httpretty.reset()
         token_is_valid.return_value = True
 
-        url = "{}/docker/node/{}/containers".format(settings.TSURU_HOST, '127.0.0.2')
+        url = "{}/docker/node/{}/containers".format(settings.TSURU_HOST, 'http://127.0.0.2:4243')
         httpretty.register_uri(
             httpretty.GET,
             url,
@@ -109,7 +109,7 @@ class NodeInfoViewTest(TestCase):
         httpretty.reset()
         token_is_valid.return_value = True
 
-        url = "{}/docker/node/{}/containers".format(settings.TSURU_HOST, '127.0.0.2')
+        url = "{}/docker/node/{}/containers".format(settings.TSURU_HOST, 'http://127.0.0.2:4243')
         httpretty.register_uri(
             httpretty.GET,
             url,
@@ -131,7 +131,7 @@ class NodeInfoViewTest(TestCase):
         httpretty.reset()
         token_is_valid.return_value = True
 
-        url = "{}/docker/node/{}/containers".format(settings.TSURU_HOST, '127.0.0.2')
+        url = "{}/docker/node/{}/containers".format(settings.TSURU_HOST, 'http://127.0.0.2:4243')
         httpretty.register_uri(
             httpretty.GET,
             url,

@@ -24,16 +24,13 @@ class PoolList(LoginRequiredView, TemplateView):
     template_name = "admin/pool_list.html"
 
     def units_by_node(self, address):
-        address = address.replace("http://", "")
-        address = address.split(":")[0]
-
         url = "{}/docker/node/{}/containers".format(settings.TSURU_HOST, address)
         response = requests.get(url, headers=self.authorization)
 
         if response.status_code != 200:
             return {}
 
-        units = response.json()
+        units = response.json() or []
 
         result = {}
 
@@ -87,9 +84,6 @@ class NodeInfo(LoginRequiredView, TemplateView):
     template_name = "admin/node_info.html"
 
     def get_containers(self, node_address):
-        node_address = node_address.replace("http://", "")
-        node_address = node_address.split(":")[0]
-
         url = "{}/docker/node/{}/containers".format(settings.TSURU_HOST, node_address)
         response = requests.get(url, headers=self.authorization)
 
@@ -99,7 +93,7 @@ class NodeInfo(LoginRequiredView, TemplateView):
         if response.status_code > 399:
             return []
 
-        return response.json()
+        return response.json() or []
 
     def get_node(self, address):
         url = "{}/docker/node".format(settings.TSURU_HOST)
@@ -205,16 +199,13 @@ class PoolInfo(LoginRequiredView, TemplateView):
     template_name = "docker/pool_info.html"
 
     def units_by_node(self, address):
-        address = address.replace("http://", "")
-        address = address.split(":")[0]
-
         url = "{}/docker/node/{}/containers".format(settings.TSURU_HOST, address)
         response = requests.get(url, headers=self.authorization)
 
         if response.status_code != 200:
             return {}
 
-        units = response.json()
+        units = response.json() or []
         result = {}
 
         for unit in units:
