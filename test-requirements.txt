@@ -3,3 +3,4 @@ mock==1.0.1
 flake8==2.0
 coverage==3.6
 freezegun==0.3.4
+httpretty==0.8.10
