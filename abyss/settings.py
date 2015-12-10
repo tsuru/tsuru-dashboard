@@ -72,15 +72,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'tsuru_dashboard.auth',
-    'tsuru_dashboard.apps',
-    'tsuru_dashboard.services',
-    'tsuru_dashboard.teams',
-    'tsuru_dashboard.healthcheck',
-    'tsuru_dashboard.admin',
-    'tsuru_dashboard.autoscale',
-    'tsuru_dashboard.dashboard',
-    'tsuru_dashboard.metrics',
+    'tsuru_dashboard',
 )
 
 SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
