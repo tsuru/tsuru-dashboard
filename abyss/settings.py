@@ -6,8 +6,6 @@ BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
 DEBUG = os.environ.get("DEBUG", "false") in ("true", "True", "1")
 
-TEMPLATE_DEBUG = DEBUG
-
 SECRET_KEY = os.environ.get("SECRET_KEY", "your-secret-key")
 
 DATABASES = {
@@ -38,15 +36,23 @@ STATICFILES_DIRS = (
     'tsuru_dashboard/admin/static_files',
 )
 
-TEMPLATE_CONTEXT_PROCESSORS = (
-    "django.core.context_processors.request",
-    "django.core.context_processors.debug",
-    "django.core.context_processors.media",
-    "django.core.context_processors.static",
-    "django.core.context_processors.tz",
-    "django.contrib.messages.context_processors.messages",
-    "tsuru_dashboard.autoscale.context_processors.autoscale_enabled",
-)
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                "django.template.context_processors.static",
+                'django.template.context_processors.tz',
+                'django.contrib.messages.context_processors.messages',
+                'tsuru_dashboard.autoscale.context_processors.autoscale_enabled',
+            ],
+        },
+    },
+]
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
