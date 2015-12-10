@@ -58,14 +58,14 @@ ROOT_URLCONF = 'abyss.urls'
 
 WSGI_APPLICATION = 'abyss.wsgi.application'
 
-INSTALLED_APPS = (
+INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
     'tsuru_dashboard',
-)
+]
 
 SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
 
