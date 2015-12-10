@@ -25,16 +25,8 @@ USE_L10N = True
 
 USE_TZ = True
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static_files'),
-    'tsuru_dashboard/dashboard/static_files',
-    'tsuru_dashboard/apps/static_files',
-    'tsuru_dashboard/admin/static_files',
-)
 
 TEMPLATES = [
     {
