@@ -1,12 +1,11 @@
 from django.conf.urls import patterns, url
-from django.views.decorators.cache import cache_page
 from django.views.decorators.csrf import csrf_exempt
 
 import views
 
 urlpatterns = patterns(
     '',
-    url(r'^$', cache_page(60 * 1)(views.PoolList.as_view()), name='pool-list'),
+    url(r'^$', views.PoolList.as_view(), name='pool-list'),
     url(r'^pool/(?P<pool>[\w-]+)/$', views.PoolInfo.as_view(), name='pool-info'),
     url(r'^pool/(?P<pool>[\w-]+)/rebalance/$', csrf_exempt(views.PoolRebalance.as_view()),
         name='pool-rebalance'),
