@@ -2,15 +2,8 @@
 {% load staticfiles %}
 
 {% block extra_css %}
-{{ block.super }}
-<style>
-#output {
-    color: #fff;
-    background-color: #333;
-    border-radius: 3px;
-    padding: 10px 20px;
-}
-</style>
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static "css/pages/app-log.css" %}" />
 {% endblock %}
 
 {% block navbar %}
@@ -21,13 +14,7 @@
 <div class="container-fluid">
 	<div class="row-fluid">
 		<div class="span12">
-            <div id="output">
-			{% for log in logs %}
-			<p>
-			<strong>{{ log.Date }} [ {{ log.Source }} ][ {{ log.Unit }} ]:</strong> {{ log.Message }}
-			</p>
-			{% endfor %}
-            </div>
+            <div id="logs"></div>
 		</div>
 	</div>
 </div>
@@ -35,17 +22,5 @@
 
 {% block extra_js %}
 <script src="{% static "js/oboe-browser.min.js" %}"></script>
-<script type="text/javascript">
-(function() {
-oboe(location.pathname + "stream/").done(function(things) {
-  $.each(things, function(i, data) {
-    deployOutput("<strong>" + data.Date + " - [" + data.Source + "][" + data.Unit + "]:</strong> " + data.Message);
-  });
-});
-
-function deployOutput(msg) {
-  $("#output").append("<p>" + msg + "</p>");
-}
-})();
-</script>
+<script src="{% static "js/log.js" %}"></script>
 {% endblock %}

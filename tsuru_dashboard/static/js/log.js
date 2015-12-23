@@ -19019,128 +19019,37 @@ module.exports = require('./lib/React');
 },{"./lib/React":26}],159:[function(require,module,exports){
 var React = require('react');
 
-var GraphContainer = React.createClass({displayName: "GraphContainer",
-  getDefaultProps: function() {
-    return {
-      interval: "1m",
-      from: "1h",
-      processName: "",
-      legend: false
-    }
+var Log = React.createClass({displayName: "Log",
+  getInitialState: function() {
+    return {messages: []};
   },
-  loadData: function() {
-    var appName = this.props.appName;
-    var kind = this.props.kind;
-    var interval = this.props.interval;
-    var from = this.props.from;
-
-    var url ="/metrics/" + appName + "/?metric=" + kind + "&interval=" + interval + "&date_range=" + from;
-
-    if (this.props.processName !== "") {
-        url += "&process_name=" + this.props.processName;
-    }
-    $.getJSON(url, function(data) {
-      if (Object.keys(data.data).length === 0)
-        data.data = {" ": [1,1]};
-
-      this.renderGraph(data);
+  componentDidMount: function() {
+    oboe(this.props.url).done(function(things) {
+      $.each(things, function(i, data) {
+        var msg = "<p><strong>" + data.Date + " [ " + data.Source + " ][ " + data.Unit + " ]:</strong> - " + data.Message + "</p>";
+        $(".log").append("<p>" + msg + "</p>");
+        // this.setState({messages: this.state.messages.concat(data)});
+      }.bind(this));
     }.bind(this));
   },
-  renderGraph: function(result) {
-    var $elem = $("#" + this.props.kind);
-    var d = [];
-    for (key in result.data) {
-      d.push({
-        data: result.data[key],
-        lines: {show: true, fill: true},
-        label: key
-      });
-    }
-    var options = {
-        xaxis: {
-            mode: "time",
-            timezone: "browser"
-        },
-        grid: {
-		  hoverable: true,
-		},
-		tooltip: {
-		  show: true,
-		  content: "%x the %s was %y"
-        },
-        legend: {
-          position: "sw",
-          show: this.props.legend
-        }
-    };
-    $.plot($elem, d, options);
-  },
   render: function() {
-    this.loadData();
-    var kind = this.props.kind;
-    var appName = this.props.appName;
-    var url = "/apps/" + appName + "/metrics/details/?kind=" + kind + "&from=1h&serie=1m";
     return (
-      React.createElement("div", {className: "graph-container"}, 
-        React.createElement("h2", null, this.props.kind), 
-        React.createElement("a", {href: url}), 
-        React.createElement("a", {href: url}, React.createElement("div", {id: this.props.kind, className: "graph"}))
-      )
-    );
+      React.createElement("div", {className: "log"})
+    )
   }
 });
 
-var Metrics = React.createClass({displayName: "Metrics",
-  render: function() {
-    var appName = this.props.appName;
-    return (
-      React.createElement("div", {className: "metrics"}, 
-        React.createElement(GraphContainer, {kind: "cpu_max", appName: appName, processName: this.props.processName}), 
-        React.createElement(GraphContainer, {kind: "mem_max", appName: appName, processName: this.props.processName}), 
-        React.createElement(GraphContainer, {kind: "connections", appName: appName, processName: this.props.processName}), 
-        React.createElement(GraphContainer, {kind: "units", appName: appName, processName: this.props.processName}), 
-        React.createElement(GraphContainer, {kind: "requests_min", appName: appName}), 
-        React.createElement(GraphContainer, {kind: "response_time", appName: appName})
-      )
-    );
-  }
-});
-
-module.exports = {
-    Metrics: Metrics,
-    GraphContainer: GraphContainer,
-};
+module.exports = Log;
 
 },{"react":158}],160:[function(require,module,exports){
 var React = require('react'),
     ReactDOM = require('react-dom'),
-    GraphContainer = require("../components/metrics.jsx").GraphContainer;
+    Log = require("../components/log.jsx");
 
-var appName = window.location.pathname.split("/")[2];
-
-var queryString = function(key) {
-  var keys = {};
-  var items = window.location.search.substr(1).split("&");
-  $.each(items, function(i, item) {
-    var keyValue = item.split("=");
-    keys[keyValue[0]] = keyValue[1];
-  });
-  return keys[key];
-}
-
-$("select[name=from]").val(queryString("from"));
-$("select[name=serie]").val(queryString("serie"));
-$("input[name=kind]").val(queryString("kind"));
-
-var kind = queryString("kind");
-var interval = queryString("serie");
-var from = queryString("from");
-
+var url = window.location.pathname + "stream/";
 ReactDOM.render(
-  React.createElement("div", {className: "metrics"}, 
-    React.createElement(GraphContainer, {kind: kind, appName: appName, interval: interval, from: from, legend: true})
-  ),
-  document.getElementById('metrics')
+  React.createElement(Log, {url: url}),
+  document.getElementById('logs')
 );
 
-},{"../components/metrics.jsx":159,"react":158,"react-dom":2}]},{},[160]);
+},{"../components/log.jsx":159,"react":158,"react-dom":2}]},{},[160]);
