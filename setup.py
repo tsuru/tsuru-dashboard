@@ -12,7 +12,7 @@ setup(
     author_email="tsuru@corp.globo.com",
     include_package_data=True,
     install_requires=[
-        "Django>=1.9",
+        "Django>=1.9.1",
         "requests>=2.8.1",
         "python-dateutil>=2.4.2",
         "pytz>=2015.4",
