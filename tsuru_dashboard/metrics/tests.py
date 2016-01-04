@@ -110,7 +110,10 @@ class GetBackendTest(TestCase):
         backend = get_backend(app, 'token')
         self.assertIsInstance(backend, ElasticSearch)
 
-    def test_envs_from_app(self):
+    @patch("requests.get")
+    def test_envs_from_app(self, get_mock):
+        get_mock.return_value = Mock(status_code=500)
+
         app = {"name": "appname", "envs": {"ELASTICSEARCH_HOST": "ble"}, "units": [{"ID": "id"}]}
 
         backend = get_backend(app, 'token')
