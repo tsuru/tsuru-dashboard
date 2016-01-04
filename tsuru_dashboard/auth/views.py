@@ -140,7 +140,7 @@ class Login(FormView):
             return super(Login, self).form_valid(form)
 
         form.add_error(None, response.content)
-        return self.render_to_response(self.get_context_data(form=form))
+        return super(Login, self).form_invalid(form)
 
 
 class Logout(View):
