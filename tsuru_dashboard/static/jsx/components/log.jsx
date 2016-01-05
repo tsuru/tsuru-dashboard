@@ -42,9 +42,22 @@ var Follow = React.createClass({
 });
 
 var Top = React.createClass({
+  componentDidMount: function() {
+    window.addEventListener('scroll', this.handleScroll);
+  },
+  componentWillUnmount: function() {
+    window.removeEventListener('scroll', this.handleScroll);
+  },
+  handleScroll: function(e) {
+	var scroll = window.scrollY;
+	var windowSize = window.innerHeight;
+	var pageSize = window.document.getElementsByTagName('body')[0].clientHeight;
+	var bottom = pageSize - windowSize - scroll;
+    ReactDOM.findDOMNode(this.refs.toTop).style.bottom = bottom + 'px';
+  },
   render: function() {
     return (
-      <a href="#" className="to-top" onClick={this.props.onClick}>Top ▲</a>
+      <a href="#" ref="toTop" className="to-top" onClick={this.props.onClick}>Top ▲</a>
     )
   }
 });

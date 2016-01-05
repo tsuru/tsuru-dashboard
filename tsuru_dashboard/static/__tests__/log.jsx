@@ -11,7 +11,5 @@ describe('Log', function() {
     var log = TestUtils.renderIntoDocument(
       <Log />
     );
-
-    expect(ReactDOM.findDOMNode(log).className).toEqual("log");
   });
 });
