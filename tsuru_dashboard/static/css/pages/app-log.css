@@ -3,4 +3,70 @@
     background-color: #333;
     border-radius: 3px;
     padding: 10px 20px;
+	position: relative;
+}
+
+#logs .active {
+  	background-color: #08c;
+}
+
+#logs .to-top {
+    z-index: 80;
+    position: absolute;
+    display: block;
+    bottom: 2px;
+    right: 2px;
+    margin-right: 2px;
+    padding-right: 16px;
+    text-align: right;
+    color: #999;
+}
+
+.log-tail {
+    z-index: 80;
+    position: absolute;
+    display: block;
+    top: 0;
+    right: 0;
+    margin: 10px 10px 0 0;
+}
+
+.log-tail .tail-status {
+    position: relative;
+    display: inline-block;
+    height: 20px;
+    width: 20px;
+    vertical-align: middle;
+    background-color: #8d8d8d;
+    border-radius: 50%;
+}
+
+.log-tail .tail-status:after {
+    content: "";
+    display: block;
+    height: 10px;
+    width: 10px;
+    background: #f1f1f1;
+    border-radius: 50%;
+}
+
+.log-tail .tail-label {
+    display: none;
+    padding: .1em .5em .1em 1.5em;
+    cursor: pointer;
+    background-color: #777;
+    background-repeat: no-repeat;
+    background-size: auto 12px;
+    background-position: 6px 4px;
+    border-radius: 2px;
+    color: #f1f1f1;
+}
+
+.log-tail .tail-status:after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    margin: auto;
 }
