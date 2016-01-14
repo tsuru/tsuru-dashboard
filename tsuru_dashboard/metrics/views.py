@@ -33,11 +33,12 @@ class Metric(LoginRequiredView):
         app = self.get_app(app_name)
         app["envs"] = self.get_envs(self.request, app_name)
 
-        from .backend import get_backend
-        token = self.request.session.get('tsuru_token')
-        backend = get_backend(app, token)
-
         interval = self.request.GET.get("interval")
         date_range = self.request.GET.get("date_range")
-        data = getattr(backend, metric)(date_range=date_range, interval=interval, process_name=process_name)
+
+        from .backend import get_backend
+        token = self.request.session.get('tsuru_token')
+        backend = get_backend(app, token, date_range=date_range, process_name=process_name)
+
+        data = getattr(backend, metric)(interval=interval)
         return HttpResponse(json.dumps(data))

@@ -2,13 +2,14 @@ from tsuru_dashboard import settings
 
 import requests
 import json
+import datetime
 
 
 class MetricNotEnabled(Exception):
     pass
 
 
-def get_backend(app, token):
+def get_backend(app, token, date_range=None, process_name=None):
     headers = {'authorization': token}
     url = "{}/apps/{}/metric/envs".format(settings.TSURU_HOST, app["name"])
     response = requests.get(url, headers=headers)
@@ -16,22 +17,37 @@ def get_backend(app, token):
     if response.status_code == 200:
         data = response.json()
         if "METRICS_ELASTICSEARCH_HOST" in data:
-            return ElasticSearch(data["METRICS_ELASTICSEARCH_HOST"], ".measure-tsuru-*", app["name"])
+            return ElasticSearch(
+                url=data["METRICS_ELASTICSEARCH_HOST"],
+                app=app["name"],
+                process_name=process_name,
+                date_range=date_range
+            )
 
     if "envs" in app and "ELASTICSEARCH_HOST" in app["envs"]:
-        return ElasticSearch(app["envs"]["ELASTICSEARCH_HOST"], ".measure-tsuru-*", app["name"])
+        return ElasticSearch(
+            url=app["envs"]["ELASTICSEARCH_HOST"],
+            app=app["name"],
+            process_name=process_name,
+            date_range=date_range
+        )
 
     raise MetricNotEnabled
 
 
 class ElasticSearch(object):
-    def __init__(self, url, index, app, process_name=None):
-        self.index = index
+    def __init__(self, url, app, process_name=None, date_range="1h"):
+        if date_range == "1h":
+            self.index = ".measure-tsuru-{}".format(datetime.date.today().strftime("%Y.%m.%d"))
+        else:
+            self.index = ".measure-tsuru-{}.*".format(datetime.date.today().year)
         self.app = app
         self.url = url
+        self.process_name = process_name
+        self.date_range = date_range
 
     def post(self, data, metric):
-        url = "{}/.measure-tsuru-*/{}/_search".format(self.url, metric)
+        url = "{}/{}/{}/_search".format(self.url, self.index, metric)
         result = requests.post(url, data=json.dumps(data))
         return result.json()
 
@@ -76,20 +92,19 @@ class ElasticSearch(object):
             "max": "{0:.2f}".format(max_value + 1),
         }
 
-    def cpu_max(self, date_range=None, interval=None, process_name=None):
-        query = self.query(date_range=date_range, interval=interval, process_name=process_name)
+    def cpu_max(self, interval=None):
+        query = self.query(interval=interval)
         response = self.post(query, "cpu_max")
         process = self.process(response)
         return process
 
-    def mem_max(self, date_range=None, interval=None, process_name=None):
-        query = self.query(date_range=date_range, interval=interval, process_name=process_name)
+    def mem_max(self, interval=None):
+        query = self.query(interval=interval)
         return self.process(self.post(query, "mem_max"), formatter=lambda x: x / (1024 * 1024))
 
-    def units(self, date_range=None, interval=None, process_name=None):
+    def units(self, interval=None):
         aggregation = {"units": {"cardinality": {"field": "host"}}}
-        query = self.query(date_range=date_range, interval=interval,
-                           process_name=process_name, aggregation=aggregation)
+        query = self.query(interval=interval, aggregation=aggregation)
         return self.units_process(self.post(query, "cpu_max"))
 
     def units_process(self, data, formatter=None):
@@ -121,10 +136,9 @@ class ElasticSearch(object):
             "max": "{0:.2f}".format(max_value),
         }
 
-    def requests_min(self, date_range=None, interval=None, process_name=None):
+    def requests_min(self, interval=None):
         aggregation = {"sum": {"sum": {"field": "count"}}}
-        query = self.query(date_range=date_range, interval=interval,
-                           process_name=process_name, aggregation=aggregation)
+        query = self.query(interval=interval, aggregation=aggregation)
         return self.requests_min_process(self.post(query, "response_time"))
 
     def requests_min_process(self, data, formatter=None):
@@ -155,14 +169,13 @@ class ElasticSearch(object):
             "max": max_value,
         }
 
-    def response_time(self, date_range=None, interval=None, process_name=None):
-        query = self.query(date_range=date_range, interval=interval, process_name=process_name)
+    def response_time(self, interval=None):
+        query = self.query(interval=interval)
         return self.process(self.post(query, "response_time"))
 
-    def connections(self, date_range=None, interval=None, process_name=None):
+    def connections(self, interval=None):
         aggregation = {"connection": {"terms": {"field": "connection.raw"}}}
-        query = self.query(date_range=date_range, interval=interval,
-                           process_name=process_name, aggregation=aggregation)
+        query = self.query(interval=interval, aggregation=aggregation)
         return self.connections_process(self.post(query, "connection"))
 
     def connections_process(self, data, formatter=None):
@@ -192,10 +205,7 @@ class ElasticSearch(object):
             "max": max_value,
         }
 
-    def query(self, date_range=None, interval=None, aggregation=None, process_name=None):
-        if not date_range:
-            date_range = "1h"
-
+    def query(self, interval=None, aggregation=None):
         if not interval:
             interval = "1m"
 
@@ -210,11 +220,11 @@ class ElasticSearch(object):
             }
         }
 
-        if process_name:
+        if self.process_name:
             p = {
                 "term": {
-                    "process.raw": process_name,
-                    "process": process_name,
+                    "process.raw": self.process_name,
+                    "process": self.process_name,
                 },
             }
             f["bool"]["must"].append(p)
@@ -238,7 +248,7 @@ class ElasticSearch(object):
                     "date_range": {
                         "field": "@timestamp",
                         "ranges": [{
-                            "from": "now-" + date_range,
+                            "from": "now-" + self.date_range,
                             "to": "now"
                         }]
                     },

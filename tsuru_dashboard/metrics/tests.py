@@ -7,6 +7,7 @@ from tsuru_dashboard.metrics import views
 
 from mock import patch, Mock
 import json
+import datetime
 
 
 class MetricViewTest(TestCase):
@@ -77,8 +78,8 @@ class MetricViewTest(TestCase):
         response = view(request, app_name="app_name")
 
         self.assertEqual(response.status_code, 200)
-        get_backend_mock.assert_called_with({'envs': {}}, 'token')
-        backend_mock.cpu_max.assert_called_with(date_range=u'2h/h', interval=u'30m', process_name="web")
+        get_backend_mock.assert_called_with({'envs': {}}, 'token', date_range=u'2h/h', process_name=u'web')
+        backend_mock.cpu_max.assert_called_with(interval=u'30m')
 
     @patch("tsuru_dashboard.auth.views.token_is_valid")
     def test_get_bad_request(self, token_mock):
@@ -132,45 +133,46 @@ class ElasticSearchTest(TestCase):
     def setUp(self):
         self.maxDiff = None
         self.es = ElasticSearch("http://url.com", "index", "app")
+        self.index = ".measure-tsuru-{}".format(datetime.date.today().strftime("%Y.%m.%d"))
 
     @patch("requests.post")
     def test_cpu_max(self, post_mock):
         self.es.process = Mock()
         self.es.cpu_max()
-        url = "{}/.measure-tsuru-*/{}/_search".format(self.es.url, "cpu_max")
+        url = "{}/{}/{}/_search".format(self.es.url, self.index, "cpu_max")
         post_mock.assert_called_with(url, data=json.dumps(self.es.query()))
 
     @patch("requests.post")
     def test_mem_max(self, post_mock):
         self.es.process = Mock()
         self.es.mem_max()
-        url = "{}/.measure-tsuru-*/{}/_search".format(self.es.url, "mem_max")
+        url = "{}/{}/{}/_search".format(self.es.url, self.index, "mem_max")
         post_mock.assert_called_with(url, data=json.dumps(self.es.query()))
 
     @patch("requests.post")
     def test_units(self, post_mock):
         self.es.units()
-        url = "{}/.measure-tsuru-*/{}/_search".format(self.es.url, "cpu_max")
+        url = "{}/{}/{}/_search".format(self.es.url, self.index, "cpu_max")
         aggregation = {"units": {"cardinality": {"field": "host"}}}
         post_mock.assert_called_with(url, data=json.dumps(self.es.query(aggregation=aggregation)))
 
     @patch("requests.post")
     def test_requests_min(self, post_mock):
         self.es.requests_min()
-        url = "{}/.measure-tsuru-*/{}/_search".format(self.es.url, "response_time")
+        url = "{}/{}/{}/_search".format(self.es.url, self.index, "response_time")
         aggregation = {"sum": {"sum": {"field": "count"}}}
         post_mock.assert_called_with(url, data=json.dumps(self.es.query(aggregation=aggregation)))
 
     @patch("requests.post")
     def test_response_time(self, post_mock):
         self.es.response_time()
-        url = "{}/.measure-tsuru-*/{}/_search".format(self.es.url, "response_time")
+        url = "{}/{}/{}/_search".format(self.es.url, self.index, "response_time")
         post_mock.assert_called_with(url, data=json.dumps(self.es.query()))
 
     @patch("requests.post")
     def test_connections(self, post_mock):
         self.es.connections()
-        url = "{}/.measure-tsuru-*/{}/_search".format(self.es.url, "connection")
+        url = "{}/{}/{}/_search".format(self.es.url, self.index, "connection")
         aggregation = {"connection": {"terms": {"field": "connection.raw"}}}
         post_mock.assert_called_with(url, data=json.dumps(self.es.query(aggregation=aggregation)))
 
