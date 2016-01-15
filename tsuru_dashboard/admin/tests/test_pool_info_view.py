@@ -51,9 +51,6 @@ class PoolInfoViewTest(TestCase):
                  "Metadata": {"LastSuccess": "2014-08-01T14:09:40-03:00",
                               "pool": "theonepool"},
                  "Status": "ready"},
-                {"Address": "http://myserver2.com:2375",
-                 "Metadata": {"LastSuccess": "2014-08-01T14:09:40-03:00"},
-                 "Status": "ready"},
             ],
         }
 
@@ -63,7 +60,8 @@ class PoolInfoViewTest(TestCase):
 
         for addr in ["http://128.0.0.1:4243", "http://myserver.com:2375", "http://127.0.0.1:2375"]:
             url = "{}/docker/node/{}/containers".format(settings.TSURU_HOST, addr)
-            body = json.dumps([{"Status": "started"}, {"Status": "stopped"}])
+            body = json.dumps(
+                [{"Status": "started", "HostAddr": addr}, {"Status": "stopped", "HostAddr": addr}])
             httpretty.register_uri(httpretty.GET, url, body=body, status=200)
 
         response = PoolInfo.as_view()(self.request, pool="mypool")
@@ -99,9 +97,6 @@ class PoolInfoViewTest(TestCase):
                 {"Address": "http://myserver.com:2375",
                  "Metadata": {"LastSuccess": "2014-08-01T14:09:40-03:00",
                               "pool": "theonepool"},
-                 "Status": "ready"},
-                {"Address": "http://myserver2.com:2375",
-                 "Metadata": {"LastSuccess": "2014-08-01T14:09:40-03:00"},
                  "Status": "ready"},
             ],
         }

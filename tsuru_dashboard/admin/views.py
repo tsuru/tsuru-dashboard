@@ -212,14 +212,24 @@ class ListHealing(LoginRequiredView, TemplateView):
 class PoolInfo(LoginRequiredView, TemplateView):
     template_name = "docker/pool_info.html"
 
-    def units_by_node(self, address):
-        url = "{}/docker/node/{}/containers".format(settings.TSURU_HOST, address)
-        response = requests.get(url, headers=self.authorization)
+    def get_node(self, address, data):
+        for response in data:
+            if response.status_code != 200:
+                continue
 
-        if response.status_code != 200:
-            return {}
+            node_units = response.json()
+            if not node_units:
+                continue
 
-        units = response.json() or []
+            if 'HostAddr' not in node_units[0]:
+                continue
+
+            if node_units[0]['HostAddr'] in address:
+                return node_units
+        return []
+
+    def units_by_node(self, address, units):
+        units = self.get_node(address, units)
         result = {}
 
         for unit in units:
@@ -249,6 +259,12 @@ class PoolInfo(LoginRequiredView, TemplateView):
             data = response.json()
             nodes = data.get("nodes", [])
 
+            url = "{}/docker/node/{}/containers"
+            urls = [url.format(settings.TSURU_HOST, node["Address"]) for node in nodes]
+
+            rs = (grequests.get(u, headers=self.authorization) for u in urls)
+            units = grequests.map(rs)
+
             for node in nodes:
                 if node["Metadata"].get("pool", "") != pool:
                     continue
@@ -256,7 +272,7 @@ class PoolInfo(LoginRequiredView, TemplateView):
                 dt = node["Metadata"].get("LastSuccess")
                 node["Metadata"]["LastSuccess"] = self.node_last_success(dt)
 
-                node["Units"] = self.units_by_node(node["Address"])
+                node["Units"] = self.units_by_node(node["Address"], units)
 
                 pool = node["Metadata"].get("pool")
                 nodes_by_pool = pools.get(pool, [])
