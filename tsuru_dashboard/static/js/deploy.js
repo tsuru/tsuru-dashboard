@@ -19020,10 +19020,13 @@ module.exports = require('./lib/React');
 var React = require('react');
 
 var DeployBox = React.createClass({displayName: "DeployBox",
+  getDefaultProps: function() {
+    return {message: "drop files here to deploy"};
+  },
   render: function() {
     return (
       React.createElement("div", {id: "filedrag"}, 
-        "drop files here to deploy"
+        this.props.message
       )
     );
   }
@@ -19037,7 +19040,7 @@ var StartDeployBtn = React.createClass({displayName: "StartDeployBtn",
     return (
       React.createElement("button", {type: "submit", 
               disabled: this.props.disabled, 
-              className: "btn btn-danger btn-rollback", 
+              className: "btn btn-rollback", 
               onClick: this.handleClick}, 
         "Start deploy"
       )
@@ -19183,7 +19186,7 @@ var DeployPopin = React.createClass({displayName: "DeployPopin",
             React.createElement("h3", {id: "myModalLabel"}, "New deploy")
         ), 
         React.createElement("div", {className: "modal-body"}, 
-            this.state.deploy ? '' : React.createElement(DeployBox, {addFile: this.addFile}), 
+            this.state.deploy ? '' : React.createElement(DeployBox, {addFile: this.addFile, message: "drop more files here"}), 
             this.state.files.length > 0 ? React.createElement(Files, {files: this.state.files}) : '', 
             this.state.output.length > 0 ? React.createElement(Output, {message: this.state.output}) : ''
         ), 

@@ -1,10 +1,13 @@
 var React = require('react');
 
 var DeployBox = React.createClass({
+  getDefaultProps: function() {
+    return {message: "drop files here to deploy"};
+  },
   render: function() {
     return (
       <div id='filedrag'>
-        drop files here to deploy
+        {this.props.message}
       </div>
     );
   }
@@ -18,7 +21,7 @@ var StartDeployBtn = React.createClass({
     return (
       <button type='submit'
               disabled={this.props.disabled}
-              className='btn btn-danger btn-rollback'
+              className='btn btn-rollback'
               onClick={this.handleClick}>
         Start deploy
       </button>
@@ -164,7 +167,7 @@ var DeployPopin = React.createClass({
             <h3 id='myModalLabel'>New deploy</h3>
         </div>
         <div className='modal-body'>
-            {this.state.deploy ? '' : <DeployBox addFile={this.addFile} />}
+            {this.state.deploy ? '' : <DeployBox addFile={this.addFile} message="drop more files here" />}
             {this.state.files.length > 0 ? <Files files={this.state.files} /> : ''}
             {this.state.output.length > 0 ? <Output message={this.state.output} /> : ''}
         </div>
