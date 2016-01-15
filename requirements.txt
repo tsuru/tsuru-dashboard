@@ -3,3 +3,4 @@ tsuru_dashboard==0.1.1
 gunicorn==19.3.0
 gevent==1.1b6
 raven==4.2.3
+grequests==0.2.0
