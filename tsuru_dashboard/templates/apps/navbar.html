@@ -13,11 +13,6 @@
             <li{% if active == "settings" %} class="active"{% endif %}>
                 <a title="settings" href="{% url 'app-settings' app.name %}">settings</a>
             </li>
-            {% if autoscale_enabled %}
-            <li{% if active == "autoscale" %} class="active"{% endif %}>
-                <a title="auto scale" href="{% url 'autoscale' app.name %}">auto scale</a>
-            </li>
-            {% endif %}
         </ul>
     </div>
 </div>
