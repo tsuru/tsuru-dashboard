@@ -20,57 +20,76 @@
 <div class="container-fluid">
 	<div class="row">
 		<div class="col-md-12">
-			<form action="" method="post">
+			<form action="" method="post" class="form-horizontal">
 				{% csrf_token %}
-				<fieldset>
-					<div class="clearfix control-group{% if app_form.errors.name %} error{% endif %}">
-						<label for="{{ app_form.name.name }}">Name</label>
-						<input type="text" class="input-xlarge" name="{{ app_form.name.name }}" id="{{ app_form.name.name }}" value="{{ app_form.name.value|default:"" }}">
-						<span class="help-inline">{{ app_form.errors.name }}</span>
-					</div>
-					<div class="clearfix control-group{% if app_form.errors.platform %} error{% endif %}">
-						<label for="{{ app_form.platform.name }}">Platform</label>
-                        {{ app_form.platform }}
-						<span class="help-inline">{{ app_form.errors.platform }}</span>
-					</div>
-					<div class="clearfix control-group{% if app_form.errors.teamOwner %} error{% endif %}">
-						<label for="{{ app_form.teamOwner.name }}">Team</label>
-                        {{ app_form.teamOwner }}
-						<span class="help-inline">{{ app_form.errors.teamOwner }}</span>
-                        <a class="btn add-team" data-toggle="modal" data-target="#add-team-modal" title="new team" href="#add-team">+</a>
-					</div>
-					<div class="clearfix control-group{% if app_form.errors.plan %} error{% endif %}">
-						<label for="{{ app_form.plan.name }}">Plan</label>
-                        {{ app_form.plan }}
-						<span class="help-inline">{{ app_form.errors.plan }}</span>
-					</div>
-					<div class="clearfix control-group{% if app_form.errors.pool %} error{% endif %}">
-						<label for="{{ app_form.pool.name }}">Pool</label>
-                        {{ app_form.pool }}
-						<span class="help-inline">{{ app_form.errors.pool }}</span>
-					</div>
-					<button class="btn primary" type="submit">Create app</button>
-				</fieldset>
+			  <div class="form-group{% if app_form.errors.name %} error{% endif %}">
+				<label for="{{ app_form.name.name }}" class="col-sm-2 control-label">Name</label>
+				<div class="col-sm-10">
+				  <input type="text" class="form-control" id="{{ app_form.name.name }}" value="{{ app_form.name.value|default:"" }}">
+				  <span class="help-inline">{{ app_form.errors.name }}</span>
+				</div>
+			  </div>
+			  <div class="form-group{% if app_form.errors.platform %} error{% endif %}">
+				<label for="{{ app_form.platform.name }}" class="col-sm-2 control-label">Platform</label>
+				<div class="col-sm-10">
+                  {{ app_form.platform }}
+				  <span class="help-inline">{{ app_form.errors.platform }}</span>
+				</div>
+			  </div>
+			  <div class="form-group{% if app_form.errors.teamOwner %} error{% endif %}">
+				<label for="{{ app_form.teamOwner.name }}" class="col-sm-2 control-label">Team</label>
+				<div class="col-sm-10">
+                  {{ app_form.teamOwner }}
+				  <span class="help-inline">{{ app_form.errors.teamOwner }}</span>
+                  <a class="btn btn-default add-team" data-toggle="modal" data-target="#add-team-modal" title="new team" href="#add-team">+</a>
+				</div>
+			  </div>
+			  <div class="form-group{% if app_form.errors.plan %} error{% endif %}">
+				<label for="{{ app_form.plan.name }}" class="col-sm-2 control-label">Plan</label>
+				<div class="col-sm-10">
+                  {{ app_form.plan }}
+				  <span class="help-inline">{{ app_form.errors.plan }}</span>
+				</div>
+			  </div>
+			  <div class="form-group{% if app_form.errors.pool %} error{% endif %}">
+				<label for="{{ app_form.pool.name }}" class="col-sm-2 control-label">Pool</label>
+				<div class="col-sm-10">
+                  {{ app_form.pool }}
+				  <span class="help-inline">{{ app_form.errors.pool }}</span>
+				</div>
+			  </div>
+			  <div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10">
+				  <button type="submit" class="btn btn-default">Create app</button>
+				</div>
+			  </div>
 			</form>
 		</div>
 	</div>
 </div>
-<div id="add-team-modal" class="add-team-modal fade modal">
-    <div class="container-fluid">
-        <h3>Create a team</h3>
-        <form id="add-team-form" action="{% url 'team-add' %}" method="post">
+<div id="add-team-modal" class="add-team-modal fade modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Create a team</h4>
+      </div>
+      <form id="add-team-form" action="{% url 'team-add' %}" method="post">
+      <div class="modal-body">
             {% csrf_token %}
-            <fieldset>
-                <div class="clearfix control-group">
-                    <label>name</label>
-                    <input type="text" name="name">
-                    <span class="help-inline"></span>
-                </div>
-                <button class="btn primary add-team" type="submit">Create</button>
-            </fieldset>
-        </form>
-    </div>
-</div>
+		    <div class="form-group">
+			  <label for="name" class="control-label">Name</label>
+			  <input type="text" class="form-control" id="name" />
+		    </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button class="btn btn-primary add-team" type="submit">Create</button>
+      </div>
+      </form>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 {% endblock %}
 
 {% block extra_js %}
