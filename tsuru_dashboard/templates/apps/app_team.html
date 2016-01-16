@@ -6,11 +6,11 @@
 {% endblock %}
 
 {% block app-content %}
-	<div class="row-fluid">
-		<div class="span12 teams">
+	<div class="row">
+		<div class="col-md-12 teams">
 			{% for team in app.teams %}
-			<div class="row-fluid">
-				<div class="span10 app-teams">
+			<div class="row">
+				<div class="col-md-10 app-teams">
 					<p>{{ team }}</p>
 				</div>
 				<div class="content">
@@ -20,8 +20,8 @@
 			{% endfor %}
 		</div>
 	</div>
-	<div class="row-fluid">
-		<div class="span10 add-create">
+	<div class="row">
+		<div class="col-md-10 add-create">
 			<a href="{% url 'app-add-team' app.name %}" class="btn btn-info">Add Team</a>
 		</div>
 	</div>

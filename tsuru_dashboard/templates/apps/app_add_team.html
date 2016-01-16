@@ -6,8 +6,8 @@
 {% endblock extra_css %}
 
 {% block app-content %}
-	<div class="row-fluid">
-		<div class="span12">
+	<div class="row">
+		<div class="col-md-12">
 			<form action="{% url 'app-add-team' app_name %}" method="post">
 				{% csrf_token %}
 				<fieldset>

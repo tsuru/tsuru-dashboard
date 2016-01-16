@@ -19,10 +19,10 @@ h1 {
 {% endblock %}
 
 {% block app-content %}
-	<div class="row-fluid">
-		<div class="span12">
+	<div class="row">
+		<div class="col-md-12">
 			<form method="GET">
-				<div class="span2">
+				<div class="col-md-2">
 				<label>Time range:</label>
 				<select name="from">
 					<option value="1h">last hour</option>
@@ -35,7 +35,7 @@ h1 {
 					<option value="2w">last 2 weeks</option>
 				</select>
 				</div>
-				<div class="span2">
+				<div class="col-md-2">
 				<label>Period:</label> 
 				<select name="serie">
 					<option value="1m">1 minute</option>
@@ -46,7 +46,7 @@ h1 {
 					<option value="1d">1 day</option>
 				</select>
 				</div>
-				<div class="span1">
+				<div class="col-md-1">
 				<input type="hidden" name="kind">
 				<input type="submit" value="filter">
 				</div>
@@ -55,11 +55,11 @@ h1 {
 	</div>
 </div>
 <div class="container-fluid">
-	<div class="row-fluid">
-		<div class="span12">
+	<div class="row">
+		<div class="col-md-12">
             <div class="content">
-                <div class="row-fluid">
-                    <div class="span12" id="metrics">
+                <div class="row">
+                    <div class="col-md-12" id="metrics">
                     </div>
                 </div>
             </div>

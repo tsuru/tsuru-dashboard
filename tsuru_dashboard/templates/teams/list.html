@@ -13,8 +13,8 @@
 
 {% block content %}
 <div class="container-fluid">
-	<div class="row-fluid">
-		<ul class="span12 teams unstyled">
+	<div class="row">
+		<ul class="col-md-12 teams unstyled">
 			{% for team in teams %}
                 <li><a data-team-name="{{ team.name }}" href="{% url 'team-info' team.name %}">{{ team.name }}</a></li>
 			{% endfor %}

@@ -7,21 +7,20 @@
 		<meta name="description" content="tsuru web dashboard">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}">
-        <link rel="stylesheet" href="{% static "css/bootstrap-responsive.min.css" %}">
         <link rel="stylesheet" href="{% static "css/abyss.css" %}">
         <link rel="icon" type="image/x-icon" href="{% static "img/favicon.ico" %}">
 		{% block extra_css %}
 		{% endblock extra_css %}
 	</head>
 	<body>
-		<div class="row-fluid">
-			<div class="menu span12">
+		<div class="row">
+			<div class="menu col-md-12">
 				<div class="logo-tsuru">
                     <img src="{% static "img/brand.svg" %}">
 				</div>
 				<div class="drop">
 					<a data-toggle="dropdown" class="dropdown-toggle" href="#">
-						<i class="icon-cog icon-white"></i>
+                        <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
 					</a>
 					<ul class="dropdown-menu">
 						<li><a href="{% url 'key' %}">Add keys</a></li>
@@ -31,15 +30,17 @@
 					</ul>
 				</div>
 			</div>
-			<div class="userbar span12">
+			<div class="userbar col-md-12">
 				{% block sidebar %}
 				{% include "sidebar.html" %}
 				{% endblock %}
 			</div>
-			<div class="content span12">
+			<div class="content col-md-12">
 				<div class="container-fluid">
-					<div class="row-fluid">
-					    {% block header %}{% endblock %}
+					<div class="row">
+		                <div class="col-md-12">
+					        {% block header %}{% endblock %}
+		                </div>
 					</div>
 				</div>
 				{% include "messages.html" %}

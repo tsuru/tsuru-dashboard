@@ -22,8 +22,8 @@ table td, table th {
 {% block content %}
 <div class="container-fluid">
     {% for key, nodes in pools.items %}
-    <div class="row-fluid">
-        <div class="span12">
+    <div class="row">
+        <div class="col-md-12">
             <h3><a href="{% url "pool-info" key %}">{{ key }}</a></h3>
             <table class="table">
                 <thead>

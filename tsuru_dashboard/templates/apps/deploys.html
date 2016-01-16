@@ -13,12 +13,12 @@
 {% endblock %}
 
 {% block app-content %}
-	<div class="row-fluid">
-		<div class="span12" id="deploy-box">
+	<div class="row">
+		<div class="col-md-12" id="deploy-box">
         </div>
     </div>
-	<div class="row-fluid">
-		<div class="span12">
+	<div class="row">
+		<div class="col-md-12">
 		<table class="deploys table" id="list">
             {% for deploy in deploys %}
                 <tr class="{% if deploy.Error %}error{% endif %}">

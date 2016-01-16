@@ -8,6 +8,10 @@ body {
 	padding: 19px 29px 29px;
 	margin: 0 auto 20px;
 }
+.logo img {
+    max-width: 100%;
+    height: auto;
+}
 .form-signin {
 	max-width: 300px;
 	padding: 19px 29px 29px;

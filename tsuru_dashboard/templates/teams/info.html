@@ -16,8 +16,8 @@
 
 {% block content %}
 <div class="container-fluid">
-	<div class="row-fluid">
-		<div class="span12">
+	<div class="row">
+		<div class="col-md-12">
 			<div class="widget">
 				<div class="title">
 					<span class="icon">
@@ -40,8 +40,8 @@
 			</div>
 		</div>
 	</div>
-	<div class="row-fluid">
-		<div class="span12">
+	<div class="row">
+		<div class="col-md-12">
 			<div class="widget">
 				<div class="title">
 					<span class="icon">
@@ -53,11 +53,11 @@
 					<ul class="no-style">
 						{% for user in team.users %}
 						<li>
-						<div class="row-fluid">
-							<div class="span3">
+						<div class="row">
+							<div class="col-md-3">
 								{{ user }}
 							</div>
-							<div class="span8">
+							<div class="col-md-8">
 								<a class="btn btn-danger" href="{% url 'team-user-remove' team.name user %}" title="with team=team.name %}remove {{ user }} from {{ team }}">remove</a>
 							</div>
 						</div>
@@ -68,8 +68,8 @@
 			</div>
 		</div>
 	</div>
-	<div class="row-fluid">
-		<div class="span12">
+	<div class="row">
+		<div class="col-md-12">
 			<div class="widget">
 				<div class="title">
 					<span class="icon">

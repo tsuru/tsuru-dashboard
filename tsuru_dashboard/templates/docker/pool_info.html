@@ -15,7 +15,7 @@
 
 {% block content %}
 <div class="container-fluid">
-    <div class="span12">
+    <div class="col-md-12">
         <div class="content">
             <a class="btn" href="#node-create" data-toggle="modal">
                 Create node</a>
@@ -24,8 +24,8 @@
         </div>
 	</div>
     {% for key, nodes in pools.items %}
-    <div class="row-fluid">
-        <div class="span12">
+    <div class="row">
+        <div class="col-md-12">
             <div id="node-create"
                  class="modal hide fade"
                  tabindex="-1"
@@ -34,7 +34,7 @@
                  aria-hidden="true">
             </div>
         </div>
-        <div class="span12">
+        <div class="col-md-12">
             <h3>{{ key }}</h3>
             <table class="table">
                 <thead>

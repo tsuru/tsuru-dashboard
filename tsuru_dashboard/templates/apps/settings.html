@@ -6,8 +6,8 @@
 {% endblock %}
 
 {% block app-content %}
-	<div class="row-fluid">
-		<div class="span12">
+	<div class="row">
+		<div class="col-md-12">
             <h3>Info</h3>
             <div class="content">
                 <p><strong>Git URL:</strong> {{ app.repository }}</p>
@@ -26,8 +26,8 @@
             {% endif %}
         </div>
 	</div>
-	<div class="row-fluid">
-		<div class="span12">
+	<div class="row">
+		<div class="col-md-12">
             <h3>Plan</h3>
             <div class="content">
                 <p><strong>Name:</strong> {{ app.plan.name }}</p>
@@ -36,8 +36,8 @@
             </div>
         </div>
 	</div>
-	<div class="row-fluid">
-		<div class="span10">
+	<div class="row">
+		<div class="col-md-10">
             <div class="content">
             <h3>Environment variables</h3>
             <p class="settings-toggle"><a href=#>&#x25BC;</a> {{ app.envs|length }} enviroment variables</p>
@@ -70,8 +70,8 @@
             </div>
 		</div>
 	</div>
-	<div class="row-fluid">
-		<div class="span12">
+	<div class="row">
+		<div class="col-md-12">
             <h3>Domains</h3>
 				<div class="content">
 					<p>
@@ -86,8 +86,8 @@
 				</div>
 			</div>
 	</div>
-	<div class="row-fluid">
-		<div class="span12">
+	<div class="row">
+		<div class="col-md-12">
             <h3>Ownership</h3>
 				<div class="content">
 					<p><strong>Owner:</strong> {{ app.owner }}</p>
@@ -97,8 +97,8 @@
 			</div>
 	</div>
 
-	<div class="row-fluid">
-		<div class="span12">
+	<div class="row">
+		<div class="col-md-12">
             <h3>Delete app</h3>
 				<div class="content">
 					<a class="btn btn-danger" href="#confirmation" data-toggle="modal">

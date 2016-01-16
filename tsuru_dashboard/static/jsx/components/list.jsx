@@ -58,7 +58,7 @@ var AppTable = React.createClass({
     });
     return (
 	  <table className="table">
-        <tbody>{appNodes}</tbody>
+        {appNodes}
 	  </table>
     );
   }

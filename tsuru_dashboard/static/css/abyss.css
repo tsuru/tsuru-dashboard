@@ -6,7 +6,7 @@ ul.no-style {
 	list-style-type: none;
 }
 
-.menu.span12 {
+.menu.col-md-12 {
 	background-color: #222233;
 	border-bottom: 1px solid #4D4C4C;
 }
@@ -15,6 +15,11 @@ ul.no-style {
 	max-width: 100px;
 	padding: 13px 13px 13px;
 	display: inline-block;
+}
+
+.logo-tsuru img {
+    max-width: 100px;
+    height: auto;
 }
 
 .drop {
@@ -94,7 +99,7 @@ select {
 	text-decoration: none;
 }
 
-.span10.app-teams {
+.col-md-10.app-teams {
 	padding-bottom: 5px;
 }
 
