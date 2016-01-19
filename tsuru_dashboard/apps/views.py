@@ -22,7 +22,7 @@ from pygments.formatters import HtmlFormatter
 from tsuru_dashboard import settings
 from tsuru_dashboard.auth.views import LoginRequiredView, LoginRequiredMixin
 
-from .forms import AppForm, AppAddTeamForm, RunForm, SetEnvForm
+from .forms import AppForm, AppAddTeamForm, SetEnvForm
 
 
 class AppMixin(LoginRequiredMixin):
@@ -457,40 +457,6 @@ class AppDetailJson(LoginRequiredView):
         if "ID" in unit:
             return unit["ID"]
         return unit["Name"]
-
-
-class Run(LoginRequiredView):
-    template = 'apps/run.html'
-
-    def get(self, request):
-        context = {}
-        context['form'] = RunForm()
-        context['apps'] = self._get_apps(request)
-        return TemplateResponse(request, self.template, context=context)
-
-    def post(self, request):
-        form = RunForm(request.POST)
-        if not form.is_valid():
-            return TemplateResponse(request, self.template, {'form': form})
-
-        authorization = {'authorization': request.session.get('tsuru_token')}
-        tsuru_url = '{}/apps/{}/run'.format(
-            settings.TSURU_HOST, form.data.get('app'))
-        response = requests.post(tsuru_url, data=form.data.get('command'),
-                                 headers=authorization)
-        if response.status_code == 200:
-            return TemplateResponse(request, self.template,
-                                    {'form': form,
-                                     'message': response.content})
-        return TemplateResponse(request, self.template,
-                                {'form': form, 'errors': response.content})
-
-    def _get_apps(self, request):
-        authorization = {'authorization': request.session.get('tsuru_token')}
-        response = requests.get('{}/apps'.format(settings.TSURU_HOST),
-                                headers=authorization)
-        apps = response.json()
-        return [a['name'] for a in apps]
 
 
 class LogStream(LoginRequiredView):
