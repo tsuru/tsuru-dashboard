@@ -22,7 +22,7 @@ from pygments.formatters import HtmlFormatter
 from tsuru_dashboard import settings
 from tsuru_dashboard.auth.views import LoginRequiredView, LoginRequiredMixin
 
-from .forms import AppForm, AppAddTeamForm, SetEnvForm
+from .forms import AppForm, AppAddTeamForm
 
 
 class AppMixin(LoginRequiredMixin):
@@ -426,59 +426,6 @@ class LogStream(LoginRequiredView):
 
 class AppLog(AppMixin, TemplateView):
     template_name = 'apps/app_log.html'
-
-
-class AppEnv(LoginRequiredView):
-    template = 'apps/app_env.html'
-
-    def get(self, request, app_name):
-        context = {}
-        context['app'] = app_name
-        context['form'] = SetEnvForm(initial=context)
-
-        response = self.get_envs(request, app_name)
-
-        if response.status_code == 200:
-            envs = response.content.split('\n')
-            context['envs'] = envs
-            return TemplateResponse(request, self.template, context)
-        return TemplateResponse(request, self.template,
-                                {'errors': response.content})
-
-    def post(self, request, app_name):
-        context = {}
-        context['app'] = app_name
-
-        response = self.get_envs(request, app_name)
-        if response.status_code == 200:
-            form = SetEnvForm(request.POST)
-            context['form'] = form
-            if not form.is_valid():
-                return TemplateResponse(request, self.template, context)
-
-            envs = response.content.split('\n')
-            envs.append(request.POST['env'])
-            context['envs'] = envs
-
-            response = self.set_env(request, app_name, form)
-
-            if response.status_code == 200:
-                context['message'] = response.content
-                return TemplateResponse(request, self.template, context)
-
-        context['errors'] = response.content
-        return TemplateResponse(request, self.template, context)
-
-    def get_envs(self, request, app_name):
-        authorization = {'authorization': request.session.get('tsuru_token')}
-        tsuru_url = '{}/apps/{}/env'.format(settings.TSURU_HOST, app_name)
-        return requests.get(tsuru_url, headers=authorization)
-
-    def set_env(self, request, app_name, form):
-        authorization = {'authorization': request.session.get('tsuru_token')}
-        tsuru_url = '{}/apps/{}/env'.format(settings.TSURU_HOST, app_name)
-        return requests.post(tsuru_url, data=form.data.get('env'),
-                             headers=authorization)
 
 
 class MetricDetail(AppMixin, TemplateView):

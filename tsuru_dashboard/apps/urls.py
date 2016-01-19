@@ -30,5 +30,4 @@ urlpatterns = patterns(
         views.DeployInfo.as_view(), name='app-deploy'),
     url(r'^(?P<app_name>[\w-]+)/rollback/(?P<image>.+)/$',
         views.AppRollback.as_view(), name='app-rollback'),
-    url(r'^(?P<app_name>[\w-]+)/env/$', views.AppEnv.as_view(), name='get-env'),
 )
