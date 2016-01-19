@@ -59,18 +59,6 @@ class AppTeamsViewTest(TestCase):
 
         self.assertDictEqual(expected, response.context_data["app"])
 
-    @patch('requests.get')
-    @patch("tsuru_dashboard.auth.views.token_is_valid")
-    def test_get_with_invalid_app_should_return_context_with_error(self, tis, get):
-        self.response_mock.status_code = 404
-        self.response_mock.content = 'App not found'
-        get.return_value = self.response_mock
-
-        response = AppTeams.as_view()(self.request, app_name='invalid-app')
-
-        self.assertIn('errors', response.context_data.keys())
-        self.assertEqual(self.response_mock.content, response.context_data['errors'])
-
     def test_get_request_run_url_should_not_return_404(self):
         response = self.client.get(reverse('app-teams', args=[self.app_name]))
         self.assertNotEqual(404, response.status_code)

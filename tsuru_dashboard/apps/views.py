@@ -25,12 +25,26 @@ from tsuru_dashboard.auth.views import LoginRequiredView, LoginRequiredMixin
 from .forms import AppForm, AppAddTeamForm, RunForm, SetEnvForm
 
 
-class DeployInfo(LoginRequiredMixin, TemplateView):
-    template_name = 'apps/deploy.html'
-
+class AppMixin(LoginRequiredMixin):
     def get_app(self, app_name):
         url = '{}/apps/{}'.format(settings.TSURU_HOST, app_name)
-        return requests.get(url, headers=self.authorization).json()
+        response = requests.get(url, headers=self.authorization)
+
+        if response.status_code == 404:
+            raise Http404()
+
+        return response.json()
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(AppMixin, self).get_context_data(*args, **kwargs)
+
+        app_name = kwargs['app_name']
+        context['app'] = self.get_app(app_name)
+        return context
+
+
+class DeployInfo(AppMixin, TemplateView):
+    template_name = 'apps/deploy.html'
 
     def get_context_data(self, *args, **kwargs):
         deploy_id = kwargs['deploy']
@@ -48,9 +62,6 @@ class DeployInfo(LoginRequiredMixin, TemplateView):
             diff = None
 
         context['deploy']['Diff'] = diff
-
-        app_name = kwargs['app_name']
-        context['app'] = self.get_app(app_name)
         return context
 
 
@@ -171,7 +182,7 @@ class ChangeUnit(LoginRequiredView):
         return redirect(reverse('detail-app', args=[app_name]))
 
 
-class AppDetail(LoginRequiredMixin, TemplateView):
+class AppDetail(AppMixin, TemplateView):
     template_name = 'apps/details.html'
 
     def service_instances(self, app_name):
@@ -181,19 +192,6 @@ class AppDetail(LoginRequiredMixin, TemplateView):
     def get_context_data(self, *args, **kwargs):
         context = super(AppDetail, self).get_context_data(*args, **kwargs)
         app_name = kwargs['app_name']
-        token = self.request.session.get('tsuru_token')
-        url = '{}/apps/{}'.format(settings.TSURU_HOST, app_name)
-        headers = {
-            'content-type': 'application/json',
-            'Authorization': token,
-        }
-
-        response = requests.get(url, headers=headers)
-        if response.status_code == 404:
-            raise Http404()
-
-        context['app'] = response.json()
-
         service_instances = []
 
         for service in self.service_instances(app_name):
@@ -508,34 +506,12 @@ class LogStream(LoginRequiredView):
         return StreamingHttpResponse(sending_stream())
 
 
-class AppLog(LoginRequiredMixin, TemplateView):
+class AppLog(AppMixin, TemplateView):
     template_name = 'apps/app_log.html'
 
-    def get_context_data(self, *args, **kwargs):
-        context = super(AppLog, self).get_context_data(*args, **kwargs)
-        app_name = kwargs['app_name']
-        app_url = '{}/apps/{}'.format(settings.TSURU_HOST, app_name)
-        app = requests.get(app_url, headers=self.authorization).json()
-        context['app'] = app
-        return context
 
-
-class AppTeams(LoginRequiredMixin, TemplateView):
+class AppTeams(AppMixin, TemplateView):
     template_name = "apps/app_team.html"
-
-    def get_context_data(self, *args, **kwargs):
-        context = super(AppTeams, self).get_context_data(*args, **kwargs)
-
-        url = '{}/apps/{}'.format(settings.TSURU_HOST, kwargs["app_name"])
-        response = requests.get(url, headers=self.authorization)
-
-        if response.status_code == 200:
-            app = response.json()
-            context.update({"app": app})
-        else:
-            context.update({"errors": response.content})
-
-        return context
 
 
 class AppEnv(LoginRequiredView):
@@ -591,24 +567,17 @@ class AppEnv(LoginRequiredView):
                              headers=authorization)
 
 
-class MetricDetail(LoginRequiredMixin, TemplateView):
+class MetricDetail(AppMixin, TemplateView):
     template_name = 'apps/metric_details.html'
 
     def get_envs(self, app_name):
         url = '{}/apps/{}/env'.format(settings.TSURU_HOST, app_name)
         return requests.get(url, headers=self.authorization).json()
 
-    def get_app(self, app_name):
-        url = '{}/apps/{}'.format(settings.TSURU_HOST, app_name)
-        return requests.get(url, headers=self.authorization).json()
-
     def get_context_data(self, *args, **kwargs):
         context = super(MetricDetail, self).get_context_data(*args, **kwargs)
         app_name = kwargs['app_name']
-
-        context['app'] = self.get_app(app_name)
         context['app']['envs'] = self.get_envs(app_name)
-
         return context
 
 
@@ -622,7 +591,7 @@ class AppRollback(LoginRequiredView):
         return HttpResponseServerError('NOT OK')
 
 
-class Settings(LoginRequiredMixin, TemplateView):
+class Settings(AppMixin, TemplateView):
     template_name = 'apps/settings.html'
 
     def get_envs(self, app_name):
@@ -632,16 +601,7 @@ class Settings(LoginRequiredMixin, TemplateView):
     def get_context_data(self, *args, **kwargs):
         context = super(Settings, self).get_context_data(*args, **kwargs)
         app_name = kwargs['app_name']
-        token = self.request.session.get('tsuru_token')
-        url = '{}/apps/{}'.format(settings.TSURU_HOST, app_name)
-        headers = {
-            'content-type': 'application/json',
-            'Authorization': token,
-        }
-
-        context['app'] = requests.get(url, headers=headers).json()
         context['app']['envs'] = self.get_envs(app_name)
-
         return context
 
 
