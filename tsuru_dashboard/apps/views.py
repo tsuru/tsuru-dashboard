@@ -146,42 +146,6 @@ class ListDeploy(LoginRequiredView):
         return TemplateResponse(request, self.template, context=context)
 
 
-class ChangeUnit(LoginRequiredView):
-    def add_unit(self, units, app_name):
-        requests.put(
-            '{}/apps/{}/units'.format(settings.TSURU_HOST, app_name),
-            headers=self.authorization,
-            data=str(units)
-        )
-
-    def remove_units(self, units, app_name):
-        requests.delete(
-            '{}/apps/{}/units'.format(settings.TSURU_HOST, app_name),
-            headers=self.authorization,
-            data=str(units)
-        )
-
-    def get_app(self, app_name):
-        url = '{}/apps/{}'.format(settings.TSURU_HOST, app_name)
-        return requests.get(url, headers=self.authorization).json()
-
-    def post(self, request, *args, **kwargs):
-        app_name = kwargs['app_name']
-
-        app = self.get_app(app_name)
-
-        app_units = len(app['units'])
-        units = int(request.POST['units'])
-
-        if len(app['units']) < int(request.POST['units']):
-            self.add_unit(units - app_units, app_name)
-
-        if len(app['units']) > int(request.POST['units']):
-            self.remove_units(app_units - units, app_name)
-
-        return redirect(reverse('detail-app', args=[app_name]))
-
-
 class AppDetail(AppMixin, TemplateView):
     template_name = 'apps/details.html'
 
