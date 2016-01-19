@@ -23,8 +23,6 @@ urlpatterns = patterns(
         name='app-settings'),
     url(r'^(?P<app_name>[\w-]+)/team/add/$',
         views.AppAddTeam.as_view(), name='app-add-team'),
-    url(r'^(?P<app_name>[\w-]+)/team/revoke/(?P<team>[\w-]+)',
-        views.AppRevokeTeam.as_view(), name='app-revoke-team'),
     url(r'^(?P<app_name>[\w-]+)/metrics/details/$',
         views.MetricDetail.as_view(), name='metrics-app'),
     url(r'^(?P<app_name>[\w-]+)/deploys/$', csrf_exempt(views.ListDeploy.as_view()), name='app-deploys'),

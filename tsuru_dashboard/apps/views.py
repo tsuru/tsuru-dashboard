@@ -310,18 +310,6 @@ class AppAddTeam(LoginRequiredView):
         return [t['name'] for t in teams]
 
 
-class AppRevokeTeam(LoginRequiredView):
-    def get(self, request, app_name, team):
-        app_name = self.kwargs['app_name']
-
-        authorization = {'authorization': request.session.get('tsuru_token')}
-        tsuru_url = '{}/apps/{}/{}'.format(
-            settings.TSURU_HOST, app_name, team)
-        requests.delete(tsuru_url, headers=authorization)
-
-        return redirect(reverse('app-teams', args=[app_name]))
-
-
 class RemoveApp(LoginRequiredView):
     def get(self, request, *args, **kwargs):
         app_name = self.kwargs['name']
