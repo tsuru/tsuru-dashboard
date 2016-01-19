@@ -28462,7 +28462,8 @@ var AppSearch = React.createClass({displayName: "AppSearch",
                ref: "name", 
                placeholder: "search apps by name", 
                onChange: this.handleChange}), 
-		React.createElement(AppAdd, null)
+		React.createElement(AppAdd, null), 
+        React.createElement("div", {className: "clearfix"})
       )
     );
   }
@@ -28501,7 +28502,7 @@ var AppTable = React.createClass({displayName: "AppTable",
     });
     return (
 	  React.createElement("table", {className: "table"}, 
-        appNodes
+        React.createElement("tbody", null, appNodes)
 	  )
     );
   }

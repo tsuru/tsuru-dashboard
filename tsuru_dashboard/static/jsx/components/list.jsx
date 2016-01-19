@@ -20,6 +20,7 @@ var AppSearch = React.createClass({
                placeholder="search apps by name"
                onChange={this.handleChange} />
 		<AppAdd />
+        <div className="clearfix"></div>
       </div>
     );
   }
@@ -58,7 +59,7 @@ var AppTable = React.createClass({
     });
     return (
 	  <table className="table">
-        {appNodes}
+        <tbody>{appNodes}</tbody>
 	  </table>
     );
   }
