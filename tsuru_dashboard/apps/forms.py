@@ -7,7 +7,3 @@ class AppForm(forms.Form):
     plan = forms.ChoiceField(required=False)
     teamOwner = forms.ChoiceField(required=False)
     pool = forms.ChoiceField(required=False)
-
-
-class AppAddTeamForm(forms.Form):
-    team = forms.CharField(max_length=60)

@@ -22,7 +22,7 @@ from pygments.formatters import HtmlFormatter
 from tsuru_dashboard import settings
 from tsuru_dashboard.auth.views import LoginRequiredView, LoginRequiredMixin
 
-from .forms import AppForm, AppAddTeamForm
+from .forms import AppForm
 
 
 class AppMixin(LoginRequiredMixin):
@@ -270,44 +270,6 @@ class CreateApp(LoginRequiredView):
                 default = p['name']
             plan_list.append((p['name'], p['name']))
         return default, plan_list
-
-
-class AppAddTeam(LoginRequiredView):
-    template = 'apps/app_add_team.html'
-
-    def get(self, request, app_name):
-        context = {}
-        context['app_name'] = app_name
-        context['app'] = {'name': app_name}
-        context['form'] = AppAddTeamForm()
-        context['teams'] = self._get_teams(request)
-        return TemplateResponse(request, self.template, context=context)
-
-    def post(self, request, app_name):
-        form = AppAddTeamForm(request.POST)
-        if not form.is_valid():
-            return TemplateResponse(request, self.template, {'form': form})
-
-        authorization = {'authorization': request.session.get('tsuru_token')}
-        tsuru_url = '{}/apps/{}/{}'.format(
-            settings.TSURU_HOST, app_name, form.data.get('team'))
-        response = requests.put(tsuru_url, headers=authorization)
-        if response.status_code == 200:
-            return TemplateResponse(
-                request, self.template,
-                {'form': form, 'app_name': app_name,
-                 'message': 'The Team was successfully added'}
-            )
-        return TemplateResponse(request, self.template,
-                                {'form': form, 'app_name': app_name,
-                                 'errors': response.content})
-
-    def _get_teams(self, request):
-        authorization = {'authorization': request.session.get('tsuru_token')}
-        response = requests.get('{}/teams'.format(settings.TSURU_HOST),
-                                headers=authorization)
-        teams = response.json()
-        return [t['name'] for t in teams]
 
 
 class RemoveApp(LoginRequiredView):
