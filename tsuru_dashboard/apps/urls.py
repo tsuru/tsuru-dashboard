@@ -21,8 +21,6 @@ urlpatterns = patterns(
         name='app_log'),
     url(r'^(?P<app_name>[\w-]+)/settings/$', views.Settings.as_view(),
         name='app-settings'),
-    url(r'^(?P<app_name>[\w-]+)/teams/$',
-        views.AppTeams.as_view(), name='app-teams'),
     url(r'^(?P<app_name>[\w-]+)/team/add/$',
         views.AppAddTeam.as_view(), name='app-add-team'),
     url(r'^(?P<app_name>[\w-]+)/team/revoke/(?P<team>[\w-]+)',

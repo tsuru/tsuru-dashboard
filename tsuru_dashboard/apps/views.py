@@ -440,10 +440,6 @@ class AppLog(AppMixin, TemplateView):
     template_name = 'apps/app_log.html'
 
 
-class AppTeams(AppMixin, TemplateView):
-    template_name = "apps/app_team.html"
-
-
 class AppEnv(LoginRequiredView):
     template = 'apps/app_env.html'
 
