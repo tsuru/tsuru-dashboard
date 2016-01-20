@@ -38,9 +38,9 @@ def get_backend(app, token, date_range=None, process_name=None):
 class ElasticSearch(object):
     def __init__(self, url, app, process_name=None, date_range="1h"):
         if date_range == "1h":
-            self.index = ".measure-tsuru-{}".format(datetime.date.today().strftime("%Y.%m.%d"))
+            self.index = ".measure-tsuru-{}".format(datetime.datetime.utcnow().strftime("%Y.%m.%d"))
         else:
-            self.index = ".measure-tsuru-{}.*".format(datetime.date.today().year)
+            self.index = ".measure-tsuru-{}.*".format(datetime.datetime.utcnow().strftime("%Y"))
         self.app = app
         self.url = url
         self.process_name = process_name
