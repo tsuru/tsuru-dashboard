@@ -22,21 +22,21 @@
 		<div class="col-md-12">
 			<form action="" method="post" class="form-horizontal">
 				{% csrf_token %}
-			  <div class="form-group{% if app_form.errors.name %} error{% endif %}">
+			  <div class="form-group{% if app_form.errors.name %}has-error{% endif %}">
 				<label for="{{ app_form.name.name }}" class="col-sm-2 control-label">Name</label>
 				<div class="col-sm-10">
 				  <input type="text" class="form-control" id="{{ app_form.name.name }}" value="{{ app_form.name.value|default:"" }}">
 				  <span class="help-inline">{{ app_form.errors.name }}</span>
 				</div>
 			  </div>
-			  <div class="form-group{% if app_form.errors.platform %} error{% endif %}">
+			  <div class="form-group{% if app_form.errors.platform %}has-error{% endif %}">
 				<label for="{{ app_form.platform.name }}" class="col-sm-2 control-label">Platform</label>
 				<div class="col-sm-10">
                   {{ app_form.platform }}
 				  <span class="help-inline">{{ app_form.errors.platform }}</span>
 				</div>
 			  </div>
-			  <div class="form-group{% if app_form.errors.teamOwner %} error{% endif %}">
+			  <div class="form-group{% if app_form.errors.teamOwner %}has-error{% endif %}">
 				<label for="{{ app_form.teamOwner.name }}" class="col-sm-2 control-label">Team</label>
 				<div class="col-sm-10">
                   {{ app_form.teamOwner }}
@@ -44,14 +44,14 @@
                   <a class="btn btn-default add-team" data-toggle="modal" data-target="#add-team-modal" title="new team" href="#add-team">+</a>
 				</div>
 			  </div>
-			  <div class="form-group{% if app_form.errors.plan %} error{% endif %}">
+			  <div class="form-group{% if app_form.errors.plan %}has-error{% endif %}">
 				<label for="{{ app_form.plan.name }}" class="col-sm-2 control-label">Plan</label>
 				<div class="col-sm-10">
                   {{ app_form.plan }}
 				  <span class="help-inline">{{ app_form.errors.plan }}</span>
 				</div>
 			  </div>
-			  <div class="form-group{% if app_form.errors.pool %} error{% endif %}">
+			  <div class="form-group{% if app_form.errors.pool %}has-error{% endif %}">
 				<label for="{{ app_form.pool.name }}" class="col-sm-2 control-label">Pool</label>
 				<div class="col-sm-10">
                   {{ app_form.pool }}

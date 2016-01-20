@@ -30,7 +30,7 @@
                 </thead>
                 <tbody>
 				{% for event in events %}
-                    <tr class="{% if event.Error %}error{% endif %}">
+                    <tr class="{% if event.Error %}bg-danger{% endif %}">
                         <td>{{ event.App }}</td>
                         <td>{% if event.FailingNode.Address %}{{ event.FailingNode.Address }}{% else %}{{ event.FailingContainer.ID }}{% endif %}</td>
                         <td>{% if event.CreatedNode.Address %}{{ event.CreatedNode.Address }}{% else %}{{ event.CreatedContainer.ID }}{% endif %}</td>

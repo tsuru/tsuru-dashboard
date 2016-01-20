@@ -29,7 +29,7 @@
 				</thead>
 				<tbody>
 					{% for deploy in deploys %}
-					<tr class="{% if deploy.Error %}error{% endif %}">
+					<tr class="{% if deploy.Error %}bg-danger{% endif %}">
 						<td class='app'>
 							{% if  deploy.ID %}
 							<a href="{% url 'deploy-info' deploy.ID %}">{{ deploy.App }}</a>

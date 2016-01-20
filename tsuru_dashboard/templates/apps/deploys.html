@@ -21,7 +21,7 @@
 		<div class="col-md-12">
 		<table class="deploys table" id="list">
             {% for deploy in deploys %}
-                <tr class="{% if deploy.Error %}error{% endif %}">
+                <tr class="{% if deploy.Error %}bg-danger{% endif %}">
                     <td>
                         {{ deploy.Timestamp|string_to_date|date:" d-m-Y H:i:s " }}
                         - deployed from: {{ deploy.Origin }}
