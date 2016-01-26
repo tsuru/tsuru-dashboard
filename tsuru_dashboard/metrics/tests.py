@@ -150,6 +150,13 @@ class ElasticSearchTest(TestCase):
         post_mock.assert_called_with(url, data=json.dumps(self.es.query()))
 
     @patch("requests.post")
+    def test_swap(self, post_mock):
+        self.es.process = Mock()
+        self.es.swap()
+        url = "{}/{}/{}/_search".format(self.es.url, self.index, "swap")
+        post_mock.assert_called_with(url, data=json.dumps(self.es.query()))
+
+    @patch("requests.post")
     def test_units(self, post_mock):
         self.es.units()
         url = "{}/{}/{}/_search".format(self.es.url, self.index, "cpu_max")

@@ -102,6 +102,10 @@ class ElasticSearch(object):
         query = self.query(interval=interval)
         return self.process(self.post(query, "mem_max"), formatter=lambda x: x / (1024 * 1024))
 
+    def swap(self, interval=None):
+        query = self.query(interval=interval)
+        return self.process(self.post(query, "swap"), formatter=lambda x: x / (1024 * 1024))
+
     def units(self, interval=None):
         aggregation = {"units": {"cardinality": {"field": "host"}}}
         query = self.query(interval=interval, aggregation=aggregation)

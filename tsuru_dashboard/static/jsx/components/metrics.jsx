@@ -78,6 +78,7 @@ var Metrics = React.createClass({
       <div className="metrics">
         <GraphContainer kind="cpu_max" appName={appName} processName={this.props.processName} />
         <GraphContainer kind="mem_max" appName={appName} processName={this.props.processName} />
+        <GraphContainer kind="swap" appName={appName} processName={this.props.processName} />
         <GraphContainer kind="connections" appName={appName} processName={this.props.processName} />
         <GraphContainer kind="units" appName={appName} processName={this.props.processName} />
         <GraphContainer kind="requests_min" appName={appName} />
