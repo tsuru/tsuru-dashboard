@@ -22,14 +22,14 @@
 				<thead>
 					<tr>
 						<th>App</th>
-						<th class="to-right">Duration</th>
-						<th class="to-right">Origin</th>
+						<th>Duration</th>
+						<th>Origin</th>
 						<th class="to-right">Timestamp</th>
 					</tr>
 				</thead>
 				<tbody>
 					{% for deploy in deploys %}
-					<tr class="{% if deploy.Error %}bg-danger{% endif %}">
+                    <tr class="{% if deploy.Error %}bg-danger{% endif %}{% if deploy.Image == "diff" %}bg-warning{% endif %}">
 						<td class='app'>
 							{% if  deploy.ID %}
 							<a href="{% url 'deploy-info' deploy.ID %}">{{ deploy.App }}</a>
@@ -38,8 +38,14 @@
 							{% endif %}
 							{% if deploy.Error %} - {{ deploy.Error }}{% endif %}
 						</td>
-						<td class='to-right'>{{ deploy.Duration|time_to_string }}</td>
-						<td class='to-right'>{{ deploy.Origin }}</td>
+                        <td>
+                            {% if deploy.Image == "diff" %}
+                              <div class="loader"></div>
+                            {% else %}
+                              {{ deploy.Duration|time_to_string }}
+                            {% endif %}
+                        </td>
+						<td>{{ deploy.Origin }}</td>
 						<td class='to-right'>{{ deploy.Timestamp|string_to_date|date:" d-m-Y H:i:s " }}</td>
 					</tr>
 					{% endfor %}
