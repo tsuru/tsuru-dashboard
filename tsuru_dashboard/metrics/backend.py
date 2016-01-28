@@ -61,11 +61,11 @@ class ElasticSearch(object):
         min_value = None
         max_value = 0
 
-        if "aggregations" in data and data["aggregations"]["range"]["buckets"][0]["doc_count"] > 0:
-            for bucket in data["aggregations"]["range"]["buckets"][0]["date"]["buckets"]:
-                bucket_max = formatter(bucket["max"]["value"])
-                bucket_min = formatter(bucket["min"]["value"])
-                bucket_avg = formatter(bucket["avg"]["value"])
+        if "aggregations" in data and len(data["aggregations"]["date"]["buckets"]) > 0:
+            for bucket in data["aggregations"]["date"]["buckets"]:
+                bucket_max = formatter(bucket["stats"]["max"])
+                bucket_min = formatter(bucket["stats"]["min"])
+                bucket_avg = formatter(bucket["stats"]["avg"])
 
                 if min_value is None:
                     min_value = bucket_min
@@ -116,8 +116,8 @@ class ElasticSearch(object):
         min_value = None
         max_value = 0
 
-        if "aggregations" in data and data["aggregations"]["range"]["buckets"][0]["doc_count"] > 0:
-            for bucket in data["aggregations"]["range"]["buckets"][0]["date"]["buckets"]:
+        if "aggregations" in data and len(data["aggregations"]["date"]["buckets"]) > 0:
+            for bucket in data["aggregations"]["date"]["buckets"]:
                 value = bucket["units"]["value"]
 
                 if min_value is None:
@@ -150,8 +150,8 @@ class ElasticSearch(object):
         min_value = None
         max_value = 0
 
-        if "aggregations" in data and data["aggregations"]["range"]["buckets"][0]["doc_count"] > 0:
-            for bucket in data["aggregations"]["range"]["buckets"][0]["date"]["buckets"]:
+        if "aggregations" in data and len(data["aggregations"]["date"]["buckets"]) > 0:
+            for bucket in data["aggregations"]["date"]["buckets"]:
                 value = bucket["sum"]["value"]
 
                 if min_value is None:
@@ -187,8 +187,8 @@ class ElasticSearch(object):
         min_value = 0
         max_value = 0
 
-        if "aggregations" in data and data["aggregations"]["range"]["buckets"][0]["doc_count"] > 0:
-            for bucket in data["aggregations"]["range"]["buckets"][0]["date"]["buckets"]:
+        if "aggregations" in data and len(data["aggregations"]["date"]["buckets"]) > 0:
+            for bucket in data["aggregations"]["date"]["buckets"]:
                 for doc in bucket["connection"]["buckets"]:
                     size = doc["doc_count"]
                     conn = doc["key"]
@@ -215,12 +215,22 @@ class ElasticSearch(object):
 
         f = {
             "bool": {
-                "must": [{
-                    "term": {
-                        "app": self.app,
-                        "app.raw": self.app,
+                "must": [
+                    {
+                        "term": {
+                            "app": self.app,
+                            "app.raw": self.app,
+                        }
+                    },
+                    {
+                        "range": {
+                            "@timestamp": {
+                                "gte": "now-" + self.date_range,
+                                "lt": "now"
+                            }
+                        },
                     }
-                }],
+                ],
             }
         }
 
@@ -239,32 +249,17 @@ class ElasticSearch(object):
             }
         }
         if not aggregation:
-            aggregation = {
-                "max": {"max": {"field": "value"}},
-                "min": {"min": {"field": "value"}},
-                "avg": {"avg": {"field": "value"}}
-            }
+            aggregation = {"stats": {"stats": {"field": "value"}}}
         return {
             "query": query_filter,
             "size": 0,
             "aggs": {
-                "range": {
-                    "date_range": {
+                "date": {
+                    "date_histogram": {
                         "field": "@timestamp",
-                        "ranges": [{
-                            "from": "now-" + self.date_range,
-                            "to": "now"
-                        }]
+                        "interval": interval
                     },
-                    "aggs": {
-                        "date": {
-                            "date_histogram": {
-                                "field": "@timestamp",
-                                "interval": interval
-                            },
-                            "aggs": aggregation,
-                        }
-                    }
+                    "aggs": aggregation,
                 }
             }
         }

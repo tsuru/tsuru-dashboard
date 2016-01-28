@@ -198,46 +198,26 @@ class ElasticSearchTest(TestCase):
                 "hits": []
             },
             "aggregations": {
-                "range": {
+                "date": {
                     "buckets": [
                         {
-                            "key": "2015-07-21T19:35:00.000Z-2015-07-21T19:37:05.388Z",
-                            "from": 1437507300000,
-                            "from_as_string": "2015-07-21T19:35:00.000Z",
-                            "to": 1437507425388,
-                            "to_as_string": "2015-07-21T19:37:05.388Z",
-                            "doc_count": 18,
-                            "date": {
-                                "buckets": [
-                                    {
-                                        "key_as_string": "2015-07-21T19:35:00.000Z",
-                                        "key": 1437507300000,
-                                        "doc_count": 9,
-                                        "min": {
-                                            "value": 97517568
-                                        },
-                                        "max": {
-                                            "value": 97517568
-                                        },
-                                        "avg": {
-                                            "value": 97517568
-                                        }
-                                    },
-                                    {
-                                        "key_as_string": "2015-07-21T19:36:00.000Z",
-                                        "key": 1437507360000,
-                                        "doc_count": 9,
-                                        "min": {
-                                            "value": 97517568
-                                        },
-                                        "max": {
-                                            "value": 97517568
-                                        },
-                                        "avg": {
-                                            "value": 97517568
-                                        }
-                                    }
-                                ]
+                            "key_as_string": "2015-07-21T19:35:00.000Z",
+                            "key": 1437507300000,
+                            "doc_count": 9,
+                            "stats": {
+                                "min": 97517568,
+                                "max": 97517568,
+                                "avg": 97517568
+                            }
+                        },
+                        {
+                            "key_as_string": "2015-07-21T19:36:00.000Z",
+                            "key": 1437507360000,
+                            "doc_count": 9,
+                            "stats": {
+                                "min": 97517568,
+                                "max": 97517568,
+                                "avg": 97517568
                             }
                         }
                     ]
@@ -271,46 +251,26 @@ class ElasticSearchTest(TestCase):
                 "hits": []
             },
             "aggregations": {
-                "range": {
+                "date": {
                     "buckets": [
                         {
-                            "key": "2015-07-21T19:35:00.000Z-2015-07-21T19:37:05.388Z",
-                            "from": 1437507300000,
-                            "from_as_string": "2015-07-21T19:35:00.000Z",
-                            "to": 1437507425388,
-                            "to_as_string": "2015-07-21T19:37:05.388Z",
-                            "doc_count": 18,
-                            "date": {
-                                "buckets": [
-                                    {
-                                        "key_as_string": "2015-07-21T19:35:00.000Z",
-                                        "key": 1437507300000,
-                                        "doc_count": 9,
-                                        "min": {
-                                            "value": 97517568
-                                        },
-                                        "max": {
-                                            "value": 97517568
-                                        },
-                                        "avg": {
-                                            "value": 97517568
-                                        }
-                                    },
-                                    {
-                                        "key_as_string": "2015-07-21T19:36:00.000Z",
-                                        "key": 1437507360000,
-                                        "doc_count": 9,
-                                        "min": {
-                                            "value": 97517568
-                                        },
-                                        "max": {
-                                            "value": 97517568
-                                        },
-                                        "avg": {
-                                            "value": 97517568
-                                        }
-                                    }
-                                ]
+                            "key_as_string": "2015-07-21T19:35:00.000Z",
+                            "key": 1437507300000,
+                            "doc_count": 9,
+                            "stats": {
+                                "min": 97517568,
+                                "max": 97517568,
+                                "avg": 97517568
+                            }
+                        },
+                        {
+                            "key_as_string": "2015-07-21T19:36:00.000Z",
+                            "key": 1437507360000,
+                            "doc_count": 9,
+                            "stats": {
+                                "min": 97517568,
+                                "max": 97517568,
+                                "avg": 97517568
                             }
                         }
                     ]
