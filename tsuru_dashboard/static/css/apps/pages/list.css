@@ -26,3 +26,11 @@ i.icono-plus {
 .table {
     clear: both;
 }
+
+.table .app-status {
+    padding-right: 5px;
+    max-height: 25px;
+    height: auto;
+    max-width: 25px;
+    width: auto;
+}
