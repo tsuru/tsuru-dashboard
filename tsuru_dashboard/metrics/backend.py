@@ -35,6 +35,55 @@ def get_backend(app, token, date_range=None, process_name=None):
     raise MetricNotEnabled
 
 
+NET_AGGREGATION = {
+    "units": {
+        "terms": {
+            "field": "host"
+        },
+        "aggs": {
+            "delta": {
+                "scripted_metric": {
+                    "init_script": """
+_agg['max'] = [ts: 0, val: null]
+_agg['min'] = [ts: 0, val: null]
+""",
+                    "map_script": """
+ts = doc['@timestamp'][0]
+val = doc['value'][0]
+if (ts > _agg.max.ts) {
+    _agg.max.ts = ts
+    _agg.max.val = val
+}
+if (_agg.min.ts == 0 || ts < _agg.min.ts) {
+    _agg.min.ts = ts
+    _agg.min.val = val
+}
+""",
+                    "reduce_script": """
+max = null
+min = null
+for (a in _aggs) {
+    if (max == null || a.max.ts > max.ts) {
+        max = a.max
+    }
+    if (min == null || a.min.ts < min.ts) {
+        min = a.min
+    }
+}
+dt = max.ts - min.ts
+if (dt > 0) {
+    return ((max.val - min.val)/1024)/(dt/1000)
+} else {
+    return 0
+}
+"""
+                }
+            }
+        }
+    }
+}
+
+
 class ElasticSearch(object):
     def __init__(self, url, app, process_name=None, date_range="1h"):
         if date_range == "1h":
@@ -105,6 +154,47 @@ class ElasticSearch(object):
     def swap(self, interval=None):
         query = self.query(interval=interval)
         return self.process(self.post(query, "swap"), formatter=lambda x: x / (1024 * 1024))
+
+    def netrx(self, interval=None):
+        return self.net_metric("netrx", interval)
+
+    def nettx(self, interval=None):
+        return self.net_metric("nettx", interval)
+
+    def net_metric(self, kind, interval=None):
+        query = self.query(interval=interval, aggregation=NET_AGGREGATION)
+        data = self.post(query, kind)
+        return self.net_process(data)
+
+    def net_process(self, data):
+        result = {}
+        min_value = None
+        max_value = 0
+
+        if "aggregations" in data and len(data["aggregations"]["date"]["buckets"]) > 0:
+            for bucket in data["aggregations"]["date"]["buckets"]:
+                value = 0
+                for in_bucket in bucket["units"]["buckets"]:
+                    value += in_bucket["delta"]["value"]
+
+                if min_value is None:
+                    min_value = value
+
+                if value < min_value:
+                    min_value = value
+
+                if value > max_value:
+                    max_value = value
+
+                if not result:
+                    result["requests"] = []
+                result["requests"].append([bucket["key"], value])
+
+        return {
+            "data": result,
+            "min": min_value,
+            "max": max_value,
+        }
 
     def units(self, interval=None):
         aggregation = {"units": {"cardinality": {"field": "host"}}}

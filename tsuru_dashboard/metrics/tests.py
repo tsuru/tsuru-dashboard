@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.test.client import RequestFactory
 
 from tsuru_dashboard import settings
-from tsuru_dashboard.metrics.backend import ElasticSearch, get_backend, MetricNotEnabled
+from tsuru_dashboard.metrics.backend import ElasticSearch, get_backend, MetricNotEnabled, NET_AGGREGATION
 from tsuru_dashboard.metrics import views
 
 from mock import patch, Mock
@@ -182,6 +182,18 @@ class ElasticSearchTest(TestCase):
         url = "{}/{}/{}/_search".format(self.es.url, self.index, "connection")
         aggregation = {"connection": {"terms": {"field": "connection.raw"}}}
         post_mock.assert_called_with(url, data=json.dumps(self.es.query(aggregation=aggregation)))
+
+    @patch("requests.post")
+    def test_netrx(self, post_mock):
+        self.es.netrx()
+        url = "{}/{}/{}/_search".format(self.es.url, self.index, "netrx")
+        post_mock.assert_called_with(url, data=json.dumps(self.es.query(aggregation=NET_AGGREGATION)))
+
+    @patch("requests.post")
+    def test_nettx(self, post_mock):
+        self.es.nettx()
+        url = "{}/{}/{}/_search".format(self.es.url, self.index, "nettx")
+        post_mock.assert_called_with(url, data=json.dumps(self.es.query(aggregation=NET_AGGREGATION)))
 
     def test_process(self):
         data = {

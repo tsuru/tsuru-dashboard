@@ -28942,7 +28942,9 @@ var Metrics = React.createClass({displayName: "Metrics",
         React.createElement(GraphContainer, {kind: "connections", appName: appName, processName: this.props.processName}), 
         React.createElement(GraphContainer, {kind: "units", appName: appName, processName: this.props.processName}), 
         React.createElement(GraphContainer, {kind: "requests_min", appName: appName}), 
-        React.createElement(GraphContainer, {kind: "response_time", appName: appName})
+        React.createElement(GraphContainer, {kind: "response_time", appName: appName}), 
+        React.createElement(GraphContainer, {kind: "nettx", appName: appName}), 
+        React.createElement(GraphContainer, {kind: "netrx", appName: appName})
       )
     );
   }
