@@ -24,6 +24,12 @@ If all is well you should able to run the local server:
     $ export TSURU_HOST=http://tsuru-api-endpoint.com
     $ make run
 
+## Browserifying jsx files
+
+To generate all javascript files based on jsx file you can use the command:
+
+    $ make rebuild-all-js
+
 # Running tests
 
 ## Running all tests
