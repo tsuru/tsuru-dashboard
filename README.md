@@ -11,6 +11,7 @@ For issue tracking:
 # Deploying to tsuru
 
 tsuru-dashboard can be deployed to tsuru like any other app.
+all you need is create a python app and deploy to tsuru using `git push` or `tsuru app-deploy`.
 
 # Setting up a development environment
 
@@ -21,15 +22,23 @@ For local development, first create a virtualenv and install the deps:
 If all is well you should able to run the local server:
 
     $ export TSURU_HOST=http://tsuru-api-endpoint.com
-    $ ./manage.py migrate
-    $ ./manage.py collectstatic
-    $ ./manage.py runserver
+    $ make run
 
 # Running tests
 
+## Running all tests
+
     $ make test
 
-Links:
+## Running python tests
+
+    $ make python-test
+
+## Running javascript tests
+
+    $ make node-test
+
+# Links
 
 - Full tsuru documentation: http://docs.tsuru.io
 - How to Contribute: http://docs.tsuru.io/en/latest/contributing
