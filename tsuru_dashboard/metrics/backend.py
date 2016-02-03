@@ -106,40 +106,22 @@ class ElasticSearch(object):
                 return x
             formatter = default_formatter
 
-        result = {}
-        min_value = None
-        max_value = 0
+        def processor(result, bucket):
+            bucket_max = formatter(bucket["stats"]["max"])
+            bucket_min = formatter(bucket["stats"]["min"])
+            bucket_avg = formatter(bucket["stats"]["avg"])
+            if not result:
+                result = {
+                    "max": [],
+                    "min": [],
+                    "avg": [],
+                }
+            result["max"].append([bucket["key"], bucket_max])
+            result["min"].append([bucket["key"], bucket_min])
+            result["avg"].append([bucket["key"], bucket_avg])
+            return result, bucket_min, bucket_max
 
-        if "aggregations" in data and len(data["aggregations"]["date"]["buckets"]) > 0:
-            for bucket in data["aggregations"]["date"]["buckets"]:
-                bucket_max = formatter(bucket["stats"]["max"])
-                bucket_min = formatter(bucket["stats"]["min"])
-                bucket_avg = formatter(bucket["stats"]["avg"])
-
-                if min_value is None:
-                    min_value = bucket_min
-
-                if bucket_min < min_value:
-                    min_value = bucket_min
-
-                if bucket_max > max_value:
-                    max_value = bucket_max
-
-                if not result:
-                    result = {
-                        "max": [],
-                        "min": [],
-                        "avg": [],
-                    }
-                result["max"].append([bucket["key"], "{0:.2f}".format(bucket_max)])
-                result["min"].append([bucket["key"], "{0:.2f}".format(bucket_min)])
-                result["avg"].append([bucket["key"], "{0:.2f}".format(bucket_avg)])
-
-        return {
-            "data": result,
-            "min": "{0:.2f}".format(min_value or 0),
-            "max": "{0:.2f}".format(max_value + 1),
-        }
+        return self.base_process(data, processor)
 
     def cpu_max(self, interval=None):
         query = self.query(interval=interval)
@@ -163,140 +145,108 @@ class ElasticSearch(object):
 
     def net_metric(self, kind, interval=None):
         query = self.query(interval=interval, aggregation=NET_AGGREGATION)
-        data = self.post(query, kind)
-        return self.net_process(data)
+        return self.base_process(self.post(query, kind), self.net_process)
 
-    def net_process(self, data):
-        result = {}
-        min_value = None
-        max_value = 0
-
-        if "aggregations" in data and len(data["aggregations"]["date"]["buckets"]) > 0:
-            for bucket in data["aggregations"]["date"]["buckets"]:
-                value = 0
-                for in_bucket in bucket["units"]["buckets"]:
-                    value += in_bucket["delta"]["value"]
-
-                if min_value is None:
-                    min_value = value
-
-                if value < min_value:
-                    min_value = value
-
-                if value > max_value:
-                    max_value = value
-
-                if not result:
-                    result["requests"] = []
-                result["requests"].append([bucket["key"], value])
-
-        return {
-            "data": result,
-            "min": min_value,
-            "max": max_value,
-        }
+    def net_process(self, result, bucket):
+        value = 0
+        for in_bucket in bucket["units"]["buckets"]:
+            value += in_bucket["delta"]["value"]
+        if not result:
+            result["requests"] = []
+        result["requests"].append([bucket["key"], value])
+        return result, value, value
 
     def units(self, interval=None):
         aggregation = {"units": {"cardinality": {"field": "host"}}}
         query = self.query(interval=interval, aggregation=aggregation)
-        return self.units_process(self.post(query, "cpu_max"))
+        return self.base_process(self.post(query, "cpu_max"), self.units_process)
 
-    def units_process(self, data, formatter=None):
-        result = {}
-        min_value = None
-        max_value = 0
-
-        if "aggregations" in data and len(data["aggregations"]["date"]["buckets"]) > 0:
-            for bucket in data["aggregations"]["date"]["buckets"]:
-                value = bucket["units"]["value"]
-
-                if min_value is None:
-                    min_value = value
-
-                if value < min_value:
-                    min_value = value
-
-                if value > max_value:
-                    max_value = value
-
-                if not result:
-                    result["units"] = []
-
-                result["units"].append([bucket["key"], "{0:.2f}".format(value)])
-
-        return {
-            "data": result,
-            "min": "{0:.2f}".format(min_value or 0),
-            "max": "{0:.2f}".format(max_value),
-        }
+    def units_process(self, result, bucket):
+        value = bucket["units"]["value"]
+        if not result:
+            result["units"] = []
+        result["units"].append([bucket["key"], value])
+        return result, value, value
 
     def requests_min(self, interval=None):
         aggregation = {"sum": {"sum": {"field": "count"}}}
         query = self.query(interval=interval, aggregation=aggregation)
-        return self.requests_min_process(self.post(query, "response_time"))
+        return self.base_process(self.post(query, "response_time"), self.requests_min_process)
 
-    def requests_min_process(self, data, formatter=None):
+    def requests_min_process(self, result, bucket):
+        value = bucket["sum"]["value"]
+        if not result:
+            result["requests"] = []
+        result["requests"].append([bucket["key"], value])
+        return result, value, value
+
+    def response_time(self, interval=None):
+        aggregation = {
+            "stats": {"stats": {"field": "value"}},
+            "percentiles": {"percentiles": {"field": "value"}}
+        }
+        query = self.query(interval=interval, aggregation=aggregation)
+        return self.base_process(self.post(query, "response_time"), self.response_time_process)
+
+    def response_time_process(self, result, bucket):
+        bucket_max = bucket["stats"]["max"]
+        bucket_min = bucket["stats"]["min"]
+        bucket_avg = bucket["stats"]["avg"]
+        if not result:
+            result = {
+                "max": [],
+                "min": [],
+                "avg": [],
+                "p95": [],
+                "p99": [],
+            }
+        result["max"].append([bucket["key"], bucket_max])
+        result["min"].append([bucket["key"], bucket_min])
+        result["avg"].append([bucket["key"], bucket_avg])
+        result["p95"].append([bucket["key"], bucket["percentiles"]["values"]["95.0"]])
+        result["p99"].append([bucket["key"], bucket["percentiles"]["values"]["99.0"]])
+        return result, bucket_min, bucket_max
+
+    def connections(self, interval=None):
+        aggregation = {"connection": {"terms": {"field": "connection.raw"}}}
+        query = self.query(interval=interval, aggregation=aggregation)
+        return self.base_process(self.post(query, "connection"), self.connections_process)
+
+    def connections_process(self, result, bucket):
+        min_value = 0
+        max_value = 0
+        for doc in bucket["connection"]["buckets"]:
+            size = doc["doc_count"]
+            conn = doc["key"]
+            if conn not in result:
+                result[conn] = []
+
+            if size < min_value:
+                min_value = size
+
+            if size > max_value:
+                max_value = size
+
+            result[conn].append([bucket["key"], size])
+        return result, min_value, max_value
+
+    def base_process(self, data, processor):
         result = {}
         min_value = None
         max_value = 0
 
         if "aggregations" in data and len(data["aggregations"]["date"]["buckets"]) > 0:
             for bucket in data["aggregations"]["date"]["buckets"]:
-                value = bucket["sum"]["value"]
-
-                if min_value is None:
-                    min_value = value
-
-                if value < min_value:
-                    min_value = value
-
-                if value > max_value:
-                    max_value = value
-
-                if not result:
-                    result["requests"] = []
-                result["requests"].append([bucket["key"], value])
+                result, min_v, max_v = processor(result, bucket)
+                if min_value is None or min_v < min_value:
+                    min_value = min_v
+                if max_v > max_value:
+                    max_value = max_v
 
         return {
             "data": result,
-            "min": min_value,
-            "max": max_value,
-        }
-
-    def response_time(self, interval=None):
-        query = self.query(interval=interval)
-        return self.process(self.post(query, "response_time"))
-
-    def connections(self, interval=None):
-        aggregation = {"connection": {"terms": {"field": "connection.raw"}}}
-        query = self.query(interval=interval, aggregation=aggregation)
-        return self.connections_process(self.post(query, "connection"))
-
-    def connections_process(self, data, formatter=None):
-        result = {}
-        min_value = 0
-        max_value = 0
-
-        if "aggregations" in data and len(data["aggregations"]["date"]["buckets"]) > 0:
-            for bucket in data["aggregations"]["date"]["buckets"]:
-                for doc in bucket["connection"]["buckets"]:
-                    size = doc["doc_count"]
-                    conn = doc["key"]
-                    if conn not in result:
-                        result[conn] = []
-
-                    if size < min_value:
-                        min_value = size
-
-                    if size > max_value:
-                        max_value = size
-
-                    result[conn].append([bucket["key"], size])
-
-        return {
-            "data": result,
-            "min": min_value,
-            "max": max_value,
+            "min": min_value or 0,
+            "max": max_value + 1,
         }
 
     def query(self, interval=None, aggregation=None):

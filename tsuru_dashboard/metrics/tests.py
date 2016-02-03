@@ -174,7 +174,11 @@ class ElasticSearchTest(TestCase):
     def test_response_time(self, post_mock):
         self.es.response_time()
         url = "{}/{}/{}/_search".format(self.es.url, self.index, "response_time")
-        post_mock.assert_called_with(url, data=json.dumps(self.es.query()))
+        aggregation = {
+            "stats": {"stats": {"field": "value"}},
+            "percentiles": {"percentiles": {"field": "value"}}
+        }
+        post_mock.assert_called_with(url, data=json.dumps(self.es.query(aggregation=aggregation)))
 
     @patch("requests.post")
     def test_connections(self, post_mock):
@@ -238,12 +242,12 @@ class ElasticSearchTest(TestCase):
         }
         expected = {
             "data": {
-                "max": [[1437507300000, '97517568.00'], [1437507360000, '97517568.00']],
-                "min": [[1437507300000, '97517568.00'], [1437507360000, '97517568.00']],
-                "avg": [[1437507300000, '97517568.00'], [1437507360000, '97517568.00']],
+                "max": [[1437507300000, 97517568], [1437507360000, 97517568]],
+                "min": [[1437507300000, 97517568], [1437507360000, 97517568]],
+                "avg": [[1437507300000, 97517568], [1437507360000, 97517568]],
             },
-            "min": '97517568.00',
-            "max": '97517569.00'
+            "min": 97517568,
+            "max": 97517569
         }
         d = self.es.process(data)
         self.assertDictEqual(d, expected)
@@ -291,12 +295,12 @@ class ElasticSearchTest(TestCase):
         }
         expected = {
             "data": {
-                "max": [[1437507300000, '93.00'], [1437507360000, '93.00']],
-                "min": [[1437507300000, '93.00'], [1437507360000, '93.00']],
-                "avg": [[1437507300000, '93.00'], [1437507360000, '93.00']],
+                "max": [[1437507300000, 93], [1437507360000, 93]],
+                "min": [[1437507300000, 93], [1437507360000, 93]],
+                "avg": [[1437507300000, 93], [1437507360000, 93]],
             },
-            "min": '93.00',
-            "max": '94.00'
+            "min": 93,
+            "max": 94
         }
         d = self.es.process(data, formatter=lambda x: x / (1024 * 1024))
         self.assertDictEqual(d, expected)
@@ -316,7 +320,7 @@ class ElasticSearchTest(TestCase):
                 "hits": []
             }
         }
-        expected = {'data': {}, 'max': '1.00', 'min': '0.00'}
+        expected = {'data': {}, 'max': 1, 'min': 0}
         d = self.es.process(data, formatter=lambda x: x / (1024 * 1024))
         self.assertDictEqual(d, expected)
 
@@ -335,8 +339,8 @@ class ElasticSearchTest(TestCase):
                 "hits": []
             }
         }
-        expected = {'data': {}, 'max': '0.00', 'min': '0.00'}
-        d = self.es.units_process(data, formatter=lambda x: x / (1024 * 1024))
+        expected = {'data': {}, 'max': 1, 'min': 0}
+        d = self.es.base_process(data, self.es.units_process)
         self.assertDictEqual(d, expected)
 
     def test_request_min_process_no_aggregation(self):
@@ -354,8 +358,8 @@ class ElasticSearchTest(TestCase):
                 "hits": []
             }
         }
-        expected = {'data': {}, 'max': 0, 'min': None}
-        d = self.es.requests_min_process(data, formatter=lambda x: x / (1024 * 1024))
+        expected = {'data': {}, 'max': 1, 'min': 0}
+        d = self.es.base_process(data, self.es.requests_min_process)
         self.assertDictEqual(d, expected)
 
     def test_connections_process_no_aggregation(self):
@@ -373,6 +377,6 @@ class ElasticSearchTest(TestCase):
                 "hits": []
             }
         }
-        expected = {'data': {}, 'max': 0, 'min': 0}
-        d = self.es.connections_process(data, formatter=lambda x: x / (1024 * 1024))
+        expected = {'data': {}, 'max': 1, 'min': 0}
+        d = self.es.base_process(data, self.es.connections_process)
         self.assertDictEqual(d, expected)
