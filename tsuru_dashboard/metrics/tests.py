@@ -181,6 +181,20 @@ class ElasticSearchTest(TestCase):
         post_mock.assert_called_with(url, data=json.dumps(self.es.query(aggregation=aggregation)))
 
     @patch("requests.post")
+    def test_http_methods(self, post_mock):
+        self.es.http_methods()
+        url = "{}/{}/{}/_search".format(self.es.url, self.index, "response_time")
+        aggregation = {"method": {"terms": {"field": "method"}}}
+        post_mock.assert_called_with(url, data=json.dumps(self.es.query(aggregation=aggregation)))
+
+    @patch("requests.post")
+    def test_status_code(self, post_mock):
+        self.es.status_code()
+        url = "{}/{}/{}/_search".format(self.es.url, self.index, "response_time")
+        aggregation = {"status_code": {"terms": {"field": "status_code"}}}
+        post_mock.assert_called_with(url, data=json.dumps(self.es.query(aggregation=aggregation)))
+
+    @patch("requests.post")
     def test_connections(self, post_mock):
         self.es.connections()
         url = "{}/{}/{}/_search".format(self.es.url, self.index, "connection")

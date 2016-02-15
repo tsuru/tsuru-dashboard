@@ -207,6 +207,56 @@ class ElasticSearch(object):
         result["p99"].append([bucket["key"], bucket["percentiles"]["values"]["99.0"]])
         return result, bucket_min, bucket_max
 
+    def http_methods(self, interval=None):
+        aggregation = {"method": {"terms": {"field": "method"}}}
+        query = self.query(interval=interval, aggregation=aggregation)
+        return self.base_process(self.post(query, "response_time"), self.http_methods_process)
+
+    def http_methods_process(self, result, bucket):
+        max_value = 0
+        min_value = 0
+
+        for doc in bucket["method"]["buckets"]:
+            value = doc["doc_count"]
+            method = doc["key"]
+
+            if method not in result:
+                result[method] = []
+
+            if value < min_value:
+                min_value = value
+
+            if value > max_value:
+                max_value = value
+
+            result[method].append([bucket["key"], value])
+        return result, min_value, max_value
+
+    def status_code(self, interval=None):
+        aggregation = {"status_code": {"terms": {"field": "status_code"}}}
+        query = self.query(interval=interval, aggregation=aggregation)
+        return self.base_process(self.post(query, "response_time"), self.status_code_process)
+
+    def status_code_process(self, result, bucket):
+        max_value = 0
+        min_value = 0
+
+        for doc in bucket["status_code"]["buckets"]:
+            value = doc["doc_count"]
+            code = doc["key"]
+
+            if code not in result:
+                result[code] = []
+
+            if value < min_value:
+                min_value = value
+
+            if value > max_value:
+                max_value = value
+
+            result[code].append([bucket["key"], value])
+        return result, min_value, max_value
+
     def connections(self, interval=None):
         aggregation = {"connection": {"terms": {"field": "connection.raw"}}}
         query = self.query(interval=interval, aggregation=aggregation)
