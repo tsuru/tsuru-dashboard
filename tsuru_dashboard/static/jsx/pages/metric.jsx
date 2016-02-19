@@ -22,9 +22,19 @@ var kind = queryString("kind");
 var interval = queryString("serie");
 var from = queryString("from");
 
+var titles = {
+  "cpu_max": "cpu (%)",
+  "mem_max": "memory (MB)",
+  "swap": "swap (MB)",
+  "requests_min": "requests min",
+  "response_time": "response time (seconds)",
+  "http_methods": "http methods",
+  "status_code": "status code"
+};
+
 ReactDOM.render(
   <div className="metrics">
-    <GraphContainer kind={kind} appName={appName} interval={interval} from={from} legend={true} />
+    <GraphContainer kind={kind} title={titles[kind]? titles[kind] : kind} appName={appName} interval={interval} from={from} legend={true} />
   </div>,
   document.getElementById('metrics')
 );

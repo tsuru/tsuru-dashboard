@@ -43,11 +43,11 @@ var GraphContainer = React.createClass({
             timezone: "browser"
         },
         grid: {
-		  hoverable: true,
-		},
-		tooltip: {
-		  show: true,
-		  content: "%x the %s was %y"
+      hoverable: true,
+    },
+    tooltip: {
+      show: true,
+      content: "%x the %s was %y"
         },
         legend: {
           position: "sw",
@@ -59,11 +59,12 @@ var GraphContainer = React.createClass({
   render: function() {
     this.loadData();
     var kind = this.props.kind;
+    var title = this.props.title;
     var appName = this.props.appName;
     var url = "/apps/" + appName + "/metrics/details/?kind=" + kind + "&from=1h&serie=1m";
     return (
       <div className="graph-container">
-        <h2>{this.props.kind}</h2>
+        <h2>{title ? title : kind}</h2>
         <a href={url}></a>
         <a href={url}><div id={this.props.kind} className="graph"></div></a>
       </div>
@@ -76,15 +77,15 @@ var Metrics = React.createClass({
     var appName = this.props.appName;
     return (
       <div className="metrics">
-        <GraphContainer kind="cpu_max" appName={appName} processName={this.props.processName} />
-        <GraphContainer kind="mem_max" appName={appName} processName={this.props.processName} />
-        <GraphContainer kind="swap" appName={appName} processName={this.props.processName} />
+        <GraphContainer kind="cpu_max" title="cpu (%)" appName={appName} processName={this.props.processName} />
+        <GraphContainer kind="mem_max" title="memory (MB)" appName={appName} processName={this.props.processName} />
+        <GraphContainer kind="swap" title="swap (MB)"appName={appName} processName={this.props.processName} />
         <GraphContainer kind="connections" appName={appName} processName={this.props.processName} />
         <GraphContainer kind="units" appName={appName} processName={this.props.processName} />
-        <GraphContainer kind="requests_min" appName={appName} />
-        <GraphContainer kind="response_time" appName={appName} />
-        <GraphContainer kind="http_methods" appName={appName} />
-        <GraphContainer kind="status_code" appName={appName} />
+        <GraphContainer kind="requests_min" title="requests min" appName={appName} />
+        <GraphContainer kind="response_time" title="response time (seconds)" appName={appName} />
+        <GraphContainer kind="http_methods" title="http methods" appName={appName} />
+        <GraphContainer kind="status_code" title="status code" appName={appName} />
         <GraphContainer kind="nettx" appName={appName} />
         <GraphContainer kind="netrx" appName={appName} />
       </div>

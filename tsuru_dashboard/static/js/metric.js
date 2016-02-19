@@ -19076,11 +19076,11 @@ var GraphContainer = React.createClass({displayName: "GraphContainer",
             timezone: "browser"
         },
         grid: {
-		  hoverable: true,
-		},
-		tooltip: {
-		  show: true,
-		  content: "%x the %s was %y"
+      hoverable: true,
+    },
+    tooltip: {
+      show: true,
+      content: "%x the %s was %y"
         },
         legend: {
           position: "sw",
@@ -19092,11 +19092,12 @@ var GraphContainer = React.createClass({displayName: "GraphContainer",
   render: function() {
     this.loadData();
     var kind = this.props.kind;
+    var title = this.props.title;
     var appName = this.props.appName;
     var url = "/apps/" + appName + "/metrics/details/?kind=" + kind + "&from=1h&serie=1m";
     return (
       React.createElement("div", {className: "graph-container"}, 
-        React.createElement("h2", null, this.props.kind), 
+        React.createElement("h2", null, title ? title : kind), 
         React.createElement("a", {href: url}), 
         React.createElement("a", {href: url}, React.createElement("div", {id: this.props.kind, className: "graph"}))
       )
@@ -19109,15 +19110,15 @@ var Metrics = React.createClass({displayName: "Metrics",
     var appName = this.props.appName;
     return (
       React.createElement("div", {className: "metrics"}, 
-        React.createElement(GraphContainer, {kind: "cpu_max", appName: appName, processName: this.props.processName}), 
-        React.createElement(GraphContainer, {kind: "mem_max", appName: appName, processName: this.props.processName}), 
-        React.createElement(GraphContainer, {kind: "swap", appName: appName, processName: this.props.processName}), 
+        React.createElement(GraphContainer, {kind: "cpu_max", title: "cpu (%)", appName: appName, processName: this.props.processName}), 
+        React.createElement(GraphContainer, {kind: "mem_max", title: "memory (MB)", appName: appName, processName: this.props.processName}), 
+        React.createElement(GraphContainer, {kind: "swap", title: "swap (MB)", appName: appName, processName: this.props.processName}), 
         React.createElement(GraphContainer, {kind: "connections", appName: appName, processName: this.props.processName}), 
         React.createElement(GraphContainer, {kind: "units", appName: appName, processName: this.props.processName}), 
-        React.createElement(GraphContainer, {kind: "requests_min", appName: appName}), 
-        React.createElement(GraphContainer, {kind: "response_time", appName: appName}), 
-        React.createElement(GraphContainer, {kind: "http_methods", appName: appName}), 
-        React.createElement(GraphContainer, {kind: "status_code", appName: appName}), 
+        React.createElement(GraphContainer, {kind: "requests_min", title: "requests min", appName: appName}), 
+        React.createElement(GraphContainer, {kind: "response_time", title: "response time (seconds)", appName: appName}), 
+        React.createElement(GraphContainer, {kind: "http_methods", title: "http methods", appName: appName}), 
+        React.createElement(GraphContainer, {kind: "status_code", title: "status code", appName: appName}), 
         React.createElement(GraphContainer, {kind: "nettx", appName: appName}), 
         React.createElement(GraphContainer, {kind: "netrx", appName: appName})
       )
@@ -19155,9 +19156,19 @@ var kind = queryString("kind");
 var interval = queryString("serie");
 var from = queryString("from");
 
+var titles = {
+  "cpu_max": "cpu (%)",
+  "mem_max": "memory (MB)",
+  "swap": "swap (MB)",
+  "requests_min": "requests min",
+  "response_time": "response time (seconds)",
+  "http_methods": "http methods",
+  "status_code": "status code"
+};
+
 ReactDOM.render(
   React.createElement("div", {className: "metrics"}, 
-    React.createElement(GraphContainer, {kind: kind, appName: appName, interval: interval, from: from, legend: true})
+    React.createElement(GraphContainer, {kind: kind, title: titles[kind]? titles[kind] : kind, appName: appName, interval: interval, from: from, legend: true})
   ),
   document.getElementById('metrics')
 );
