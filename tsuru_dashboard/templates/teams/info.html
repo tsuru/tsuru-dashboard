@@ -84,7 +84,9 @@
 		</div>
 	</div>
 </div>
-<div id="confirmation" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div id="confirmation" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+  <div class="modal-content">
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
 		<h3 id="myModalLabel">Are you sure?</h3>
@@ -100,6 +102,8 @@
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 			<button class="btn btn-danger btn-remove" disabled="disabled">Delete team</button>
 		</form>
+			</div>
+		</div>
 	</div>
 </div>
 {% endblock %}

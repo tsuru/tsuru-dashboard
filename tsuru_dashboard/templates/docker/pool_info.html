@@ -27,9 +27,9 @@
     <div class="row">
         <div class="col-md-12">
             <div id="node-create"
-                 class="modal hide fade"
+                 class="modal fade"
                  tabindex="-1"
-                 role="dialog" 
+                 role="dialog"
                  aria-labelledby="myModalLabel"
                  aria-hidden="true">
             </div>
@@ -67,7 +67,9 @@
     {% endfor %}
 </div>
 
-<div id="pool-rebalance" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div id="pool-rebalance" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+  <div class="modal-content">
     <form method="post" action="{% url "pool-rebalance" pool %}">
 	    <div class="modal-header">
 		    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -83,6 +85,8 @@
 			<button class="btn btn-danger btn-rebalance" disabled="disabled">I understand the consequences, rebalance this pool</button>
 	    </div>
 	</form>
+</div>
+</div>
 </div>
 {% endblock %}
 

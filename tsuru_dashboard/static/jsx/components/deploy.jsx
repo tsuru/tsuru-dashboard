@@ -130,7 +130,7 @@ var DeployPopin = React.createClass({
   },
   cancel: function() {
     this.setState({files: [], zip: new JSZip()});
-  }, 
+  },
   deploy: function() {
     this.setState({deploy: true, output: 'Wait until deploy is started.', disabled: true, files: []});
 

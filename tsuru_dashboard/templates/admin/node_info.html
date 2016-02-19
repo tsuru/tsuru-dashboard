@@ -65,8 +65,10 @@
 	</div>
 </div>
 
-<div id="confirmation" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <form method="get" action="{% url "node-remove" address %}">
+<div id="confirmation" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+	<div class="modal-content">
+		<form method="get" action="{% url "node-remove" address %}">
 	    <div class="modal-header">
 		    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
 		    <h3 id="myModalLabel">Are you sure?</h3>
@@ -83,6 +85,8 @@
 			<button class="btn btn-danger btn-remove" disabled="disabled">I understand the consequences, delete this node</button>
 	    </div>
 	</form>
+</div>
+</div>
 </div>
 {% endblock %}
 
