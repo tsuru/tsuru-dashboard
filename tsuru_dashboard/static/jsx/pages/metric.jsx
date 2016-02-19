@@ -29,7 +29,9 @@ var titles = {
   "requests_min": "requests min",
   "response_time": "response time (seconds)",
   "http_methods": "http methods",
-  "status_code": "status code"
+  "status_code": "status code",
+  "nettx": "net up (KBytes/s)",
+  "netrx": "net down (KBytes/s)"
 };
 
 ReactDOM.render(

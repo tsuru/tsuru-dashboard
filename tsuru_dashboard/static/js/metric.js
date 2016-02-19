@@ -19119,8 +19119,8 @@ var Metrics = React.createClass({displayName: "Metrics",
         React.createElement(GraphContainer, {kind: "response_time", title: "response time (seconds)", appName: appName}), 
         React.createElement(GraphContainer, {kind: "http_methods", title: "http methods", appName: appName}), 
         React.createElement(GraphContainer, {kind: "status_code", title: "status code", appName: appName}), 
-        React.createElement(GraphContainer, {kind: "nettx", appName: appName}), 
-        React.createElement(GraphContainer, {kind: "netrx", appName: appName})
+        React.createElement(GraphContainer, {kind: "nettx", title: "net up (KBytes/s)", appName: appName}), 
+        React.createElement(GraphContainer, {kind: "netrx", title: "net down (KBytes/s)", appName: appName})
       )
     );
   }
@@ -19163,7 +19163,9 @@ var titles = {
   "requests_min": "requests min",
   "response_time": "response time (seconds)",
   "http_methods": "http methods",
-  "status_code": "status code"
+  "status_code": "status code",
+  "nettx": "net up (KBytes/s)",
+  "netrx": "net down (KBytes/s)"
 };
 
 ReactDOM.render(

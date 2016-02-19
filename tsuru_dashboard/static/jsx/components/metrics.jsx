@@ -86,8 +86,8 @@ var Metrics = React.createClass({
         <GraphContainer kind="response_time" title="response time (seconds)" appName={appName} />
         <GraphContainer kind="http_methods" title="http methods" appName={appName} />
         <GraphContainer kind="status_code" title="status code" appName={appName} />
-        <GraphContainer kind="nettx" appName={appName} />
-        <GraphContainer kind="netrx" appName={appName} />
+        <GraphContainer kind="nettx" title="net up (KBytes/s)" appName={appName} />
+        <GraphContainer kind="netrx" title="net down (KBytes/s)" appName={appName} />
       </div>
     );
   }

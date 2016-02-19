@@ -1105,7 +1105,7 @@ module.exports = performanceNow;
  *
  * @providesModule shallowEqual
  * @typechecks
- *
+ * 
  */
 
 'use strict';
@@ -19039,7 +19039,7 @@ var DeployBox = React.createClass({displayName: "DeployBox",
   },
   render: function() {
     return (
-      React.createElement("div", {id: "filedrag"},
+      React.createElement("div", {id: "filedrag"}, 
         this.props.message
       )
     );
@@ -19052,10 +19052,10 @@ var StartDeployBtn = React.createClass({displayName: "StartDeployBtn",
   },
   render: function() {
     return (
-      React.createElement("button", {type: "submit",
-              disabled: this.props.disabled,
-              className: "btn btn-rollback",
-              onClick: this.handleClick},
+      React.createElement("button", {type: "submit", 
+              disabled: this.props.disabled, 
+              className: "btn btn-rollback", 
+              onClick: this.handleClick}, 
         "Start deploy"
       )
     )
@@ -19065,11 +19065,11 @@ var StartDeployBtn = React.createClass({displayName: "StartDeployBtn",
 var CancelBtn = React.createClass({displayName: "CancelBtn",
   render: function() {
     return (
-      React.createElement("button", {disabled: this.props.disabled,
-              "data-dismiss": "modal",
-              "aria-hidden": "true",
-              className: "btn",
-              onClick: this.props.onClick},
+      React.createElement("button", {disabled: this.props.disabled, 
+              "data-dismiss": "modal", 
+              "aria-hidden": "true", 
+              className: "btn", 
+              onClick: this.props.onClick}, 
         "Cancel"
       )
     )
@@ -19092,8 +19092,8 @@ var Files = React.createClass({displayName: "Files",
 var Output = React.createClass({displayName: "Output",
   render: function() {
     return (
-      React.createElement("div", {id: "output"},
-        React.createElement("img", {src: "/static/img/ajax-loader.gif"}),
+      React.createElement("div", {id: "output"}, 
+        React.createElement("img", {src: "/static/img/ajax-loader.gif"}), 
         React.createElement("div", {className: "messages", dangerouslySetInnerHTML: {__html: this.props.message}})
       )
     )
@@ -19195,18 +19195,18 @@ var DeployPopin = React.createClass({displayName: "DeployPopin",
   },
   render: function() {
     return (
-      React.createElement("div", {className: "deploy-popin"},
-        React.createElement("div", {className: "modal-header"},
+      React.createElement("div", {className: "deploy-popin"}, 
+        React.createElement("div", {className: "modal-header"}, 
             React.createElement("h3", {id: "myModalLabel"}, "New deploy")
-        ),
-        React.createElement("div", {className: "modal-body"},
-            this.state.deploy ? '' : React.createElement(DeployBox, {addFile: this.addFile, message: "drop more files here"}),
-            this.state.files.length > 0 ? React.createElement(Files, {files: this.state.files}) : '',
+        ), 
+        React.createElement("div", {className: "modal-body"}, 
+            this.state.deploy ? '' : React.createElement(DeployBox, {addFile: this.addFile, message: "drop more files here"}), 
+            this.state.files.length > 0 ? React.createElement(Files, {files: this.state.files}) : '', 
             this.state.output.length > 0 ? React.createElement(Output, {message: this.state.output}) : ''
-        ),
-        React.createElement("div", {className: "modal-footer"},
-            React.createElement("input", {type: "hidden", id: "filecontent", name: "filecontent"}),
-            React.createElement(CancelBtn, {disabled: this.state.deploy, onClick: this.cancel}),
+        ), 
+        React.createElement("div", {className: "modal-footer"}, 
+            React.createElement("input", {type: "hidden", id: "filecontent", name: "filecontent"}), 
+            React.createElement(CancelBtn, {disabled: this.state.deploy, onClick: this.cancel}), 
             React.createElement(StartDeployBtn, {deploy: this.deploy, disabled: this.state.disabled})
         )
       )
