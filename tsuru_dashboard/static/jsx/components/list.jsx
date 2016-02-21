@@ -35,12 +35,36 @@ var AppAdd = React.createClass({
   }
 });
 
+var AppStatus = React.createClass({
+  getStatus: function() {
+    var status = "Stopped";
+    if (this.props.units) {
+      for (var i = 0; i < this.props.units.length; i++) {
+        var unit = this.props.units[i];
+        if (unit.Status === "Started") {
+          status = "Started";
+          break;
+        }
+        status = unit.Status;
+      }
+    }
+    return status.toLowerCase();
+  },
+  render: function() {
+    var status = this.getStatus();
+    return (
+	  <img src={"/static/img/" + status + ".svg"} alt={status} title={status} className="app-status"/>
+    );
+  }
+});
+
 var App = React.createClass({
   mixins: [PureRenderMixin],
   render: function() {
     return (
       <tr>
         <td>
+          <AppStatus units={this.props.units}/>
           <a href={this.props.name} title="App Details">
             {this.props.name}
           </a>
@@ -54,7 +78,7 @@ var AppTable = React.createClass({
   render: function() {
     var appNodes = this.props.data.map(function(app) {
       return (
-        <App key={app.name} name={app.name} url={app.url}/>
+        <App key={app.name} name={app.name} url={app.url} units={app.units}/>
       );
     });
     return (
