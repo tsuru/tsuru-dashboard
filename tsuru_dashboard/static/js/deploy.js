@@ -19196,6 +19196,8 @@ var DeployPopin = React.createClass({displayName: "DeployPopin",
   render: function() {
     return (
       React.createElement("div", {className: "deploy-popin"}, 
+      React.createElement("div", {className: "modal-dialog", role: "document"}, 
+       React.createElement("div", {className: "modal-content"}, 
         React.createElement("div", {className: "modal-header"}, 
             React.createElement("h3", {id: "myModalLabel"}, "New deploy")
         ), 
@@ -19208,8 +19210,10 @@ var DeployPopin = React.createClass({displayName: "DeployPopin",
             React.createElement("input", {type: "hidden", id: "filecontent", name: "filecontent"}), 
             React.createElement(CancelBtn, {disabled: this.state.deploy, onClick: this.cancel}), 
             React.createElement(StartDeployBtn, {deploy: this.deploy, disabled: this.state.disabled})
+          )
         )
       )
+    )
     );
   }
 });

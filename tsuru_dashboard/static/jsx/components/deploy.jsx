@@ -163,6 +163,8 @@ var DeployPopin = React.createClass({
   render: function() {
     return (
       <div className='deploy-popin'>
+      <div className="modal-dialog" role="document">
+       <div className="modal-content">
         <div className='modal-header'>
             <h3 id='myModalLabel'>New deploy</h3>
         </div>
@@ -175,8 +177,10 @@ var DeployPopin = React.createClass({
             <input type='hidden' id='filecontent' name='filecontent' />
             <CancelBtn disabled={this.state.deploy} onClick={this.cancel} />
             <StartDeployBtn deploy={this.deploy} disabled={this.state.disabled} />
+          </div>
         </div>
       </div>
+    </div>
     );
   }
 });
