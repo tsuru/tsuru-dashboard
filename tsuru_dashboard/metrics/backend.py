@@ -258,7 +258,11 @@ class ElasticSearch(object):
         return result, min_value, max_value
 
     def connections(self, interval=None):
-        aggregation = {"connection": {"terms": {"field": "connection.raw"}}}
+        aggregation = {
+            "connection": {
+                "terms": {"script": "doc['connection.raw'].value + doc['connection'].value"}
+            }
+        }
         query = self.query(interval=interval, aggregation=aggregation)
         return self.base_process(self.post(query, "connection"), self.connections_process)
 
@@ -307,9 +311,19 @@ class ElasticSearch(object):
             "bool": {
                 "must": [
                     {
-                        "term": {
-                            "app": self.app,
-                            "app.raw": self.app,
+                        "bool": {
+                            "should": [
+                                {
+                                    "term": {
+                                        "app": self.app
+                                    }
+                                },
+                                {
+                                    "term": {
+                                        "app.raw": self.app
+                                    }
+                                }
+                            ]
                         }
                     },
                     {
@@ -326,10 +340,20 @@ class ElasticSearch(object):
 
         if self.process_name:
             p = {
-                "term": {
-                    "process.raw": self.process_name,
-                    "process": self.process_name,
-                },
+                "bool": {
+                    "should": [
+                        {
+                            "term": {
+                                "process": self.process_name
+                            }
+                        },
+                        {
+                            "term": {
+                                "process.raw": self.process_name
+                            }
+                        }
+                    ]
+                }
             }
             f["bool"]["must"].append(p)
 
