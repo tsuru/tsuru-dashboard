@@ -16,7 +16,10 @@ class ListService(LoginRequiredView, TemplateView):
     def get_context_data(self, *args, **kwargs):
         context = super(ListService, self).get_context_data(*args, **kwargs)
         url = "{}/services/instances".format(settings.TSURU_HOST)
-        services = requests.get(url, headers=self.authorization).json()
+        services = []
+        resp = requests.get(url, headers=self.authorization)
+        if resp.status_code == 200:
+            services = resp.json()
         context.update({"services": services})
         return context
 
