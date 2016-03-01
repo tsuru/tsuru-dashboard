@@ -236,9 +236,19 @@ class CreateApp(LoginRequiredView):
             for pool in pools_json.get('public_pools', []):
                 pools.add(pool.get("Name", pool))
 
-        for team_list in pools_by_team:
-            for pool in team_list['Pools']:
-                pools.add(pool)
+            for team_list in pools_by_team:
+                for pool in team_list['Pools']:
+                    pools.add(pool)
+
+        if isinstance(pools_json, list):
+            for pool in pools_json:
+                # backward compatibility
+                if "Pools" in pool:
+                    pools.update(pool.get("Pools"))
+
+                if "Name" in pool:
+                    pools.add(pool.get("Name"))
+
         result = [('', '')]
         result.extend([(p, p) for p in pools])
         return result

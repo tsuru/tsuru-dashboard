@@ -134,7 +134,7 @@ class CreateAppViewTest(TestCase):
         )
 
     @patch('requests.get')
-    def test_pools(self, get):
+    def test_pools_old_format(self, get):
         content = u"""[{"Pools": ["basic", "one"], "Team": "andrews"}]"""
         m = Mock(status_code=200, content=content)
         m.json.return_value = json.loads(content)
@@ -145,6 +145,19 @@ class CreateAppViewTest(TestCase):
         view = CreateApp()
         pools = view.pools(request)
         self.assertListEqual([("", ""), ('one', 'one'), ('basic', 'basic')], pools)
+
+    @patch('requests.get')
+    def test_pools_1_0(self, get):
+        content = u"""[{"Name": "dead"}]"""
+        m = Mock(status_code=200, content=content)
+        m.json.return_value = json.loads(content)
+        get.return_value = m
+        request = RequestFactory().get("/")
+        request.session = {'tsuru_token': 'tokentest'}
+
+        view = CreateApp()
+        pools = view.pools(request)
+        self.assertListEqual([("", ""), ('dead', 'dead')], pools)
 
     @patch("requests.get")
     def test_pools_empty(self, get):
