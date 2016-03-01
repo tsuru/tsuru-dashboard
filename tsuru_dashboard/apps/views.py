@@ -151,7 +151,10 @@ class AppDetail(AppMixin, TemplateView):
 
     def service_instances(self, app_name):
         tsuru_url = '{}/services/instances?app={}'.format(settings.TSURU_HOST, app_name)
-        return requests.get(tsuru_url, headers=self.authorization).json()
+        response = requests.get(tsuru_url, headers=self.authorization)
+        if response.status_code == 200:
+            return response.json()
+        return []
 
     def get_context_data(self, *args, **kwargs):
         context = super(AppDetail, self).get_context_data(*args, **kwargs)

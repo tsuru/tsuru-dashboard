@@ -52,8 +52,10 @@ class AppDetailTestCase(TestCase):
         self.assertListEqual(service_instances, [{"name": "mymongo", "servicename": "mongodb"}])
 
     @patch('requests.get')
-    def test_service_instances(self, get):
-        get.return_value = Mock(status_code=200)
+    def test_service_instances_empty(self, get):
+        response = Mock(status_code=204)
+        response.json.side_effect = ValueError
+        get.return_value = response
         AppDetail.service_instances = self.old_service_instances
         app_detail = AppDetail()
         app_detail.request = self.request
