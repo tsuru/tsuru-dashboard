@@ -53,18 +53,32 @@ h1 {
 			</form>
 		</div>
 	</div>
-</div>
+
 <div class="container-fluid">
 	<div class="row">
 		<div class="col-md-12">
             <div class="content">
                 <div class="row">
                     <div class="col-md-12" id="metrics">
+               		</div>
+                </div>
+            </div>
+		</div>
+	</div>
+</div>
+
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+            <div class="content">
+                <div class="row">
+                    <div class="col-md-12" id="top-slow">
                     </div>
                 </div>
             </div>
 		</div>
 	</div>
+</div>
 {% endblock %}
 
 {% block extra_js %}
@@ -73,4 +87,5 @@ h1 {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flot/0.8.3/jquery.flot.time.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flot.tooltip/0.8.5/jquery.flot.tooltip.js"></script>
 <script src="{% static "js/metric.js" %}"></script>
+<script src="{% static "js/top-slow.js" %}"></script>
 {% endblock %}

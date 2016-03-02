@@ -19056,7 +19056,6 @@ var GraphContainer = React.createClass({displayName: "GraphContainer",
     $.getJSON(url, function(data) {
       if (Object.keys(data.data).length === 0)
         data.data = {" ": [1,1]};
-
       this.renderGraph(data);
     }.bind(this));
   },
@@ -19119,8 +19118,8 @@ var Metrics = React.createClass({displayName: "Metrics",
         React.createElement(GraphContainer, {kind: "response_time", title: "response time (seconds)", appName: appName}), 
         React.createElement(GraphContainer, {kind: "http_methods", title: "http methods", appName: appName}), 
         React.createElement(GraphContainer, {kind: "status_code", title: "status code", appName: appName}), 
-        React.createElement(GraphContainer, {kind: "nettx", title: "net up (KBytes/s)", appName: appName}), 
-        React.createElement(GraphContainer, {kind: "netrx", title: "net down (KBytes/s)", appName: appName})
+        React.createElement(GraphContainer, {kind: "nettx", title: "net up (KB/s)", appName: appName}), 
+        React.createElement(GraphContainer, {kind: "netrx", title: "net down (KB/s)", appName: appName})
       )
     );
   }
@@ -19164,8 +19163,8 @@ var titles = {
   "response_time": "response time (seconds)",
   "http_methods": "http methods",
   "status_code": "status code",
-  "nettx": "net up (KBytes/s)",
-  "netrx": "net down (KBytes/s)"
+  "nettx": "net up (KB/s)",
+  "netrx": "net down (KB/s)"
 };
 
 ReactDOM.render(

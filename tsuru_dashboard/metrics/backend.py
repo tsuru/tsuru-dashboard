@@ -3,6 +3,7 @@ from tsuru_dashboard import settings
 import requests
 import json
 import datetime
+import re
 
 
 class MetricNotEnabled(Exception):
@@ -206,6 +207,37 @@ class ElasticSearch(object):
         result["p95"].append([bucket["key"], bucket["percentiles"]["values"]["95.0"]])
         result["p99"].append([bucket["key"], bucket["percentiles"]["values"]["99.0"]])
         return result, bucket_min, bucket_max
+
+    def top_slow(self, interval=None):
+        aggregation = {
+            "top": {
+                "terms": {
+                    "script": "doc['method'].value +'U'+doc['path.raw'].value +'U'+doc['status_code'].value"
+                },
+                "aggs": {"max": {"max": {"field": "value"}}}
+            }
+        }
+        query = self.query(interval=interval, aggregation=aggregation)
+        return self.base_process(self.post(query, "response_time"), self.top_slow_process)
+
+    def top_slow_process(self, result, bucket):
+        max_response = 0
+        for b in bucket["top"]["buckets"]:
+            response_time = b["max"]["value"]
+            if response_time > max_response:
+                max_response = response_time
+            r = r'(?P<method>\w+)U(?P<path>.*)U(?P<status_code>\d{3})'
+            info = re.search(r, b["key"])
+            path = info.groupdict()['path']
+            status_code = info.groupdict()['status_code']
+            method = info.groupdict()['method']
+
+            if path not in result:
+                result[path] = []
+
+            result[path].append([bucket["key"], response_time, status_code, method])
+
+        return result, 0, max_response
 
     def http_methods(self, interval=None):
         aggregation = {"method": {"terms": {"field": "method"}}}
