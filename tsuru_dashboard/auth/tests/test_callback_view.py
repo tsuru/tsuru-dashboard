@@ -4,8 +4,6 @@ from django.test.client import RequestFactory
 import mock
 import httpretty
 
-import json
-
 from tsuru_dashboard import settings
 from tsuru_dashboard.auth.views import Callback
 
@@ -36,10 +34,10 @@ class CallbackViewTest(TestCase):
         self.assertDictEqual(request.session["permissions"], {"healing": False})
 
         expected_url = 'http://localhost:8080/auth/login'
-        expected_data = json.dumps({
+        expected_data = {
             "redirectUrl": "http://localhost:3333/auth/callback/",
             "code": "somecode"
-        })
+        }
 
         post_mock.assert_called_with(expected_url, data=expected_data)
 
@@ -77,9 +75,9 @@ class CallbackViewTest(TestCase):
         self.assertDictEqual(request.session["permissions"], {"healing": True})
 
         expected_url = 'http://localhost:8080/auth/login'
-        expected_data = json.dumps({
+        expected_data = {
             "redirectUrl": "http://localhost:3333/auth/callback/",
             "code": "somecode"
-        })
+        }
 
         post_mock.assert_called_with(expected_url, data=expected_data)

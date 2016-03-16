@@ -130,7 +130,7 @@ class Login(FormView):
         username = form.cleaned_data['username']
         data = {"password": form.cleaned_data['password']}
         url = '{0}/users/{1}/tokens'.format(settings.TSURU_HOST, username)
-        response = requests.post(url, data=json.dumps(data))
+        response = requests.post(url, data=data)
 
         if response.status_code == 200:
             result = response.json()
@@ -191,7 +191,7 @@ class Callback(View):
             "redirectUrl": redirect_url,
         }
         url = '{}/auth/login'.format(settings.TSURU_HOST)
-        response = requests.post(url, data=json.dumps(data))
+        response = requests.post(url, data=data)
         if response.status_code == 200:
             result = response.json()
             self.request.session['tsuru_token'] = "type {}".format(result['token'])
