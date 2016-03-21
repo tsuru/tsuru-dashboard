@@ -42,6 +42,7 @@
                     <th>Host</th>
                     <th>Started units</th>
                     <th>Stopped units</th>
+                    <th>Total units</th>
                     <th>Last success</th>
                     <th>Status</th>
                 </tr>
@@ -56,6 +57,7 @@
                     </td>
                     <td>{{ node.Units.started|default:"0" }}</td>
                     <td>{{ node.Units.stopped|default:"0" }}</td>
+                    <td>{{ node.Units.total|default:"0" }}</td>
                     <td>{{ node.Metadata.LastSuccess|date:"Y/m/d H:i:s e" }}</td>
                     <td>{{ node.Status }}</td>
                 </tr>

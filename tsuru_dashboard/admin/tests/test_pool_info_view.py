@@ -68,11 +68,11 @@ class PoolInfoViewTest(TestCase):
         date = parser.parse("2014-08-01T14:09:40-03:00")
         expected = {"mypool": [
             {"Address": "http://128.0.0.1:4243",
-             "Units": {"started": 1, "stopped": 1},
+             "Units": {"started": 1, "stopped": 1, "total": 2},
              "Metadata": {"LastSuccess": date, "pool": "mypool"},
              "Status": "ready"},
             {"Address": "http://127.0.0.1:2375",
-             "Units": {"started": 1, "stopped": 1},
+             "Units": {"started": 1, "stopped": 1, "total": 2},
              "Metadata": {"LastSuccess": date, "pool": "mypool"},
              "Status": "ready"},
         ]}
