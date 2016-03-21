@@ -1,4 +1,3 @@
-import json
 import tarfile
 import datetime
 import calendar
@@ -207,12 +206,10 @@ class CreateApp(LoginRequiredView):
             if 'plan' in data:
                 data['plan'] = {'name': data['plan']}
 
-            data = json.dumps(data)
-
             url = '{}/apps'.format(settings.TSURU_HOST)
             response = requests.post(url, data=data, headers=authorization)
 
-            if response.status_code == 200:
+            if response.status_code == 201:
                 messages.success(request, u'App was successfully created', fail_silently=True)
                 return redirect(reverse('list-app'))
 
