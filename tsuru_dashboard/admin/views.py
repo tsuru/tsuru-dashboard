@@ -89,7 +89,7 @@ class PoolList(LoginRequiredView, TemplateView):
                 nodes_by_pool = pools.get(pool, [])
                 nodes_by_pool.append(node)
                 pools[pool] = nodes_by_pool
-        return pools
+        return sorted(pools.items())
 
     def get_context_data(self, *args, **kwargs):
         context = super(PoolList, self).get_context_data(*args, **kwargs)

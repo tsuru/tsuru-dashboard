@@ -29,7 +29,7 @@ class PoolListViewTest(TestCase):
         response = PoolList.as_view()(self.request)
 
         self.assertIn("admin/pool_list.html", response.template_name)
-        self.assertEqual({}, response.context_data["pools"])
+        self.assertEqual([], response.context_data["pools"])
         url = "{}/docker/node".format(settings.TSURU_HOST)
         get.assert_called_with(url, headers={"authorization": "admin"})
 
@@ -82,7 +82,7 @@ class PoolListViewTest(TestCase):
              "Metadata": {"LastSuccess": date, "pool": "theonepool"},
              "Status": "ready"},
         ]}
-        self.assertEqual(expected, response.context_data["pools"])
+        self.assertEqual(sorted(expected.items()), response.context_data["pools"])
 
     @httpretty.activate
     @patch("tsuru_dashboard.auth.views.token_is_valid")
@@ -131,4 +131,4 @@ class PoolListViewTest(TestCase):
              "Metadata": {"LastSuccess": date, "pool": "theonepool"},
              "Status": "ready"},
         ]}
-        self.assertEqual(expected, response.context_data["pools"])
+        self.assertEqual(sorted(expected.items()), response.context_data["pools"])
