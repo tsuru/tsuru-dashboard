@@ -292,7 +292,7 @@ class ElasticSearch(object):
     def connections(self, interval=None):
         aggregation = {
             "connection": {
-                "terms": {"script": "doc['connection.raw'].value + doc['connection'].value"}
+                "terms": {"field": "connection.raw"}
             }
         }
         query = self.query(interval=interval, aggregation=aggregation)

@@ -212,8 +212,7 @@ class ElasticSearchTest(TestCase):
     def test_connections(self, post_mock):
         self.es.connections()
         url = "{}/{}/{}/_search".format(self.es.url, self.index, "connection")
-        script = "doc['connection.raw'].value + doc['connection'].value"
-        aggregation = {"connection": {"terms": {"script": script}}}
+        aggregation = {"connection": {"terms": {"field": "connection.raw"}}}
         post_mock.assert_called_with(url, data=json.dumps(self.es.query(aggregation=aggregation)))
 
     @patch("requests.post")
