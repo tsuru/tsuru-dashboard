@@ -60,7 +60,7 @@ class ChangePassword(LoginRequiredMixin, FormView):
         data = form.cleaned_data
         headers = {'authorization': self.request.session.get('tsuru_token')}
         url = "{0}/users/password".format(settings.TSURU_HOST)
-        response = requests.put(url, data=json.dumps(data), headers=headers)
+        response = requests.put(url, data=data, headers=headers)
         if response.status_code < 399:
             messages.success(self.request, u'Password successfully updated!', fail_silently=True)
         else:
