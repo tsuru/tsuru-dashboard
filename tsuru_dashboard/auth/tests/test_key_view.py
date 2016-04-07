@@ -47,7 +47,7 @@ class KeyViewTest(TestCase):
         self.assertEqual(1, post.call_count)
         post.assert_called_with(
             '%s/users/keys' % settings.TSURU_HOST,
-            data='{"name": "mykey", "key": "test-key-qq"}',
+            data={"name": "mykey", "key": "test-key-qq"},
             headers={'authorization':
                      self.request_post.session['tsuru_token']})
 

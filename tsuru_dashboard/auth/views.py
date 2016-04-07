@@ -208,7 +208,7 @@ class KeyAdd(LoginRequiredMixin, FormView):
 
     def form_valid(self, form):
         url = '{}/users/keys'.format(settings.TSURU_HOST)
-        response = requests.post(url, data=json.dumps(form.cleaned_data), headers=self.authorization)
+        response = requests.post(url, data=form.cleaned_data, headers=self.authorization)
         if response.status_code < 399:
             messages.success(self.request, "The key was successfully added", fail_silently=True)
         else:
