@@ -7,7 +7,6 @@ from tsuru_dashboard import settings
 from tsuru_dashboard.auth.views import LoginRequiredView
 
 import requests
-import json
 
 
 class ListService(LoginRequiredView, TemplateView):
@@ -54,13 +53,13 @@ class ServiceInstanceDetail(LoginRequiredView, TemplateView):
 class ServiceAdd(LoginRequiredView):
     def post(self, request, *args, **kwargs):
         service_name = kwargs["service_name"]
-        url = '{}/services/instances'.format(settings.TSURU_HOST)
+        url = '{}/services/{}/instances'.format(settings.TSURU_HOST, service_name)
         data = {
             "name": request.POST["name"],
-            "team": request.POST["team"],
-            "service_name": service_name,
+            "owner": request.POST["team"],
         }
-        requests.post(url, data=json.dumps(data), headers=self.authorization)
+        requests.post(url, data=data, headers=self.authorization)
+
         return redirect(reverse('service-list'))
 
     def get(self, request, *args, **kwargs):

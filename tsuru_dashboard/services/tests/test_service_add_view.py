@@ -5,7 +5,6 @@ from django.core.urlresolvers import reverse
 from tsuru_dashboard import settings
 from tsuru_dashboard.services.views import ServiceAdd
 
-import json
 import mock
 
 
@@ -21,9 +20,9 @@ class ServiceAddViewTest(TestCase):
         self.assertEqual(302, response.status_code)
         self.assertEqual(reverse('service-list'), response.items()[1][1])
         post.assert_called_with(
-            '{0}/services/instances'.format(settings.TSURU_HOST),
+            '{0}/services/service/instances'.format(settings.TSURU_HOST),
             headers={'authorization': 'admin'},
-            data=json.dumps({"name": "name", "team": "team", "service_name": "service"}))
+            data={"name": "name", "owner": "team"})
 
     @mock.patch("requests.get")
     def test_get(self, get):
