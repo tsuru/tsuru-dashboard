@@ -13,6 +13,7 @@ class ServiceAddViewTest(TestCase):
     @mock.patch("requests.get")
     def test_post(self, get, post):
         get.return_value = mock.Mock(status_code=200)
+        post.return_value = mock.Mock(status_code=201)
         data = {"name": "name", "team": "team"}
         request = RequestFactory().post("/", data)
         request.session = {"tsuru_token": "admin"}

@@ -2,6 +2,7 @@ from django.template.response import TemplateResponse
 from django.shortcuts import redirect
 from django.views.generic import TemplateView
 from django.core.urlresolvers import reverse
+from django.contrib import messages
 
 from tsuru_dashboard import settings
 from tsuru_dashboard.auth.views import LoginRequiredView
@@ -58,9 +59,14 @@ class ServiceAdd(LoginRequiredView):
             "name": request.POST["name"],
             "owner": request.POST["team"],
         }
-        requests.post(url, data=data, headers=self.authorization)
+        response = requests.post(url, data=data, headers=self.authorization)
 
-        return redirect(reverse('service-list'))
+        if response.status_code == 201:
+            messages.success(request, u'Instance was successfully created', fail_silently=True)
+            return redirect(reverse('service-list'))
+
+        messages.error(request, response.content, fail_silently=True)
+        return redirect(reverse('service-add', args=[service_name]))
 
     def get(self, request, *args, **kwargs):
         service_name = kwargs["service_name"]
