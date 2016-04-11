@@ -47,7 +47,15 @@ class ServiceInstanceDetail(LoginRequiredView, TemplateView):
         service_name = kwargs["service"]
         instance = self.get_instance(service_name, instance_name)
         apps = self.apps(instance)
-        context.update({"instance": instance, "apps": apps})
+        context.update(
+            {
+                "instance": instance,
+                "apps": apps,
+                "service_name": service_name,
+                "instance_name": instance_name
+            }
+        )
+
         return context
 
 
