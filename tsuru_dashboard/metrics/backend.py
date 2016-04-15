@@ -15,21 +15,21 @@ def get_backend(app, token, date_range=None, process_name=None):
     url = "{}/apps/{}/metric/envs".format(settings.TSURU_HOST, app["name"])
     response = requests.get(url, headers=headers)
 
+    es_query = ElasticSearchFilter(app=app["name"], process_name=process_name, date_range=date_range).query()
+
     if response.status_code == 200:
         data = response.json()
         if "METRICS_ELASTICSEARCH_HOST" in data:
             return ElasticSearch(
                 url=data["METRICS_ELASTICSEARCH_HOST"],
-                app=app["name"],
-                process_name=process_name,
+                query=es_query,
                 date_range=date_range
             )
 
     if "envs" in app and "ELASTICSEARCH_HOST" in app["envs"]:
         return ElasticSearch(
             url=app["envs"]["ELASTICSEARCH_HOST"],
-            app=app["name"],
-            process_name=process_name,
+            query=es_query,
             date_range=date_range
         )
 
@@ -85,15 +85,65 @@ if (dt > 0) {
 }
 
 
+class ElasticSearchFilter(object):
+    def __init__(self, app, process_name=None, date_range=None):
+        self.date_range = date_range
+        if app is not None:
+            self.filter = self.app_filter(app, process_name)
+
+    def query(self):
+        return {
+            "filtered": {
+                "filter": self.filter
+            }
+        }
+
+    def app_filter(self, app, process_name):
+        f = {
+            "bool": {
+                "must": [
+                    {
+                        "bool": {
+                            "should": [
+                                self.term_filter("app", app),
+                                self.term_filter("app.raw", app)
+                            ]
+                        }
+                    },
+                    self.timestamp_filter(self.date_range)
+                ],
+            }
+        }
+
+        if process_name:
+            p = {
+                "bool": {
+                    "should": [
+                        self.term_filter("process", process_name),
+                        self.term_filter("process.raw", process_name)
+                    ]
+                }
+            }
+            f["bool"]["must"].append(p)
+        return f
+
+    def term_filter(self, field, value):
+        return {"term": {field: value}}
+
+    def timestamp_filter(self, date_range):
+        if date_range is None:
+            date_range = "1h"
+        return {"range": {"@timestamp": {"gte": "now-" + date_range, "lt": "now"}}}
+
+
 class ElasticSearch(object):
-    def __init__(self, url, app, process_name=None, date_range="1h"):
+    def __init__(self, url, query, date_range="1h"):
         if date_range == "1h":
             self.index = ".measure-tsuru-{}".format(datetime.datetime.utcnow().strftime("%Y.%m.%d"))
         else:
             self.index = ".measure-tsuru-{}.*".format(datetime.datetime.utcnow().strftime("%Y"))
-        self.app = app
         self.url = url
-        self.process_name = process_name
+        self.filtered_query = query
         self.date_range = date_range
 
     def post(self, data, metric):
@@ -339,65 +389,10 @@ class ElasticSearch(object):
         if not interval:
             interval = "1m"
 
-        f = {
-            "bool": {
-                "must": [
-                    {
-                        "bool": {
-                            "should": [
-                                {
-                                    "term": {
-                                        "app": self.app
-                                    }
-                                },
-                                {
-                                    "term": {
-                                        "app.raw": self.app
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        "range": {
-                            "@timestamp": {
-                                "gte": "now-" + self.date_range,
-                                "lt": "now"
-                            }
-                        },
-                    }
-                ],
-            }
-        }
-
-        if self.process_name:
-            p = {
-                "bool": {
-                    "should": [
-                        {
-                            "term": {
-                                "process": self.process_name
-                            }
-                        },
-                        {
-                            "term": {
-                                "process.raw": self.process_name
-                            }
-                        }
-                    ]
-                }
-            }
-            f["bool"]["must"].append(p)
-
-        query_filter = {
-            "filtered": {
-                "filter": f
-            }
-        }
         if not aggregation:
             aggregation = {"stats": {"stats": {"field": "value"}}}
         return {
-            "query": query_filter,
+            "query": self.filtered_query,
             "size": 0,
             "aggs": {
                 "date": {

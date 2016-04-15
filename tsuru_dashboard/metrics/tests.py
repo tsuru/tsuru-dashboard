@@ -2,7 +2,8 @@ from django.test import TestCase
 from django.test.client import RequestFactory
 
 from tsuru_dashboard import settings
-from tsuru_dashboard.metrics.backend import ElasticSearch, get_backend, MetricNotEnabled, NET_AGGREGATION
+from tsuru_dashboard.metrics.backend import ElasticSearch, ElasticSearchFilter
+from tsuru_dashboard.metrics.backend import get_backend, MetricNotEnabled, NET_AGGREGATION
 from tsuru_dashboard.metrics import views
 
 from mock import patch, Mock
@@ -132,7 +133,7 @@ class GetBackendTest(TestCase):
 class ElasticSearchTest(TestCase):
     def setUp(self):
         self.maxDiff = None
-        self.es = ElasticSearch("http://url.com", "index", "app")
+        self.es = ElasticSearch("http://url.com", ElasticSearchFilter(app="app_name").query())
         self.index = ".measure-tsuru-{}".format(datetime.datetime.utcnow().strftime("%Y.%m.%d"))
 
     @patch("requests.post")
@@ -408,3 +409,39 @@ class ElasticSearchTest(TestCase):
         expected = {'data': {}, 'max': 1, 'min': 0}
         d = self.es.base_process(data, self.es.connections_process)
         self.assertDictEqual(d, expected)
+
+
+class ElasticSearchFilterTest(TestCase):
+    def test_app_filters(self):
+        expected_filter = {
+            "bool": {
+                "must": [
+                    {
+                        "bool": {
+                            "should": [
+                                {"term": {"app": "app_name"}},
+                                {"term": {"app.raw": "app_name"}},
+                            ]
+                        },
+                    },
+                    {
+                        "range": {
+                            "@timestamp": {
+                                "gte": "now-1h",
+                                "lt": "now"
+                            }
+                        }
+                    },
+                    {
+                        "bool": {
+                            "should": [
+                                {"term": {"process": "process_name"}},
+                                {"term": {"process.raw": "process_name"}}
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+        filter = ElasticSearchFilter(app="app_name", process_name="process_name").filter
+        self.assertDictEqual(filter, expected_filter)
