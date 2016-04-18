@@ -15,7 +15,7 @@ var GraphContainer = React.createClass({
     var interval = this.props.interval;
     var from = this.props.from;
 
-    var url ="/metrics/" + appName + "/?metric=" + kind + "&interval=" + interval + "&date_range=" + from;
+    var url ="/metrics/app/" + appName + "/?metric=" + kind + "&interval=" + interval + "&date_range=" + from;
 
     if (this.props.processName !== "") {
         url += "&process_name=" + this.props.processName;

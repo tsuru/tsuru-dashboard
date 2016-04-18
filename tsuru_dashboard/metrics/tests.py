@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.test.client import RequestFactory
 
 from tsuru_dashboard import settings
-from tsuru_dashboard.metrics.backend import ElasticSearch, ElasticSearchFilter
+from tsuru_dashboard.metrics.backend import ElasticSearch, AppFilter, ComponentFilter
 from tsuru_dashboard.metrics.backend import get_backend, MetricNotEnabled, NET_AGGREGATION
 from tsuru_dashboard.metrics import views
 
@@ -12,8 +12,8 @@ import datetime
 
 
 class MetricViewTest(TestCase):
-    def request(self):
-        request = RequestFactory().get("/ble/?metric=cpu_max")
+    def request(self, string_params=""):
+        request = RequestFactory().get("/ble/" + string_params)
         request.session = {"tsuru_token": "token"}
         return request
 
@@ -50,7 +50,7 @@ class MetricViewTest(TestCase):
 
     @patch("tsuru_dashboard.metrics.backend.get_backend")
     @patch("tsuru_dashboard.auth.views.token_is_valid")
-    def test_get(self, token_mock, get_backend_mock):
+    def test_get_app_metric(self, token_mock, get_backend_mock):
         token_mock.return_value = True
         backend_mock = Mock()
         backend_mock.cpu_max.return_value = {}
@@ -73,13 +73,45 @@ class MetricViewTest(TestCase):
 
         self.addCleanup(cleanup)
 
-        request = RequestFactory().get("/ble/?metric=cpu_max&date_range=2h/h&interval=30m&process_name=web")
-        request.session = {"tsuru_token": "token"}
-
-        response = view(request, app_name="app_name")
+        request = self.request("?metric=cpu_max&date_range=2h/h&interval=30m&process_name=web")
+        response = view(request, target_name="app_name", target_type="app")
 
         self.assertEqual(response.status_code, 200)
-        get_backend_mock.assert_called_with({'envs': {}}, 'token', date_range=u'2h/h', process_name=u'web')
+        get_backend_mock.assert_called_with(
+            app={'envs': {}}, token='token', date_range=u'2h/h', process_name=u'web')
+        backend_mock.cpu_max.assert_called_with(interval=u'30m')
+
+    @patch("tsuru_dashboard.metrics.backend.get_backend")
+    @patch("tsuru_dashboard.auth.views.token_is_valid")
+    def test_get_component_metric(self, token_mock, get_backend_mock):
+        token_mock.return_value = True
+        backend_mock = Mock()
+        backend_mock.cpu_max.return_value = {}
+        get_backend_mock.return_value = backend_mock
+
+        v = views.Metric
+
+        original_get_app = v.get_app
+        v.get_app = Mock()
+        v.get_app.return_value = {}
+
+        original_get_envs = v.get_envs
+        v.get_envs = Mock()
+        v.get_envs.return_value = {}
+        view = v.as_view()
+
+        def cleanup():
+            v.get_app = original_get_app
+            v.get_envs = original_get_envs
+
+        self.addCleanup(cleanup)
+
+        request = self.request("?metric=cpu_max&date_range=2h/h&interval=30m")
+        response = view(request, target_name="comp_name", target_type="component")
+
+        self.assertEqual(response.status_code, 200)
+        get_backend_mock.assert_called_with(
+            component_name="comp_name", token='token', date_range=u'2h/h', app=None)
         backend_mock.cpu_max.assert_called_with(interval=u'30m')
 
     @patch("tsuru_dashboard.auth.views.token_is_valid")
@@ -133,7 +165,7 @@ class GetBackendTest(TestCase):
 class ElasticSearchTest(TestCase):
     def setUp(self):
         self.maxDiff = None
-        self.es = ElasticSearch("http://url.com", ElasticSearchFilter(app="app_name").query())
+        self.es = ElasticSearch("http://url.com", AppFilter(app="app_name").query())
         self.index = ".measure-tsuru-{}".format(datetime.datetime.utcnow().strftime("%Y.%m.%d"))
 
     @patch("requests.post")
@@ -443,5 +475,31 @@ class ElasticSearchFilterTest(TestCase):
                 ]
             }
         }
-        filter = ElasticSearchFilter(app="app_name", process_name="process_name").filter
+        filter = AppFilter(app="app_name", process_name="process_name").filter
+        self.assertDictEqual(filter, expected_filter)
+
+    def test_component_filters(self):
+        expected_filter = {
+            "bool": {
+                "must": [
+                    {
+                        "bool": {
+                            "should": [
+                                {"term": {"container": "comp_name"}},
+                                {"term": {"container.raw": "comp_name"}},
+                            ]
+                        },
+                    },
+                    {
+                        "range": {
+                            "@timestamp": {
+                                "gte": "now-1h",
+                                "lt": "now"
+                            }
+                        }
+                    },
+                ]
+            }
+        }
+        filter = ComponentFilter(component="comp_name").filter
         self.assertDictEqual(filter, expected_filter)
