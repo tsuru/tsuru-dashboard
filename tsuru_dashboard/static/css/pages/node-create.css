@@ -27,8 +27,3 @@ table td, table th {
 .node-create form {
     clear: both;
 }
-
-#node-create {
-    width: 800px;
-    margin-left: -400px;
-}

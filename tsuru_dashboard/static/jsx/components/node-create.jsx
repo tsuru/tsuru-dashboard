@@ -1,5 +1,5 @@
 var React = require('react'),
-	$ = require('jquery');
+  $ = require('jquery');
 
 var Option = React.createClass({
   render: function() {
@@ -119,7 +119,7 @@ var CancelBtn = React.createClass({
   render: function() {
     return (
       <button data-dismiss='modal'
-			  disabled={this.props.disabled}
+        disabled={this.props.disabled}
               aria-hidden='true'
               className='btn'
               onClick={this.props.onClick}>
@@ -222,13 +222,13 @@ var NodeCreate = React.createClass({
     this.addMetadata("", "");
   },
   loadTemplates: function() {
-	$.ajax({
-	  type: 'GET',
-	  url: "/admin/templates.json",
-	  success: function(data) {
+  $.ajax({
+    type: 'GET',
+    url: "/admin/templates.json",
+    success: function(data) {
         this.setState({templates: data});
-	  }.bind(this)
-	});
+    }.bind(this)
+  });
   },
   componentDidMount: function() {
     this.loadTemplates();
@@ -244,12 +244,12 @@ var NodeCreate = React.createClass({
     }.bind(this));
   },
   addNode: function() {
-	this.setState({disabled: true});
+  this.setState({disabled: true});
     var url = "/admin/node/add/?register=" + this.state.register;
     var data = {};
     this.state.metadata.forEach(function(metadata) {
       data[metadata.key] = metadata.value;
-	});
+  });
     if (this.state.iaas.length > 0) {
       data["iaas"] = this.state.iaas;
     }
@@ -258,7 +258,7 @@ var NodeCreate = React.createClass({
       url: url,
       data: data,
       success: function() {
-  		location.reload();
+      location.reload();
       }.bind(this)
     }); 
   },
@@ -268,19 +268,23 @@ var NodeCreate = React.createClass({
   render: function() {
     return (
       <div className="node-create">
-        <div className='modal-header'>
-          <h3 id='myModalLabel'>Create node</h3>
-        </div>
-        <div className='modal-body'>
-          {this.state.templates.length > 0 ? <Template templates={this.state.templates} selectTemplate={this.selectTemplate} /> : ""}
-          <Register register={this.state.register} onClick={this.registerToggle} />
- 	      <Iaas iaas={this.state.iaas} />
-          <Meta metadata={this.state.metadata} removeMetadata={this.removeMetadata} editMetadata={this.editMetadata} />
-        </div>
-        <div className='modal-footer'>
-          <CancelBtn onClick={this.cancel} disabled={this.state.disabled} />
-          <Button text="Add metadata" onClick={this.add} disabled={this.state.disabled} />
-          <Button text="Create node" onClick={this.addNode} disabled={this.state.disabled} />
+        <div className="modal-dialog" role="dialog">
+          <div className="modal-content">
+            <div className='modal-header'>
+              <h3 id='myModalLabel'>Create node</h3>
+            </div>
+            <div className='modal-body'>
+              {this.state.templates.length > 0 ? <Template templates={this.state.templates} selectTemplate={this.selectTemplate} /> : ""}
+              <Register register={this.state.register} onClick={this.registerToggle} />
+              <Iaas iaas={this.state.iaas} />
+              <Meta metadata={this.state.metadata} removeMetadata={this.removeMetadata} editMetadata={this.editMetadata} />
+            </div>
+            <div className='modal-footer'>
+              <CancelBtn onClick={this.cancel} disabled={this.state.disabled} />
+              <Button text="Add metadata" onClick={this.add} disabled={this.state.disabled} />
+              <Button text="Create node" onClick={this.addNode} disabled={this.state.disabled} />
+            </div>
+          </div>
         </div>
       </div>
     );
