@@ -10,7 +10,7 @@
     "browserify": "^12.0.1",
     "fakexmlhttprequest": "0.0.1",
     "fuzzy": "^0.1.0",
-    "jest-cli": "^0.7.1",
+    "jest-cli": "^11.0.2",
     "jquery": "^2.1.4",
     "oboe": "^2.1.2",
     "react": "^0.14.2",
