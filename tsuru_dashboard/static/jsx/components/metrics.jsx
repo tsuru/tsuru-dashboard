@@ -1,5 +1,10 @@
-var React = require('react'),
-    $ = require('jquery');
+var React = require('react');
+
+if(typeof window.jQuery === 'undefined') {
+  var $ = require('jquery');
+} else {
+  var $ = window.jQuery;
+}
 
 var GraphContainer = React.createClass({
   getDefaultProps: function() {

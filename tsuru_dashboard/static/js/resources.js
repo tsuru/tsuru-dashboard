@@ -28881,6 +28881,13 @@ module.exports = require('./lib/React');
 },{"./lib/React":54}],160:[function(require,module,exports){
 var React = require('react');
 
+if(typeof window.jQuery === 'undefined') {
+  console.warn("metrics");
+  var $ = require('jquery');
+} else {
+  var $ = window.jQuery;
+}
+
 var GraphContainer = React.createClass({displayName: "GraphContainer",
   getDefaultProps: function() {
     return {
@@ -28978,11 +28985,17 @@ module.exports = {
     GraphContainer: GraphContainer,
 };
 
-},{"react":159}],161:[function(require,module,exports){
+},{"jquery":28,"react":159}],161:[function(require,module,exports){
 (function (process){
 var React = require('react'),
-	$ = require('jquery'),
     Metrics = require("../components/metrics.jsx").Metrics;
+
+if(typeof window.jQuery === 'undefined') {
+  console.warn("resources");
+  var $ = require('jquery');
+} else {
+  var $ = window.jQuery;
+}
 
 var Resources = React.createClass({displayName: "Resources",
   getInitialState: function() {
@@ -29030,7 +29043,7 @@ var ProcessTab = React.createClass({displayName: "ProcessTab",
 
 var ProcessTabs = React.createClass({displayName: "ProcessTabs",
   getInitialState: function() {
-    return {active: ""}; 
+    return {active: ""};
   },
   setActive: function(process) {
     this.setState({active: process});
@@ -29097,7 +29110,7 @@ var ProcessInfo = React.createClass({displayName: "ProcessInfo",
     var units = this.props.process;
     var kind = this.props.kind;
     var classNames = "table containers-app";
-    if (this.state.hide) 
+    if (this.state.hide)
       classNames += " hide";
     return (
       React.createElement("div", {className: "units-toggle", onClick: this.onClick}, 
@@ -29114,7 +29127,7 @@ var ProcessContent = React.createClass({displayName: "ProcessContent",
   processByStatus: function() {
     var status = {};
     for (i in this.props.process) {
-      var unit = this.props.process[i]; 
+      var unit = this.props.process[i];
       if (!(unit.Status in status)) {
         status[unit.Status] = [];
       }
@@ -29140,7 +29153,7 @@ var ProcessContent = React.createClass({displayName: "ProcessContent",
 
 var Process = React.createClass({displayName: "Process",
   getInitialState: function() {
-    return {process: {}, active: null}; 
+    return {process: {}, active: null};
   },
   setActive: function(process) {
     this.setState({active: this.state.process[process]});
