@@ -1,5 +1,5 @@
 var React = require('react'),
-	$ = require('jquery');
+    $ = require('jquery');
 
 var Option = React.createClass({
   render: function() {
@@ -25,7 +25,7 @@ var Template = React.createClass({
     return (
       <div className="template">
         <label>
-          Template: 
+          Template:
           <select onChange={this.onChange}>
             <option>Select a template</option>
             {options}
@@ -41,7 +41,7 @@ var Register = React.createClass({
     return (
       <div className="register" onClick={this.props.onClick}>
         <label>
-          Register an already created node: 
+          Register an already created node:
           <input type="checkbox" onClick={this.onClick} />
         </label>
       </div>
@@ -83,11 +83,11 @@ var MetaItem = React.createClass({
     return (
       <div className="meta-item">
         <label>
-          Key: 
+          Key:
           <input type="text" name="name" ref="name" value={this.state.name} onChange={this.onChange} />
         </label>
         <label>
-          Value: 
+          Value:
           <input type="text" name="value" ref="value" value={this.state.value} onChange={this.onChange} />
         </label>
         <button onClick={this.removeMetadata}>Remove item</button>
@@ -177,7 +177,7 @@ var NodeCreate = React.createClass({
   },
   metaIndexByKey: function(key) {
     var index = -1;
-    var meta = this.state.metadata; 
+    var meta = this.state.metadata;
     meta.forEach(function(metadata, i) {
       if (metadata.key === key) {
         index = i;
@@ -186,7 +186,7 @@ var NodeCreate = React.createClass({
     return index;
   },
   addMetadata: function(key, value) {
-    var metadata = this.state.metadata; 
+    var metadata = this.state.metadata;
     var m = {key: key, value: value};
     var index = this.metaIndexByKey(key);
     if (index === -1) {
@@ -210,7 +210,7 @@ var NodeCreate = React.createClass({
     if (index === -1)
         return;
 
-    var metadata = this.state.metadata; 
+    var metadata = this.state.metadata;
     var m = metadata[index];
     m.key = newKey;
     m.value = newValue;
@@ -244,7 +244,7 @@ var NodeCreate = React.createClass({
     }.bind(this));
   },
   addNode: function() {
-	this.setState({disabled: true});
+    this.setState({disabled: true});
     var url = "/admin/node/add/?register=" + this.state.register;
     var data = {};
     this.state.metadata.forEach(function(metadata) {
@@ -260,7 +260,7 @@ var NodeCreate = React.createClass({
       success: function() {
   		location.reload();
       }.bind(this)
-    }); 
+    });
   },
   setIaas: function(iaas) {
     this.setState({iaas: iaas});
