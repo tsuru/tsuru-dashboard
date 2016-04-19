@@ -1,4 +1,5 @@
-var React = require('react');
+var React = require('react'),
+    $ = require('jquery');
 
 var GraphContainer = React.createClass({
   getDefaultProps: function() {

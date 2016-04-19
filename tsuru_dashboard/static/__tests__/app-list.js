@@ -24,7 +24,6 @@ describe('AppList', function() {
     );
     expect(wrapper.find(".app-list").children().length).toBe(3)
     expect(wrapper.find(AppSearch).length).toBe(1);
-    //expect(wrapper.find(Loading).length).toBe(1); TODO: state??
     expect(wrapper.find(AppTable).length).toBe(1);
   });
 
