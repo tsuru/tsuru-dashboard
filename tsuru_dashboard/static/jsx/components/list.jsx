@@ -1,7 +1,7 @@
 var React = require('react'),
     fuzzy = require('fuzzy'),
     Loading = require('./loading.jsx'),
-	$ = require('jquery'),
+    $ = require('jquery'),
     PureRenderMixin = require('react-addons-pure-render-mixin');
 
 
@@ -87,14 +87,14 @@ var AppList = React.createClass({
   },
   appsByName: function(name) {
     if (this.state.loading) {
-        this.setState({term: name});    
+        this.setState({term: name});
         return;
     }
 
     if (this.state.cached.length == 0 ) {
       this.loadApps();
       return;
-    } 
+    }
     var options = {
       extract: function(el) { return el.name }
     };
