@@ -2,80 +2,75 @@ jest.dontMock('../jsx/components/list.jsx');
 jest.dontMock('fuzzy');
 
 var React = require('react'),
-    ReactDOM = require('react-dom'),
+    Enzyme = require('enzyme'),
     List = require('../jsx/components/list.jsx'),
     AppList = List.AppList,
-    $ = require('jquery'),
-    TestUtils = require('react-addons-test-utils');
+    AppSearch = List.AppSearch,
+    AppTable = List.AppTable,
+    Loading = require('../jsx/components/loading.jsx'),
+    $ = require('jquery');
 
 describe('AppList', function() {
   it('should has app-list as className', function() {
-    var list = TestUtils.renderIntoDocument(
+    const wrapper = Enzyme.shallow(
       <AppList url="http://localhost:80/apps/list.json" />
     );
-    
-    expect(ReactDOM.findDOMNode(list).className).toEqual("app-list");
+    expect(wrapper.find(".app-list").length).toBe(1);
   });
 
-  it ('should be composed by AppSearch, Loading and AppTable', function() {
-    var list = TestUtils.renderIntoDocument(
+  it ('should be composed by AppSearch and AppTable', function() {
+    const wrapper = Enzyme.shallow(
       <AppList url="http://localhost:80/apps/list.json" />
     );
+    expect(wrapper.find(".app-list").children().length).toBe(3)
+    expect(wrapper.find(AppSearch).length).toBe(1);
+    //expect(wrapper.find(Loading).length).toBe(1); TODO: state??
+    expect(wrapper.find(AppTable).length).toBe(1);
+  });
 
-    expect(ReactDOM.findDOMNode(list).children.length).toEqual(3);
-
-    var appSearch = ReactDOM.findDOMNode(list).children[0];
-    expect(appSearch.className).toEqual("search");
-
-    var loading = ReactDOM.findDOMNode(list).children[1];
-    expect(loading.textContent).toEqual('');
-
-    var appTable = ReactDOM.findDOMNode(list).children[2];
-    expect(appTable.className).toEqual("table");
+  it ('should contain Loading if its loading', function() {
+    const wrapper = Enzyme.shallow(
+      <AppList url="http://localhost:80/apps/list.json" />
+    );
+    wrapper.setState({loading: true})
+    expect(wrapper.find(Loading).length).toBe(1);
   });
 
   it('should load apps on render', function() {
-    var list = TestUtils.renderIntoDocument(
-      React.createElement(List.AppList, {url: 'http://localhost:80/apps/list.json'})
-    );
+    const wrapper = Enzyme.mount(
+      <AppList url="http://localhost:80/apps/list.json" />
+    )
 
-    $.ajax.mock.calls[2][0].success({apps: [{name: "appname"}, {name: "otherapp"}]});
+    $.ajax.mock.calls[0][0].success({apps: [{name: "appname"}, {name: "otherapp"}]});
 
-    expect({apps: [{name: "appname"}, {name: "otherapp"}], cached: [{name: "appname"}, {name: "otherapp"}], loading: false, term: ''}).toEqual(list.state);
+    expect({apps: [{name: "appname"}, {name: "otherapp"}], cached: [{name: "appname"}, {name: "otherapp"}], loading: false, term: ''}).toEqual(wrapper.state());
 
-	var items = TestUtils.scryRenderedDOMComponentsWithTag(list, "td");
-	expect(items.length).toBe(2);
+    var items = wrapper.find("td");
+    expect(items.length).toBe(2);
   });
 
   it('should filter list by app name', function() {
-    var list = TestUtils.renderIntoDocument(
-      React.createElement(List.AppList, {url: 'http://localhost:80/apps/list.json'})
-    );
+    const wrapper = Enzyme.mount(
+      <AppList url="http://localhost:80/apps/list.json" />
+    )
 
-    $.ajax.mock.calls[3][0].success({apps: [{name: "appname"}, {name: "other"}]});
+    $.ajax.mock.calls[1][0].success({apps: [{name: "appname"}, {name: "other"}]});
 
-	var input = TestUtils.findRenderedDOMComponentWithTag(list, "input");
-	TestUtils.Simulate.change(input, {target: {value: "oth"}});
-    
-    expect({apps: [{name: "other"}], cached: [{name: "appname"}, {name: "other"}], loading: false, term: ''}).toEqual(list.state);
-
-	var items = TestUtils.scryRenderedDOMComponentsWithTag(list, "td");
-	expect(items.length).toBe(1);
+    wrapper.find("input").simulate('change', {target: {value: "oth"}});
+    expect({apps: [{name: "other"}], cached: [{name: "appname"}, {name: "other"}], loading: false, term: ''}).toEqual(wrapper.state());
+    expect(wrapper.find("td").length).toBe(1);
   });
 
   it('should list all on empty search', function() {
-    var list = TestUtils.renderIntoDocument(
-      React.createElement(List.AppList, {url: 'http://localhost:80/apps/list.json'})
-    );
+    const wrapper = Enzyme.mount(
+      <AppList url="http://localhost:80/apps/list.json" />
+    )
 
-    $.ajax.mock.calls[4][0].success({apps: [{name: "appname"}, {name: "other"}]});
+    $.ajax.mock.calls[2][0].success({apps: [{name: "appname"}, {name: "other"}]});
 
-	var input = TestUtils.findRenderedDOMComponentWithTag(list, "input");
-	TestUtils.Simulate.change(input, {target: {value: ""}});
-
-	expect({apps: [{name: "appname"}, {name: "other"}], cached: [{name: "appname"}, {name: "other"}], loading: false, term: ''}).toEqual(list.state);
-
-	var items = TestUtils.scryRenderedDOMComponentsWithTag(list, "td");
-	expect(items.length).toBe(2);
+    wrapper.find("input").simulate('change', {target: {value: ""}});
+    expect({apps: [{name: "appname"}, {name: "other"}], cached: [{name: "appname"}, {name: "other"}], loading: false, term: ''}).toEqual(wrapper.state());
+	  expect(wrapper.find("td").length).toBe(2);
   });
+
 });
