@@ -1,25 +1,19 @@
 jest.dontMock('../jsx/components/options-menu.jsx');
 
 var React = require('react'),
-    ReactDOM = require('react-dom'),
-    OptionsMenu = require('../jsx/components/options-menu.jsx'),
-    TestUtils = require('react-addons-test-utils');
+    Enzyme = require('enzyme'),
+    OptionsMenu = require('../jsx/components/options-menu.jsx');
 
 describe('OptionMenu', function() {
-  it('should has options-menu as className', function() {
-    var optionsMenu = TestUtils.renderIntoDocument(
-      <OptionsMenu />
-    );
-
-    expect(ReactDOM.findDOMNode(optionsMenu).className).toEqual("options-menu");
+  it('has options-menu as className', function() {
+    const optionsMenu = Enzyme.shallow(<OptionsMenu />);
+    expect(optionsMenu.find(".options-menu").length).toBe(1);
   });
 
-  it('options items', function() {
-    var optionsMenu = TestUtils.renderIntoDocument(
+  it('contains options items', function() {
+    const optionsMenu = Enzyme.mount(
       <OptionsMenu items={["about", "docs"]} />
     );
-
-    var items = TestUtils.scryRenderedDOMComponentsWithClass(optionsMenu, 'options-item');
-    expect(items.length).toBe(2);
+    expect(optionsMenu.find('.options-item').length).toBe(2);
   });
 });
