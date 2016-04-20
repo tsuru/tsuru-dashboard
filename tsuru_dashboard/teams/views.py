@@ -10,7 +10,6 @@ from tsuru_dashboard.auth.views import LoginRequiredView
 from .forms import TeamForm
 
 import requests
-import json
 
 
 class RemoveUser(LoginRequiredView):
@@ -88,7 +87,7 @@ class Add(LoginRequiredView):
         errors = ''
         if form.is_valid():
             url = '{}/teams'.format(settings.TSURU_HOST)
-            response = requests.post(url, data=json.dumps(form.data), headers=self.authorization)
+            response = requests.post(url, data={'name': form.data['name']}, headers=self.authorization)
             if response.status_code == 200:
                 return redirect(reverse("team-list"))
             errors = response.content

@@ -272,7 +272,9 @@ class CreateApp(LoginRequiredView):
         authorization = {'authorization': request.session.get('tsuru_token')}
         url = '{}/plans'.format(settings.TSURU_HOST)
         response = requests.get(url, headers=authorization)
-        plans = response.json() or []
+        plans = []
+        if response.status_code == 200:
+            plans = response.json()
         plan_list = [('', '')]
         default = ''
         for p in plans:

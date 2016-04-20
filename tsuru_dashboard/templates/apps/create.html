@@ -97,8 +97,10 @@
     $("button.add-team").on("click", function(e) {
         e.preventDefault();
         var form = $("#add-team-form");
-        var new_team = form.find("input[name='name']").val();
-        var form_data = form.serialize();
+        var new_team = form.find("input#name").val();
+        var token = form.serialize();
+        var team = "&name=".concat(new_team)
+        var form_data = token.concat(team);
         $.post(form.attr("action"), form_data, function(data){
             $.get("/teams/", function(data) {
                 var teams = $(data).find(".teams li a");

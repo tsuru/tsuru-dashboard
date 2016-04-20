@@ -47,7 +47,7 @@ class TeamViewTest(TestCase):
         self.assertEqual(1, post.call_count)
         post.assert_called_with(
             '%s/teams' % settings.TSURU_HOST,
-            data='{"name": "test-team"}',
+            data={"name": "test-team"},
             headers={'authorization':
                      self.request_post.session['tsuru_token']})
 
