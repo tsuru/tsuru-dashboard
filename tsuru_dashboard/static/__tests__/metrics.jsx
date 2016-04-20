@@ -6,7 +6,8 @@ var React = require('react'),
     $ = require('jquery'),
     Module = require('../jsx/components/metrics.jsx'),
     Metrics = Module.Metrics,
-    GraphContainer = Module.GraphContainer;
+    GraphContainer = Module.GraphContainer,
+    Graph = Module.Graph;
 
 describe('Metrics', function() {
   it('has metrics as className', function() {
@@ -31,6 +32,12 @@ describe('Metrics', function() {
 });
 
 describe('GraphContainer', function() {
+
+  beforeEach(() => {
+    $.plot = jest.genMockFunction();
+    $.getJSON.mockClear();
+  });
+
   it('has graph-container as className', function(){
     const graphContainer = Enzyme.shallow(<GraphContainer />);
 
@@ -38,8 +45,7 @@ describe('GraphContainer', function() {
   });
 
   it('fetches application metrics', function() {
-    $.getJSON.mockClear();
-    const graphContainer = Enzyme.shallow(
+    const graphContainer = Enzyme.mount(
       <GraphContainer kind="cpu_max" appName="myApp" processName="myProcess"/>
     );
 
@@ -66,11 +72,65 @@ describe('GraphContainer', function() {
     expect(aHref.props().href).toBe("/apps/myApp/metrics/details/?kind=cpu_max&from=1h&serie=1m");
   });
 
-  it('renders the graph div', function() {
+  it('renders the Graph component', function() {
     const graphContainer = Enzyme.shallow(<GraphContainer kind="cpu_max" />);
-    var graph = graphContainer.find("div").last();
+    var graph = graphContainer.find(Graph);
 
     expect(graph.props().id).toBe("cpu_max");
-    expect(graph.props().className).toBe("graph");
   });
+
+  it('sends fetched data to child Graph', function() {
+    var data = {
+      max: 1.5,
+      data: {
+        max: [[0,1], [1,1.5]],
+        min: [[0,0.5], [1,1]]
+      },
+      min: 0
+    };
+    $.getJSON = function(url, callback) {
+      callback(data);
+    };
+
+    const graphContainer = Enzyme.mount(<GraphContainer kind="cpu_max" />);
+    var graph = graphContainer.find(Graph);
+
+    expect(graph.props().model).toBe(data.data);
+  });
+
+});
+
+describe('Graph', function() {
+
+  beforeEach(() => {
+    $.plot = jest.genMockFunction();
+  });
+
+  it('has graph as className', function() {
+    const graph = Enzyme.shallow(<Graph />);
+
+    expect(graph.find(".graph").length).toBe(1);
+  });
+
+  it('renders a div with the specified id', function() {
+    const graph = Enzyme.shallow(<Graph id="123"/>);
+
+    expect(graph.find("div").props().id).toBe("123");
+  });
+
+  it('uses flot on the rendered div', function() {
+    var data = {
+      max: [[0,1], [1,1.5]],
+      min: [[0,0.5], [1,1]]
+    }
+    const graph = Enzyme.mount(<Graph id="123" model={data}/>);
+    var call = $.plot.mock.calls[0];
+
+    expect($.plot.mock.calls.length).toBe(1);
+    expect(call[1].length).toBe(2);
+    expect(call[1][0].data).toBe(data.max);
+    expect(call[1][1].data).toBe(data.min);
+    expect(call[2].legend.show).toBe(graph.props().legend);
+  });
+
 });

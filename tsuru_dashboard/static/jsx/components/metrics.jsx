@@ -7,6 +7,11 @@ if(typeof window.jQuery === 'undefined') {
 }
 
 var GraphContainer = React.createClass({
+  getInitialState: function() {
+    return {
+      model: {}
+    }
+  },
   getDefaultProps: function() {
     return {
       interval: "1m",
@@ -15,13 +20,13 @@ var GraphContainer = React.createClass({
       legend: false
     }
   },
-  loadData: function() {
+  componentDidMount: function() {
     var appName = this.props.appName;
     var kind = this.props.kind;
     var interval = this.props.interval;
     var from = this.props.from;
 
-    var url ="/metrics/app/" + appName + "/?metric=" + kind + "&interval=" + interval + "&date_range=" + from;
+    var url = "/metrics/app/" + appName + "/?metric=" + kind + "&interval=" + interval + "&date_range=" + from;
 
     if (this.props.processName !== "") {
         url += "&process_name=" + this.props.processName;
@@ -29,40 +34,10 @@ var GraphContainer = React.createClass({
     $.getJSON(url, function(data) {
       if (Object.keys(data.data).length === 0)
         data.data = {" ": [1,1]};
-      this.renderGraph(data);
+      this.setState({model: data.data});
     }.bind(this));
   },
-  renderGraph: function(result) {
-    var $elem = $("#" + this.props.kind);
-    var d = [];
-    for (key in result.data) {
-      d.push({
-        data: result.data[key],
-        lines: {show: true, fill: true},
-        label: key
-      });
-    }
-    var options = {
-        xaxis: {
-            mode: "time",
-            timezone: "browser"
-        },
-        grid: {
-      hoverable: true,
-    },
-    tooltip: {
-      show: true,
-      content: "%x the %s was %y"
-        },
-        legend: {
-          position: "sw",
-          show: this.props.legend
-        }
-    };
-    $.plot($elem, d, options);
-  },
   render: function() {
-    this.loadData();
     var kind = this.props.kind;
     var title = this.props.title;
     var appName = this.props.appName;
@@ -71,8 +46,55 @@ var GraphContainer = React.createClass({
       <div className="graph-container">
         <h2>{title ? title : kind}</h2>
         <a href={url}></a>
-        <a href={url}><div id={this.props.kind} className="graph"></div></a>
+        <a href={url}>
+          <Graph id={this.props.kind} legend={this.props.legend} model={this.state.model} />
+        </a>
       </div>
+    );
+  }
+});
+
+var Graph = React.createClass({
+  getOptions: function() {
+    return {
+      xaxis: {
+        mode: "time",
+        timezone: "browser"
+      },
+      grid: {
+        hoverable: true,
+      },
+      tooltip: {
+        show: true,
+        content: "%x the %s was %y"
+      },
+      legend: {
+        position: "sw",
+        show: this.props.legend
+      }
+    }
+  },
+  componentDidMount: function() {
+    this.renderGraph();
+  },
+  componentDidUpdate: function() {
+    this.renderGraph();
+  },
+  renderGraph: function() {
+    var $elem = $("#" + this.props.id);
+    var d = [];
+    for (var key in this.props.model) {
+      d.push({
+        data: this.props.model[key],
+        lines: {show: true, fill: true},
+        label: key
+      });
+    }
+    $.plot($elem, d, this.getOptions());
+  },
+  render: function() {
+    return (
+      <div id={this.props.id} className="graph"></div>
     );
   }
 });
@@ -101,4 +123,5 @@ var Metrics = React.createClass({
 module.exports = {
     Metrics: Metrics,
     GraphContainer: GraphContainer,
+    Graph: Graph
 };
