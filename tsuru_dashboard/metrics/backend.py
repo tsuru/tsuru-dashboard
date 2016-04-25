@@ -236,7 +236,7 @@ class ElasticSearch(object):
         return result, value, value
 
     def units(self, interval=None):
-        aggregation = {"units": {"cardinality": {"field": "host"}}}
+        aggregation = {"units": {"cardinality": {"field": "host.raw"}}}
         query = self.query(interval=interval, aggregation=aggregation)
         return self.base_process(self.post(query, "cpu_max"), self.units_process)
 
