@@ -34,6 +34,11 @@
                         <span>Dashboard</span>
 					</a>
                 </li>
+                <li{% if active == "components" %} class="active"{% endif %}>
+					<a href="{% url 'list-component' %}">
+                        <span>Components</span>
+					</a>
+                </li>
 			</ul>
 		</div> <!-- /container-user -->
 	</div> <!-- /inner -->

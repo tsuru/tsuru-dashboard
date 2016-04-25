@@ -12,4 +12,5 @@ urlpatterns = [
     url(r'^healthcheck/', include('tsuru_dashboard.healthcheck.urls')),
     url(r'^dashboard/', include('tsuru_dashboard.dashboard.urls')),
     url(r'^metrics/', include('tsuru_dashboard.metrics.urls')),
+    url(r'^components/', include('tsuru_dashboard.components.urls')),
 ]

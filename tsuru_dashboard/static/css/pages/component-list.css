@@ -1,0 +1,23 @@
+.metrics div, .metrics-container div {
+    margin: 2px;
+    display: inline-block;
+}
+
+.metrics .graph-container, .metrics-container .graph-container {
+    border: #777 1px solid;
+}
+
+.metrics svg, .metrics-container svg {
+    width: 285px;
+    height: 200px
+}
+
+.graph-container h2 {
+    font-size: 16px;
+    margin: 0 38px;
+}
+
+.graph-container .graph {
+    width: 285px;
+    height: 205px;
+}

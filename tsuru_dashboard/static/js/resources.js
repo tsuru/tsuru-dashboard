@@ -29011,11 +29011,12 @@ var Metrics = React.createClass({displayName: "Metrics",
     return "/" + targetType + "s/" + targetName + "/metrics/details/?kind=" + metric + "&from=1h&serie=1m";
   },
   getGraphContainer: function(metric) {
+    var id = this.props.targetName + "_" + metric;
     return (
-      React.createElement(GraphContainer, {id: metric, title: this.props.titles[metric], 
+      React.createElement(GraphContainer, {id: id, title: this.props.titles[metric], 
         data_url: this.getMetricDataUrl(metric), 
         detail_url: this.getMetricDetailUrl(metric), 
-        legend: this.props.legend, key: metric}
+        legend: this.props.legend, key: id}
       )
     );
   },
