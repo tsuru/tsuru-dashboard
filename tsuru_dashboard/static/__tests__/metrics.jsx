@@ -19,16 +19,50 @@ describe('Metrics', function() {
   it('contains GraphContainers for all metrics', function() {
     const metrics = Enzyme.shallow(<Metrics />);
     var containers = metrics.find(GraphContainer);
-    var kinds = containers.map(c => c.props().kind);
-    var expectedKinds = [
+    var ids = containers.map(c => c.props().id);
+    var expectedIds = [
       "cpu_max", "mem_max", "swap", "connections",
       "units", "requests_min", "response_time", "http_methods",
       "status_code", "nettx", "netrx"
     ];
 
     expect(containers.length).toBe(11);
-    expect(kinds.sort()).toEqual(expectedKinds.sort());
+    expect(ids.sort()).toEqual(expectedIds.sort());
   });
+
+  it('contains GraphContainer for a single metric', function() {
+    const metrics = Enzyme.shallow(<Metrics metrics={["cpu_max"]} />);
+    var containers = metrics.find(GraphContainer);
+
+    expect(containers.length).toBe(1);
+    expect(containers.props().id).toBe("cpu_max");
+  });
+
+  it('renders a GraphContainer with urls for application metrics', function() {
+    const metrics = Enzyme.shallow(<Metrics targetName={"myApp"} processName={"myProcess"} metrics={["cpu_max"]} />);
+    var container = metrics.find(GraphContainer);
+
+    expect(container.props().data_url).toBe(
+      "/metrics/app/myApp/?metric=cpu_max&interval=1m&date_range=1h&process_name=myProcess"
+    );
+    expect(container.props().detail_url).toBe(
+      "/apps/myApp/metrics/details/?kind=cpu_max&from=1h&serie=1m"
+    );
+  });
+
+  it('renders a GraphContainer with url for component metrics', function() {
+    const metrics = Enzyme.shallow(<Metrics targetName={"myComp"} targetType={"component"} metrics={["cpu_max"]} />);
+    var container = metrics.find(GraphContainer);
+
+    expect(container.props().data_url).toBe(
+      "/metrics/component/myComp/?metric=cpu_max&interval=1m&date_range=1h"
+    );
+    expect(container.props().detail_url).toBe(
+      "/components/myComp/metrics/details/?kind=cpu_max&from=1h&serie=1m"
+    );
+
+  })
+
 });
 
 describe('GraphContainer', function() {
@@ -44,9 +78,9 @@ describe('GraphContainer', function() {
     expect(graphContainer.find(".graph-container").length).toBe(1);
   });
 
-  it('fetches application metrics', function() {
+  it('fetches the data url', function() {
     const graphContainer = Enzyme.mount(
-      <GraphContainer kind="cpu_max" appName="myApp" processName="myProcess"/>
+      <GraphContainer data_url={"/metrics/app/myApp/?metric=cpu_max&interval=1m&date_range=1h&process_name=myProcess"}/>
     );
 
     expect($.getJSON.mock.calls.length).toBe(1);
@@ -65,7 +99,7 @@ describe('GraphContainer', function() {
 
   it('renders a link to the graph details', function() {
     const graphContainer = Enzyme.shallow(
-      <GraphContainer kind="cpu_max" appName="myApp" processName="myProcess"/>
+      <GraphContainer detail_url={"/apps/myApp/metrics/details/?kind=cpu_max&from=1h&serie=1m"}/>
     );
     var aHref = graphContainer.find("a").first();
 
@@ -73,7 +107,7 @@ describe('GraphContainer', function() {
   });
 
   it('renders the Graph component', function() {
-    const graphContainer = Enzyme.shallow(<GraphContainer kind="cpu_max" />);
+    const graphContainer = Enzyme.shallow(<GraphContainer id="cpu_max" />);
     var graph = graphContainer.find(Graph);
 
     expect(graph.props().id).toBe("cpu_max");

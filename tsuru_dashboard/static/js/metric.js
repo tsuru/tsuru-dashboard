@@ -28895,40 +28895,22 @@ var GraphContainer = React.createClass({displayName: "GraphContainer",
   },
   getDefaultProps: function() {
     return {
-      interval: "1m",
-      from: "1h",
-      processName: "",
       legend: false
     }
   },
   componentDidMount: function() {
-    var appName = this.props.appName;
-    var kind = this.props.kind;
-    var interval = this.props.interval;
-    var from = this.props.from;
-
-    var url = "/metrics/app/" + appName + "/?metric=" + kind + "&interval=" + interval + "&date_range=" + from;
-
-    if (this.props.processName !== "") {
-        url += "&process_name=" + this.props.processName;
-    }
-    $.getJSON(url, function(data) {
+    $.getJSON(this.props.data_url, function(data) {
       if (Object.keys(data.data).length === 0)
         data.data = {" ": [1,1]};
       this.setState({model: data.data});
     }.bind(this));
   },
   render: function() {
-    var kind = this.props.kind;
-    var title = this.props.title;
-    var appName = this.props.appName;
-    var url = "/apps/" + appName + "/metrics/details/?kind=" + kind + "&from=1h&serie=1m";
     return (
       React.createElement("div", {className: "graph-container"}, 
-        React.createElement("h2", null, title ? title : kind), 
-        React.createElement("a", {href: url}), 
-        React.createElement("a", {href: url}, 
-          React.createElement(Graph, {id: this.props.kind, legend: this.props.legend, model: this.state.model})
+        React.createElement("h2", null, this.props.title), 
+        React.createElement("a", {href: this.props.detail_url}, 
+          React.createElement(Graph, {id: this.props.id, legend: this.props.legend, model: this.state.model})
         )
       )
     );
@@ -28981,21 +28963,69 @@ var Graph = React.createClass({displayName: "Graph",
 });
 
 var Metrics = React.createClass({displayName: "Metrics",
+  getDefaultProps: function() {
+    return {
+      interval: "1m",
+      from: "1h",
+      targetType: "app",
+      titles: {
+        cpu_max: "cpu (%)",
+        mem_max: "memory (MB)",
+        swap: "swap (MB)",
+        connections: "connections",
+        units: "units",
+        requests_min: "requests min",
+        response_time: "response time (seconds)",
+        http_methods: "http methods",
+        status_code: "status code",
+        nettx: "net up (KB/s)",
+        netrx: "net down (KB/s)"
+      },
+      metrics: [
+        "cpu_max", "mem_max", "swap",
+        "connections", "units",
+        "requests_min", "response_time",
+        "http_methods", "status_code",
+        "nettx", "netrx"
+      ]
+    }
+  },
+  getMetricDataUrl: function(metric) {
+    var targetType = this.props.targetType;
+    var targetName = this.props.targetName;
+    var interval = this.props.interval;
+    var from = this.props.from;
+
+    var url = "/metrics/" + targetType + "/" + targetName;
+    url += "/?metric=" + metric + "&interval=" + interval + "&date_range=" + from;
+
+    if (this.props.processName !== undefined) {
+        url += "&process_name=" + this.props.processName;
+    }
+
+    return url;
+  },
+  getMetricDetailUrl: function(metric) {
+    var targetName = this.props.targetName;
+    var targetType = this.props.targetType;
+    return "/" + targetType + "s/" + targetName + "/metrics/details/?kind=" + metric + "&from=1h&serie=1m";
+  },
+  getGraphContainer: function(metric) {
+    return (
+      React.createElement(GraphContainer, {id: metric, title: this.props.titles[metric], 
+        data_url: this.getMetricDataUrl(metric), 
+        detail_url: this.getMetricDetailUrl(metric), 
+        legend: this.props.legend, key: metric}
+      )
+    );
+  },
   render: function() {
-    var appName = this.props.appName;
+    var self = this;
     return (
       React.createElement("div", {className: "metrics"}, 
-        React.createElement(GraphContainer, {kind: "cpu_max", title: "cpu (%)", appName: appName, processName: this.props.processName}), 
-        React.createElement(GraphContainer, {kind: "mem_max", title: "memory (MB)", appName: appName, processName: this.props.processName}), 
-        React.createElement(GraphContainer, {kind: "swap", title: "swap (MB)", appName: appName, processName: this.props.processName}), 
-        React.createElement(GraphContainer, {kind: "connections", appName: appName, processName: this.props.processName}), 
-        React.createElement(GraphContainer, {kind: "units", appName: appName, processName: this.props.processName}), 
-        React.createElement(GraphContainer, {kind: "requests_min", title: "requests min", appName: appName}), 
-        React.createElement(GraphContainer, {kind: "response_time", title: "response time (seconds)", appName: appName}), 
-        React.createElement(GraphContainer, {kind: "http_methods", title: "http methods", appName: appName}), 
-        React.createElement(GraphContainer, {kind: "status_code", title: "status code", appName: appName}), 
-        React.createElement(GraphContainer, {kind: "nettx", title: "net up (KB/s)", appName: appName}), 
-        React.createElement(GraphContainer, {kind: "netrx", title: "net down (KB/s)", appName: appName})
+        self.props.metrics.map(function(metric) {
+          return self.getGraphContainer(metric);
+        })
       )
     );
   }
@@ -29010,7 +29040,7 @@ module.exports = {
 },{"jquery":28,"react":159}],161:[function(require,module,exports){
 var React = require('react'),
     ReactDOM = require('react-dom'),
-    GraphContainer = require("../components/metrics.jsx").GraphContainer;
+    Metrics = require("../components/metrics.jsx").Metrics;
 
 var appName = window.location.pathname.split("/")[2];
 
@@ -29032,22 +29062,8 @@ var kind = queryString("kind");
 var interval = queryString("serie");
 var from = queryString("from");
 
-var titles = {
-  "cpu_max": "cpu (%)",
-  "mem_max": "memory (MB)",
-  "swap": "swap (MB)",
-  "requests_min": "requests min",
-  "response_time": "response time (seconds)",
-  "http_methods": "http methods",
-  "status_code": "status code",
-  "nettx": "net up (KB/s)",
-  "netrx": "net down (KB/s)"
-};
-
 ReactDOM.render(
-  React.createElement("div", {className: "metrics"}, 
-    React.createElement(GraphContainer, {kind: kind, title: titles[kind]? titles[kind] : kind, appName: appName, interval: interval, from: from, legend: true})
-  ),
+  React.createElement(Metrics, {metrics: [kind], targetName: appName, interval: interval, from: from, legend: true}),
   document.getElementById('metrics')
 );
 

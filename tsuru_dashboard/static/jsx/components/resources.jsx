@@ -155,7 +155,7 @@ var ProcessContent = React.createClass({
     return (
       <div className='resources-content' id="metrics-container">
         {info}
-        <Metrics appName={this.props.appName} processName={processName} />
+        <Metrics targetName={this.props.appName} processName={processName} />
       </div>
     );
   }
