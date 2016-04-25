@@ -17,9 +17,9 @@ describe('Metrics', function() {
   });
 
   it('contains GraphContainers for all metrics', function() {
-    const metrics = Enzyme.shallow(<Metrics />);
+    const metrics = Enzyme.shallow(<Metrics targetName="" />);
     var containers = metrics.find(GraphContainer);
-    var ids = containers.map(c => c.props().id);
+    var ids = containers.map(c => c.props().id.substring(1));
     var expectedIds = [
       "cpu_max", "mem_max", "swap", "connections",
       "units", "requests_min", "response_time", "http_methods",
@@ -31,11 +31,11 @@ describe('Metrics', function() {
   });
 
   it('contains GraphContainer for a single metric', function() {
-    const metrics = Enzyme.shallow(<Metrics metrics={["cpu_max"]} />);
+    const metrics = Enzyme.shallow(<Metrics targetName={"myApp"} metrics={["cpu_max"]} />);
     var containers = metrics.find(GraphContainer);
 
     expect(containers.length).toBe(1);
-    expect(containers.props().id).toBe("cpu_max");
+    expect(containers.props().id).toBe("myApp_cpu_max");
   });
 
   it('renders a GraphContainer with urls for application metrics', function() {
