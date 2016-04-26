@@ -8,7 +8,7 @@ import json
 class ListComponentJsonViewTest(TestCase):
     def setUp(self):
         self.request = RequestFactory().get("/")
-        self.request.session = {"tsuru_token": "token"}
+        self.request.session = {"tsuru_token": "token", "permissions": {"admin": True}}
 
     @patch("tsuru_dashboard.auth.views.token_is_valid")
     def test_list_components(self, token_is_valid):
