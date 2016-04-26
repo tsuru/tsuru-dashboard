@@ -62,6 +62,19 @@ class LoginRequiredMixin(object):
             request, *args, **kwargs)
 
 
+class PermissionRequiredMixin(object):
+    required_permission = "admin"
+
+    def dispatch(self, request, *args, **kwargs):
+        permission = request.session.get('permissions', {}).get(self.required_permission, False)
+        if not permission:
+            messages.error(self.request, u'Permission denied.', fail_silently=True)
+            return redirect('/')
+        else:
+            return super(PermissionRequiredMixin, self).dispatch(
+                request, *args, **kwargs)
+
+
 class ChangePassword(LoginRequiredMixin, FormView):
     template_name = 'auth/change_password.html'
     form_class = ChangePasswordForm
