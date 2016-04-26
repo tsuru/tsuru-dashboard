@@ -25,9 +25,20 @@ def get_permissions(token):
     headers = {"authorization": token}
     permissions = {}
 
-    url = "{}/docker/healing".format(settings.TSURU_HOST)
+    url = "{0}/users/info".format(settings.TSURU_HOST)
     response = requests.get(url, headers=headers)
-    permissions["healing"] = response.status_code != 403
+    user = response.json()
+    permissions["admin"] = False
+    permissions["healing"] = False
+    for perm in user["Permissions"]:
+        if perm["Name"] == "" and perm["ContextType"] == "global":
+            permissions["admin"] = True
+            for k in permissions:
+                permissions[k] = True
+            return permissions
+        elif perm["Name"] == "healing.read":
+            permissions["healing"] = True
+
     return permissions
 
 
