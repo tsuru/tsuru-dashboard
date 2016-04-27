@@ -8,6 +8,7 @@ from django.views.generic import TemplateView
 from django.http import HttpResponse, Http404, JsonResponse, StreamingHttpResponse
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
+from django.contrib import messages
 
 from pygments import highlight
 from pygments.lexers import DiffLexer
@@ -331,8 +332,16 @@ class NodeAdd(LoginRequiredView):
     def post(self, *args, **kwargs):
         register = self.request.GET.get("register", "false")
         register = True if register == "true" else False
-        self.client.nodes.create(register=register, **self.request.POST.dict())
-        return HttpResponse()
+        resp = self.client.nodes.create(register=register, **self.request.POST.dict())
+
+        for line in resp.iter_lines():
+            msg_err = json.loads(line).get('Error')
+            if msg_err:
+                messages.error(self.request, msg_err, fail_silently=True)
+                return HttpResponse(msg_err, status=500)
+
+        messages.success(self.request, u'Node was successfully created', fail_silently=True)
+        return HttpResponse('Node was successfully created', status=200)
 
 
 class PoolRebalance(LoginRequiredView):

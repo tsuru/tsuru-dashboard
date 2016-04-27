@@ -29134,13 +29134,17 @@ var NodeCreate = React.createClass({displayName: "NodeCreate",
     if (this.state.iaas.length > 0) {
       data["iaas"] = this.state.iaas;
     }
+    data["pool"] = this.props.pool;
     $.ajax({
       type: "POST",
       url: url,
       data: data,
       success: function() {
-      location.reload();
-      }.bind(this)
+        location.reload();
+      }.bind(this),
+      error: function(){
+        location.reload();
+      } .bind(this)
     }); 
   },
   setIaas: function(iaas) {
@@ -29179,8 +29183,10 @@ var React = require('react'),
     ReactDOM = require('react-dom'),
     NodeCreate = require("../components/node-create.jsx");
 
+var pool = window.location.pathname.split("/")[3];
+
 ReactDOM.render(
-  React.createElement(NodeCreate, null),
+  React.createElement(NodeCreate, {pool: pool}),
   document.getElementById('node-create')
 );
 

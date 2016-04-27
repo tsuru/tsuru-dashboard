@@ -8,6 +8,8 @@ import httpretty
 from tsuru_dashboard import settings
 from tsuru_dashboard.admin.views import NodeAdd
 
+import json
+
 
 class NodeAddViewTest(TestCase):
     def setUp(self):
@@ -29,7 +31,7 @@ class NodeAddViewTest(TestCase):
         httpretty.register_uri(
             httpretty.POST,
             url,
-            body="{}",
+            body=json.dumps({"Message": "", "Error": ""}),
             status=200
         )
 
@@ -48,10 +50,11 @@ class NodeAddViewTest(TestCase):
         request.session = {'tsuru_token': 'tokentest'}
 
         url = "{}/docker/node".format(settings.TSURU_HOST)
+
         httpretty.register_uri(
             httpretty.POST,
             url,
-            body="{}",
+            body=json.dumps({"Message": "", "Error": ""}),
             status=200
         )
 

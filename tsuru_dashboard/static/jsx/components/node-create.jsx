@@ -253,13 +253,17 @@ var NodeCreate = React.createClass({
     if (this.state.iaas.length > 0) {
       data["iaas"] = this.state.iaas;
     }
+    data["pool"] = this.props.pool;
     $.ajax({
       type: "POST",
       url: url,
       data: data,
       success: function() {
-      location.reload();
-      }.bind(this)
+        location.reload();
+      }.bind(this),
+      error: function(){
+        location.reload();
+      } .bind(this)
     }); 
   },
   setIaas: function(iaas) {
