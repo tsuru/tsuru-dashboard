@@ -32,7 +32,7 @@
                         {% for container in containers %}
                         <tr>
                             <td>{{ container.ID|slice:":12" }}</td>
-                            <td>{{ container.AppName }}</td>
+                            <td><a href="{% url 'detail-app' container.AppName %}">{{ container.AppName }}</a></td>
                             <td>{{ container.Type }}</td>
                             <td>{{ container.ProcessName }}</td>
                             <td>{{ container.IP }}</td>
