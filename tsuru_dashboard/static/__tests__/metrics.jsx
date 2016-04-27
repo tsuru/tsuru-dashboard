@@ -39,6 +39,7 @@ describe('Metrics', function() {
   });
 
   it('renders a GraphContainer with urls for application metrics', function() {
+    $.inArray.mockReturnValueOnce(-1);
     const metrics = Enzyme.shallow(<Metrics targetName={"myApp"} processName={"myProcess"} metrics={["cpu_max"]} />);
     var container = metrics.find(GraphContainer);
 
@@ -47,6 +48,16 @@ describe('Metrics', function() {
     );
     expect(container.props().detail_url).toBe(
       "/apps/myApp/metrics/details/?kind=cpu_max&from=1h&serie=1m"
+    );
+  });
+
+  it('ignores processName when inArray returns 1', function(){
+    $.inArray.mockReturnValueOnce(1);
+    const metrics = Enzyme.shallow(<Metrics targetName={"myApp"} processName={"myProcess"} metrics={["requests_min"]} />);
+    var container = metrics.find(GraphContainer);
+
+    expect(container.props().data_url).toBe(
+      "/metrics/app/myApp/?metric=requests_min&interval=1m&date_range=1h"
     );
   });
 
@@ -60,8 +71,7 @@ describe('Metrics', function() {
     expect(container.props().detail_url).toBe(
       "/components/myComp/metrics/details/?kind=cpu_max&from=1h&serie=1m"
     );
-
-  })
+  });
 
 });
 

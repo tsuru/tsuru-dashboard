@@ -109,6 +109,16 @@ var Metrics = React.createClass({
       ]
     }
   },
+  filterByProcess: function(metric) {
+    var webTransactions = ["requests_min", "response_time",
+        "http_methods", "status_code",
+        "nettx", "netrx"
+    ];
+    if ($.inArray(metric, webTransactions) === -1) {
+        return "&process_name=" + this.props.processName;
+    }
+    return "";
+  },
   getMetricDataUrl: function(metric) {
     var targetType = this.props.targetType;
     var targetName = this.props.targetName;
@@ -118,8 +128,8 @@ var Metrics = React.createClass({
     var url = "/metrics/" + targetType + "/" + targetName;
     url += "/?metric=" + metric + "&interval=" + interval + "&date_range=" + from;
 
-    if (this.props.processName !== undefined) {
-        url += "&process_name=" + this.props.processName;
+    if(this.props.processName !== undefined) {
+      url += this.filterByProcess(metric);
     }
 
     return url;
