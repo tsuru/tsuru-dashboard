@@ -1,77 +1,60 @@
 jest.dontMock('../jsx/components/node-create.jsx');
 
 var React = require('react'),
-    ReactDOM = require('react-dom'),
-    NodeCreate = require('../jsx/components/node-create.jsx'),
-    TestUtils = require('react-addons-test-utils');
+    Enzyme = require('enzyme'),
+    NodeCreate = require('../jsx/components/node-create.jsx');
 
 describe('NodeCreate', function() {
   it('should has node-create as className', function() {
-    var nodeCreate = TestUtils.renderIntoDocument(
-      <NodeCreate />
-    );
-    
-    expect(ReactDOM.findDOMNode(nodeCreate).className).toEqual("node-create");
+    const nodeCreate = Enzyme.shallow(<NodeCreate />);
+    expect(nodeCreate.find(".node-create").length).toBe(1);
   });
 
   it('should initial state', function() {
-    var nodeCreate = TestUtils.renderIntoDocument(
-      <NodeCreate />
-    );
-  
-    expect(nodeCreate.state.templates.length).toBe(0);
-    expect(nodeCreate.state.metadata.length).toBe(0);
-    expect(nodeCreate.state.register).toBeFalsy();
+    const nodeCreate = Enzyme.shallow(<NodeCreate />);
+    var state = nodeCreate.state();
+    expect(state.templates.length).toBe(0);
+    expect(state.metadata.length).toBe(0);
+    expect(state.register).toBeFalsy();
   });
 
   it('change register state on click', function() {
-    var nodeCreate = TestUtils.renderIntoDocument(
-      <NodeCreate />
-    );
-    var register = TestUtils.findRenderedDOMComponentWithClass(nodeCreate, "register");
+    const nodeCreate = Enzyme.mount(<NodeCreate />);
+    var register = nodeCreate.find(".register");
 
-    expect(nodeCreate.state.register).toBeFalsy();
-    expect(nodeCreate.state.metadata.length).toEqual(0);
+    expect(nodeCreate.state().register).toBeFalsy();
+    expect(nodeCreate.state().metadata.length).toEqual(0);
 
-    TestUtils.Simulate.click(register);
-    expect(nodeCreate.state.register).toBeTruthy();
-    expect(nodeCreate.state.metadata).toEqual([{id: 1, key: "address", value: ""}]);
+    register.simulate('click');
+    expect(nodeCreate.state().register).toBeTruthy();
+    expect(nodeCreate.state().metadata).toEqual([{id: 1, key: "address", value: ""}]);
 
-    TestUtils.Simulate.click(register);
-    expect(nodeCreate.state.register).toBeFalsy();
-    expect(nodeCreate.state.metadata).toEqual([]);
+    register.simulate('click');
+    expect(nodeCreate.state().register).toBeFalsy();
+    expect(nodeCreate.state().metadata).toEqual([]);
   });
 
   it('don"t show template select on empty templates', function() {
-    var nodeCreate = TestUtils.renderIntoDocument(
-      <NodeCreate />
-    );
-    var templates = TestUtils.scryRenderedDOMComponentsWithClass(nodeCreate, "template");
-
+    const nodeCreate = Enzyme.shallow(<NodeCreate />);
+    var templates = nodeCreate.find(".template");
     expect(templates.length).toBe(0);
   });
 
   it('metadata items', function() {
-    var nodeCreate = TestUtils.renderIntoDocument(
-      <NodeCreate />
-    );
-    nodeCreate.addMetadata("key", "value");
-    nodeCreate.addMetadata("anotherkey", "v");
-    var items = TestUtils.scryRenderedDOMComponentsWithClass(nodeCreate, "meta-item");
+    const nodeCreate = Enzyme.mount(<NodeCreate />);
 
+    nodeCreate.get(0).addMetadata("key", "value");
+    nodeCreate.get(0).addMetadata("anotherkey", "v");
+
+    var items = nodeCreate.find(".meta-item");
     expect(items.length).toEqual(2);
 
-    var item = ReactDOM.findDOMNode(items[0]);
-    var key = item.childNodes[0].childNodes[1];
-    expect(key.attributes["value"].value).toEqual("key");
-    var value = item.childNodes[1].childNodes[1];
-    expect(value.attributes["value"].value).toEqual("value");
+    var inputs = items.children().find("input");
+    expect(inputs.at(0).props().value).toBe("key");
+    expect(inputs.at(1).props().value).toBe("value");
 
-    var item = ReactDOM.findDOMNode(items[1]);
-    var key = item.childNodes[0].childNodes[1];
-    expect(key.attributes["value"].value).toEqual("anotherkey");
-    var value = item.childNodes[1].childNodes[1];
-    expect(value.attributes["value"].value).toEqual("v");
+    expect(inputs.at(2).props().value).toBe("anotherkey");
+    expect(inputs.at(3).props().value).toBe("v");
   });
 
 });

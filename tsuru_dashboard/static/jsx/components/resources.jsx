@@ -1,6 +1,11 @@
 var React = require('react'),
-	$ = require('jquery'),
     Metrics = require("../components/metrics.jsx").Metrics;
+
+if(typeof window.jQuery === 'undefined') {
+  var $ = require('jquery');
+} else {
+  var $ = window.jQuery;
+}
 
 var Resources = React.createClass({
   getInitialState: function() {
@@ -48,7 +53,7 @@ var ProcessTab = React.createClass({
 
 var ProcessTabs = React.createClass({
   getInitialState: function() {
-    return {active: ""}; 
+    return {active: ""};
   },
   setActive: function(process) {
     this.setState({active: process});
@@ -115,7 +120,7 @@ var ProcessInfo = React.createClass({
     var units = this.props.process;
     var kind = this.props.kind;
     var classNames = "table containers-app";
-    if (this.state.hide) 
+    if (this.state.hide)
       classNames += " hide";
     return (
       <div className="units-toggle" onClick={this.onClick}>
@@ -132,7 +137,7 @@ var ProcessContent = React.createClass({
   processByStatus: function() {
     var status = {};
     for (i in this.props.process) {
-      var unit = this.props.process[i]; 
+      var unit = this.props.process[i];
       if (!(unit.Status in status)) {
         status[unit.Status] = [];
       }
@@ -150,7 +155,7 @@ var ProcessContent = React.createClass({
     return (
       <div className='resources-content' id="metrics-container">
         {info}
-        <Metrics appName={this.props.appName} processName={processName} />
+        <Metrics targetName={this.props.appName} processName={processName} />
       </div>
     );
   }
@@ -158,7 +163,7 @@ var ProcessContent = React.createClass({
 
 var Process = React.createClass({
   getInitialState: function() {
-    return {process: {}, active: null}; 
+    return {process: {}, active: null};
   },
   setActive: function(process) {
     this.setState({active: this.state.process[process]});

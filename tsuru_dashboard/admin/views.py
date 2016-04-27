@@ -51,6 +51,10 @@ class PoolList(LoginRequiredView, TemplateView):
 
             result[unit['Status']] += 1
 
+        len_units = len(units)
+        if len_units > 0:
+            result['total'] = len_units
+
         return result
 
     def node_last_success(self, date):
@@ -86,8 +90,7 @@ class PoolList(LoginRequiredView, TemplateView):
                 nodes_by_pool = pools.get(pool, [])
                 nodes_by_pool.append(node)
                 pools[pool] = nodes_by_pool
-
-        return pools
+        return sorted(pools.items())
 
     def get_context_data(self, *args, **kwargs):
         context = super(PoolList, self).get_context_data(*args, **kwargs)
@@ -238,6 +241,10 @@ class PoolInfo(LoginRequiredView, TemplateView):
                 result[unit['Status']] = 0
 
             result[unit['Status']] += 1
+
+        len_units = len(units)
+        if len_units > 0:
+            result['total'] = len_units
 
         return result
 

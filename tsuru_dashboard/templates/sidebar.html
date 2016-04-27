@@ -34,6 +34,13 @@
                         <span>Dashboard</span>
 					</a>
                 </li>
+                {% if request.session.permissions.admin %}
+                <li{% if active == "components" %} class="active"{% endif %}>
+					<a href="{% url 'list-component' %}">
+                        <span>Components</span>
+					</a>
+                </li>
+                {% endif %}
 			</ul>
 		</div> <!-- /container-user -->
 	</div> <!-- /inner -->

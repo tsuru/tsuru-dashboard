@@ -10,30 +10,34 @@ class MetricNotEnabled(Exception):
     pass
 
 
-def get_backend(app, token, date_range=None, process_name=None):
-    headers = {'authorization': token}
-    url = "{}/apps/{}/metric/envs".format(settings.TSURU_HOST, app["name"])
-    response = requests.get(url, headers=headers)
+def get_backend(app, token, component_name=None, date_range=None, process_name=None):
+    if component_name is not None:
+        es_query = ComponentFilter(component=component_name, date_range=date_range).query()
+        return ElasticSearch(url=settings.ELASTICSEARCH_HOST, query=es_query, date_range=date_range)
+    else:
+        headers = {'authorization': token}
+        url = "{}/apps/{}/metric/envs".format(settings.TSURU_HOST, app["name"])
+        response = requests.get(url, headers=headers)
 
-    if response.status_code == 200:
-        data = response.json()
-        if "METRICS_ELASTICSEARCH_HOST" in data:
+        es_query = AppFilter(app=app["name"], process_name=process_name, date_range=date_range).query()
+
+        if response.status_code == 200:
+            data = response.json()
+            if "METRICS_ELASTICSEARCH_HOST" in data:
+                return ElasticSearch(
+                    url=data["METRICS_ELASTICSEARCH_HOST"],
+                    query=es_query,
+                    date_range=date_range
+                )
+
+        if "envs" in app and "ELASTICSEARCH_HOST" in app["envs"]:
             return ElasticSearch(
-                url=data["METRICS_ELASTICSEARCH_HOST"],
-                app=app["name"],
-                process_name=process_name,
+                url=app["envs"]["ELASTICSEARCH_HOST"],
+                query=es_query,
                 date_range=date_range
             )
 
-    if "envs" in app and "ELASTICSEARCH_HOST" in app["envs"]:
-        return ElasticSearch(
-            url=app["envs"]["ELASTICSEARCH_HOST"],
-            app=app["name"],
-            process_name=process_name,
-            date_range=date_range
-        )
-
-    raise MetricNotEnabled
+        raise MetricNotEnabled
 
 
 NET_AGGREGATION = {
@@ -85,15 +89,89 @@ if (dt > 0) {
 }
 
 
+class ElasticSearchFilter(object):
+    def query(self):
+        return {
+            "filtered": {
+                "filter": self.filter
+            }
+        }
+
+    def term_filter(self, field, value):
+        return {"term": {field: value}}
+
+    def timestamp_filter(self, date_range):
+        if date_range is None:
+            date_range = "1h"
+        return {"range": {"@timestamp": {"gte": "now-" + date_range, "lt": "now"}}}
+
+
+class ComponentFilter(ElasticSearchFilter):
+    def __init__(self, component, date_range=None):
+        self.date_range = date_range
+        self.filter = self.component_filter(component)
+
+    def component_filter(self, component):
+        return {
+            "bool": {
+                "must": [
+                    {
+                        "bool": {
+                            "should": [
+                                self.term_filter("container", component),
+                                self.term_filter("container.raw", component)
+                            ]
+                        }
+                    },
+                    self.timestamp_filter(self.date_range)
+                ],
+            }
+        }
+
+
+class AppFilter(ElasticSearchFilter):
+    def __init__(self, app, process_name=None, date_range=None):
+        self.date_range = date_range
+        self.filter = self.app_filter(app, process_name)
+
+    def app_filter(self, app, process_name):
+        f = {
+            "bool": {
+                "must": [
+                    {
+                        "bool": {
+                            "should": [
+                                self.term_filter("app", app),
+                                self.term_filter("app.raw", app)
+                            ]
+                        }
+                    },
+                    self.timestamp_filter(self.date_range)
+                ],
+            }
+        }
+
+        if process_name:
+            p = {
+                "bool": {
+                    "should": [
+                        self.term_filter("process", process_name),
+                        self.term_filter("process.raw", process_name)
+                    ]
+                }
+            }
+            f["bool"]["must"].append(p)
+        return f
+
+
 class ElasticSearch(object):
-    def __init__(self, url, app, process_name=None, date_range="1h"):
+    def __init__(self, url, query, date_range="1h"):
         if date_range == "1h":
             self.index = ".measure-tsuru-{}".format(datetime.datetime.utcnow().strftime("%Y.%m.%d"))
         else:
             self.index = ".measure-tsuru-{}.*".format(datetime.datetime.utcnow().strftime("%Y"))
-        self.app = app
         self.url = url
-        self.process_name = process_name
+        self.filtered_query = query
         self.date_range = date_range
 
     def post(self, data, metric):
@@ -158,7 +236,7 @@ class ElasticSearch(object):
         return result, value, value
 
     def units(self, interval=None):
-        aggregation = {"units": {"cardinality": {"field": "host"}}}
+        aggregation = {"units": {"cardinality": {"field": "host.raw"}}}
         query = self.query(interval=interval, aggregation=aggregation)
         return self.base_process(self.post(query, "cpu_max"), self.units_process)
 
@@ -292,7 +370,7 @@ class ElasticSearch(object):
     def connections(self, interval=None):
         aggregation = {
             "connection": {
-                "terms": {"script": "doc['connection.raw'].value + doc['connection'].value"}
+                "terms": {"field": "connection.raw"}
             }
         }
         query = self.query(interval=interval, aggregation=aggregation)
@@ -339,65 +417,10 @@ class ElasticSearch(object):
         if not interval:
             interval = "1m"
 
-        f = {
-            "bool": {
-                "must": [
-                    {
-                        "bool": {
-                            "should": [
-                                {
-                                    "term": {
-                                        "app": self.app
-                                    }
-                                },
-                                {
-                                    "term": {
-                                        "app.raw": self.app
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        "range": {
-                            "@timestamp": {
-                                "gte": "now-" + self.date_range,
-                                "lt": "now"
-                            }
-                        },
-                    }
-                ],
-            }
-        }
-
-        if self.process_name:
-            p = {
-                "bool": {
-                    "should": [
-                        {
-                            "term": {
-                                "process": self.process_name
-                            }
-                        },
-                        {
-                            "term": {
-                                "process.raw": self.process_name
-                            }
-                        }
-                    ]
-                }
-            }
-            f["bool"]["must"].append(p)
-
-        query_filter = {
-            "filtered": {
-                "filter": f
-            }
-        }
         if not aggregation:
             aggregation = {"stats": {"stats": {"field": "value"}}}
         return {
-            "query": query_filter,
+            "query": self.filtered_query,
             "size": 0,
             "aggs": {
                 "date": {

@@ -28934,7 +28934,7 @@ module.exports = Components;
 
 },{"react":159}],161:[function(require,module,exports){
 var React = require('react'),
-	$ = require('jquery'),
+    $ = require('jquery'),
     Base = require('./base.jsx'),
     Button = Base.Button,
     Output = Base.Output,

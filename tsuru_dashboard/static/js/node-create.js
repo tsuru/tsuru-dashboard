@@ -28880,7 +28880,7 @@ module.exports = require('./lib/React');
 
 },{"./lib/React":54}],160:[function(require,module,exports){
 var React = require('react'),
-  $ = require('jquery');
+    $ = require('jquery');
 
 var Option = React.createClass({displayName: "Option",
   render: function() {
@@ -28906,7 +28906,7 @@ var Template = React.createClass({displayName: "Template",
     return (
       React.createElement("div", {className: "template"}, 
         React.createElement("label", null, 
-          "Template:",  
+          "Template:", 
           React.createElement("select", {onChange: this.onChange}, 
             React.createElement("option", null, "Select a template"), 
             options
@@ -28922,7 +28922,7 @@ var Register = React.createClass({displayName: "Register",
     return (
       React.createElement("div", {className: "register", onClick: this.props.onClick}, 
         React.createElement("label", null, 
-          "Register an already created node:",  
+          "Register an already created node:", 
           React.createElement("input", {type: "checkbox", onClick: this.onClick})
         )
       )
@@ -28964,11 +28964,11 @@ var MetaItem = React.createClass({displayName: "MetaItem",
     return (
       React.createElement("div", {className: "meta-item"}, 
         React.createElement("label", null, 
-          "Key:",  
+          "Key:", 
           React.createElement("input", {type: "text", name: "name", ref: "name", value: this.state.name, onChange: this.onChange})
         ), 
         React.createElement("label", null, 
-          "Value:",  
+          "Value:", 
           React.createElement("input", {type: "text", name: "value", ref: "value", value: this.state.value, onChange: this.onChange})
         ), 
         React.createElement("button", {onClick: this.removeMetadata}, "Remove item")
@@ -29058,7 +29058,7 @@ var NodeCreate = React.createClass({displayName: "NodeCreate",
   },
   metaIndexByKey: function(key) {
     var index = -1;
-    var meta = this.state.metadata; 
+    var meta = this.state.metadata;
     meta.forEach(function(metadata, i) {
       if (metadata.key === key) {
         index = i;
@@ -29067,7 +29067,7 @@ var NodeCreate = React.createClass({displayName: "NodeCreate",
     return index;
   },
   addMetadata: function(key, value) {
-    var metadata = this.state.metadata; 
+    var metadata = this.state.metadata;
     var m = {key: key, value: value};
     var index = this.metaIndexByKey(key);
     if (index === -1) {
@@ -29091,7 +29091,7 @@ var NodeCreate = React.createClass({displayName: "NodeCreate",
     if (index === -1)
         return;
 
-    var metadata = this.state.metadata; 
+    var metadata = this.state.metadata;
     var m = metadata[index];
     m.key = newKey;
     m.value = newValue;
@@ -29125,7 +29125,7 @@ var NodeCreate = React.createClass({displayName: "NodeCreate",
     }.bind(this));
   },
   addNode: function() {
-  this.setState({disabled: true});
+    this.setState({disabled: true});
     var url = "/admin/node/add/?register=" + this.state.register;
     var data = {};
     this.state.metadata.forEach(function(metadata) {
@@ -29159,7 +29159,7 @@ var NodeCreate = React.createClass({displayName: "NodeCreate",
               React.createElement("h3", {id: "myModalLabel"}, "Create node")
             ), 
             React.createElement("div", {className: "modal-body"}, 
-              this.state.templates.length > 0 ? React.createElement(Template, {templates: this.state.templates, selectTemplate: this.selectTemplate}) : "", 
+              this.state.templates != null && this.state.templates.length > 0 ? React.createElement(Template, {templates: this.state.templates, selectTemplate: this.selectTemplate}) : "", 
               React.createElement(Register, {register: this.state.register, onClick: this.registerToggle}), 
               React.createElement(Iaas, {iaas: this.state.iaas}), 
               React.createElement(Meta, {metadata: this.state.metadata, removeMetadata: this.removeMetadata, editMetadata: this.editMetadata})

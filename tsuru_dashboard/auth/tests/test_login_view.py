@@ -15,8 +15,8 @@ from tsuru_dashboard.auth.views import Login
 class LoginViewTest(TestCase):
     def setUp(self):
         httpretty.enable()
-        url = "{}/docker/healing".format(settings.TSURU_HOST)
-        httpretty.register_uri(httpretty.GET, url, status=403)
+        url = "{}/users/info".format(settings.TSURU_HOST)
+        httpretty.register_uri(httpretty.GET, url, status=200, body='{"Permissions": []}')
 
     @patch("requests.get")
     def test_login_get(self, get_mock):
@@ -71,7 +71,11 @@ class LoginViewTest(TestCase):
         self.assertEqual("type my beautiful token", request.session["tsuru_token"])
 
     @patch("requests.post")
-    def test_set_permissions_in_session(self, post):
+    def test_set_admin_permission_in_session(self, post):
+        url = "{}/users/info".format(settings.TSURU_HOST)
+        httpretty.register_uri(
+            httpretty.GET, url, status=200, body='{"Permissions": [{"Name": "", "ContextType": "global"}]}'
+        )
         response_mock = Mock(status_code=200)
         response_mock.json.return_value = {"token": "my beautiful token"}
         post.return_value = response_mock
@@ -79,7 +83,22 @@ class LoginViewTest(TestCase):
         request = RequestFactory().post("/", data)
         request.session = {}
         Login.as_view()(request)
-        self.assertDictEqual({"healing": False}, request.session["permissions"])
+        self.assertDictEqual({"healing": True, "admin": True}, request.session["permissions"])
+
+    @patch("requests.post")
+    def test_set_healing_permission_in_session(self, post):
+        url = "{}/users/info".format(settings.TSURU_HOST)
+        httpretty.register_uri(
+            httpretty.GET, url, status=200, body='{"Permissions": [{"Name": "healing.read"}]}'
+        )
+        response_mock = Mock(status_code=200)
+        response_mock.json.return_value = {"token": "my beautiful token"}
+        post.return_value = response_mock
+        data = {"username": "valid@email.com", "password": "123456"}
+        request = RequestFactory().post("/", data)
+        request.session = {}
+        Login.as_view()(request)
+        self.assertDictEqual({"healing": True, "admin": False}, request.session["permissions"])
 
     @patch("requests.post")
     def test_should_set_username_in_the_session(self, post):

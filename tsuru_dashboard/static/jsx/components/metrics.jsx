@@ -1,92 +1,151 @@
 var React = require('react');
 
+if(typeof window.jQuery === 'undefined') {
+  var $ = require('jquery');
+} else {
+  var $ = window.jQuery;
+}
+
 var GraphContainer = React.createClass({
+  getInitialState: function() {
+    return {
+      model: {}
+    }
+  },
   getDefaultProps: function() {
     return {
-      interval: "1m",
-      from: "1h",
-      processName: "",
       legend: false
     }
   },
-  loadData: function() {
-    var appName = this.props.appName;
-    var kind = this.props.kind;
-    var interval = this.props.interval;
-    var from = this.props.from;
-
-    var url ="/metrics/" + appName + "/?metric=" + kind + "&interval=" + interval + "&date_range=" + from;
-
-    if (this.props.processName !== "") {
-        url += "&process_name=" + this.props.processName;
-    }
-    $.getJSON(url, function(data) {
+  componentDidMount: function() {
+    $.getJSON(this.props.data_url, function(data) {
       if (Object.keys(data.data).length === 0)
         data.data = {" ": [1,1]};
-      this.renderGraph(data);
+      this.setState({model: data.data});
     }.bind(this));
   },
-  renderGraph: function(result) {
-    var $elem = $("#" + this.props.kind);
-    var d = [];
-    for (key in result.data) {
-      d.push({
-        data: result.data[key],
-        lines: {show: true, fill: true},
-        label: key
-      });
-    }
-    var options = {
-        xaxis: {
-            mode: "time",
-            timezone: "browser"
-        },
-        grid: {
-      hoverable: true,
-    },
-    tooltip: {
-      show: true,
-      content: "%x the %s was %y"
-        },
-        legend: {
-          position: "sw",
-          show: this.props.legend
-        }
-    };
-    $.plot($elem, d, options);
-  },
   render: function() {
-    this.loadData();
-    var kind = this.props.kind;
-    var title = this.props.title;
-    var appName = this.props.appName;
-    var url = "/apps/" + appName + "/metrics/details/?kind=" + kind + "&from=1h&serie=1m";
     return (
       <div className="graph-container">
-        <h2>{title ? title : kind}</h2>
-        <a href={url}></a>
-        <a href={url}><div id={this.props.kind} className="graph"></div></a>
+        <h2>{this.props.title}</h2>
+        <a href={this.props.detail_url}>
+          <Graph id={this.props.id} legend={this.props.legend} model={this.state.model} />
+        </a>
       </div>
     );
   }
 });
 
-var Metrics = React.createClass({
+var Graph = React.createClass({
+  getOptions: function() {
+    return {
+      xaxis: {
+        mode: "time",
+        timezone: "browser"
+      },
+      grid: {
+        hoverable: true,
+      },
+      tooltip: {
+        show: true,
+        content: "%x the %s was %y"
+      },
+      legend: {
+        position: "sw",
+        show: this.props.legend
+      }
+    }
+  },
+  componentDidMount: function() {
+    this.renderGraph();
+  },
+  componentDidUpdate: function() {
+    this.renderGraph();
+  },
+  renderGraph: function() {
+    var $elem = $("#" + this.props.id);
+    var d = [];
+    for (var key in this.props.model) {
+      d.push({
+        data: this.props.model[key],
+        lines: {show: true, fill: true},
+        label: key
+      });
+    }
+    $.plot($elem, d, this.getOptions());
+  },
   render: function() {
-    var appName = this.props.appName;
+    return (
+      <div id={this.props.id} className="graph"></div>
+    );
+  }
+});
+
+var Metrics = React.createClass({
+  getDefaultProps: function() {
+    return {
+      interval: "1m",
+      from: "1h",
+      targetType: "app",
+      titles: {
+        cpu_max: "cpu (%)",
+        mem_max: "memory (MB)",
+        swap: "swap (MB)",
+        connections: "connections",
+        units: "units",
+        requests_min: "requests min",
+        response_time: "response time (seconds)",
+        http_methods: "http methods",
+        status_code: "status code",
+        nettx: "net up (KB/s)",
+        netrx: "net down (KB/s)"
+      },
+      metrics: [
+        "cpu_max", "mem_max", "swap",
+        "connections", "units",
+        "requests_min", "response_time",
+        "http_methods", "status_code",
+        "nettx", "netrx"
+      ]
+    }
+  },
+  getMetricDataUrl: function(metric) {
+    var targetType = this.props.targetType;
+    var targetName = this.props.targetName;
+    var interval = this.props.interval;
+    var from = this.props.from;
+
+    var url = "/metrics/" + targetType + "/" + targetName;
+    url += "/?metric=" + metric + "&interval=" + interval + "&date_range=" + from;
+
+    if (this.props.processName !== undefined) {
+        url += "&process_name=" + this.props.processName;
+    }
+
+    return url;
+  },
+  getMetricDetailUrl: function(metric) {
+    var targetName = this.props.targetName;
+    var targetType = this.props.targetType;
+    return "/" + targetType + "s/" + targetName + "/metrics/details/?kind=" + metric + "&from=1h&serie=1m";
+  },
+  getGraphContainer: function(metric) {
+    var id = this.props.targetName + "_" + metric;
+    return (
+      <GraphContainer id={id} title={this.props.titles[metric]}
+        data_url={this.getMetricDataUrl(metric)}
+        detail_url={this.getMetricDetailUrl(metric)}
+        legend={this.props.legend} key={id}
+      />
+    );
+  },
+  render: function() {
+    var self = this;
     return (
       <div className="metrics">
-        <GraphContainer kind="cpu_max" title="cpu (%)" appName={appName} processName={this.props.processName} />
-        <GraphContainer kind="mem_max" title="memory (MB)" appName={appName} processName={this.props.processName} />
-        <GraphContainer kind="swap" title="swap (MB)"appName={appName} processName={this.props.processName} />
-        <GraphContainer kind="connections" appName={appName} processName={this.props.processName} />
-        <GraphContainer kind="units" appName={appName} processName={this.props.processName} />
-        <GraphContainer kind="requests_min" title="requests min" appName={appName} />
-        <GraphContainer kind="response_time" title="response time (seconds)" appName={appName} />
-        <GraphContainer kind="http_methods" title="http methods" appName={appName} />
-        <GraphContainer kind="status_code" title="status code" appName={appName} />
-        <GraphContainer kind="nettx" title="net up (KB/s)" appName={appName} />
-        <GraphContainer kind="netrx" title="net down (KB/s)" appName={appName} />
+        {self.props.metrics.map(function(metric) {
+          return self.getGraphContainer(metric);
+        })}
       </div>
     );
   }
@@ -95,4 +154,5 @@ var Metrics = React.createClass({
 module.exports = {
     Metrics: Metrics,
     GraphContainer: GraphContainer,
+    Graph: Graph
 };

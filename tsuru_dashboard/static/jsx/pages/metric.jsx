@@ -1,6 +1,6 @@
 var React = require('react'),
     ReactDOM = require('react-dom'),
-    GraphContainer = require("../components/metrics.jsx").GraphContainer;
+    Metrics = require("../components/metrics.jsx").Metrics;
 
 var appName = window.location.pathname.split("/")[2];
 
@@ -22,21 +22,7 @@ var kind = queryString("kind");
 var interval = queryString("serie");
 var from = queryString("from");
 
-var titles = {
-  "cpu_max": "cpu (%)",
-  "mem_max": "memory (MB)",
-  "swap": "swap (MB)",
-  "requests_min": "requests min",
-  "response_time": "response time (seconds)",
-  "http_methods": "http methods",
-  "status_code": "status code",
-  "nettx": "net up (KB/s)",
-  "netrx": "net down (KB/s)"
-};
-
 ReactDOM.render(
-  <div className="metrics">
-    <GraphContainer kind={kind} title={titles[kind]? titles[kind] : kind} appName={appName} interval={interval} from={from} legend={true} />
-  </div>,
+  <Metrics metrics={[kind]} targetName={appName} interval={interval} from={from} legend={true} />,
   document.getElementById('metrics')
 );

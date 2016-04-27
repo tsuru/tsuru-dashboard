@@ -21,22 +21,23 @@ table td, table th {
 
 {% block content %}
 <div class="container-fluid">
-    {% for key, nodes in pools.items %}
-    <div class="row">
+    {% for pool in pools %}
+     <div class="row">
         <div class="col-md-12">
-            <h3><a href="{% url "pool-info" key %}">{{ key }}</a></h3>
+            <h3><a href="{% url "pool-info" pool.0 %}">{{ pool.0 }}</a></h3>
             <table class="table">
                 <thead>
                 <tr>
                     <th>Host</th>
                     <th>Started units</th>
                     <th>Stopped units</th>
+                    <th>Total units</th>
                     <th>Last success</th>
                     <th>Status</th>
                 </tr>
                 </thead>
                 <tbody>
-                {% for node in nodes %}
+                {% for node in pool.1 %}
                 <tr>
                     <td>
                         <a href="{% url 'node-info' node.Address %}" title="Containers List">
@@ -45,6 +46,7 @@ table td, table th {
                     </td>
                     <td>{{ node.Units.started|default:"0" }}</td>
                     <td>{{ node.Units.stopped|default:"0" }}</td>
+                    <td>{{ node.Units.total|default:"0" }}</td>
                     <td>{{ node.Metadata.LastSuccess|date:"Y/m/d H:i:s e" }}</td>
                     <td>{{ node.Status }}</td>
                 </tr>
@@ -52,7 +54,7 @@ table td, table th {
                 </tbody>
             </table>
         </div>
-    </div>
+     </div>
     {% endfor %}
 </div>
 {% endblock %}

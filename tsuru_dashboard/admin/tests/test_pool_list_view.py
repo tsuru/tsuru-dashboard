@@ -29,7 +29,7 @@ class PoolListViewTest(TestCase):
         response = PoolList.as_view()(self.request)
 
         self.assertIn("admin/pool_list.html", response.template_name)
-        self.assertEqual({}, response.context_data["pools"])
+        self.assertEqual([], response.context_data["pools"])
         url = "{}/docker/node".format(settings.TSURU_HOST)
         get.assert_called_with(url, headers={"authorization": "admin"})
 
@@ -70,19 +70,19 @@ class PoolListViewTest(TestCase):
         date = parser.parse("2014-08-01T14:09:40-03:00")
         expected = {"theonepool": [
             {"Address": "http://128.0.0.1:4243",
-             "Units": {"started": 1, "stopped": 1},
+             "Units": {"started": 1, "stopped": 1, "total": 2},
              "Metadata": {"LastSuccess": date, "pool": "theonepool"},
              "Status": "ready"},
             {"Address": "http://127.0.0.1:2375",
-             "Units": {"started": 1, "stopped": 1},
+             "Units": {"started": 1, "stopped": 1, "total": 2},
              "Metadata": {"LastSuccess": date, "pool": "theonepool"},
              "Status": "ready"},
             {"Address": "http://myserver.com:2375",
-             "Units": {"started": 1, "stopped": 1},
+             "Units": {"started": 1, "stopped": 1, "total": 2},
              "Metadata": {"LastSuccess": date, "pool": "theonepool"},
              "Status": "ready"},
         ]}
-        self.assertEqual(expected, response.context_data["pools"])
+        self.assertEqual(sorted(expected.items()), response.context_data["pools"])
 
     @httpretty.activate
     @patch("tsuru_dashboard.auth.views.token_is_valid")
@@ -131,4 +131,4 @@ class PoolListViewTest(TestCase):
              "Metadata": {"LastSuccess": date, "pool": "theonepool"},
              "Status": "ready"},
         ]}
-        self.assertEqual(expected, response.context_data["pools"])
+        self.assertEqual(sorted(expected.items()), response.context_data["pools"])

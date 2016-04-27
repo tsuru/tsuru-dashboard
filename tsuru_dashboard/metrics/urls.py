@@ -5,5 +5,5 @@ import views
 
 urlpatterns = patterns(
     '',
-    url(r'^(?P<app_name>[\w-]+)/$', views.Metric.as_view(), name='metric'),
+    url(r'^(?P<target_type>[\w-]+)/(?P<target_name>[\w-]+)/$', views.Metric.as_view(), name='metric'),
 )

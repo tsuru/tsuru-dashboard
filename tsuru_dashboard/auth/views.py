@@ -25,9 +25,20 @@ def get_permissions(token):
     headers = {"authorization": token}
     permissions = {}
 
-    url = "{}/docker/healing".format(settings.TSURU_HOST)
+    url = "{0}/users/info".format(settings.TSURU_HOST)
     response = requests.get(url, headers=headers)
-    permissions["healing"] = response.status_code != 403
+    user = response.json()
+    permissions["admin"] = False
+    permissions["healing"] = False
+    for perm in user["Permissions"]:
+        if perm["Name"] == "" and perm["ContextType"] == "global":
+            permissions["admin"] = True
+            for k in permissions:
+                permissions[k] = True
+            return permissions
+        elif perm["Name"] == "healing.read":
+            permissions["healing"] = True
+
     return permissions
 
 
@@ -49,6 +60,19 @@ class LoginRequiredMixin(object):
             return redirect("%s?next=%s" % (reverse('login'), request.path))
         return super(LoginRequiredMixin, self).dispatch(
             request, *args, **kwargs)
+
+
+class PermissionRequiredMixin(object):
+    required_permission = "admin"
+
+    def dispatch(self, request, *args, **kwargs):
+        permission = request.session.get('permissions', {}).get(self.required_permission, False)
+        if not permission:
+            messages.error(self.request, u'Permission denied.', fail_silently=True)
+            return redirect('/')
+        else:
+            return super(PermissionRequiredMixin, self).dispatch(
+                request, *args, **kwargs)
 
 
 class ChangePassword(LoginRequiredMixin, FormView):
