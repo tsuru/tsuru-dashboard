@@ -77,7 +77,7 @@ var TopSlow = React.createClass({
     var appName = this.props.appName;
     var kind = this.props.kind;
     var from = this.props.from;
-    var url ="/metrics/" + appName + "/?metric=" + kind + "&date_range=" + from;
+    var url = "/metrics/app/" + appName + "/?metric=" + kind + "&date_range=" + from;
     $.getJSON(url, function(data) {
       if (Object.keys(data.data).length === 0)
         data.data = {" ": [1,1]};

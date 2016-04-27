@@ -1,16 +1,12 @@
 jest.dontMock('../jsx/components/loading.jsx');
 
-describe('Loading', function() {
-  it('changes the text after click', function() {
-    var React = require('react');
-    var ReactDOM = require('react-dom');
-    var Loading = require('../jsx/components/loading.jsx');
-    var TestUtils = require('react-addons-test-utils');
+var React = require('react'),
+    Enzyme = require('enzyme'),
+    Loading = require('../jsx/components/loading.jsx');
 
-    var loading = TestUtils.renderIntoDocument(
-      <Loading />
-    );
-    
-    expect(ReactDOM.findDOMNode(loading).className).toEqual("loader");
+describe('Loading', function() {
+  it('renders an element with "loader" class', function() {
+    var wrapper = Enzyme.shallow(<Loading />)
+    expect(wrapper.find(".loader").length).toBe(1);
   });
 });

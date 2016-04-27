@@ -15,8 +15,8 @@ class CallbackViewTest(TestCase):
     @httpretty.activate
     @mock.patch("requests.post")
     def test_callback(self, post_mock):
-        url = "{}/docker/healing".format(settings.TSURU_HOST)
-        httpretty.register_uri(httpretty.GET, url, status=403)
+        url = "{}/users/info".format(settings.TSURU_HOST)
+        httpretty.register_uri(httpretty.GET, url, status=200, body='{"Permissions": []}')
 
         response_mock = mock.Mock(status_code=200)
         response_mock.json.return_value = {"token": "xpto"}
@@ -33,7 +33,7 @@ class CallbackViewTest(TestCase):
         self.assertEqual(response.url, "/apps")
 
         self.assertEqual(request.session["tsuru_token"], "type xpto")
-        self.assertDictEqual(request.session["permissions"], {"healing": False})
+        self.assertDictEqual(request.session["permissions"], {"healing": False, "admin": False})
 
         expected_url = 'http://localhost:8080/auth/login'
         expected_data = json.dumps({
@@ -55,10 +55,12 @@ class CallbackViewTest(TestCase):
 
     @httpretty.activate
     @mock.patch("requests.post")
-    def test_callback_with_healing_permission(self, post_mock):
-        url = "{}/docker/healing".format(settings.TSURU_HOST)
-        httpretty.register_uri(httpretty.GET, url, status_code=200)
-
+    def test_callback_with_permissions(self, post_mock):
+        url = "{}/users/info".format(settings.TSURU_HOST)
+        httpretty.register_uri(
+            httpretty.GET, url, status=200,
+            body='{"Permissions": [{"Name":"healing.read"}, {"Name": "", "ContextType": "global"}]}'
+        )
         response_mock = mock.Mock(status_code=200)
         response_mock.json.return_value = {"token": "xpto"}
 
@@ -74,7 +76,7 @@ class CallbackViewTest(TestCase):
         self.assertEqual(response.url, "/apps")
 
         self.assertEqual(request.session["tsuru_token"], "type xpto")
-        self.assertDictEqual(request.session["permissions"], {"healing": True})
+        self.assertDictEqual(request.session["permissions"], {"healing": True, "admin": True})
 
         expected_url = 'http://localhost:8080/auth/login'
         expected_data = json.dumps({

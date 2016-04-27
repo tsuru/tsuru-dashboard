@@ -193,7 +193,7 @@ class ElasticSearchTest(TestCase):
     def test_units(self, post_mock):
         self.es.units()
         url = "{}/{}/{}/_search".format(self.es.url, self.index, "cpu_max")
-        aggregation = {"units": {"cardinality": {"field": "host"}}}
+        aggregation = {"units": {"cardinality": {"field": "host.raw"}}}
         post_mock.assert_called_with(url, data=json.dumps(self.es.query(aggregation=aggregation)))
 
     @patch("requests.post")
