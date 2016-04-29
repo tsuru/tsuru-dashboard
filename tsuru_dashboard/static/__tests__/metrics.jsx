@@ -40,27 +40,21 @@ describe('Metrics', function() {
     expect(containers.props().id).toBe("myApp_cpu_max");
   });
 
-  it('renders a GraphContainer with urls for application metrics', function() {
+  it('renders a GraphContainer with data url for app metrics', function() {
     const metrics = Enzyme.shallow(<Metrics targetName={"myApp"} processName={"myProcess"} metrics={["cpu_max"]} />);
     var container = metrics.find(GraphContainer);
 
     expect(container.props().data_url).toBe(
       "/metrics/app/myApp/?metric=cpu_max&interval=1m&date_range=1h&process_name=myProcess"
     );
-    expect(container.props().detail_url).toBe(
-      "/apps/myApp/metrics/details/?kind=cpu_max&from=1h&serie=1m"
-    );
   });
 
-  it('renders a GraphContainer with url for component metrics', function() {
+  it('renders a GraphContainer with data url for component metrics', function() {
     const metrics = Enzyme.shallow(<Metrics targetName={"myComp"} targetType={"component"} metrics={["cpu_max"]} />);
     var container = metrics.find(GraphContainer);
 
     expect(container.props().data_url).toBe(
       "/metrics/component/myComp/?metric=cpu_max&interval=1m&date_range=1h"
-    );
-    expect(container.props().detail_url).toBe(
-      "/components/myComp/metrics/details/?kind=cpu_max&from=1h&serie=1m"
     );
   });
 
@@ -76,15 +70,9 @@ describe('Metrics', function() {
     expect(container.props().data_url).toBe(
       "/metrics/app/myApp/?metric=cpu_max&interval=1m&date_range=3h"
     );
-    expect(container.props().detail_url).toBe(
-      "/apps/myApp/metrics/details/?kind=cpu_max&from=3h&serie=1m"
-    );
     metrics.find('select[name="serie"]').simulate('change', {target: { value: "1d"}});
     expect(container.props().data_url).toBe(
       "/metrics/app/myApp/?metric=cpu_max&interval=1d&date_range=3h"
-    );
-    expect(container.props().detail_url).toBe(
-      "/apps/myApp/metrics/details/?kind=cpu_max&from=3h&serie=1d"
     );
   });
 
@@ -164,15 +152,6 @@ describe('GraphContainer', function() {
     );
 
     expect(graphContainer.find("h2").text()).toBe("This is a cool graph!");
-  });
-
-  it('renders a link to the graph details', function() {
-    const graphContainer = Enzyme.shallow(
-      <GraphContainer detail_url={"/apps/myApp/metrics/details/?kind=cpu_max&from=1h&serie=1m"}/>
-    );
-    var aHref = graphContainer.find("a").first();
-
-    expect(aHref.props().href).toBe("/apps/myApp/metrics/details/?kind=cpu_max&from=1h&serie=1m");
   });
 
   it('renders the Graph component', function() {

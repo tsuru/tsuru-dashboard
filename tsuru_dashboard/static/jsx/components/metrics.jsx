@@ -9,8 +9,7 @@ if(typeof window.jQuery === 'undefined') {
 var GraphContainer = React.createClass({
   getInitialState: function() {
     return {
-      model: {},
-      detail_url: this.props.detail_url
+      model: {}
     }
   },
   getDefaultProps: function() {
@@ -22,9 +21,6 @@ var GraphContainer = React.createClass({
     this.loadData(this.props.data_url);
   },
   componentWillReceiveProps: function(nextProps) {
-    var state = this.state;
-    state.detail_url = nextProps.detail_url;
-    this.setState(state);
     this.loadData(nextProps.data_url);
   },
   loadData: function(url) {
@@ -40,9 +36,7 @@ var GraphContainer = React.createClass({
     return (
       <div className="graph-container">
         <h2>{this.props.title}</h2>
-        <a href={this.state.detail_url}>
-          <Graph id={this.props.id} legend={this.props.legend} model={this.state.model} />
-        </a>
+        <Graph id={this.props.id} legend={this.props.legend} model={this.state.model} />
       </div>
     );
   }
@@ -142,23 +136,11 @@ var Metrics = React.createClass({
 
     return url;
   },
-  getMetricDetailUrl: function(metric) {
-    var targetName = this.props.targetName;
-    var targetType = this.props.targetType;
-    var interval = this.state.interval;
-    var from = this.state.from;
-
-    var url = "/" + targetType + "s/" + targetName + "/metrics/details";
-    url += "/?kind=" + metric + "&from=" + from + "&serie=" + interval;
-
-    return url;
-  },
   getGraphContainer: function(metric) {
     var id = this.props.targetName + "_" + metric;
     return (
       <GraphContainer id={id} title={this.props.titles[metric]}
         data_url={this.getMetricDataUrl(metric)}
-        detail_url={this.getMetricDetailUrl(metric)}
         legend={this.state.legend} key={id}
       />
     );
