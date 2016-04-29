@@ -9,7 +9,8 @@ if(typeof window.jQuery === 'undefined') {
 var GraphContainer = React.createClass({
   getInitialState: function() {
     return {
-      model: {}
+      model: {},
+      detail_url: this.props.detail_url
     }
   },
   getDefaultProps: function() {
@@ -18,17 +19,28 @@ var GraphContainer = React.createClass({
     }
   },
   componentDidMount: function() {
-    $.getJSON(this.props.data_url, function(data) {
+    this.loadData(this.props.data_url);
+  },
+  componentWillReceiveProps: function(nextProps) {
+    var state = this.state;
+    state.detail_url = nextProps.detail_url;
+    this.setState(state);
+    this.loadData(nextProps.data_url);
+  },
+  loadData: function(url) {
+    $.getJSON(url, function(data) {
       if (Object.keys(data.data).length === 0)
         data.data = {" ": [1,1]};
-      this.setState({model: data.data});
+      var state = this.state;
+      state.model = data.data;
+      this.setState(state);
     }.bind(this));
   },
   render: function() {
     return (
       <div className="graph-container">
         <h2>{this.props.title}</h2>
-        <a href={this.props.detail_url}>
+        <a href={this.state.detail_url}>
           <Graph id={this.props.id} legend={this.props.legend} model={this.state.model} />
         </a>
       </div>
@@ -82,6 +94,13 @@ var Graph = React.createClass({
 });
 
 var Metrics = React.createClass({
+  getInitialState: function() {
+    return {
+      "interval": this.props.interval,
+      "from": this.props.from,
+      "size": "small"
+    }
+  },
   getDefaultProps: function() {
     return {
       interval: "1m",
@@ -122,8 +141,8 @@ var Metrics = React.createClass({
   getMetricDataUrl: function(metric) {
     var targetType = this.props.targetType;
     var targetName = this.props.targetName;
-    var interval = this.props.interval;
-    var from = this.props.from;
+    var interval = this.state.interval;
+    var from = this.state.from;
 
     var url = "/metrics/" + targetType + "/" + targetName;
     url += "/?metric=" + metric + "&interval=" + interval + "&date_range=" + from;
@@ -137,7 +156,13 @@ var Metrics = React.createClass({
   getMetricDetailUrl: function(metric) {
     var targetName = this.props.targetName;
     var targetType = this.props.targetType;
-    return "/" + targetType + "s/" + targetName + "/metrics/details/?kind=" + metric + "&from=1h&serie=1m";
+    var interval = this.state.interval;
+    var from = this.state.from;
+
+    var url = "/" + targetType + "s/" + targetName + "/metrics/details";
+    url += "/?kind=" + metric + "&from=" + from + "&serie=" + interval;
+
+    return url;
   },
   getGraphContainer: function(metric) {
     var id = this.props.targetName + "_" + metric;
@@ -149,15 +174,100 @@ var Metrics = React.createClass({
       />
     );
   },
+  updateFrom: function(from) {
+    var newState = this.state;
+    newState.from = from;
+    this.setState(newState);
+  },
+  updateInterval: function(interval) {
+    var newState = this.state;
+    newState.interval = interval;
+    this.setState(newState);
+  },
+  updateSize: function(size) {
+    var newState = this.state;
+    newState.size = size;
+    this.setState(newState);
+  },
   render: function() {
     var self = this;
+    var className = "graphs-" + this.state.size;
     return (
       <div className="metrics">
-        {self.props.metrics.map(function(metric) {
-          return self.getGraphContainer(metric);
-        })}
+        <div className="metrics-options">
+          <TimeRangeFilter onChange={self.updateFrom}/>
+          <PeriodSelector onChange={self.updateInterval}/>
+          <SizeSelector onChange={self.updateSize}/>
+        </div>
+        <div className={className}>
+          {self.props.metrics.map(function(metric) {
+            return self.getGraphContainer(metric);
+          })}
+        </div>
       </div>
     );
+  }
+});
+
+var TimeRangeFilter = React.createClass({
+  handleChange: function(event) {
+    this.props.onChange(event.target.value);
+  },
+  render: function() {
+    return (
+      <div className="metrics-range">
+        <label>Time range:</label>
+        <select name="from" onChange={this.handleChange}>
+          <option value="1h">last hour</option>
+          <option value="3h">last 3 hours</option>
+          <option value="6h">last 6 hours</option>
+          <option value="12h">last 12 hours</option>
+          <option value="1d">last 24 hours</option>
+          <option value="3d">last 3 days</option>
+          <option value="1w">last 1 week</option>
+          <option value="2w">last 2 weeks</option>
+        </select>
+      </div>
+    )
+  }
+});
+
+var PeriodSelector = React.createClass({
+  handleChange: function(event) {
+    this.props.onChange(event.target.value);
+  },
+  render: function() {
+    return (
+      <div className="metrics-period">
+        <label>Period:</label>
+        <select name="serie" onChange={this.handleChange}>
+          <option value="1m">1 minute</option>
+          <option value="5m">5 minutes</option>
+          <option value="15m">15 minutes</option>
+          <option value="1h">1 hour</option>
+          <option value="6h">6 hours</option>
+          <option value="1d">1 day</option>
+        </select>
+      </div>
+    )
+  }
+});
+
+var SizeSelector = React.createClass({
+  handleChange: function(event) {
+    this.props.onChange(event.target.value);
+  },
+  render: function() {
+    return (
+      <div className="metrics-size">
+        <label>Size:</label>
+        <select name="size" onChange={this.handleChange}>
+          <option value="small">Small</option>
+          <option value="medium">Medium</option>
+          <option value="large">Large</option>
+        </select>
+      </div>
+    )
   }
 });
 

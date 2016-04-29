@@ -10,6 +10,11 @@ var React = require('react'),
     Graph = Module.Graph;
 
 describe('Metrics', function() {
+
+  beforeEach(() => {
+    $.plot = jest.genMockFunction();
+  });
+
   it('has metrics as className', function() {
     const metrics = Enzyme.shallow(<Metrics />);
 
@@ -73,6 +78,40 @@ describe('Metrics', function() {
     );
   });
 
+  it('sends new options to GraphContainer on change', function() {
+    const metrics = Enzyme.mount(<Metrics targetName={"myApp"} targetType={"app"} metrics={["cpu_max"]} />);
+    var container = metrics.find(GraphContainer);
+    expect(container.props().data_url).toBe(
+      "/metrics/app/myApp/?metric=cpu_max&interval=1m&date_range=1h"
+    );
+    metrics.find('select[name="from"]').simulate('change', {target: { value: "3h"}});
+    expect(container.props().data_url).toBe(
+      "/metrics/app/myApp/?metric=cpu_max&interval=1m&date_range=3h"
+    );
+    expect(container.props().detail_url).toBe(
+      "/apps/myApp/metrics/details/?kind=cpu_max&from=3h&serie=1m"
+    );
+    metrics.find('select[name="serie"]').simulate('change', {target: { value: "1d"}});
+    expect(container.props().data_url).toBe(
+      "/metrics/app/myApp/?metric=cpu_max&interval=1d&date_range=3h"
+    );
+    expect(container.props().detail_url).toBe(
+      "/apps/myApp/metrics/details/?kind=cpu_max&from=3h&serie=1d"
+    );
+  });
+
+  it('renders a container div depending on the selected size', function() {
+    const metrics = Enzyme.mount(<Metrics targetName={"myApp"} targetType={"app"} metrics={["cpu_max"]} />);
+    var sizeSelector = metrics.find('select[name="size"]');
+    expect(metrics.find('.graphs-small').length).toBe(1);
+    sizeSelector.simulate('change', {target: { value: "medium"}});
+    expect(metrics.find('.graphs-medium').length).toBe(1);
+    sizeSelector.simulate('change', {target: { value: "large"}});
+    expect(metrics.find('.graphs-large').length).toBe(1);
+    sizeSelector.simulate('change', {target: { value: "small"}});
+    expect(metrics.find('.graphs-small').length).toBe(1);
+  });
+
 });
 
 describe('GraphContainer', function() {
@@ -124,6 +163,7 @@ describe('GraphContainer', function() {
   });
 
   it('sends fetched data to child Graph', function() {
+    var prev_get = $.getJSON;
     var data = {
       max: 1.5,
       data: {
@@ -135,11 +175,22 @@ describe('GraphContainer', function() {
     $.getJSON = function(url, callback) {
       callback(data);
     };
-
     const graphContainer = Enzyme.mount(<GraphContainer kind="cpu_max" />);
     var graph = graphContainer.find(Graph);
 
     expect(graph.props().model).toBe(data.data);
+    $.getJSON = prev_get;
+  });
+
+  it('re-fetches data when props change', function() {
+    const graphContainer = Enzyme.mount(
+      <GraphContainer data_url={"/metrics?call=1"}/>
+    );
+    graphContainer.setProps({ data_url: "/metrics?call=2"});
+
+    expect($.getJSON.mock.calls.length).toBe(2);
+    expect($.getJSON.mock.calls[0][0]).toBe("/metrics?call=1");
+    expect($.getJSON.mock.calls[1][0]).toBe("/metrics?call=2");
   });
 
 });

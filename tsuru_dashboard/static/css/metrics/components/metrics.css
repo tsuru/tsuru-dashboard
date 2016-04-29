@@ -1,0 +1,43 @@
+.metrics-container div {
+    margin: 2px;
+    display: inline-block;
+}
+
+.metrics-options {
+    display: block;
+}
+
+.metrics-options div {
+    display: inline-block;
+    padding: 10px;
+}
+
+.metrics-options label {
+    padding-right: 10px;
+}
+
+.metrics .graph-container, .metrics-container .graph-container {
+    border: #777 1px solid;
+    display: inline-block;
+}
+
+.graph-container h2 {
+    font-size: 16px;
+    margin: 0 38px;
+}
+
+.graph-container .graph {
+    min-width: 285px;
+    width: 100%;
+    min-height: 205px;
+    height: 95%;
+}
+
+.graphs-medium > .graph-container {
+    width: 50%;
+}
+
+.graphs-large > .graph-container {
+    width: 100%;
+    height: 300px;
+}
