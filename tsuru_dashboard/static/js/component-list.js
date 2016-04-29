@@ -29151,22 +29151,9 @@ var Metrics = React.createClass({displayName: "Metrics",
       },
       metrics: [
         "cpu_max", "mem_max", "swap",
-        "connections", "units",
-        "requests_min", "response_time",
-        "http_methods", "status_code",
-        "nettx", "netrx"
+        "connections", "units"
       ]
     }
-  },
-  filterByProcess: function(metric) {
-    var webTransactions = ["requests_min", "response_time",
-        "http_methods", "status_code",
-        "nettx", "netrx"
-    ];
-    if ($.inArray(metric, webTransactions) === -1) {
-        return "&process_name=" + this.props.processName;
-    }
-    return "";
   },
   getMetricDataUrl: function(metric) {
     var targetType = this.props.targetType;
@@ -29178,7 +29165,7 @@ var Metrics = React.createClass({displayName: "Metrics",
     url += "/?metric=" + metric + "&interval=" + interval + "&date_range=" + from;
 
     if(this.props.processName !== undefined) {
-      url += this.filterByProcess(metric);
+      url += "&process_name=" + this.props.processName;
     }
 
     return url;
@@ -29302,8 +29289,20 @@ var SizeSelector = React.createClass({displayName: "SizeSelector",
   }
 });
 
+var WebTransactionsMetrics = React.createClass({displayName: "WebTransactionsMetrics",
+  render: function() {
+    return (
+      React.createElement(Metrics, {metrics: ["requests_min", "response_time",
+        "http_methods", "status_code", "nettx", "netrx"], 
+        targetName: this.props.appName, 
+        targetType: "app"})
+    )
+  }
+});
+
 module.exports = {
     Metrics: Metrics,
+    WebTransactionsMetrics: WebTransactionsMetrics,
     GraphContainer: GraphContainer,
     Graph: Graph
 };

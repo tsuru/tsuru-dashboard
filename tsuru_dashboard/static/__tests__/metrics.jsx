@@ -6,6 +6,7 @@ var React = require('react'),
     $ = require('jquery'),
     Module = require('../jsx/components/metrics.jsx'),
     Metrics = Module.Metrics,
+    WebTransactionsMetrics = Module.WebTransactionsMetrics,
     GraphContainer = Module.GraphContainer,
     Graph = Module.Graph;
 
@@ -25,13 +26,9 @@ describe('Metrics', function() {
     const metrics = Enzyme.shallow(<Metrics targetName="" />);
     var containers = metrics.find(GraphContainer);
     var ids = containers.map(c => c.props().id.substring(1));
-    var expectedIds = [
-      "cpu_max", "mem_max", "swap", "connections",
-      "units", "requests_min", "response_time", "http_methods",
-      "status_code", "nettx", "netrx"
-    ];
+    var expectedIds = ["cpu_max", "mem_max", "swap", "connections", "units"];
 
-    expect(containers.length).toBe(11);
+    expect(containers.length).toBe(5);
     expect(ids.sort()).toEqual(expectedIds.sort());
   });
 
@@ -44,7 +41,6 @@ describe('Metrics', function() {
   });
 
   it('renders a GraphContainer with urls for application metrics', function() {
-    $.inArray.mockReturnValueOnce(-1);
     const metrics = Enzyme.shallow(<Metrics targetName={"myApp"} processName={"myProcess"} metrics={["cpu_max"]} />);
     var container = metrics.find(GraphContainer);
 
@@ -53,16 +49,6 @@ describe('Metrics', function() {
     );
     expect(container.props().detail_url).toBe(
       "/apps/myApp/metrics/details/?kind=cpu_max&from=1h&serie=1m"
-    );
-  });
-
-  it('ignores processName when inArray returns 1', function(){
-    $.inArray.mockReturnValueOnce(1);
-    const metrics = Enzyme.shallow(<Metrics targetName={"myApp"} processName={"myProcess"} metrics={["requests_min"]} />);
-    var container = metrics.find(GraphContainer);
-
-    expect(container.props().data_url).toBe(
-      "/metrics/app/myApp/?metric=requests_min&interval=1m&date_range=1h"
     );
   });
 
@@ -122,6 +108,18 @@ describe('Metrics', function() {
     expect(metrics.state().legend).toBe(false);
   });
 
+});
+
+describe('WebTransactionsMetrics', function() {
+  it('renders Metrics with correct props', function() {
+    const webTransactions = Enzyme.shallow(<WebTransactionsMetrics appName={"myApp"}/>);
+    var metrics = webTransactions.find(Metrics);
+    expect(metrics.props().metrics).toEqual(
+      ["requests_min", "response_time", "http_methods", "status_code", "nettx", "netrx"]
+    );
+    expect(metrics.props().targetName).toEqual("myApp");
+    expect(metrics.props().targetType).toEqual("app");
+  });
 });
 
 describe('GraphContainer', function() {

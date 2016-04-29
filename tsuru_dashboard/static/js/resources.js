@@ -29004,22 +29004,9 @@ var Metrics = React.createClass({displayName: "Metrics",
       },
       metrics: [
         "cpu_max", "mem_max", "swap",
-        "connections", "units",
-        "requests_min", "response_time",
-        "http_methods", "status_code",
-        "nettx", "netrx"
+        "connections", "units"
       ]
     }
-  },
-  filterByProcess: function(metric) {
-    var webTransactions = ["requests_min", "response_time",
-        "http_methods", "status_code",
-        "nettx", "netrx"
-    ];
-    if ($.inArray(metric, webTransactions) === -1) {
-        return "&process_name=" + this.props.processName;
-    }
-    return "";
   },
   getMetricDataUrl: function(metric) {
     var targetType = this.props.targetType;
@@ -29031,7 +29018,7 @@ var Metrics = React.createClass({displayName: "Metrics",
     url += "/?metric=" + metric + "&interval=" + interval + "&date_range=" + from;
 
     if(this.props.processName !== undefined) {
-      url += this.filterByProcess(metric);
+      url += "&process_name=" + this.props.processName;
     }
 
     return url;
@@ -29155,8 +29142,20 @@ var SizeSelector = React.createClass({displayName: "SizeSelector",
   }
 });
 
+var WebTransactionsMetrics = React.createClass({displayName: "WebTransactionsMetrics",
+  render: function() {
+    return (
+      React.createElement(Metrics, {metrics: ["requests_min", "response_time",
+        "http_methods", "status_code", "nettx", "netrx"], 
+        targetName: this.props.appName, 
+        targetType: "app"})
+    )
+  }
+});
+
 module.exports = {
     Metrics: Metrics,
+    WebTransactionsMetrics: WebTransactionsMetrics,
     GraphContainer: GraphContainer,
     Graph: Graph
 };
@@ -29164,7 +29163,8 @@ module.exports = {
 },{"jquery":28,"react":159}],161:[function(require,module,exports){
 (function (process){
 var React = require('react'),
-    Metrics = require("../components/metrics.jsx").Metrics;
+    Metrics = require("../components/metrics.jsx").Metrics
+    WebTransactionsMetrics = require("../components/metrics.jsx").WebTransactionsMetrics;
 
 if(typeof window.jQuery === 'undefined') {
   var $ = require('jquery');
@@ -29177,13 +29177,13 @@ var Resources = React.createClass({displayName: "Resources",
     return {app: null};
   },
   appInfo: function(url) {
-	$.ajax({
-	  type: 'GET',
-	  url: this.props.url,
-	  success: function(data) {
-        this.setState({app: data.app});
-	  }.bind(this)
-	});
+    $.ajax({
+  	  type: 'GET',
+  	  url: this.props.url,
+  	  success: function(data) {
+          this.setState({app: data.app});
+  	  }.bind(this)
+    });
   },
   componentDidMount: function() {
     this.appInfo();
@@ -29191,13 +29191,13 @@ var Resources = React.createClass({displayName: "Resources",
   render: function() {
     return (
       React.createElement("div", {className: "resources"}, 
-        this.state.app === null ? "" : React.createElement(Process, {app: this.state.app})
+        this.state.app === null ? "" : React.createElement(Resource, {app: this.state.app})
       )
     );
   }
 });
 
-var ProcessTab = React.createClass({displayName: "ProcessTab",
+var Tab = React.createClass({displayName: "Tab",
   onClick: function(e) {
     e.preventDefault();
     e.stopPropagation();
@@ -29205,24 +29205,24 @@ var ProcessTab = React.createClass({displayName: "ProcessTab",
     if (this.props.active)
       return;
 
-    this.props.setActive(this.props.process);
+    this.props.setActive(this.props.name);
   },
   render: function() {
     return (
       React.createElement("li", {className: this.props.active ? "active" : ''}, 
-        React.createElement("a", {href: "#", onClick: this.onClick}, this.props.process)
+        React.createElement("a", {href: "#", onClick: this.onClick}, this.props.name)
       )
     );
   }
 });
 
-var ProcessTabs = React.createClass({displayName: "ProcessTabs",
+var Tabs = React.createClass({displayName: "Tabs",
   getInitialState: function() {
     return {active: ""};
   },
-  setActive: function(process) {
-    this.setState({active: process});
-    this.props.setActive(process);
+  setActive: function(name) {
+    this.setState({active: name});
+    this.props.setActive(name);
   },
   componentDidUpdate: function() {
     var keys = Object.keys(this.props.process);
@@ -29231,16 +29231,24 @@ var ProcessTabs = React.createClass({displayName: "ProcessTabs",
     }
   },
   render: function() {
-    var processList = [];
+    var tabs = [];
     for (process in this.props.process) {
-      processList.push(React.createElement(ProcessTab, {key: process, 
-                                   process: process, 
-                                   active: process === this.state.active, 
-                                   setActive: this.setActive}));
+      tabs.push(React.createElement(Tab, {key: process, 
+                  name: process, 
+                  active: process === this.state.active, 
+                  setActive: this.setActive}));
     };
+    var webT = "Web transactions";
+    tabs.push(
+      React.createElement(Tab, {key: webT, 
+        name: webT, 
+        active: webT === this.state.active, 
+        setActive: this.setActive}
+      )
+    );
     return (
       React.createElement("ul", {className: "nav nav-pills"}, 
-        processList
+        tabs
       )
     );
   }
@@ -29326,12 +29334,26 @@ var ProcessContent = React.createClass({displayName: "ProcessContent",
   }
 });
 
-var Process = React.createClass({displayName: "Process",
+var WebTransactionsContent = React.createClass({displayName: "WebTransactionsContent",
+  render: function() {
+    return (
+      React.createElement("div", {className: "resources-content", id: "metrics-container"}, 
+        React.createElement(WebTransactionsMetrics, {appName: this.props.appName})
+      )
+    )
+  }
+});
+
+var Resource = React.createClass({displayName: "Resource",
   getInitialState: function() {
-    return {process: {}, active: null};
+    return {process: {}, activeProcess: null, tab: null};
   },
-  setActive: function(process) {
-    this.setState({active: this.state.process[process]});
+  setActive: function(name) {
+    if(this.state.process[name] !== undefined) {
+      this.setState({activeProcess: this.state.process[name], tab: "process"});
+    } else {
+      this.setState({tab: name, activeProcess: null});
+    }
   },
   unitsByProcess: function() {
     var process = {};
@@ -29350,8 +29372,9 @@ var Process = React.createClass({displayName: "Process",
   render: function() {
     return (
       React.createElement("div", null, 
-        React.createElement(ProcessTabs, {process: this.state.process, setActive: this.setActive}), 
-        this.state.active === null ? "" : React.createElement(ProcessContent, {process: this.state.active, appName: this.props.app.name})
+        React.createElement(Tabs, {process: this.state.process, setActive: this.setActive}), 
+        this.state.tab === "process" ? React.createElement(ProcessContent, {process: this.state.activeProcess, appName: this.props.app.name}) : "", 
+        this.state.tab === "Web transactions" ? React.createElement(WebTransactionsContent, {appName: this.props.app.name}) : ""
       )
     );
   }
