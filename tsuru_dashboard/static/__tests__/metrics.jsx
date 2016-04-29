@@ -65,7 +65,9 @@ describe('Metrics', function() {
   });
 
   it('sends new options to GraphContainer on change', function() {
-    const metrics = Enzyme.mount(<Metrics targetName={"myApp"} targetType={"app"} metrics={["cpu_max"]} />);
+    const metrics = Enzyme.mount(
+      <Metrics targetName={"myApp"} targetType={"app"} metrics={["cpu_max"]} />
+    );
     var container = metrics.find(GraphContainer);
     expect(container.props().data_url).toBe(
       "/metrics/app/myApp/?metric=cpu_max&interval=1m&date_range=1h"
@@ -84,6 +86,16 @@ describe('Metrics', function() {
     expect(container.props().detail_url).toBe(
       "/apps/myApp/metrics/details/?kind=cpu_max&from=3h&serie=1d"
     );
+  });
+
+  it('call onFromChange when from changes', function() {
+    var onChange = jest.genMockFunction();
+    const metrics = Enzyme.mount(
+      <Metrics targetName={"myApp"} onFromChange={onChange} />
+    );
+    metrics.find('select[name="from"]').simulate('change', {target: { value: "3h"}});
+    expect(onChange.mock.calls.length).toBe(1);
+    expect(onChange.mock.calls[0][0]).toBe("3h");
   });
 
   it('renders a container div depending on the selected size', function() {

@@ -1,6 +1,7 @@
 var React = require('react'),
     Metrics = require("../components/metrics.jsx").Metrics,
-    WebTransactionsMetrics = require("../components/metrics.jsx").WebTransactionsMetrics;
+    WebTransactionsMetrics = require("../components/metrics.jsx").WebTransactionsMetrics,
+    TopSlow = require("../components/top-slow.jsx").TopSlow;
 
 if(typeof window.jQuery === 'undefined') {
   var $ = require('jquery');
@@ -171,10 +172,19 @@ var ProcessContent = React.createClass({
 });
 
 var WebTransactionsContent = React.createClass({
+  getInitialState: function() {
+    return {
+      from: this.props.from
+    }
+  },
+  updateFrom: function(from) {
+    this.setState({from: from});
+  },
   render: function() {
     return (
       <div className='resources-content' id="metrics-container">
-        <WebTransactionsMetrics appName={this.props.appName} />
+        <WebTransactionsMetrics appName={this.props.appName} onFromChange={this.updateFrom}/>
+        <TopSlow kind={"top_slow"} appName={this.props.appName} from={this.state.from}/>
       </div>
     )
   }

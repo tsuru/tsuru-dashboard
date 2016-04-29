@@ -19108,12 +19108,16 @@ var TopSlow = React.createClass({displayName: "TopSlow",
     return {top: [], requests: []};
   },
   componentDidMount: function() {
-    this.loadData();
+    this.loadData(this.props.from);
   },
-  loadData: function() {
+  componentWillReceiveProps: function(nextProps) {
+    if(this.props.from !== nextProps.from){
+      this.loadData(nextProps.from);
+    }
+  },
+  loadData: function(from) {
     var appName = this.props.appName;
     var kind = this.props.kind;
-    var from = this.props.from;
     var url = "/metrics/app/" + appName + "/?metric=" + kind + "&date_range=" + from;
     $.getJSON(url, function(data) {
       if (Object.keys(data.data).length === 0)

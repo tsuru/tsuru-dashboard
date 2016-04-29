@@ -29048,6 +29048,9 @@ var Metrics = React.createClass({displayName: "Metrics",
     var newState = this.state;
     newState.from = from;
     this.setState(newState);
+    if(this.props.onFromChange) {
+      this.props.onFromChange(from);
+    }
   },
   updateInterval: function(interval) {
     var newState = this.state;
@@ -29148,7 +29151,9 @@ var WebTransactionsMetrics = React.createClass({displayName: "WebTransactionsMet
       React.createElement(Metrics, {metrics: ["requests_min", "response_time",
         "http_methods", "status_code", "nettx", "netrx"], 
         targetName: this.props.appName, 
-        targetType: "app"})
+        targetType: "app", 
+        onFromChange: this.props.onFromChange}
+      )
     )
   }
 });
@@ -29163,8 +29168,9 @@ module.exports = {
 },{"jquery":28,"react":159}],161:[function(require,module,exports){
 (function (process){
 var React = require('react'),
-    Metrics = require("../components/metrics.jsx").Metrics
-    WebTransactionsMetrics = require("../components/metrics.jsx").WebTransactionsMetrics;
+    Metrics = require("../components/metrics.jsx").Metrics,
+    WebTransactionsMetrics = require("../components/metrics.jsx").WebTransactionsMetrics,
+    TopSlow = require("../components/top-slow.jsx").TopSlow;
 
 if(typeof window.jQuery === 'undefined') {
   var $ = require('jquery');
@@ -29335,10 +29341,19 @@ var ProcessContent = React.createClass({displayName: "ProcessContent",
 });
 
 var WebTransactionsContent = React.createClass({displayName: "WebTransactionsContent",
+  getInitialState: function() {
+    return {
+      from: this.props.from
+    }
+  },
+  updateFrom: function(from) {
+    this.setState({from: from});
+  },
   render: function() {
     return (
       React.createElement("div", {className: "resources-content", id: "metrics-container"}, 
-        React.createElement(WebTransactionsMetrics, {appName: this.props.appName})
+        React.createElement(WebTransactionsMetrics, {appName: this.props.appName, onFromChange: this.updateFrom}), 
+        React.createElement(TopSlow, {kind: "top_slow", appName: this.props.appName, from: this.state.from})
       )
     )
   }
@@ -29383,7 +29398,147 @@ var Resource = React.createClass({displayName: "Resource",
 module.exports = Resources;
 
 }).call(this,require('_process'))
-},{"../components/metrics.jsx":160,"_process":29,"jquery":28,"react":159}],162:[function(require,module,exports){
+},{"../components/metrics.jsx":160,"../components/top-slow.jsx":162,"_process":29,"jquery":28,"react":159}],162:[function(require,module,exports){
+var React = require('react');
+
+var SelectTopInterval = React.createClass({displayName: "SelectTopInterval",
+  handleChange: function(e) {
+    e.preventDefault();
+    var topSize = e.target.value.trim();
+    this.props.selectTopRequests(this.props.requests, topSize);
+  },
+  render: function() {
+    return (
+      React.createElement("select", {onChange: this.handleChange}, 
+        React.createElement("option", {value: "10"}, "10"), 
+        React.createElement("option", {value: "20"}, "20"), 
+        React.createElement("option", {value: "30"}, "30"), 
+        React.createElement("option", {value: "40"}, "40"), 
+        React.createElement("option", {value: "50"}, "50")
+      )
+    );
+  }
+});
+
+var RequestRow = React.createClass({displayName: "RequestRow",
+  render: function() {
+    return (
+      React.createElement("tr", null, 
+        React.createElement("td", null, this.props.request.method), 
+        React.createElement("td", null, this.props.request.path), 
+        React.createElement("td", null, this.props.request.status_code), 
+        React.createElement("td", null, this.props.request.response), 
+        React.createElement("td", null, this.props.request.time)
+      )
+    );
+  }
+});
+
+var TopTable = React.createClass({displayName: "TopTable",
+  render: function() {
+    var topNodes = this.props.top.map(function(result) {
+            return (
+              React.createElement(RequestRow, {key: result.method + result.path + result.status_code + result.time, request: result})
+            );
+        });
+    return (
+      React.createElement("table", {className: "table"}, 
+        React.createElement("thead", null, 
+          React.createElement("tr", null, 
+            React.createElement("th", null, "Method"), 
+            React.createElement("th", null, "Path"), 
+            React.createElement("th", null, "Status Code"), 
+            React.createElement("th", null, "Response time"), 
+            React.createElement("th", null, "Time")
+          )
+        ), 
+        React.createElement("tbody", null, 
+          topNodes
+        )
+      )
+    );
+  }
+
+});
+
+var TopSlow = React.createClass({displayName: "TopSlow",
+  getDefaultProps: function() {
+    return {
+      from: "1h",
+      topInterval: 10,
+    }
+  },
+  getInitialState: function() {
+    return {top: [], requests: []};
+  },
+  componentDidMount: function() {
+    this.loadData(this.props.from);
+  },
+  componentWillReceiveProps: function(nextProps) {
+    if(this.props.from !== nextProps.from){
+      this.loadData(nextProps.from);
+    }
+  },
+  loadData: function(from) {
+    var appName = this.props.appName;
+    var kind = this.props.kind;
+    var url = "/metrics/app/" + appName + "/?metric=" + kind + "&date_range=" + from;
+    $.getJSON(url, function(data) {
+      if (Object.keys(data.data).length === 0)
+        data.data = {" ": [1,1]};
+        this.sortData(data);
+    }.bind(this));
+  },
+  sortData: function(result) {
+    var requests = [];
+    for(key in result.data) {
+      for(i in result.data[key]){
+        var dt = new Date(result.data[key][i][0]);
+        var date = dt.toString().split(" ");
+        requests.push({
+            time: date[1] + " " + date[2] + " " + date[4],
+            response: result.data[key][i][1],
+            status_code: result.data[key][i][2],
+            method: result.data[key][i][3],
+            path: key
+        });
+      }
+    }
+    requests.sort(function(a,b){
+      return (a.response >= b.response ? -1 : a.response < b.response ? 1 : 0);
+    });
+    this.selectTopRequests(requests, this.props.topInterval);
+  },
+  selectTopRequests: function(requests, topSize){
+    if(requests.length < topSize){
+      this.setState({top: requests, requests: requests});
+      return;
+    }
+    var topSlow = [];
+    for(var i = 0; i < topSize; i++) {
+      topSlow.push(requests[i]);
+    }
+    this.setState({top: topSlow, requests: requests});
+  },
+  render: function() {
+    return (
+      React.createElement("div", null, 
+        React.createElement("div", null, 
+          React.createElement("h3", null, 
+            "Top slow: ", React.createElement(SelectTopInterval, {selectTopRequests: this.selectTopRequests, requests: this.state.requests})
+          )
+        ), 
+        React.createElement(TopTable, {top: this.state.top})
+      )
+    );
+  }
+});
+
+module.exports = {
+    TopSlow: TopSlow,
+};
+
+},{"react":159}],163:[function(require,module,exports){
 var React = require('react'),
     ReactDOM = require('react-dom'),
     Resources = require("../components/resources.jsx");
@@ -29394,4 +29549,4 @@ ReactDOM.render(
   document.getElementById('resources')
 );
 
-},{"../components/resources.jsx":161,"react":159,"react-dom":30}]},{},[162]);
+},{"../components/resources.jsx":161,"react":159,"react-dom":30}]},{},[163]);

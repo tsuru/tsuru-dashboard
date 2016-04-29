@@ -167,6 +167,9 @@ var Metrics = React.createClass({
     var newState = this.state;
     newState.from = from;
     this.setState(newState);
+    if(this.props.onFromChange) {
+      this.props.onFromChange(from);
+    }
   },
   updateInterval: function(interval) {
     var newState = this.state;
@@ -267,7 +270,9 @@ var WebTransactionsMetrics = React.createClass({
       <Metrics metrics={["requests_min", "response_time",
         "http_methods", "status_code", "nettx", "netrx"]}
         targetName={this.props.appName}
-        targetType={"app"} />
+        targetType={"app"}
+        onFromChange={this.props.onFromChange}
+      />
     )
   }
 });
