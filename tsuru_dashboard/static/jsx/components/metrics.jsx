@@ -98,7 +98,8 @@ var Metrics = React.createClass({
     return {
       "interval": this.props.interval,
       "from": this.props.from,
-      "size": "small"
+      "size": "small",
+      "legend": this.props.legend
     }
   },
   getDefaultProps: function() {
@@ -106,6 +107,7 @@ var Metrics = React.createClass({
       interval: "1m",
       from: "1h",
       targetType: "app",
+      legend: false,
       titles: {
         cpu_max: "cpu (%)",
         mem_max: "memory (MB)",
@@ -170,7 +172,7 @@ var Metrics = React.createClass({
       <GraphContainer id={id} title={this.props.titles[metric]}
         data_url={this.getMetricDataUrl(metric)}
         detail_url={this.getMetricDetailUrl(metric)}
-        legend={this.props.legend} key={id}
+        legend={this.state.legend} key={id}
       />
     );
   },
@@ -187,6 +189,7 @@ var Metrics = React.createClass({
   updateSize: function(size) {
     var newState = this.state;
     newState.size = size;
+    newState.legend = size === "large";
     this.setState(newState);
   },
   render: function() {

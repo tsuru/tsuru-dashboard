@@ -112,6 +112,16 @@ describe('Metrics', function() {
     expect(metrics.find('.graphs-small').length).toBe(1);
   });
 
+  it('updates legend state depending on selected size', function() {
+    const metrics = Enzyme.mount(<Metrics targetName={"myApp"} targetType={"app"} metrics={["cpu_max"]} />);
+    var sizeSelector = metrics.find('select[name="size"]');
+    expect(metrics.state().legend).toBe(false);
+    sizeSelector.simulate('change', {target: { value: "large"}});
+    expect(metrics.state().legend).toBe(true);
+    sizeSelector.simulate('change', {target: { value: "medium"}});
+    expect(metrics.state().legend).toBe(false);
+  });
+
 });
 
 describe('GraphContainer', function() {
