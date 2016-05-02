@@ -74,6 +74,8 @@ describe('Metrics', function() {
     expect(container.props().data_url).toBe(
       "/metrics/app/myApp/?metric=cpu_max&interval=1d&date_range=3h"
     );
+    metrics.find('input[name="refresh"]').simulate('change', {target: { checked: true}});
+    expect(container.props().refresh).toBe(true);
   });
 
   it('call onFromChange when from changes', function() {
@@ -190,6 +192,30 @@ describe('GraphContainer', function() {
     expect($.getJSON.mock.calls.length).toBe(2);
     expect($.getJSON.mock.calls[0][0]).toBe("/metrics?call=1");
     expect($.getJSON.mock.calls[1][0]).toBe("/metrics?call=2");
+  });
+
+  it('manages interval according to refresh prop', function() {
+    const graphContainer = Enzyme.mount(
+      <GraphContainer data_url={"/metrics?call=1"} refresh={true}/>
+    );
+
+    expect(setInterval.mock.calls.length).toBe(1);
+    expect(setInterval.mock.calls[0][1]).toBe(60000);
+    expect(clearInterval.mock.calls.length).toBe(0);
+
+    graphContainer.setProps({ data_url: "/metrics?call=1", refresh: false});
+    expect(clearInterval.mock.calls.length).toBe(1);
+  })
+
+  it('re-fetches data when refresh is on', function() {
+    const graphContainer = Enzyme.mount(
+      <GraphContainer data_url={"/metrics?call=1"} refresh={true}/>
+    );
+    expect($.getJSON.mock.calls.length).toBe(1);
+    jest.runOnlyPendingTimers();
+    expect($.getJSON.mock.calls.length).toBe(2);
+    jest.runOnlyPendingTimers();
+    expect($.getJSON.mock.calls.length).toBe(3);
   });
 
 });

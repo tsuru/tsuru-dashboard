@@ -28890,19 +28890,31 @@ if(typeof window.jQuery === 'undefined') {
 var GraphContainer = React.createClass({displayName: "GraphContainer",
   getInitialState: function() {
     return {
-      model: {}
+      model: {},
+      data_url: this.props.data_url,
+      intervalID: null,
+      refresh: this.props.refresh
     }
   },
   getDefaultProps: function() {
     return {
-      legend: false
+      legend: false,
+      refresh: false
     }
   },
   componentDidMount: function() {
-    this.loadData(this.props.data_url);
+    this.refreshData();
   },
   componentWillReceiveProps: function(nextProps) {
-    this.loadData(nextProps.data_url);
+    var state = this.state;
+    state.data_url = nextProps.data_url;
+    state.refresh = nextProps.refresh;
+    this.setState(state);
+    this.refreshData();
+  },
+  refreshData: function() {
+    this.loadData(this.state.data_url);
+    this.configureRefreshInterval();
   },
   loadData: function(url) {
     $.getJSON(url, function(data) {
@@ -28912,6 +28924,17 @@ var GraphContainer = React.createClass({displayName: "GraphContainer",
       state.model = data.data;
       this.setState(state);
     }.bind(this));
+  },
+  configureRefreshInterval: function() {
+    var state = this.state;
+    if(state.refresh && state.intervalID === null) {
+      console.warn("setInterval");
+      state.intervalID = setInterval(this.refreshData, 60000);
+    } else if(!state.refresh && state.intervalID !== null) {
+      clearInterval(state.intervalID);
+      state.intervalID = null;
+    }
+    this.setState(state);
   },
   render: function() {
     return (
@@ -28974,7 +28997,8 @@ var Metrics = React.createClass({displayName: "Metrics",
       "interval": this.props.interval,
       "from": this.props.from,
       "size": "small",
-      "legend": this.props.legend
+      "legend": this.props.legend,
+      "refresh": false,
     }
   },
   getDefaultProps: function() {
@@ -29022,7 +29046,8 @@ var Metrics = React.createClass({displayName: "Metrics",
     return (
       React.createElement(GraphContainer, {id: id, title: this.props.titles[metric], 
         data_url: this.getMetricDataUrl(metric), 
-        legend: this.state.legend, key: id}
+        legend: this.state.legend, key: id, 
+        refresh: this.state.refresh}
       )
     );
   },
@@ -29045,6 +29070,11 @@ var Metrics = React.createClass({displayName: "Metrics",
     newState.legend = size === "large";
     this.setState(newState);
   },
+  updateRefresh: function(refresh) {
+    var newState = this.state;
+    newState.refresh = refresh;
+    this.setState(newState);
+  },
   render: function() {
     var self = this;
     var className = "graphs-" + this.state.size;
@@ -29053,7 +29083,8 @@ var Metrics = React.createClass({displayName: "Metrics",
         React.createElement("div", {className: "metrics-options"}, 
           React.createElement(TimeRangeFilter, {onChange: self.updateFrom}), 
           React.createElement(PeriodSelector, {onChange: self.updateInterval}), 
-          React.createElement(SizeSelector, {onChange: self.updateSize})
+          React.createElement(SizeSelector, {onChange: self.updateSize}), 
+          React.createElement(AutoRefresh, {onChange: self.updateRefresh})
         ), 
         React.createElement("div", {className: className}, 
           self.props.metrics.map(function(metric) {
@@ -29122,6 +29153,28 @@ var SizeSelector = React.createClass({displayName: "SizeSelector",
           React.createElement("option", {value: "medium"}, "Medium"), 
           React.createElement("option", {value: "large"}, "Large")
         )
+      )
+    )
+  }
+});
+
+var AutoRefresh = React.createClass({displayName: "AutoRefresh",
+  getInitialState: function() {
+    return {
+      checked: false
+    }
+  },
+  handleChange: function(event) {
+    var checked = event.target.checked;
+    this.setState({checked: checked});
+    this.props.onChange(checked);
+  },
+  render: function() {
+    return (
+      React.createElement("div", {className: "metrics-refresh"}, 
+        React.createElement("input", {type: "checkbox", name: "refresh", checked: this.state.checked, 
+          onChange: this.handleChange}), 
+        React.createElement("label", null, "Auto refresh (every 60 seconds)")
       )
     )
   }
