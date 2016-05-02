@@ -8,3 +8,7 @@ before_install:
   - nvm use 4.2
 script:
   - make test
+notifications:
+  slack:
+    rooms:
+      secure: MrhEboghWcV1ZrQbafUFzPhBM6ewjDrTyeDrfKhHQXROJKgQAweHjk39bIeu9aGqjl89ggUWi4gt3/N2E5xLkbgDdsiR21n787IJv8jyvhd7T7hFf7B/OIsnBJEGqSzpZJ+oeaj4z4DGeIhlVGouLgf9uhEafiyM1BjfoRrrRQ0=
