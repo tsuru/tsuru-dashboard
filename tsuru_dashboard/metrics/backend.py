@@ -43,7 +43,7 @@ def get_backend(app, token, component_name=None, date_range=None, process_name=N
 NET_AGGREGATION = {
     "units": {
         "terms": {
-            "field": "host"
+            "field": "host.raw"
         },
         "aggs": {
             "delta": {
