@@ -202,7 +202,7 @@ var Metrics = React.createClass({
           <TimeRangeFilter onChange={self.updateFrom}/>
           <PeriodSelector onChange={self.updateInterval}/>
           <SizeSelector onChange={self.updateSize}/>
-          <AutoRefresh onChange={self.updateRefresh} checked={this.state.refresh}/>
+          <AutoRefresh onChange={self.updateRefresh} checked={self.state.refresh}/>
         </div>
         <div className={className}>
           {self.props.metrics.map(function(metric) {
