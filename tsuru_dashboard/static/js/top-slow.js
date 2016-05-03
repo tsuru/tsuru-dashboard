@@ -19072,11 +19072,11 @@ var RequestRow = React.createClass({displayName: "RequestRow",
 
 var TopTable = React.createClass({displayName: "TopTable",
   render: function() {
-    var topNodes = this.props.top.map(function(result) {
-            return (
-              React.createElement(RequestRow, {key: result.method + result.path + result.status_code + result.time, request: result})
-            );
-        });
+    var topRequests = this.props.top.map(function(result) {
+      return (
+        React.createElement(RequestRow, {key: result.method + result.path + result.status_code + result.time, request: result})
+      );
+    });
     return (
       React.createElement("table", {className: "table"}, 
         React.createElement("thead", null, 
@@ -19089,7 +19089,7 @@ var TopTable = React.createClass({displayName: "TopTable",
           )
         ), 
         React.createElement("tbody", null, 
-          topNodes
+          topRequests.length > 0 ? topRequests : React.createElement("tr", null, React.createElement("td", {colSpan: "5"}, "No requests found."))
         )
       )
     );
@@ -19120,8 +19120,6 @@ var TopSlow = React.createClass({displayName: "TopSlow",
     var kind = this.props.kind;
     var url = "/metrics/app/" + appName + "/?metric=" + kind + "&date_range=" + from;
     $.getJSON(url, function(data) {
-      if (Object.keys(data.data).length === 0)
-        data.data = {" ": [1,1]};
         this.sortData(data);
     }.bind(this));
   },
