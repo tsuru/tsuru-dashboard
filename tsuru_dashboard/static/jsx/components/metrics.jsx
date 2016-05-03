@@ -116,7 +116,7 @@ var Metrics = React.createClass({
       "from": this.props.from,
       "size": "small",
       "legend": this.props.legend,
-      "refresh": false,
+      "refresh": true,
     }
   },
   getDefaultProps: function() {
@@ -202,7 +202,7 @@ var Metrics = React.createClass({
           <TimeRangeFilter onChange={self.updateFrom}/>
           <PeriodSelector onChange={self.updateInterval}/>
           <SizeSelector onChange={self.updateSize}/>
-          <AutoRefresh onChange={self.updateRefresh}/>
+          <AutoRefresh onChange={self.updateRefresh} checked={this.state.refresh}/>
         </div>
         <div className={className}>
           {self.props.metrics.map(function(metric) {
@@ -279,7 +279,7 @@ var SizeSelector = React.createClass({
 var AutoRefresh = React.createClass({
   getInitialState: function() {
     return {
-      checked: false
+      checked: this.props.checked
     }
   },
   handleChange: function(event) {

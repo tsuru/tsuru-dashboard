@@ -29075,7 +29075,6 @@ var GraphContainer = React.createClass({displayName: "GraphContainer",
   configureRefreshInterval: function() {
     var state = this.state;
     if(state.refresh && state.intervalID === null) {
-      console.warn("setInterval");
       state.intervalID = setInterval(this.refreshData, 60000);
     } else if(!state.refresh && state.intervalID !== null) {
       clearInterval(state.intervalID);
@@ -29145,7 +29144,7 @@ var Metrics = React.createClass({displayName: "Metrics",
       "from": this.props.from,
       "size": "small",
       "legend": this.props.legend,
-      "refresh": false,
+      "refresh": true,
     }
   },
   getDefaultProps: function() {
@@ -29231,7 +29230,7 @@ var Metrics = React.createClass({displayName: "Metrics",
           React.createElement(TimeRangeFilter, {onChange: self.updateFrom}), 
           React.createElement(PeriodSelector, {onChange: self.updateInterval}), 
           React.createElement(SizeSelector, {onChange: self.updateSize}), 
-          React.createElement(AutoRefresh, {onChange: self.updateRefresh})
+          React.createElement(AutoRefresh, {onChange: self.updateRefresh, checked: this.state.refresh})
         ), 
         React.createElement("div", {className: className}, 
           self.props.metrics.map(function(metric) {
@@ -29308,7 +29307,7 @@ var SizeSelector = React.createClass({displayName: "SizeSelector",
 var AutoRefresh = React.createClass({displayName: "AutoRefresh",
   getInitialState: function() {
     return {
-      checked: false
+      checked: this.props.checked
     }
   },
   handleChange: function(event) {
