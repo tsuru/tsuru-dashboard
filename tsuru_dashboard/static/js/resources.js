@@ -29492,7 +29492,6 @@ var TopTable = React.createClass({displayName: "TopTable",
       )
     );
   }
-
 });
 
 var TopSlow = React.createClass({displayName: "TopSlow",
