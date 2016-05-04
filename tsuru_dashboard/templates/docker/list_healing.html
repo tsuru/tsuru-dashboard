@@ -31,7 +31,7 @@
                 <tbody>
 				{% for event in events %}
                     <tr class="{% if event.Error %}bg-danger{% endif %}">
-                        <td>{{ event.App }}</td>
+                        <td><a href="{% if event.App %}{% url 'detail-app' event.App %}{% endif %}"> {{ event.App }}</a></td>
                         <td>{% if event.FailingNode.Address %}{{ event.FailingNode.Address }}{% else %}{{ event.FailingContainer.ID }}{% endif %}</td>
                         <td>{% if event.CreatedNode.Address %}{{ event.CreatedNode.Address }}{% else %}{{ event.CreatedContainer.ID }}{% endif %}</td>
                         <td>{{ event.StartTime }}</td>
