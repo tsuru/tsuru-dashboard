@@ -6,40 +6,6 @@ import datetime
 import re
 
 
-class MetricNotEnabled(Exception):
-    pass
-
-
-def get_backend(app, token, component_name=None, date_range=None, process_name=None):
-    if component_name is not None:
-        es_query = ComponentFilter(component=component_name, date_range=date_range).query()
-        return ElasticSearch(url=settings.ELASTICSEARCH_HOST, query=es_query, date_range=date_range)
-    else:
-        headers = {'authorization': token}
-        url = "{}/apps/{}/metric/envs".format(settings.TSURU_HOST, app["name"])
-        response = requests.get(url, headers=headers)
-
-        es_query = AppFilter(app=app["name"], process_name=process_name, date_range=date_range).query()
-
-        if response.status_code == 200:
-            data = response.json()
-            if "METRICS_ELASTICSEARCH_HOST" in data:
-                return ElasticSearch(
-                    url=data["METRICS_ELASTICSEARCH_HOST"],
-                    query=es_query,
-                    date_range=date_range
-                )
-
-        if "envs" in app and "ELASTICSEARCH_HOST" in app["envs"]:
-            return ElasticSearch(
-                url=app["envs"]["ELASTICSEARCH_HOST"],
-                query=es_query,
-                date_range=date_range
-            )
-
-        raise MetricNotEnabled
-
-
 NET_AGGREGATION = {
     "units": {
         "terms": {
@@ -432,3 +398,41 @@ class ElasticSearch(object):
                 }
             }
         }
+
+
+class MetricNotEnabled(Exception):
+    pass
+
+
+class AppBackend(ElasticSearch):
+    def __init__(self, app, token, process_name=None, date_range=None):
+        headers = {'authorization': token}
+        url = "{}/apps/{}/metric/envs".format(settings.TSURU_HOST, app["name"])
+        response = requests.get(url, headers=headers)
+
+        es_query = AppFilter(app=app["name"], process_name=process_name, date_range=date_range).query()
+
+        if response.status_code == 200:
+            data = response.json()
+            if "METRICS_ELASTICSEARCH_HOST" in data:
+                return super(AppBackend, self).__init__(
+                    url=data["METRICS_ELASTICSEARCH_HOST"],
+                    query=es_query,
+                    date_range=date_range
+                )
+
+        if "envs" in app and "ELASTICSEARCH_HOST" in app["envs"]:
+            return super(AppBackend, self).__init__(
+                url=app["envs"]["ELASTICSEARCH_HOST"],
+                query=es_query,
+                date_range=date_range
+            )
+
+        raise MetricNotEnabled
+
+
+class ComponentBackend(ElasticSearch):
+    def __init__(self, component, token, date_range=None):
+        es_query = ComponentFilter(component=component, date_range=date_range).query()
+        return super(ComponentBackend, self).__init__(
+            url=settings.ELASTICSEARCH_HOST, query=es_query, date_range=date_range)

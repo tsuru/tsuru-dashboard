@@ -2,6 +2,7 @@ from django.http import HttpResponse, HttpResponseBadRequest
 
 from tsuru_dashboard import settings
 from tsuru_dashboard.auth.views import LoginRequiredView
+from .backend import AppBackend, ComponentBackend
 import json
 import requests
 
@@ -15,9 +16,9 @@ class Metric(LoginRequiredView):
 
         interval = self.request.GET.get("interval")
         date_range = self.request.GET.get("date_range")
-        name = kwargs['name']
+        target = kwargs['target']
 
-        backend = self.get_metrics_backend(metric=metric, target=name, date_range=date_range, token=token)
+        backend = self.get_metrics_backend(metric=metric, target=target, date_range=date_range, token=token)
         if backend is None:
             return HttpResponseBadRequest()
 
@@ -44,16 +45,9 @@ class AppMetric(Metric):
         process_name = self.request.GET.get("process_name")
         app = self.get_app(target)
         app["envs"] = self.get_envs(self.request, target)
-        from .backend import get_backend
-        return get_backend(
-            app=app,
-            token=token,
-            date_range=date_range,
-            process_name=process_name
-        )
+        return AppBackend(app=app, token=token, date_range=date_range, process_name=process_name)
 
 
 class ComponentMetric(Metric):
     def get_metrics_backend(self, metric, target, date_range, token):
-        from .backend import get_backend
-        return get_backend(app=None, component_name=target, token=token, date_range=date_range)
+        return ComponentBackend(component=target, token=token, date_range=date_range)
