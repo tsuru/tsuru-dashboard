@@ -5,5 +5,6 @@ import views
 
 urlpatterns = patterns(
     '',
-    url(r'^(?P<target_type>[\w-]+)/(?P<target_name>[\w-]+)/$', views.Metric.as_view(), name='metric'),
+    url(r'^app/(?P<name>[\w-]+)/$', views.AppMetric.as_view(), name='app-metric'),
+    url(r'^component/(?P<name>[\w-]+)/$', views.ComponentMetric.as_view(), name='component-metric')
 )

@@ -11,7 +11,7 @@ import json
 import datetime
 
 
-class MetricViewTest(TestCase):
+class AppMetricViewTest(TestCase):
     def request(self, string_params=""):
         request = RequestFactory().get("/ble/" + string_params)
         request.session = {"tsuru_token": "token"}
@@ -23,7 +23,7 @@ class MetricViewTest(TestCase):
         response_mock.json.return_value = {}
         get_mock.return_value = response_mock
 
-        view = views.Metric()
+        view = views.AppMetric()
         view.request = self.request()
         app = view.get_app("app_name")
 
@@ -39,7 +39,7 @@ class MetricViewTest(TestCase):
         response_mock.json.return_value = env_mock
         get_mock.return_value = response_mock
 
-        view = views.Metric()
+        view = views.AppMetric()
         view.request = self.request()
         envs = view.get_envs(self.request(), "app_name")
 
@@ -56,7 +56,7 @@ class MetricViewTest(TestCase):
         backend_mock.cpu_max.return_value = {}
         get_backend_mock.return_value = backend_mock
 
-        v = views.Metric
+        v = views.AppMetric
 
         original_get_app = v.get_app
         v.get_app = Mock()
@@ -74,12 +74,19 @@ class MetricViewTest(TestCase):
         self.addCleanup(cleanup)
 
         request = self.request("?metric=cpu_max&date_range=2h/h&interval=30m&process_name=web")
-        response = view(request, target_name="app_name", target_type="app")
+        response = view(request, name="app_name")
 
         self.assertEqual(response.status_code, 200)
         get_backend_mock.assert_called_with(
             app={'envs': {}}, token='token', date_range=u'2h/h', process_name=u'web')
         backend_mock.cpu_max.assert_called_with(interval=u'30m')
+
+
+class ComponentMetricViewTest(TestCase):
+    def request(self, string_params=""):
+        request = RequestFactory().get("/ble/" + string_params)
+        request.session = {"tsuru_token": "token"}
+        return request
 
     @patch("tsuru_dashboard.metrics.backend.get_backend")
     @patch("tsuru_dashboard.auth.views.token_is_valid")
@@ -88,42 +95,31 @@ class MetricViewTest(TestCase):
         backend_mock = Mock()
         backend_mock.cpu_max.return_value = {}
         get_backend_mock.return_value = backend_mock
-
-        v = views.Metric
-
-        original_get_app = v.get_app
-        v.get_app = Mock()
-        v.get_app.return_value = {}
-
-        original_get_envs = v.get_envs
-        v.get_envs = Mock()
-        v.get_envs.return_value = {}
-        view = v.as_view()
-
-        def cleanup():
-            v.get_app = original_get_app
-            v.get_envs = original_get_envs
-
-        self.addCleanup(cleanup)
+        view = views.ComponentMetric.as_view()
 
         request = self.request("?metric=cpu_max&date_range=2h/h&interval=30m")
-        response = view(request, target_name="comp_name", target_type="component")
+        response = view(request, name="comp_name")
 
         self.assertEqual(response.status_code, 200)
         get_backend_mock.assert_called_with(
             component_name="comp_name", token='token', date_range=u'2h/h', app=None)
         backend_mock.cpu_max.assert_called_with(interval=u'30m')
 
+
+class MetricViewTest(TestCase):
+    def request(self, string_params=""):
+        request = RequestFactory().get("/ble/" + string_params)
+        request.session = {"tsuru_token": "token"}
+        return request
+
     @patch("tsuru_dashboard.auth.views.token_is_valid")
     def test_get_bad_request(self, token_mock):
         request = RequestFactory().get("")
         request.session = {"tsuru_token": "token"}
         token_mock.return_value = True
+        view = views.Metric.as_view()
 
-        v = views.Metric
-        view = v.as_view()
-
-        response = view(request, app_name="app_name")
+        response = view(request, name="app_name")
 
         self.assertEqual(response.status_code, 400)
 
