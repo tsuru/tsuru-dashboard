@@ -1,5 +1,5 @@
 from django.test import TestCase
-from tsuru_dashboard.metrics.backend import AppFilter, ComponentFilter
+from tsuru_dashboard.metrics.backend import AppFilter, ComponentFilter, NodeFilter
 
 
 class ElasticSearchFilterTest(TestCase):
@@ -8,20 +8,20 @@ class ElasticSearchFilterTest(TestCase):
             "bool": {
                 "must": [
                     {
-                        "bool": {
-                            "should": [
-                                {"term": {"app": "app_name"}},
-                                {"term": {"app.raw": "app_name"}},
-                            ]
-                        },
-                    },
-                    {
                         "range": {
                             "@timestamp": {
                                 "gte": "now-1h",
                                 "lt": "now"
                             }
                         }
+                    },
+                    {
+                        "bool": {
+                            "should": [
+                                {"term": {"app": "app_name"}},
+                                {"term": {"app.raw": "app_name"}},
+                            ]
+                        },
                     },
                     {
                         "bool": {
@@ -42,6 +42,14 @@ class ElasticSearchFilterTest(TestCase):
             "bool": {
                 "must": [
                     {
+                        "range": {
+                            "@timestamp": {
+                                "gte": "now-1h",
+                                "lt": "now"
+                            }
+                        }
+                    },
+                    {
                         "bool": {
                             "should": [
                                 {"term": {"container": "comp_name"}},
@@ -49,6 +57,16 @@ class ElasticSearchFilterTest(TestCase):
                             ]
                         },
                     },
+                ]
+            }
+        }
+        filter = ComponentFilter(component="comp_name").filter
+        self.assertDictEqual(filter, expected_filter)
+
+    def test_node_filters(self):
+        expected_filter = {
+            "bool": {
+                "must": [
                     {
                         "range": {
                             "@timestamp": {
@@ -57,8 +75,15 @@ class ElasticSearchFilterTest(TestCase):
                             }
                         }
                     },
+                    {
+                        "bool": {
+                            "should": [
+                                {"term": {"addr.raw": "127.0.0.1"}},
+                            ]
+                        },
+                    },
                 ]
             }
         }
-        filter = ComponentFilter(component="comp_name").filter
+        filter = NodeFilter(node="127.0.0.1").filter
         self.assertDictEqual(filter, expected_filter)

@@ -3,7 +3,6 @@ from django.test.client import RequestFactory
 from tsuru_dashboard import settings
 from tsuru_dashboard.metrics import views
 from mock import patch, Mock
-from tsuru_dashboard.metrics.backend import ElasticSearch
 
 
 class AppMetricViewTest(TestCase):

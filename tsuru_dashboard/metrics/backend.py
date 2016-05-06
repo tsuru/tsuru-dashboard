@@ -71,6 +71,27 @@ class ElasticSearchFilter(object):
             date_range = "1h"
         return {"range": {"@timestamp": {"gte": "now-" + date_range, "lt": "now"}}}
 
+    def metric_filter(self, *filters):
+        bool_filter = {
+            "bool": {
+                "must": [
+                    self.timestamp_filter(self.date_range)
+                ]
+            }
+        }
+        bool_filter["bool"]["must"].append({"bool": {"should": list(filters)}})
+
+        return bool_filter
+
+
+class NodeFilter(ElasticSearchFilter):
+    def __init__(self, node, date_range=None):
+        self.date_range = date_range
+        self.filter = self.node_filter(node)
+
+    def node_filter(self, node):
+        return self.metric_filter(self.term_filter("addr.raw", node))
+
 
 class ComponentFilter(ElasticSearchFilter):
     def __init__(self, component, date_range=None):
@@ -78,21 +99,8 @@ class ComponentFilter(ElasticSearchFilter):
         self.filter = self.component_filter(component)
 
     def component_filter(self, component):
-        return {
-            "bool": {
-                "must": [
-                    {
-                        "bool": {
-                            "should": [
-                                self.term_filter("container", component),
-                                self.term_filter("container.raw", component)
-                            ]
-                        }
-                    },
-                    self.timestamp_filter(self.date_range)
-                ],
-            }
-        }
+        return self.metric_filter(
+            self.term_filter("container", component), self.term_filter("container.raw", component))
 
 
 class AppFilter(ElasticSearchFilter):
@@ -101,21 +109,7 @@ class AppFilter(ElasticSearchFilter):
         self.filter = self.app_filter(app, process_name)
 
     def app_filter(self, app, process_name):
-        f = {
-            "bool": {
-                "must": [
-                    {
-                        "bool": {
-                            "should": [
-                                self.term_filter("app", app),
-                                self.term_filter("app.raw", app)
-                            ]
-                        }
-                    },
-                    self.timestamp_filter(self.date_range)
-                ],
-            }
-        }
+        f = self.metric_filter(self.term_filter("app", app), self.term_filter("app.raw", app))
 
         if process_name:
             p = {
@@ -431,8 +425,7 @@ class AppBackend(ElasticSearch):
         raise MetricNotEnabled
 
 
-class ComponentBackend(ElasticSearch):
-    def __init__(self, component, token, date_range=None):
-        es_query = ComponentFilter(component=component, date_range=date_range).query()
-        return super(ComponentBackend, self).__init__(
-            url=settings.ELASTICSEARCH_HOST, query=es_query, date_range=date_range)
+class TsuruMetricsBackend(ElasticSearch):
+    def __init__(self, filter, date_range=None):
+        return super(TsuruMetricsBackend, self).__init__(
+            url=settings.ELASTICSEARCH_HOST, query=filter.query(), date_range=date_range)
