@@ -1,7 +1,10 @@
 from django.test import TestCase
 from tsuru_dashboard.metrics.backend import AppBackend, MetricNotEnabled
-from tsuru_dashboard.metrics.backend import ElasticSearch, AppFilter, TsuruMetricsBackend
+from tsuru_dashboard.metrics.backend import ElasticSearch, AppFilter, TsuruMetricsBackend, NodeMetricsBackend
+from tsuru_dashboard.metrics.backend import NET_AGGREGATION
 from mock import patch, Mock
+import datetime
+import json
 
 
 class AppBackendTest(TestCase):
@@ -44,3 +47,213 @@ class TsuruMetricsBackendTest(TestCase):
         self.assertEqual(backend.url, u'http://localhost:9200')
         self.assertEqual(backend.filtered_query, AppFilter(app="app_name").query())
         self.assertEqual(backend.date_range, u'2h')
+
+
+class NodeMetricsBackendTest(TestCase):
+    def setUp(self):
+        self.backend = NodeMetricsBackend(addr="127.0.0.1")
+        self.index = ".measure-tsuru-{}".format(datetime.datetime.utcnow().strftime("%Y.%m.%d"))
+
+    @patch("requests.post")
+    def test_nettx(self, post_mock):
+        self.backend.nettx()
+        url = "{}/{}/{}/_search".format(self.backend.url, self.index, "host_nettx")
+        post_mock.assert_called_with(url, data=json.dumps(self.backend.query(aggregation=NET_AGGREGATION)))
+
+    @patch("requests.post")
+    def test_netrx(self, post_mock):
+        self.backend.netrx()
+        url = "{}/{}/{}/_search".format(self.backend.url, self.index, "host_netrx")
+        post_mock.assert_called_with(url, data=json.dumps(self.backend.query(aggregation=NET_AGGREGATION)))
+
+    @patch("requests.post")
+    def test_mem_max(self, post_mock):
+        self.backend.process = Mock()
+        self.backend.mem_max()
+        url = "{}/{}/{}/_search".format(self.backend.url, self.index, "host_mem_used")
+        post_mock.assert_called_with(url, data=json.dumps(self.backend.query()))
+
+    @patch("requests.post")
+    def test_cpu_max(self, post_mock):
+        aggregation = {
+            "stats": {
+                "terms": {"field": "_type"},
+                "aggs": {"stats": {"stats": {"field": "value"}}}
+            }
+        }
+        self.backend.cpu_max()
+        url = "{}/{}/{}/_search".format(self.backend.url, self.index, "host_cpu_user,host_cpu_sys")
+        post_mock.assert_called_with(url, data=json.dumps(self.backend.query(aggregation=aggregation)))
+
+    @patch("requests.post")
+    def test_load(self, post_mock):
+        aggregation = {
+            "stats": {
+                "terms": {"field": "_type"},
+                "aggs": {"stats": {"stats": {"field": "value"}}}
+            }
+        }
+        self.backend.load()
+        url = "{}/{}/{}/_search".format(self.backend.url, self.index, "host_load1,host_load5,host_load15")
+        post_mock.assert_called_with(url, data=json.dumps(self.backend.query(aggregation=aggregation)))
+
+    def test_load_process(self):
+        data = {
+            "took": 86,
+            "timed_out": False,
+            "_shards": {
+                "total": 266,
+                "successful": 266,
+                "failed": 0
+            },
+            "hits": {
+                "total": 644073,
+                "max_score": 0,
+                "hits": []
+            },
+            "aggregations": {
+                "date": {
+                    "buckets": [
+                        {
+                            "key_as_string": "2015-07-21T19:35:00.000Z",
+                            "key": 1437507300000,
+                            "doc_count": 9,
+                            "stats": {
+                                "buckets": [
+                                    {
+                                        "stats": {
+                                            "avg": 0.021
+                                        },
+                                        "key": "host_load1"
+                                    },
+                                    {
+                                        "stats": {
+                                            "avg": 0.025
+                                        },
+                                        "key": "host_load5"
+                                    },
+                                    {
+                                        "stats": {
+                                            "avg": 0.015
+                                        },
+                                        "key": "host_load15"
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "key_as_string": "2015-07-21T19:36:00.000Z",
+                            "key": 1437507360000,
+                            "doc_count": 9,
+                            "stats": {
+                                "buckets": [
+                                    {
+                                        "stats": {
+                                            "avg": 0.020
+                                        },
+                                        "key": "host_load1"
+                                    },
+                                    {
+                                        "stats": {
+                                            "avg": 0.026
+                                        },
+                                        "key": "host_load5"
+                                    },
+                                    {
+                                        "stats": {
+                                            "avg": 0.014
+                                        },
+                                        "key": "host_load15"
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+        expected = {
+            "data": {
+                "load1": [[1437507300000, 0.021], [1437507360000, 0.020]],
+                "load5": [[1437507300000, 0.025], [1437507360000, 0.026]],
+                "load15": [[1437507300000, 0.015], [1437507360000, 0.014]],
+            },
+            "min": 0,
+            "max": 1
+        }
+        d = self.backend.base_process(data, self.backend.load_process)
+        self.assertDictEqual(d, expected)
+
+    def test_cpu_max_process(self):
+        data = {
+            "took": 86,
+            "timed_out": False,
+            "_shards": {
+                "total": 266,
+                "successful": 266,
+                "failed": 0
+            },
+            "hits": {
+                "total": 644073,
+                "max_score": 0,
+                "hits": []
+            },
+            "aggregations": {
+                "date": {
+                    "buckets": [
+                        {
+                            "key_as_string": "2015-07-21T19:35:00.000Z",
+                            "key": 1437507300000,
+                            "doc_count": 9,
+                            "stats": {
+                                "buckets": [
+                                    {
+                                        "stats": {
+                                            "avg": 0.021
+                                        },
+                                        "key": "host_cpu_sys"
+                                    },
+                                    {
+                                        "stats": {
+                                            "avg": 0.015
+                                        },
+                                        "key": "host_cpu_user"
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "key_as_string": "2015-07-21T19:36:00.000Z",
+                            "key": 1437507360000,
+                            "doc_count": 9,
+                            "stats": {
+                                "buckets": [
+                                    {
+                                        "stats": {
+                                            "avg": 0.020
+                                        },
+                                        "key": "host_cpu_sys"
+                                    },
+                                    {
+                                        "stats": {
+                                            "avg": 0.016
+                                        },
+                                        "key": "host_cpu_user"
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+        expected = {
+            "data": {
+                "sys": [[1437507300000, 2.1], [1437507360000, 2.0]],
+                "user": [[1437507300000, 1.5], [1437507360000, 1.6]],
+            },
+            "min": 0,
+            "max": 1
+        }
+        d = self.backend.base_process(data, self.backend.cpu_max_process)
+        self.assertDictEqual(d, expected)
