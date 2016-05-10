@@ -5,7 +5,7 @@ if(typeof window.jQuery === 'undefined') {
 } else {
   var $ = window.jQuery;
 }
-
+componentWillUnmount
 var GraphContainer = React.createClass({
   getInitialState: function() {
     return {
@@ -30,6 +30,11 @@ var GraphContainer = React.createClass({
     state.refresh = nextProps.refresh;
     this.setState(state);
     this.refreshData();
+  },
+  componentWillUnmount: function() {
+    if(this.state.intervalID !== null){
+      clearInterval(this.state.intervalID);
+    }
   },
   refreshData: function() {
     this.loadData(this.state.data_url);
