@@ -5,7 +5,7 @@ if(typeof window.jQuery === 'undefined') {
 } else {
   var $ = window.jQuery;
 }
-componentWillUnmount
+
 var GraphContainer = React.createClass({
   getInitialState: function() {
     return {

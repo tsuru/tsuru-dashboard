@@ -11119,6 +11119,9 @@ var currentQueue;
 var queueIndex = -1;
 
 function cleanUpNextTick() {
+    if (!draining || !currentQueue) {
+        return;
+    }
     draining = false;
     if (currentQueue.length) {
         queue = currentQueue.concat(queue);
@@ -28881,6 +28884,112 @@ module.exports = require('./lib/React');
 },{"./lib/React":54}],160:[function(require,module,exports){
 var React = require('react');
 
+var Output = React.createClass({displayName: "Output",
+  render: function() {
+    return (
+      React.createElement("div", {id: "output"}, 
+        React.createElement("img", {src: "/static/img/ajax-loader.gif"}), 
+        React.createElement("div", {className: "messages", dangerouslySetInnerHTML: {__html: this.props.message}})
+      )
+    )
+  }
+});
+
+var Button = React.createClass({displayName: "Button",
+  getDefaultProps: function() {
+    return {disabled: false, onClick: function(){}, type:"button"}
+  },
+  render: function() {
+    return (
+      React.createElement("button", {type: this.props.type, 
+              disabled: this.props.disabled, 
+              onClick: this.props.onClick, 
+              className: "btn"}, 
+        this.props.text
+      )
+    );
+  }
+});
+
+var CancelBtn = React.createClass({displayName: "CancelBtn",
+  getDefaultProps: function() {
+    return {disabled: false}
+  },
+  render: function() {
+    return (
+      React.createElement("button", {"data-dismiss": "modal", 
+			  disabled: this.props.disabled, 
+              "aria-hidden": "true", 
+              className: "btn", 
+              onClick: this.props.onClick}, 
+        "Cancel"
+      )
+    )
+  }
+});
+
+var Tab = React.createClass({displayName: "Tab",
+  onClick: function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (this.props.active)
+      return;
+    if(this.props.setActive !== undefined){
+      this.props.setActive(this.props.name);
+    }
+  },
+  render: function() {
+    return (
+      React.createElement("li", {className: this.props.active ? "active" : ''}, 
+        React.createElement("a", {href: "#", onClick: this.onClick}, this.props.name)
+      )
+    );
+  }
+});
+
+var Tabs = React.createClass({displayName: "Tabs",
+  getInitialState: function() {
+    return {active: ""};
+  },
+  setActive: function(name) {
+    this.setState({active: name});
+    if(this.props.setActive !== undefined){
+      this.props.setActive(name);
+    }
+  },
+  componentDidUpdate: function() {
+    if ((this.state.active === "") && this.props.tabs.length > 0) {
+      this.setActive(this.props.tabs[0]);
+    }
+  },
+  render: function() {
+    var self = this;
+    return (
+      React.createElement("ul", {className: "nav nav-pills"}, 
+        this.props.tabs.map(function(tab) {
+          return React.createElement(Tab, {key: tab, 
+                  name: tab, 
+                  active: tab === self.state.active, 
+                  setActive: self.setActive})
+        })
+      )
+    );
+  }
+});
+
+var Components = {
+  Button: Button,
+  CancelBtn: CancelBtn,
+  Tab: Tab,
+  Tabs: Tabs
+};
+
+module.exports = Components;
+
+},{"react":159}],161:[function(require,module,exports){
+var React = require('react');
+
 if(typeof window.jQuery === 'undefined') {
   var $ = require('jquery');
 } else {
@@ -28911,6 +29020,11 @@ var GraphContainer = React.createClass({displayName: "GraphContainer",
     state.refresh = nextProps.refresh;
     this.setState(state);
     this.refreshData();
+  },
+  componentWillUnmount: function() {
+    if(this.state.intervalID !== null){
+      clearInterval(this.state.intervalID);
+    }
   },
   refreshData: function() {
     this.loadData(this.state.data_url);
@@ -29041,9 +29155,10 @@ var Metrics = React.createClass({displayName: "Metrics",
     return url;
   },
   getGraphContainer: function(metric) {
-    var id = this.props.targetName + "_" + metric;
+    var id = this.props.targetName.split('.').join('-') + "_" + metric;
+    var title = this.props.titles[metric] ? this.props.titles[metric] : metric;
     return (
-      React.createElement(GraphContainer, {id: id, title: this.props.titles[metric], 
+      React.createElement(GraphContainer, {id: id, title: title, 
         data_url: this.getMetricDataUrl(metric), 
         legend: this.state.legend, key: id, 
         refresh: this.state.refresh}
@@ -29199,12 +29314,12 @@ module.exports = {
     Graph: Graph
 };
 
-},{"jquery":28,"react":159}],161:[function(require,module,exports){
-(function (process){
+},{"jquery":28,"react":159}],162:[function(require,module,exports){
 var React = require('react'),
     Metrics = require("../components/metrics.jsx").Metrics,
     WebTransactionsMetrics = require("../components/metrics.jsx").WebTransactionsMetrics,
-    TopSlow = require("../components/top-slow.jsx").TopSlow;
+    TopSlow = require("../components/top-slow.jsx").TopSlow,
+    Tabs = require("../components/base.jsx").Tabs;
 
 if(typeof window.jQuery === 'undefined') {
   var $ = require('jquery');
@@ -29232,63 +29347,6 @@ var Resources = React.createClass({displayName: "Resources",
     return (
       React.createElement("div", {className: "resources"}, 
         this.state.app === null ? "" : React.createElement(Resource, {app: this.state.app})
-      )
-    );
-  }
-});
-
-var Tab = React.createClass({displayName: "Tab",
-  onClick: function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-
-    if (this.props.active)
-      return;
-
-    this.props.setActive(this.props.name);
-  },
-  render: function() {
-    return (
-      React.createElement("li", {className: this.props.active ? "active" : ''}, 
-        React.createElement("a", {href: "#", onClick: this.onClick}, this.props.name)
-      )
-    );
-  }
-});
-
-var Tabs = React.createClass({displayName: "Tabs",
-  getInitialState: function() {
-    return {active: ""};
-  },
-  setActive: function(name) {
-    this.setState({active: name});
-    this.props.setActive(name);
-  },
-  componentDidUpdate: function() {
-    var keys = Object.keys(this.props.process);
-    if ((this.state.active === "") && keys.length > 0) {
-      this.setActive(keys[0]);
-    }
-  },
-  render: function() {
-    var tabs = [];
-    for (process in this.props.process) {
-      tabs.push(React.createElement(Tab, {key: process, 
-                  name: process, 
-                  active: process === this.state.active, 
-                  setActive: this.setActive}));
-    };
-    var webT = "Web transactions";
-    tabs.push(
-      React.createElement(Tab, {key: webT, 
-        name: webT, 
-        active: webT === this.state.active, 
-        setActive: this.setActive}
-      )
-    );
-    return (
-      React.createElement("ul", {className: "nav nav-pills"}, 
-        tabs
       )
     );
   }
@@ -29419,9 +29477,11 @@ var Resource = React.createClass({displayName: "Resource",
     this.unitsByProcess();
   },
   render: function() {
+    tabs = Object.keys(this.state.process);
+    tabs.push("Web transactions");
     return (
       React.createElement("div", null, 
-        React.createElement(Tabs, {process: this.state.process, setActive: this.setActive}), 
+        React.createElement(Tabs, {tabs: tabs, setActive: this.setActive}), 
         this.state.tab === "process" ? React.createElement(ProcessContent, {process: this.state.activeProcess, appName: this.props.app.name}) : "", 
         this.state.tab === "Web transactions" ? React.createElement(WebTransactionsContent, {appName: this.props.app.name}) : ""
       )
@@ -29431,8 +29491,7 @@ var Resource = React.createClass({displayName: "Resource",
 
 module.exports = Resources;
 
-}).call(this,require('_process'))
-},{"../components/metrics.jsx":160,"../components/top-slow.jsx":162,"_process":29,"jquery":28,"react":159}],162:[function(require,module,exports){
+},{"../components/base.jsx":160,"../components/metrics.jsx":161,"../components/top-slow.jsx":163,"jquery":28,"react":159}],163:[function(require,module,exports){
 var React = require('react');
 
 var SelectTopInterval = React.createClass({displayName: "SelectTopInterval",
@@ -29569,7 +29628,7 @@ module.exports = {
     TopSlow: TopSlow,
 };
 
-},{"react":159}],163:[function(require,module,exports){
+},{"react":159}],164:[function(require,module,exports){
 var React = require('react'),
     ReactDOM = require('react-dom'),
     Resources = require("../components/resources.jsx");
@@ -29580,4 +29639,4 @@ ReactDOM.render(
   document.getElementById('resources')
 );
 
-},{"../components/resources.jsx":161,"react":159,"react-dom":30}]},{},[163]);
+},{"../components/resources.jsx":162,"react":159,"react-dom":30}]},{},[164]);
