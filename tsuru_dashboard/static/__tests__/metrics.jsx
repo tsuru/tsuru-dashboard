@@ -17,7 +17,7 @@ describe('Metrics', function() {
   });
 
   it('has metrics as className', function() {
-    const metrics = Enzyme.shallow(<Metrics />);
+    const metrics = Enzyme.shallow(<Metrics targetName=""/>);
 
     expect(metrics.find(".metrics").length).toBe(1);
   });

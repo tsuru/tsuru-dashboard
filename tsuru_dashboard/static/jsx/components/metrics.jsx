@@ -160,9 +160,10 @@ var Metrics = React.createClass({
     return url;
   },
   getGraphContainer: function(metric) {
-    var id = this.props.targetName + "_" + metric;
+    var id = this.props.targetName.split('.').join('-') + "_" + metric;
+    var title = this.props.titles[metric] ? this.props.titles[metric] : metric;
     return (
-      <GraphContainer id={id} title={this.props.titles[metric]}
+      <GraphContainer id={id} title={title}
         data_url={this.getMetricDataUrl(metric)}
         legend={this.state.legend} key={id}
         refresh={this.state.refresh}
