@@ -28958,7 +28958,12 @@ var Tabs = React.createClass({displayName: "Tabs",
       this.props.setActive(name);
     }
   },
-  componentDidUpdate: function() {
+  componentWillReceiveProps: function(nextProps) {
+    if ((this.state.active === "") && nextProps.tabs.length > 0) {
+      this.setActive(nextProps.tabs[0]);
+    }
+  },
+  componentDidMount: function() {
     if ((this.state.active === "") && this.props.tabs.length > 0) {
       this.setActive(this.props.tabs[0]);
     }
@@ -29478,7 +29483,9 @@ var Resource = React.createClass({displayName: "Resource",
   },
   render: function() {
     tabs = Object.keys(this.state.process);
-    tabs.push("Web transactions");
+    if(tabs.length > 0){
+      tabs.push("Web transactions");
+    }
     return (
       React.createElement("div", null, 
         React.createElement(Tabs, {tabs: tabs, setActive: this.setActive}), 

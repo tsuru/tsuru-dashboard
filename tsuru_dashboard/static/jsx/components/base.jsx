@@ -74,7 +74,12 @@ var Tabs = React.createClass({
       this.props.setActive(name);
     }
   },
-  componentDidUpdate: function() {
+  componentWillReceiveProps: function(nextProps) {
+    if ((this.state.active === "") && nextProps.tabs.length > 0) {
+      this.setActive(nextProps.tabs[0]);
+    }
+  },
+  componentDidMount: function() {
     if ((this.state.active === "") && this.props.tabs.length > 0) {
       this.setActive(this.props.tabs[0]);
     }

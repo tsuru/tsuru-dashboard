@@ -161,7 +161,9 @@ var Resource = React.createClass({
   },
   render: function() {
     tabs = Object.keys(this.state.process);
-    tabs.push("Web transactions");
+    if(tabs.length > 0){
+      tabs.push("Web transactions");
+    }
     return (
       <div>
         <Tabs tabs={tabs} setActive={this.setActive} />
