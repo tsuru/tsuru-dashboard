@@ -100,6 +100,8 @@ class PoolList(LoginRequiredView, TemplateView):
 class NodeInfo(LoginRequiredView, TemplateView):
     template_name = "admin/node_info.html"
 
+
+class NodeInfoJson(LoginRequiredView):
     def get_containers(self, node_address):
         url = "{}/docker/node/{}/containers".format(settings.TSURU_HOST, node_address)
         response = requests.get(url, headers=self.authorization)
@@ -126,14 +128,13 @@ class NodeInfo(LoginRequiredView, TemplateView):
 
         return None
 
-    def get_context_data(self, *args, **kwargs):
-        context = super(NodeInfo, self).get_context_data(*args, **kwargs)
-        context.update({
-            "containers": self.get_containers(kwargs["address"]),
-            "address": kwargs["address"],
-            "node": self.get_node(kwargs["address"]),
+    def get(self, *args, **kwargs):
+        return JsonResponse({
+            "node": {
+                "info": self.get_node(kwargs["address"]),
+                "containers": self.get_containers(kwargs["address"]),
+            }
         })
-        return context
 
 
 class ListDeploy(LoginRequiredView, TemplateView):
