@@ -28882,101 +28882,16 @@ module.exports = validateDOMNesting;
 module.exports = require('./lib/React');
 
 },{"./lib/React":54}],160:[function(require,module,exports){
-var React = require('react'),
-    $ = require('jquery');
+var React = require('react');
 
-var Option = React.createClass({displayName: "Option",
+var Output = React.createClass({displayName: "Output",
   render: function() {
     return (
-      React.createElement("option", {
-        key: this.props.value, 
-        value: this.props.value}, 
-          this.props.value
+      React.createElement("div", {id: "output"}, 
+        React.createElement("img", {src: "/static/img/ajax-loader.gif"}), 
+        React.createElement("div", {className: "messages", dangerouslySetInnerHTML: {__html: this.props.message}})
       )
-    );
-  }
-});
-
-var Template = React.createClass({displayName: "Template",
-  onChange: function(e) {
-    this.props.selectTemplate(e.target.value);
-  },
-  render: function() {
-    var options = [];
-    this.props.templates.forEach(function(template) {
-      options.push(React.createElement(Option, {key: template.Name, value: template.Name}));
-    });
-    return (
-      React.createElement("div", {className: "template"}, 
-        React.createElement("label", null, 
-          "Template:", 
-          React.createElement("select", {onChange: this.onChange}, 
-            React.createElement("option", null, "Select a template"), 
-            options
-          )
-        )
-      )
-    );
-  }
-});
-
-var Register = React.createClass({displayName: "Register",
-  render: function() {
-    return (
-      React.createElement("div", {className: "register", onClick: this.props.onClick}, 
-        React.createElement("label", null, 
-          "Register an already created node:", 
-          React.createElement("input", {type: "checkbox", onClick: this.onClick})
-        )
-      )
-    );
-  }
-});
-
-var Meta = React.createClass({displayName: "Meta",
-  render: function() {
-    var items = [];
-    this.props.metadata.forEach(function(metadata) {
-      items.push(React.createElement(MetaItem, {key: metadata.id, name: metadata.key, value: metadata.value, removeMetadata: this.props.removeMetadata, editMetadata: this.props.editMetadata}));
-    }.bind(this));
-    return (
-      React.createElement("div", {className: "meta"}, 
-        items
-      )
-    );
-  }
-});
-
-var MetaItem = React.createClass({displayName: "MetaItem",
-  getInitialState: function() {
-    return {name: this.props.name, value: this.props.value};
-  },
-  getDefaultProps: function() {
-    return {name: "", value: ""}
-  },
-  onChange: function(e) {
-    this.props.editMetadata(this.state.name, this.refs.name.value, this.refs.value.value);
-  },
-  removeMetadata: function() {
-    this.props.removeMetadata(this.refs.name.value);
-  },
-  componentWillReceiveProps: function(nextProps) {
-    this.setState({name: nextProps.name, value: nextProps.value});
-  },
-  render: function() {
-    return (
-      React.createElement("div", {className: "meta-item"}, 
-        React.createElement("label", null, 
-          "Key:", 
-          React.createElement("input", {type: "text", name: "name", ref: "name", value: this.state.name, onChange: this.onChange})
-        ), 
-        React.createElement("label", null, 
-          "Value:", 
-          React.createElement("input", {type: "text", name: "value", ref: "value", value: this.state.value, onChange: this.onChange})
-        ), 
-        React.createElement("button", {onClick: this.removeMetadata}, "Remove item")
-      )
-    );
+    )
   }
 });
 
@@ -29013,174 +28928,643 @@ var CancelBtn = React.createClass({displayName: "CancelBtn",
   }
 });
 
-var Iaas = React.createClass({displayName: "Iaas",
-  getInitialState: function() {
-    return {iaas: this.props.iaas};
-  },
-  onChange: function(e) {
-    this.props.setIaas(e.target.value);
-  },
-  componentWillReceiveProps: function(nextProps) {
-    this.setState({iaas: nextProps.iaas});
+var Tab = React.createClass({displayName: "Tab",
+  onClick: function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (this.props.active)
+      return;
+    if(this.props.setActive !== undefined){
+      this.props.setActive(this.props.name);
+    }
   },
   render: function() {
     return (
-      React.createElement("div", {className: "iaas"}, 
-        React.createElement("label", null, "Iaas name: ", React.createElement("input", {type: "text", value: this.state.iaas, onChange: this.onChange}))
+      React.createElement("li", {className: this.props.active ? "active" : ''}, 
+        React.createElement("a", {href: "#", onClick: this.onClick}, this.props.name)
       )
     );
   }
 });
 
-var NodeCreate = React.createClass({displayName: "NodeCreate",
+var Tabs = React.createClass({displayName: "Tabs",
   getInitialState: function() {
-    function idMaker() { var initial = 0; return function() { initial++; return initial}}
-    return {
-      templates: [],
-      iaas: "",
-      register: false,
-      metadata: [],
-      id: 0,
-      getId: idMaker(),
-      disabled: false
-     };
+    return {active: ""};
   },
-  cancel: function() {
-    this.setState({metadata: [], register: false});
-  },
-  registerToggle: function() {
-    if (!this.state.register) {
-        this.addMetadata("address", "");
-    } else {
-        this.removeMetadata("address");
-    }
-    this.setState({register: !this.state.register});
-  },
-  getId: function() {
-    return this.state.getId();
-  },
-  metaIndexByKey: function(key) {
-    var index = -1;
-    var meta = this.state.metadata;
-    meta.forEach(function(metadata, i) {
-      if (metadata.key === key) {
-        index = i;
-      }
-    });
-    return index;
-  },
-  addMetadata: function(key, value) {
-    var metadata = this.state.metadata;
-    var m = {key: key, value: value};
-    var index = this.metaIndexByKey(key);
-    if (index === -1) {
-        m.id = this.getId();
-        metadata.push(m);
-        this.setState({metadata: metadata});
-    } else {
-        this.editMetadata(key, key, value);
+  setActive: function(name) {
+    this.setState({active: name});
+    if(this.props.setActive !== undefined){
+      this.props.setActive(name);
     }
   },
-  removeMetadata: function(key) {
-    var index = this.metaIndexByKey(key);
-    if (index === -1 )
-      return;
-    var meta = this.state.metadata;
-    meta.splice(index, 1);
-    this.setState({metadata: meta});
-  },
-  editMetadata: function(key, newKey, newValue) {
-    var index = this.metaIndexByKey(key);
-    if (index === -1)
-        return;
-
-    var metadata = this.state.metadata;
-    var m = metadata[index];
-    m.key = newKey;
-    m.value = newValue;
-    metadata[index] = m;
-    this.setState({metadata: metadata});
-  },
-  add: function(e) {
-    e.preventDefault();
-    this.addMetadata("", "");
-  },
-  loadTemplates: function() {
-	$.ajax({
-	  type: 'GET',
-	  url: "/admin/templates.json",
-	  success: function(data) {
-        this.setState({templates: data});
-	  }.bind(this)
-	});
+  componentWillReceiveProps: function(nextProps) {
+    if ((this.state.active === "") && nextProps.tabs.length > 0) {
+      this.setActive(nextProps.tabs[0]);
+    }
   },
   componentDidMount: function() {
-    this.loadTemplates();
+    if ((this.state.active === "") && this.props.tabs.length > 0) {
+      this.setActive(this.props.tabs[0]);
+    }
   },
-  selectTemplate: function(templateName) {
-    this.state.templates.forEach(function(template) {
-      if (template.Name === templateName) {
-        this.setIaas(template.IaaSName);
-        template.Data.forEach(function(metaData) {
-          this.addMetadata(metaData.Name, metaData.Value);
-        }.bind(this));
-      }
+  render: function() {
+    var self = this;
+    return (
+      React.createElement("ul", {className: "nav nav-pills"}, 
+        this.props.tabs.map(function(tab) {
+          return React.createElement(Tab, {key: tab, 
+                  name: tab, 
+                  active: tab === self.state.active, 
+                  setActive: self.setActive})
+        })
+      )
+    );
+  }
+});
+
+var Components = {
+  Button: Button,
+  CancelBtn: CancelBtn,
+  Tab: Tab,
+  Tabs: Tabs
+};
+
+module.exports = Components;
+
+},{"react":159}],161:[function(require,module,exports){
+var React = require('react');
+
+if(typeof window.jQuery === 'undefined') {
+  var $ = require('jquery');
+} else {
+  var $ = window.jQuery;
+}
+
+var GraphContainer = React.createClass({displayName: "GraphContainer",
+  getInitialState: function() {
+    return {
+      model: {},
+      data_url: this.props.data_url,
+      intervalID: null,
+      refresh: this.props.refresh
+    }
+  },
+  getDefaultProps: function() {
+    return {
+      legend: false,
+      refresh: false
+    }
+  },
+  componentDidMount: function() {
+    this.refreshData();
+  },
+  componentWillReceiveProps: function(nextProps) {
+    var state = this.state;
+    state.data_url = nextProps.data_url;
+    state.refresh = nextProps.refresh;
+    this.setState(state);
+    this.refreshData();
+  },
+  componentWillUnmount: function() {
+    if(this.state.intervalID !== null){
+      clearInterval(this.state.intervalID);
+    }
+  },
+  refreshData: function() {
+    this.loadData(this.state.data_url);
+    this.configureRefreshInterval();
+  },
+  loadData: function(url) {
+    $.getJSON(url, function(data) {
+      if (Object.keys(data.data).length === 0)
+        data.data = {" ": [1,1]};
+      var state = this.state;
+      state.model = data.data;
+      this.setState(state);
     }.bind(this));
   },
-  addNode: function() {
-    this.setState({disabled: true});
-    var url = "/admin/node/add/?register=" + this.state.register;
-    var data = {};
-    this.state.metadata.forEach(function(metadata) {
-      data[metadata.key] = metadata.value;
-	});
-    if (this.state.iaas.length > 0) {
-      data["iaas"] = this.state.iaas;
+  configureRefreshInterval: function() {
+    var state = this.state;
+    if(state.refresh && state.intervalID === null) {
+      state.intervalID = setInterval(this.refreshData, 60000);
+    } else if(!state.refresh && state.intervalID !== null) {
+      clearInterval(state.intervalID);
+      state.intervalID = null;
     }
-    $.ajax({
-      type: "POST",
-      url: url,
-      data: data,
-      success: function() {
-  		location.reload();
-      }.bind(this)
-    });
-  },
-  setIaas: function(iaas) {
-    this.setState({iaas: iaas});
+    this.setState(state);
   },
   render: function() {
     return (
-      React.createElement("div", {className: "node-create"}, 
-        React.createElement("div", {className: "modal-header"}, 
-          React.createElement("h3", {id: "myModalLabel"}, "Create node")
+      React.createElement("div", {className: "graph-container"}, 
+        React.createElement("h2", null, this.props.title), 
+        React.createElement(Graph, {id: this.props.id, legend: this.props.legend, model: this.state.model})
+      )
+    );
+  }
+});
+
+var Graph = React.createClass({displayName: "Graph",
+  getOptions: function() {
+    return {
+      xaxis: {
+        mode: "time",
+        timezone: "browser"
+      },
+      grid: {
+        hoverable: true,
+      },
+      tooltip: {
+        show: true,
+        content: "%x the %s was %y"
+      },
+      legend: {
+        position: "sw",
+        show: this.props.legend
+      }
+    }
+  },
+  componentDidMount: function() {
+    this.renderGraph();
+  },
+  componentDidUpdate: function() {
+    this.renderGraph();
+  },
+  renderGraph: function() {
+    var $elem = $("#" + this.props.id);
+    var d = [];
+    for (var key in this.props.model) {
+      d.push({
+        data: this.props.model[key],
+        lines: {show: true, fill: true},
+        label: key
+      });
+    }
+    $.plot($elem, d, this.getOptions());
+  },
+  render: function() {
+    return (
+      React.createElement("div", {id: this.props.id, className: "graph"})
+    );
+  }
+});
+
+var Metrics = React.createClass({displayName: "Metrics",
+  getInitialState: function() {
+    return {
+      "interval": this.props.interval,
+      "from": this.props.from,
+      "size": "small",
+      "legend": this.props.legend,
+      "refresh": true,
+    }
+  },
+  getDefaultProps: function() {
+    return {
+      interval: "1m",
+      from: "1h",
+      targetType: "app",
+      legend: false,
+      titles: {
+        cpu_max: "cpu (%)",
+        mem_max: "memory (MB)",
+        swap: "swap (MB)",
+        connections: "connections",
+        units: "units",
+        requests_min: "requests min",
+        response_time: "response time (seconds)",
+        http_methods: "http methods",
+        status_code: "status code",
+        nettx: "net up (KB/s)",
+        netrx: "net down (KB/s)"
+      },
+      metrics: [
+        "cpu_max", "mem_max", "swap",
+        "connections", "units"
+      ]
+    }
+  },
+  getMetricDataUrl: function(metric) {
+    var targetType = this.props.targetType;
+    var targetName = this.props.targetName;
+    var interval = this.state.interval;
+    var from = this.state.from;
+
+    var url = "/metrics/" + targetType + "/" + targetName;
+    url += "/?metric=" + metric + "&interval=" + interval + "&date_range=" + from;
+
+    if(this.props.processName !== undefined) {
+      url += "&process_name=" + this.props.processName;
+    }
+
+    return url;
+  },
+  getGraphContainer: function(metric) {
+    var id = this.props.targetName.split('.').join('-') + "_" + metric;
+    var title = this.props.titles[metric] ? this.props.titles[metric] : metric;
+    return (
+      React.createElement(GraphContainer, {id: id, title: title, 
+        data_url: this.getMetricDataUrl(metric), 
+        legend: this.state.legend, key: id, 
+        refresh: this.state.refresh}
+      )
+    );
+  },
+  updateFrom: function(from) {
+    var newState = this.state;
+    newState.from = from;
+    this.setState(newState);
+    if(this.props.onFromChange) {
+      this.props.onFromChange(from);
+    }
+  },
+  updateInterval: function(interval) {
+    var newState = this.state;
+    newState.interval = interval;
+    this.setState(newState);
+  },
+  updateSize: function(size) {
+    var newState = this.state;
+    newState.size = size;
+    newState.legend = size === "large";
+    this.setState(newState);
+  },
+  updateRefresh: function(refresh) {
+    var newState = this.state;
+    newState.refresh = refresh;
+    this.setState(newState);
+  },
+  render: function() {
+    var self = this;
+    var className = "graphs-" + this.state.size;
+    return (
+      React.createElement("div", {className: "metrics"}, 
+        React.createElement("div", {className: "metrics-options"}, 
+          React.createElement(TimeRangeFilter, {onChange: self.updateFrom}), 
+          React.createElement(PeriodSelector, {onChange: self.updateInterval}), 
+          React.createElement(SizeSelector, {onChange: self.updateSize}), 
+          React.createElement(AutoRefresh, {onChange: self.updateRefresh, checked: self.state.refresh})
         ), 
-        React.createElement("div", {className: "modal-body"}, 
-          this.state.templates.length > 0 ? React.createElement(Template, {templates: this.state.templates, selectTemplate: this.selectTemplate}) : "", 
-          React.createElement(Register, {register: this.state.register, onClick: this.registerToggle}), 
- 	      React.createElement(Iaas, {iaas: this.state.iaas}), 
-          React.createElement(Meta, {metadata: this.state.metadata, removeMetadata: this.removeMetadata, editMetadata: this.editMetadata})
-        ), 
-        React.createElement("div", {className: "modal-footer"}, 
-          React.createElement(CancelBtn, {onClick: this.cancel, disabled: this.state.disabled}), 
-          React.createElement(Button, {text: "Add metadata", onClick: this.add, disabled: this.state.disabled}), 
-          React.createElement(Button, {text: "Create node", onClick: this.addNode, disabled: this.state.disabled})
+        React.createElement("div", {className: className}, 
+          self.props.metrics.map(function(metric) {
+            return self.getGraphContainer(metric);
+          })
         )
       )
     );
   }
 });
 
-module.exports = NodeCreate;
+var TimeRangeFilter = React.createClass({displayName: "TimeRangeFilter",
+  handleChange: function(event) {
+    this.props.onChange(event.target.value);
+  },
+  render: function() {
+    return (
+      React.createElement("div", {className: "metrics-range"}, 
+        React.createElement("label", null, "Time range:"), 
+        React.createElement("select", {name: "from", onChange: this.handleChange}, 
+          React.createElement("option", {value: "1h"}, "last hour"), 
+          React.createElement("option", {value: "3h"}, "last 3 hours"), 
+          React.createElement("option", {value: "6h"}, "last 6 hours"), 
+          React.createElement("option", {value: "12h"}, "last 12 hours"), 
+          React.createElement("option", {value: "1d"}, "last 24 hours"), 
+          React.createElement("option", {value: "3d"}, "last 3 days"), 
+          React.createElement("option", {value: "1w"}, "last 1 week"), 
+          React.createElement("option", {value: "2w"}, "last 2 weeks")
+        )
+      )
+    )
+  }
+});
 
-},{"jquery":28,"react":159}],161:[function(require,module,exports){
+var PeriodSelector = React.createClass({displayName: "PeriodSelector",
+  handleChange: function(event) {
+    this.props.onChange(event.target.value);
+  },
+  render: function() {
+    return (
+      React.createElement("div", {className: "metrics-period"}, 
+        React.createElement("label", null, "Period:"), 
+        React.createElement("select", {name: "serie", onChange: this.handleChange}, 
+          React.createElement("option", {value: "1m"}, "1 minute"), 
+          React.createElement("option", {value: "5m"}, "5 minutes"), 
+          React.createElement("option", {value: "15m"}, "15 minutes"), 
+          React.createElement("option", {value: "1h"}, "1 hour"), 
+          React.createElement("option", {value: "6h"}, "6 hours"), 
+          React.createElement("option", {value: "1d"}, "1 day")
+        )
+      )
+    )
+  }
+});
+
+var SizeSelector = React.createClass({displayName: "SizeSelector",
+  handleChange: function(event) {
+    this.props.onChange(event.target.value);
+  },
+  render: function() {
+    return (
+      React.createElement("div", {className: "metrics-size"}, 
+        React.createElement("label", null, "Size:"), 
+        React.createElement("select", {name: "size", onChange: this.handleChange}, 
+          React.createElement("option", {value: "small"}, "Small"), 
+          React.createElement("option", {value: "medium"}, "Medium"), 
+          React.createElement("option", {value: "large"}, "Large")
+        )
+      )
+    )
+  }
+});
+
+var AutoRefresh = React.createClass({displayName: "AutoRefresh",
+  getInitialState: function() {
+    return {
+      checked: this.props.checked
+    }
+  },
+  handleChange: function(event) {
+    var checked = event.target.checked;
+    this.setState({checked: checked});
+    this.props.onChange(checked);
+  },
+  render: function() {
+    return (
+      React.createElement("div", {className: "metrics-refresh"}, 
+        React.createElement("input", {type: "checkbox", name: "refresh", checked: this.state.checked, 
+          onChange: this.handleChange}), 
+        React.createElement("label", null, "Auto refresh (every 60 seconds)")
+      )
+    )
+  }
+});
+
+var WebTransactionsMetrics = React.createClass({displayName: "WebTransactionsMetrics",
+  render: function() {
+    return (
+      React.createElement(Metrics, {metrics: ["requests_min", "response_time",
+        "http_methods", "status_code", "nettx", "netrx"], 
+        targetName: this.props.appName, 
+        targetType: "app", 
+        onFromChange: this.props.onFromChange}
+      )
+    )
+  }
+});
+
+module.exports = {
+    Metrics: Metrics,
+    WebTransactionsMetrics: WebTransactionsMetrics,
+    GraphContainer: GraphContainer,
+    Graph: Graph
+};
+
+},{"jquery":28,"react":159}],162:[function(require,module,exports){
+var React = require('react'),
+  ReactDOM = require('react-dom'),
+  Metrics = require("../components/metrics.jsx").Metrics,
+  Tabs = require("../components/base.jsx").Tabs;
+
+if(typeof window.jQuery === 'undefined') {
+  var $ = require('jquery');
+} else {
+  var $ = window.jQuery;
+}
+
+var NodeInfo = React.createClass({displayName: "NodeInfo",
+  getInitialState: function() {
+    return {
+      node: null
+    }
+  },
+  nodeInfo: function() {
+    $.ajax({
+      type: 'GET',
+      url: this.props.url,
+      success: function(data) {
+        this.setState({node: data.node});
+      }.bind(this)
+    });
+  },
+  componentDidMount: function() {
+    this.nodeInfo();
+  },
+  render: function() {
+    return (
+      React.createElement("div", {className: "node-container"}, 
+        this.state.node === null ? "" : React.createElement(Node, {node: this.state.node})
+      )
+    );
+  }
+});
+
+var Node = React.createClass({displayName: "Node",
+  getInitialState: function() {
+    return {
+      tab: "Containers"
+    }
+  },
+  setActive: function(tab) {
+    this.setState({tab: tab});
+  },
+  render: function() {
+    var info = this.props.node.info;
+    var nodeAddr = info.Address.split('/')[2].split(':')[0];
+    return (
+      React.createElement("div", {className: "node"}, 
+        React.createElement("h1", null, info.Metadata.pool, " - ", info.Address, " - ", info.Status), 
+        React.createElement(Tabs, {tabs: ["Containers", "Metadata", "Metrics"], setActive: this.setActive}), 
+        React.createElement("div", {className: "tab-content"}, 
+          this.state.tab === "Containers" ? React.createElement(Containers, {containers: this.props.node.containers}) : "", 
+          this.state.tab === "Metrics" ? React.createElement(NodeMetrics, {addr: nodeAddr}) : "", 
+          this.state.tab === "Metadata" ? React.createElement(Metadata, {metadata: info.Metadata}) : "", 
+          React.createElement(DeleteNodeBtn, {addr: info.Address})
+        )
+      )
+    );
+  }
+});
+
+var Containers = React.createClass({displayName: "Containers",
+  render: function() {
+    return (
+      React.createElement("div", {className: "containers"}, 
+        React.createElement("table", {className: "table"}, 
+          React.createElement("tbody", null, 
+            React.createElement("tr", null, 
+              React.createElement("th", null, "ID"), 
+              React.createElement("th", null, "AppName"), 
+              React.createElement("th", null, "Type"), 
+              React.createElement("th", null, "Process name"), 
+              React.createElement("th", null, "IP"), 
+              React.createElement("th", null, "HostPort"), 
+              React.createElement("th", null, "Status")
+            ), 
+            this.props.containers.map(function(c) {
+              return React.createElement(Container, {key: c.ID, container: c})
+            })
+          )
+        )
+      )
+    );
+  }
+});
+
+var Container = React.createClass({displayName: "Container",
+  render: function() {
+    var container = this.props.container;
+    var appUrl = "/apps/"+container.AppName;
+    return (
+      React.createElement("tr", null, 
+        React.createElement("td", null, container.ID.slice(0,12)), 
+        React.createElement("td", null, React.createElement("a", {href: appUrl}, container.AppName)), 
+        React.createElement("td", null, container.Type), 
+        React.createElement("td", null, container.ProcessName), 
+        React.createElement("td", null, container.IP), 
+        React.createElement("td", null, container.HostPort), 
+        React.createElement("td", null, container.Status)
+      )
+    );
+  }
+});
+
+var Metadata = React.createClass({displayName: "Metadata",
+  render: function() {
+    var self = this;
+    return (
+      React.createElement("div", {className: "metadata"}, 
+        React.createElement("table", {className: "table"}, 
+          React.createElement("tbody", null, 
+            Object.keys(self.props.metadata).map(function(m){
+              return (
+                React.createElement("tr", {key: m}, 
+                  React.createElement("td", null, React.createElement("strong", null, m)), 
+                  React.createElement("td", null, self.props.metadata[m])
+                )
+              )
+            })
+          )
+        )
+      )
+    )
+  }
+});
+
+var NodeMetrics = React.createClass({displayName: "NodeMetrics",
+  render: function() {
+    return (
+      React.createElement(Metrics, {metrics: ["load", "cpu_max", "mem_max", "nettx", "netrx"], 
+        targetName: this.props.addr, 
+        targetType: "node"}
+      )
+    );
+  }
+});
+
+var DeleteNodeBtn = React.createClass({displayName: "DeleteNodeBtn",
+  getInitialState: function() {
+    return {
+      isOnConfirmation: false
+    }
+  },
+  onClick: function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    this.setState({isOnConfirmation: !this.state.isOnConfirmation});
+  },
+  handleCancel: function(e) {
+    this.setState({isOnConfirmation: false});
+  },
+  render: function() {
+    return (
+      React.createElement("div", {className: "deleteNode"}, 
+        React.createElement("a", {className: "btn btn-danger", onClick: this.onClick}, "Delete node"), 
+        this.state.isOnConfirmation === true ? React.createElement(DeleteNodeConfirmation, {addr: this.props.addr, onClose: this.handleCancel}) : ""
+      )
+    );
+  }
+});
+
+var DeleteNodeConfirmation = React.createClass({displayName: "DeleteNodeConfirmation",
+  getInitialState: function() {
+    return {
+      confirmation: "",
+      rebalance: true,
+      destroy: true,
+      isConfirmed: false
+    }
+  },
+  componentDidMount: function() {
+    $(ReactDOM.findDOMNode(this)).modal('show');
+  },
+  handleConfirmationChange: function(e) {
+    var state = this.state;
+    state.confirmation = e.target.value;
+    state.isConfirmed = state.confirmation === this.props.addr;
+    this.setState(state);
+  },
+  handleChange: function(e) {
+    var state = this.state;
+    state[e.target.name] = !state[e.target.name];
+    this.setState(state);
+  },
+  handleClose: function(e) {
+    e.preventDefault();
+    if(this.props.onClose !== undefined) {
+      this.props.onClose(e);
+    }
+  },
+  onSubmit: function(e) {
+    if(!isConfirmed){
+      e.preventDefault();
+    }
+  },
+  render: function() {
+    var removeUrl = "/admin/node/" + this.props.addr + "/remove"
+    return (
+      React.createElement("div", {id: "confirmation", className: "modal fade", role: "dialog", "aria-labelledby": "myModalLabel"}, 
+        React.createElement("div", {className: "modal-dialog", role: "document"}, 
+          React.createElement("div", {className: "modal-content"}, 
+            React.createElement("form", {onSubmit: this.onSubmit, action: removeUrl, method: "get"}, 
+              React.createElement("div", {className: "modal-header"}, 
+                React.createElement("button", {type: "button", className: "close", "data-dismiss": "modal", "aria-hidden": "true", onClick: this.handleClose}, "×"), 
+                React.createElement("h3", {id: "myModalLabel"}, "Are you sure?")
+              ), 
+              React.createElement("div", {className: "modal-body"}, 
+                React.createElement("p", null, "This action ", React.createElement("strong", null, "CANNOT"), " be undone. This will permanently delete the ", React.createElement("strong", null, this.props.addr), " node."), 
+                React.createElement("p", null, "Please type in the node address to confirm."), 
+                React.createElement("input", {type: "text", className: "remove-confirmation", value: this.state.confirmation, onChange: this.handleConfirmationChange}), 
+                React.createElement("input", {type: "checkbox", name: "rebalance", checked: this.state.rebalance, onChange: this.handleChange, value: this.state.rebalance}), 
+                React.createElement("label", {htmlFor: "rebalance"}, "rebalance?"), 
+                React.createElement("input", {type: "checkbox", name: "destroy", checked: this.state.destroy, onChange: this.handleChange, value: this.state.destroy}), 
+                React.createElement("label", {htmlFor: "destroy"}, "destroy machine (iaas)")
+              ), 
+              React.createElement("div", {className: "modal-footer"}, 
+                React.createElement("button", {className: "btn", "data-dismiss": "modal", "aria-hidden": "true", onClick: this.handleClose}, "Cancel"), 
+                React.createElement("button", {className: "btn btn-danger btn-remove", disabled: !this.state.isConfirmed}, "I understand the consequences, delete this node")
+              )
+            )
+          )
+        )
+      )
+    )
+  }
+});
+
+
+module.exports = {
+  NodeInfo: NodeInfo
+};
+
+},{"../components/base.jsx":160,"../components/metrics.jsx":161,"jquery":28,"react":159,"react-dom":30}],163:[function(require,module,exports){
 var React = require('react'),
     ReactDOM = require('react-dom'),
-    NodeCreate = require("../components/node-create.jsx");
+    NodeInfo = require("../components/node-info.jsx").NodeInfo;
 
+var url = window.location.pathname + "containers";
 ReactDOM.render(
-  React.createElement(NodeCreate, null),
-  document.getElementById('node-create')
+  React.createElement(NodeInfo, {url: url}),
+  document.getElementById('node-info')
 );
 
-},{"../components/node-create.jsx":160,"react":159,"react-dom":30}]},{},[161]);
+},{"../components/node-info.jsx":162,"react":159,"react-dom":30}]},{},[163]);

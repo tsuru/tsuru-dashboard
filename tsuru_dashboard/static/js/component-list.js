@@ -11119,6 +11119,9 @@ var currentQueue;
 var queueIndex = -1;
 
 function cleanUpNextTick() {
+    if (!draining || !currentQueue) {
+        return;
+    }
     draining = false;
     if (currentQueue.length) {
         queue = currentQueue.concat(queue);
@@ -29059,6 +29062,11 @@ var GraphContainer = React.createClass({displayName: "GraphContainer",
     this.setState(state);
     this.refreshData();
   },
+  componentWillUnmount: function() {
+    if(this.state.intervalID !== null){
+      clearInterval(this.state.intervalID);
+    }
+  },
   refreshData: function() {
     this.loadData(this.state.data_url);
     this.configureRefreshInterval();
@@ -29188,9 +29196,10 @@ var Metrics = React.createClass({displayName: "Metrics",
     return url;
   },
   getGraphContainer: function(metric) {
-    var id = this.props.targetName + "_" + metric;
+    var id = this.props.targetName.split('.').join('-') + "_" + metric;
+    var title = this.props.titles[metric] ? this.props.titles[metric] : metric;
     return (
-      React.createElement(GraphContainer, {id: id, title: this.props.titles[metric], 
+      React.createElement(GraphContainer, {id: id, title: title, 
         data_url: this.getMetricDataUrl(metric), 
         legend: this.state.legend, key: id, 
         refresh: this.state.refresh}

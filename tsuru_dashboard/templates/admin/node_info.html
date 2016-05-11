@@ -1,98 +1,23 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 
+{% block extra_css %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static "css/metrics/components/metrics.css" %}">
+<link rel="stylesheet" href="{% static "css/pages/node-info.css" %}">
+{% endblock %}
+
 {% block sidebar %}
 	{% include "sidebar.html" with active="docker" %}
 {% endblock %}
 
-{% block header %}
-    <h1>{{ node.Metadata.pool }} - {{ address }} - {{ node.Status }}</h1>
-{% endblock %}
-
 {% block content %}
-<div class="container-fluid">
-	<div class="row">
-		<div class="col-md-12">
-            <ul class="nav nav-pills">
-                <li class="active"><a data-toggle="tab"  href="#containers">Containers</a></li>
-                <li><a data-toggle="tab" href="#metadata">Metadata</a></li>
-            </ul>
-            <div class="tab-content">
-                <div id="containers"  class="tab-pane fade in active">
-                    <table class="table">
-                        <tr>
-                            <th>ID</th>
-                            <th>AppName</th>
-                            <th>Type</th>
-                            <th>Process name</th>
-                            <th>IP</th>
-                            <th>HostPort</th>
-                            <th>Status</th>
-                        </tr>
-                        {% for container in containers %}
-                        <tr>
-                            <td>{{ container.ID|slice:":12" }}</td>
-                            <td><a href="{% url 'detail-app' container.AppName %}">{{ container.AppName }}</a></td>
-                            <td>{{ container.Type }}</td>
-                            <td>{{ container.ProcessName }}</td>
-                            <td>{{ container.IP }}</td>
-                            <td>{{ container.HostPort }}</td>
-                            <td>{{ container.Status }}</td>
-                        </tr>
-                        {% endfor %}
-                    </table>
-                </div>
-                <div id="metadata" class="tab-pane fade">
-                    <table class="table">
-                    {% for k, v in node.Metadata.items %}
-                        <tr>
-                            <td><strong>{{ k }}</strong></td><td>{{ v }}</td>
-                        </tr>
-                    {% endfor %}
-                    </table>
-                </div>
-            </div>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-md-12">
-	        <div class="content">
-			    <a class="btn btn-danger" href="#confirmation" data-toggle="modal">
-				    Delete node
-                </a>
-			</div>
-		</div>
-	</div>
-</div>
-
-<div id="confirmation" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	<div class="modal-dialog" role="document">
-	<div class="modal-content">
-		<form method="get" action="{% url "node-remove" address %}">
-	    <div class="modal-header">
-		    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-		    <h3 id="myModalLabel">Are you sure?</h3>
-	    </div>
-	    <div class="modal-body">
-            <p>This action <strong>CANNOT</strong> be undone. This will permanently delete the <strong>{{ address }}</strong> node.</p>
-		    <p>Please type in the node address to confirm.</p>
-		    <input type="text" class="remove-confirmation" />
-            <label><input type="checkbox" value="true" name="rebalance" checked> rebalance?</label>
-            <label><input type="checkbox" value="true" name="destroy" checked> destroy machine (iaas)</label>
-	    </div>
-	    <div class="modal-footer">
-			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-			<button class="btn btn-danger btn-remove" disabled="disabled">I understand the consequences, delete this node</button>
-	    </div>
-	</form>
-</div>
-</div>
-</div>
+    <div id="node-info"></div>
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static "js/confirmation.js" %}"></script>
-<script type="text/javascript">
-  $.confirmation(".btn-remove", ".remove-confirmation", "{{ address }}");
-</script>
+<script src="{% static "js/jquery.flot.min.js" %}"></script>
+<script src="{% static "js/jquery.flot.time.min.js" %}"></script>
+<script src="{% static "js/jquery.flot.tooltip.min.js" %}"></script>
+<script src="{% static "js/node-info.js" %}"></script>
 {% endblock %}
