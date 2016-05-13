@@ -53,9 +53,9 @@ var Node = React.createClass({
         <h1>{info.Metadata.pool} - {info.Address} - {info.Status}</h1>
         <Tabs tabs={["Containers", "Metadata", "Metrics"]} setActive={this.setActive} />
         <div className="tab-content">
-          {this.state.tab === "Containers" ? <Containers containers={this.props.node.containers}/> : ""}
-          {this.state.tab === "Metrics" ? <NodeMetrics addr={nodeAddr}/> : ""}
-          {this.state.tab === "Metadata" ? <Metadata metadata={info.Metadata}/> : ""}
+          {this.state.tab === "Containers" ? <ContainersTab containers={this.props.node.containers}/> : ""}
+          {this.state.tab === "Metrics" ? <MetricsTab addr={nodeAddr}/> : ""}
+          {this.state.tab === "Metadata" ? <MetadataTab metadata={info.Metadata}/> : ""}
           <DeleteNodeBtn addr={info.Address}/>
         </div>
       </div>
@@ -63,7 +63,7 @@ var Node = React.createClass({
   }
 });
 
-var Containers = React.createClass({
+var ContainersTab = React.createClass({
   render: function() {
     return (
       <div className="containers">
@@ -79,7 +79,7 @@ var Containers = React.createClass({
               <th>Status</th>
             </tr>
             {this.props.containers.map(function(c) {
-              return <Container key={c.ID} container={c}/>
+              return <ContainerRow key={c.ID} container={c}/>
             })}
           </tbody>
         </table>
@@ -88,7 +88,7 @@ var Containers = React.createClass({
   }
 });
 
-var Container = React.createClass({
+var ContainerRow = React.createClass({
   render: function() {
     var container = this.props.container;
     var appUrl = "/apps/"+container.AppName;
@@ -106,7 +106,7 @@ var Container = React.createClass({
   }
 });
 
-var Metadata = React.createClass({
+var MetadataTab = React.createClass({
   render: function() {
     var self = this;
     return (
@@ -128,7 +128,7 @@ var Metadata = React.createClass({
   }
 });
 
-var NodeMetrics = React.createClass({
+var MetricsTab = React.createClass({
   render: function() {
     return (
       <Metrics metrics={["load", "cpu_max", "mem_max", "nettx", "netrx"]}
@@ -193,7 +193,7 @@ var DeleteNodeConfirmation = React.createClass({
     }
   },
   onSubmit: function(e) {
-    if(!isConfirmed){
+    if(!this.state.isConfirmed){
       e.preventDefault();
     }
   },
@@ -218,7 +218,7 @@ var DeleteNodeConfirmation = React.createClass({
                 <label htmlFor="destroy">destroy machine (iaas)</label>
               </div>
               <div className="modal-footer">
-                <button className="btn" data-dismiss="modal" aria-hidden="true" onClick={this.handleClose}>Cancel</button>
+                <button className="btn cancel" data-dismiss="modal" aria-hidden="true" onClick={this.handleClose}>Cancel</button>
                 <button className="btn btn-danger btn-remove" disabled={!this.state.isConfirmed}>I understand the consequences, delete this node</button>
               </div>
             </form>
@@ -232,6 +232,12 @@ var DeleteNodeConfirmation = React.createClass({
 
 module.exports = {
   NodeInfo: NodeInfo,
-  Node: Node
+  Node: Node,
+  MetricsTab: MetricsTab,
+  ContainersTab: ContainersTab,
+  MetadataTab: MetadataTab,
+  DeleteNodeBtn: DeleteNodeBtn,
+  ContainerRow: ContainerRow,
+  DeleteNodeConfirmation: DeleteNodeConfirmation
 };
 

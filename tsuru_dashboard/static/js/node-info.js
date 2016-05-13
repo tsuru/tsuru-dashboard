@@ -29375,9 +29375,9 @@ var Node = React.createClass({displayName: "Node",
         React.createElement("h1", null, info.Metadata.pool, " - ", info.Address, " - ", info.Status), 
         React.createElement(Tabs, {tabs: ["Containers", "Metadata", "Metrics"], setActive: this.setActive}), 
         React.createElement("div", {className: "tab-content"}, 
-          this.state.tab === "Containers" ? React.createElement(Containers, {containers: this.props.node.containers}) : "", 
-          this.state.tab === "Metrics" ? React.createElement(NodeMetrics, {addr: nodeAddr}) : "", 
-          this.state.tab === "Metadata" ? React.createElement(Metadata, {metadata: info.Metadata}) : "", 
+          this.state.tab === "Containers" ? React.createElement(ContainersTab, {containers: this.props.node.containers}) : "", 
+          this.state.tab === "Metrics" ? React.createElement(MetricsTab, {addr: nodeAddr}) : "", 
+          this.state.tab === "Metadata" ? React.createElement(MetadataTab, {metadata: info.Metadata}) : "", 
           React.createElement(DeleteNodeBtn, {addr: info.Address})
         )
       )
@@ -29385,7 +29385,7 @@ var Node = React.createClass({displayName: "Node",
   }
 });
 
-var Containers = React.createClass({displayName: "Containers",
+var ContainersTab = React.createClass({displayName: "ContainersTab",
   render: function() {
     return (
       React.createElement("div", {className: "containers"}, 
@@ -29401,7 +29401,7 @@ var Containers = React.createClass({displayName: "Containers",
               React.createElement("th", null, "Status")
             ), 
             this.props.containers.map(function(c) {
-              return React.createElement(Container, {key: c.ID, container: c})
+              return React.createElement(ContainerRow, {key: c.ID, container: c})
             })
           )
         )
@@ -29410,7 +29410,7 @@ var Containers = React.createClass({displayName: "Containers",
   }
 });
 
-var Container = React.createClass({displayName: "Container",
+var ContainerRow = React.createClass({displayName: "ContainerRow",
   render: function() {
     var container = this.props.container;
     var appUrl = "/apps/"+container.AppName;
@@ -29428,7 +29428,7 @@ var Container = React.createClass({displayName: "Container",
   }
 });
 
-var Metadata = React.createClass({displayName: "Metadata",
+var MetadataTab = React.createClass({displayName: "MetadataTab",
   render: function() {
     var self = this;
     return (
@@ -29450,7 +29450,7 @@ var Metadata = React.createClass({displayName: "Metadata",
   }
 });
 
-var NodeMetrics = React.createClass({displayName: "NodeMetrics",
+var MetricsTab = React.createClass({displayName: "MetricsTab",
   render: function() {
     return (
       React.createElement(Metrics, {metrics: ["load", "cpu_max", "mem_max", "nettx", "netrx"], 
@@ -29515,7 +29515,7 @@ var DeleteNodeConfirmation = React.createClass({displayName: "DeleteNodeConfirma
     }
   },
   onSubmit: function(e) {
-    if(!isConfirmed){
+    if(!this.state.isConfirmed){
       e.preventDefault();
     }
   },
@@ -29540,7 +29540,7 @@ var DeleteNodeConfirmation = React.createClass({displayName: "DeleteNodeConfirma
                 React.createElement("label", {htmlFor: "destroy"}, "destroy machine (iaas)")
               ), 
               React.createElement("div", {className: "modal-footer"}, 
-                React.createElement("button", {className: "btn", "data-dismiss": "modal", "aria-hidden": "true", onClick: this.handleClose}, "Cancel"), 
+                React.createElement("button", {className: "btn cancel", "data-dismiss": "modal", "aria-hidden": "true", onClick: this.handleClose}, "Cancel"), 
                 React.createElement("button", {className: "btn btn-danger btn-remove", disabled: !this.state.isConfirmed}, "I understand the consequences, delete this node")
               )
             )
@@ -29553,7 +29553,14 @@ var DeleteNodeConfirmation = React.createClass({displayName: "DeleteNodeConfirma
 
 
 module.exports = {
-  NodeInfo: NodeInfo
+  NodeInfo: NodeInfo,
+  Node: Node,
+  MetricsTab: MetricsTab,
+  ContainersTab: ContainersTab,
+  MetadataTab: MetadataTab,
+  DeleteNodeBtn: DeleteNodeBtn,
+  ContainerRow: ContainerRow,
+  DeleteNodeConfirmation: DeleteNodeConfirmation
 };
 
 },{"../components/base.jsx":160,"../components/metrics.jsx":161,"jquery":28,"react":159,"react-dom":30}],163:[function(require,module,exports){
