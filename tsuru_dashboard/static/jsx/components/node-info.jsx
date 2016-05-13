@@ -56,7 +56,7 @@ var Node = React.createClass({
           {this.state.tab === "Containers" ? <ContainersTab containers={this.props.node.containers}/> : ""}
           {this.state.tab === "Metrics" ? <MetricsTab addr={nodeAddr}/> : ""}
           {this.state.tab === "Metadata" ? <MetadataTab metadata={info.Metadata}/> : ""}
-          <DeleteNodeBtn addr={info.Address}/>
+          <DeleteNodeBtn addr={info.Address} removeURL={this.props.node.nodeRemovalURL}/>
         </div>
       </div>
     );
@@ -91,11 +91,10 @@ var ContainersTab = React.createClass({
 var ContainerRow = React.createClass({
   render: function() {
     var container = this.props.container;
-    var appUrl = "/apps/"+container.AppName;
     return (
       <tr>
         <td>{container.ID.slice(0,12)}</td>
-        <td><a href={appUrl}>{container.AppName}</a></td>
+        <td><a href={container.DashboardURL}>{container.AppName}</a></td>
         <td>{container.Type}</td>
         <td>{container.ProcessName}</td>
         <td>{container.IP}</td>
@@ -157,7 +156,8 @@ var DeleteNodeBtn = React.createClass({
     return (
       <div className="deleteNode">
         <a className="btn btn-danger" onClick={this.onClick}>Delete node</a>
-        {this.state.isOnConfirmation === true ? <DeleteNodeConfirmation addr={this.props.addr} onClose={this.handleCancel}/> : ""}
+        {this.state.isOnConfirmation === true ? <DeleteNodeConfirmation addr={this.props.addr}
+          onClose={this.handleCancel} removeAction={this.props.removeURL}/> : ""}
       </div>
     );
   }
@@ -173,7 +173,11 @@ var DeleteNodeConfirmation = React.createClass({
     }
   },
   componentDidMount: function() {
-    $(ReactDOM.findDOMNode(this)).modal('show');
+    var domElem = $(ReactDOM.findDOMNode(this));
+    if(domElem !== undefined){
+      domElem.modal('show');
+    }
+
   },
   handleConfirmationChange: function(e) {
     var state = this.state;
@@ -198,12 +202,11 @@ var DeleteNodeConfirmation = React.createClass({
     }
   },
   render: function() {
-    var removeUrl = "/admin/node/" + this.props.addr + "/remove"
     return (
       <div id="confirmation" className="modal fade" role="dialog" aria-labelledby="myModalLabel">
         <div className="modal-dialog" role="document">
           <div className="modal-content">
-            <form onSubmit={this.onSubmit} action={removeUrl} method="get">
+            <form onSubmit={this.onSubmit} action={this.props.removeAction} method="get">
               <div className="modal-header">
                 <button type="button" className="close" data-dismiss="modal" aria-hidden="true" onClick={this.handleClose}>×</button>
                 <h3 id="myModalLabel">Are you sure?</h3>

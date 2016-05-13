@@ -29378,7 +29378,7 @@ var Node = React.createClass({displayName: "Node",
           this.state.tab === "Containers" ? React.createElement(ContainersTab, {containers: this.props.node.containers}) : "", 
           this.state.tab === "Metrics" ? React.createElement(MetricsTab, {addr: nodeAddr}) : "", 
           this.state.tab === "Metadata" ? React.createElement(MetadataTab, {metadata: info.Metadata}) : "", 
-          React.createElement(DeleteNodeBtn, {addr: info.Address})
+          React.createElement(DeleteNodeBtn, {addr: info.Address, removeURL: this.props.node.nodeRemovalURL})
         )
       )
     );
@@ -29413,11 +29413,10 @@ var ContainersTab = React.createClass({displayName: "ContainersTab",
 var ContainerRow = React.createClass({displayName: "ContainerRow",
   render: function() {
     var container = this.props.container;
-    var appUrl = "/apps/"+container.AppName;
     return (
       React.createElement("tr", null, 
         React.createElement("td", null, container.ID.slice(0,12)), 
-        React.createElement("td", null, React.createElement("a", {href: appUrl}, container.AppName)), 
+        React.createElement("td", null, React.createElement("a", {href: container.DashboardURL}, container.AppName)), 
         React.createElement("td", null, container.Type), 
         React.createElement("td", null, container.ProcessName), 
         React.createElement("td", null, container.IP), 
@@ -29479,7 +29478,8 @@ var DeleteNodeBtn = React.createClass({displayName: "DeleteNodeBtn",
     return (
       React.createElement("div", {className: "deleteNode"}, 
         React.createElement("a", {className: "btn btn-danger", onClick: this.onClick}, "Delete node"), 
-        this.state.isOnConfirmation === true ? React.createElement(DeleteNodeConfirmation, {addr: this.props.addr, onClose: this.handleCancel}) : ""
+        this.state.isOnConfirmation === true ? React.createElement(DeleteNodeConfirmation, {addr: this.props.addr, 
+          onClose: this.handleCancel, removeAction: this.props.removeURL}) : ""
       )
     );
   }
@@ -29520,12 +29520,11 @@ var DeleteNodeConfirmation = React.createClass({displayName: "DeleteNodeConfirma
     }
   },
   render: function() {
-    var removeUrl = "/admin/node/" + this.props.addr + "/remove"
     return (
       React.createElement("div", {id: "confirmation", className: "modal fade", role: "dialog", "aria-labelledby": "myModalLabel"}, 
         React.createElement("div", {className: "modal-dialog", role: "document"}, 
           React.createElement("div", {className: "modal-content"}, 
-            React.createElement("form", {onSubmit: this.onSubmit, action: removeUrl, method: "get"}, 
+            React.createElement("form", {onSubmit: this.onSubmit, action: this.props.removeAction, method: "get"}, 
               React.createElement("div", {className: "modal-header"}, 
                 React.createElement("button", {type: "button", className: "close", "data-dismiss": "modal", "aria-hidden": "true", onClick: this.handleClose}, "×"), 
                 React.createElement("h3", {id: "myModalLabel"}, "Are you sure?")

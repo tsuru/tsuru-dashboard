@@ -133,6 +133,7 @@ describe('ContainersTab', function() {
   var containersData = [{
       Status: "started",
       AppName: "tsuru-dashboard",
+      DashboardURL: "/apps/tsuru-dashboard/",
       IP: "172.17.0.3",
       ProcessName: "web",
       HostPort: "49153",
@@ -141,6 +142,7 @@ describe('ContainersTab', function() {
     {
       Status: "started",
       AppName: "tsuru-dashboard2",
+      DashboardURL: "/apps/tsuru-dashboard2/",
       IP: "172.17.0.2",
       ProcessName: "web",
       HostPort: "49152",
@@ -158,6 +160,11 @@ describe('ContainersTab', function() {
     expect(rows.length).toBe(2);
     expect(rows.first().props().container).toBe(containersData[0]);
     expect(rows.last().props().container).toBe(containersData[1]);
+  });
+
+  it('renders the app link', function() {
+    const containers = Enzyme.mount(<ContainersTab containers={containersData}/>);
+    expect(containers.find("a").first().props().href).toBe("/apps/tsuru-dashboard/");
   });
 
 });
@@ -193,11 +200,12 @@ describe('DeleteNodeBtn', function() {
   });
 
   it('renders the confirmation on click', function() {
-    const deleteBtn = Enzyme.shallow(<DeleteNodeBtn addr="http://127.0.0.1"/>);
+    const deleteBtn = Enzyme.shallow(<DeleteNodeBtn addr="http://127.0.0.1" removeURL={"/remove"}/>);
     deleteBtn.find("a").simulate("click", fakeEvent);
     var confirmation = deleteBtn.find(DeleteNodeConfirmation);
     expect(confirmation.length).toBe(1);
     expect(confirmation.props().addr).toBe("http://127.0.0.1");
+    expect(confirmation.props().removeAction).toBe("/remove");
   });
 });
 
@@ -292,5 +300,14 @@ describe('DeleteNodeConfirmation', function() {
     expect(confirmation.state().rebalance).toBe(false);
     expect(confirmation.state().destroy).toBe(false);
   });
+
+  it('renders a form with correct action', function() {
+    const confirmation = Enzyme.mount(
+      <DeleteNodeConfirmation addr="http://127.0.0.1" removeAction={"/remove"}/>
+    );
+    var form = confirmation.find("form");
+    expect(form.length).toBe(1);
+    expect(form.props().action).toBe("/remove");
+  })
 
 });

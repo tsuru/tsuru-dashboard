@@ -25,7 +25,7 @@ class NodeInfoViewTest(TestCase):
 
         url = "{}/docker/node/{}/containers".format(settings.TSURU_HOST, 'http://127.0.0.2:4243')
         self.containers = [
-            {"id": "blabla", "type": "python", "appname": "myapp", "hostaddr": "http://127.0.0.2:4243"}
+            {"id": "blabla", "type": "python", "AppName": "myapp", "hostaddr": "http://127.0.0.2:4243"}
         ]
         httpretty.register_uri(
             httpretty.GET,
@@ -71,14 +71,20 @@ class NodeInfoViewTest(TestCase):
         httpretty.reset()
 
     def teste_should_get_list_of_containers_from_tsuru(self):
-        self.assertListEqual(self.containers, self.responseContent["node"]["containers"])
+        containers = self.containers
+        containers[0]["DashboardURL"] = u"/apps/myapp/"
+        self.assertListEqual(containers, self.responseContent["node"]["containers"])
 
     def teste_should_get_node_info_from_tsuru(self):
         self.assertDictEqual(self.nodes["nodes"][0], self.responseContent["node"]["info"])
 
     def test_get_request_run_url_should_not_return_404(self):
-        response = self.client.get(reverse('node-info', args=[self.address.replace("http://", "")]))
+        response = self.client.get(reverse('node-info-json', args=[self.address.replace("http://", "")]))
         self.assertNotEqual(404, response.status_code)
+
+    def test_should_return_remove_node_url(self):
+        expected = u"/admin/node/http://127.0.0.2:4243/remove/"
+        self.assertEqual(expected, self.responseContent["node"]["nodeRemovalURL"])
 
     @patch("tsuru_dashboard.auth.views.token_is_valid")
     def teste_should_get_list_of_containers_empty_list(self, token_is_valid):

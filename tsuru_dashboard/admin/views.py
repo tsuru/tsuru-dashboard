@@ -129,10 +129,16 @@ class NodeInfoJson(LoginRequiredView):
         return None
 
     def get(self, *args, **kwargs):
+        containers = self.get_containers(kwargs["address"])
+        for container in containers:
+            if "AppName" in container:
+                container["DashboardURL"] = reverse(
+                    'detail-app', kwargs={'app_name': container["AppName"]})
         return JsonResponse({
             "node": {
                 "info": self.get_node(kwargs["address"]),
-                "containers": self.get_containers(kwargs["address"]),
+                "containers": containers,
+                "nodeRemovalURL": reverse('node-remove', kwargs={'address': kwargs["address"]})
             }
         })
 
