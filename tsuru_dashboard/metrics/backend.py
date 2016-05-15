@@ -166,6 +166,9 @@ class ElasticSearch(object):
 
     def cpu_max(self, interval=None):
         query = self.query(interval=interval)
+        query["query"]["filtered"]["filter"]["bool"]["must"].append(
+            {"range": {"value": {"lt": 500}}}
+        )
         response = self.post(query, "cpu_max")
         process = self.process(response)
         return process
