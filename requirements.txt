@@ -1,7 +1,7 @@
 Django==1.9.6
 tsuru_dashboard==0.2.19
 gunicorn==19.3.0
-gevent==1.1b6
+gevent==1.1.1
 raven==4.2.3
 grequests==0.2.0
 Pygments==2.1
