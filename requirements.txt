@@ -1,5 +1,5 @@
 Django==1.9.6
-tsuru_dashboard==0.1.1
+tsuru_dashboard==0.2.19
 gunicorn==19.3.0
 gevent==1.1b6
 raven==4.2.3
