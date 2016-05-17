@@ -64,6 +64,17 @@ class NodesMetricsBackendTest(TestCase):
             }
         }
 
+        self.net_aggregation = {
+            "addrs": {
+                "terms": {
+                    "field": "addr.raw",
+                    "include": "127.0.0.1|128.0.0.1",
+                    "size": 2
+                },
+                "aggs": NET_AGGREGATION["units"]["aggs"]
+            }
+        }
+
     @patch("requests.post")
     def test_cpu_max(self, post_mock):
         self.backend.cpu_max()
@@ -87,6 +98,20 @@ class NodesMetricsBackendTest(TestCase):
         self.backend.disk()
         url = "{}/{}/{}/_search".format(self.backend.url, self.index, "host_disk_used")
         post_mock.assert_called_with(url, data=json.dumps(self.backend.query(aggregation=self.aggregation)))
+
+    @patch("requests.post")
+    def test_nettx(self, post_mock):
+        self.backend.nettx()
+        url = "{}/{}/{}/_search".format(self.backend.url, self.index, "host_nettx")
+        post_mock.assert_called_with(url, data=json.dumps(
+            self.backend.query(aggregation=self.net_aggregation)))
+
+    @patch("requests.post")
+    def test_netrx(self, post_mock):
+        self.backend.netrx()
+        url = "{}/{}/{}/_search".format(self.backend.url, self.index, "host_netrx")
+        post_mock.assert_called_with(url, data=json.dumps(
+            self.backend.query(aggregation=self.net_aggregation)))
 
     def test_process(self):
         data = {

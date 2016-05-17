@@ -523,34 +523,35 @@ class NodesMetricsBackend(TsuruMetricsBackend):
         filter = NodeFilter(node=addrs, date_range=date_range)
         return super(NodesMetricsBackend, self).__init__(filter=filter, date_range=date_range)
 
-    def process(self, data, formatter=None):
+    def process(self, data, formatter=None, processor=None):
         if formatter is None:
             def default_formatter(x):
                 return x
             formatter = default_formatter
+        if processor is None:
+            def default_processor(result, bucket):
+                if not result:
+                    result = {}
+                    for addr in self.addrs:
+                        result[addr] = []
 
-        def processor(result, bucket):
-            if not result:
-                result = {}
-                for addr in self.addrs:
-                    result[addr] = []
-
-            for b in bucket["addrs"]["buckets"]:
-                result[b["key"]].append([bucket["key"], formatter(b["avg"]["value"])])
-            return result, None, None
-
+                for b in bucket["addrs"]["buckets"]:
+                    result[b["key"]].append([bucket["key"], formatter(b["avg"]["value"])])
+                return result, None, None
+            processor = default_processor
         return self.base_process(data=data, processor=processor)
 
-    def per_addr_agg(self):
+    def per_addr_agg(self, aggs=None):
+        if aggs is None:
+            aggs = {"avg": {"avg": {"field": "value"}}}
         return {
             "addrs": {
                 "terms": {
                     "field": "addr.raw",
                     "include": '|'.join(self.addrs),
                     "size": len(self.addrs)
-
                 },
-                "aggs": {"avg": {"avg": {"field": "value"}}}
+                "aggs": aggs
             }
         }
 
@@ -569,3 +570,23 @@ class NodesMetricsBackend(TsuruMetricsBackend):
     def disk(self, interval=None):
         query = self.query(interval=interval, aggregation=self.per_addr_agg())
         return self.process(self.post(query, "host_disk_used"), formatter=lambda x: x / (1024 * 1024))
+
+    def netrx(self, interval=None):
+        query = self.query(interval=interval, aggregation=self.per_addr_agg(
+            aggs=NET_AGGREGATION["units"]["aggs"]))
+        return self.process(self.post(query, "host_netrx"), processor=self.net_processor)
+
+    def nettx(self, interval=None):
+        query = self.query(interval=interval, aggregation=self.per_addr_agg(
+            aggs=NET_AGGREGATION["units"]["aggs"]))
+        return self.process(self.post(query, "host_nettx"), processor=self.net_processor)
+
+    def net_processor(self, result, bucket):
+        if not result:
+            result = {}
+            for addr in self.addrs:
+                result[addr] = []
+        for b in bucket["addrs"]["buckets"]:
+            print b
+            result[b["key"]].append([bucket["key"], b["delta"]["value"]])
+        return result, None, None
