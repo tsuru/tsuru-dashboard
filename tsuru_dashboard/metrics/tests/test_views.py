@@ -3,6 +3,8 @@ from django.test.client import RequestFactory
 from tsuru_dashboard import settings
 from tsuru_dashboard.metrics import views
 from mock import patch, Mock
+import httpretty
+import json
 
 
 class AppMetricViewTest(TestCase):
@@ -93,3 +95,50 @@ class MetricViewTest(TestCase):
         response = view(request, name="app_name")
 
         self.assertEqual(response.status_code, 400)
+
+
+class PoolMetricViewTest(TestCase):
+
+    def setUp(self):
+        self.api_url = "{}/docker/node".format(settings.TSURU_HOST)
+        data = {
+            "machines": None,
+            "nodes": [
+                {"Address": "http://128.0.0.1:4243",
+                    "Metadata": {"LastSuccess": "2014-08-01T14:09:40-03:00",
+                                 "pool": "theonepool"},
+                 "Status": "ready"},
+                {"Address": "http://127.0.0.1:2375",
+                 "Metadata": {"LastSuccess": "2014-08-01T14:09:40-03:00",
+                              "pool": "theonepool"},
+                 "Status": "ready"},
+                {"Address": "http://myserver.com:2375",
+                 "Metadata": {"LastSuccess": "2014-08-01T14:09:40-03:00",
+                              "pool": "anotherpool"},
+                 "Status": "ready"},
+            ],
+        }
+        self.api_body = json.dumps(data)
+        self.maxDiff = None
+        self.request = RequestFactory().get("/")
+        self.request.session = {"tsuru_token": "admin"}
+
+    @httpretty.activate
+    def test_get_pool_nodes_addrs(self):
+        httpretty.register_uri(httpretty.GET, self.api_url, body=self.api_body)
+        view = views.PoolMetric(request=self.request)
+        addrs = view.get_pool_nodes("theonepool")
+        self.assertEqual(addrs, ["128.0.0.1", "127.0.0.1"])
+
+    @httpretty.activate
+    @patch("requests.post")
+    @patch("tsuru_dashboard.auth.views.token_is_valid")
+    def test_get_pool_metric(self, token_is_valid, post_mock):
+        token_is_valid.return_value = True
+        httpretty.register_uri(httpretty.GET, self.api_url, body=self.api_body)
+        view = views.PoolMetric.as_view()
+        request = RequestFactory().get("/ble/?metric=cpu_max&date_range=2h/h&interval=30m")
+        request.session = {"tsuru_token": "token"}
+        response = view(request, target="theonepool")
+
+        self.assertEqual(response.status_code, 200)

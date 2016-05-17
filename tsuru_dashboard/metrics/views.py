@@ -2,7 +2,7 @@ from django.http import HttpResponse, HttpResponseBadRequest
 
 from tsuru_dashboard import settings
 from tsuru_dashboard.auth.views import LoginRequiredView
-from .backend import AppBackend, TsuruMetricsBackend, ComponentFilter, NodeMetricsBackend
+from .backend import AppBackend, TsuruMetricsBackend, ComponentFilter, NodeMetricsBackend, NodesMetricsBackend
 import json
 import requests
 
@@ -57,3 +57,23 @@ class ComponentMetric(Metric):
 class NodeMetric(Metric):
     def get_metrics_backend(self, metric, target, date_range, token):
         return NodeMetricsBackend(addr=target, date_range=date_range)
+
+
+class PoolMetric(Metric):
+    def get_pool_nodes(self, pool_name):
+        url = "{}/docker/node".format(settings.TSURU_HOST)
+        response = requests.get(url, headers=self.authorization)
+        pool_nodes = []
+        if response.status_code != 204:
+            nodes = response.json().get("nodes", [])
+
+            for node in nodes:
+                if node["Metadata"].get("pool", "") == pool_name:
+                    addr = node["Address"].split("http://")[-1].split(":")[0]
+                    pool_nodes.append(addr)
+
+        return pool_nodes
+
+    def get_metrics_backend(self, metric, target, date_range, token):
+        addrs = self.get_pool_nodes(target)
+        return NodesMetricsBackend(addrs=addrs, date_range=date_range)

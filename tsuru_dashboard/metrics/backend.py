@@ -515,3 +515,57 @@ class NodeMetricsBackend(TsuruMetricsBackend):
     def disk(self, interval=None):
         query = self.query(interval=interval, aggregation=self.per_type_agg())
         return self.base_process(self.post(query, "host_disk_used,host_disk_total"), self.disk_process)
+
+
+class NodesMetricsBackend(TsuruMetricsBackend):
+    def __init__(self, addrs, date_range=None):
+        self.addrs = addrs
+        filter = NodeFilter(node=addrs, date_range=date_range)
+        return super(NodesMetricsBackend, self).__init__(filter=filter, date_range=date_range)
+
+    def process(self, data, formatter=None):
+        if formatter is None:
+            def default_formatter(x):
+                return x
+            formatter = default_formatter
+
+        def processor(result, bucket):
+            if not result:
+                result = {}
+                for addr in self.addrs:
+                    result[addr] = []
+
+            for b in bucket["addrs"]["buckets"]:
+                result[b["key"]].append([bucket["key"], formatter(b["avg"]["value"])])
+            return result, None, None
+
+        return self.base_process(data=data, processor=processor)
+
+    def per_addr_agg(self):
+        return {
+            "addrs": {
+                "terms": {
+                    "field": "addr.raw",
+                    "include": '|'.join(self.addrs),
+                    "size": len(self.addrs)
+
+                },
+                "aggs": {"avg": {"avg": {"field": "value"}}}
+            }
+        }
+
+    def mem_max(self, interval=None):
+        query = self.query(interval=interval, aggregation=self.per_addr_agg())
+        return self.process(self.post(query, "host_mem_used"), formatter=lambda x: x / (1024 * 1024))
+
+    def cpu_max(self, interval=None):
+        query = self.query(interval=interval, aggregation=self.per_addr_agg())
+        return self.process(self.post(query, "host_cpu_busy"), formatter=lambda x: x * 100)
+
+    def swap(self, interval=None):
+        query = self.query(interval=interval, aggregation=self.per_addr_agg())
+        return self.process(self.post(query, "host_swap_used"), formatter=lambda x: x / (1024 * 1024))
+
+    def disk(self, interval=None):
+        query = self.query(interval=interval, aggregation=self.per_addr_agg())
+        return self.process(self.post(query, "host_disk_used"), formatter=lambda x: x / (1024 * 1024))

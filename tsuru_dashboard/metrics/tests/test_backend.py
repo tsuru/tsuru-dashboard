@@ -1,7 +1,7 @@
 from django.test import TestCase
 from tsuru_dashboard.metrics.backend import AppBackend, MetricNotEnabled
 from tsuru_dashboard.metrics.backend import ElasticSearch, AppFilter, TsuruMetricsBackend, NodeMetricsBackend
-from tsuru_dashboard.metrics.backend import NET_AGGREGATION
+from tsuru_dashboard.metrics.backend import NET_AGGREGATION, NodesMetricsBackend
 from mock import patch, Mock
 import datetime
 import json
@@ -47,6 +47,110 @@ class TsuruMetricsBackendTest(TestCase):
         self.assertEqual(backend.url, u'http://localhost:9200')
         self.assertEqual(backend.filtered_query, AppFilter(app="app_name").query())
         self.assertEqual(backend.date_range, u'2h')
+
+
+class NodesMetricsBackendTest(TestCase):
+    def setUp(self):
+        self.backend = NodesMetricsBackend(addrs=["127.0.0.1", "128.0.0.1"])
+        self.index = ".measure-tsuru-{}".format(datetime.datetime.utcnow().strftime("%Y.%m.%d"))
+        self.aggregation = {
+            "addrs": {
+                "terms": {
+                    "field": "addr.raw",
+                    "include": "127.0.0.1|128.0.0.1",
+                    "size": 2
+                },
+                "aggs": {"avg": {"avg": {"field": "value"}}}
+            }
+        }
+
+    @patch("requests.post")
+    def test_cpu_max(self, post_mock):
+        self.backend.cpu_max()
+        url = "{}/{}/{}/_search".format(self.backend.url, self.index, "host_cpu_busy")
+        post_mock.assert_called_with(url, data=json.dumps(self.backend.query(aggregation=self.aggregation)))
+
+    @patch("requests.post")
+    def test_mem_max(self, post_mock):
+        self.backend.mem_max()
+        url = "{}/{}/{}/_search".format(self.backend.url, self.index, "host_mem_used")
+        post_mock.assert_called_with(url, data=json.dumps(self.backend.query(aggregation=self.aggregation)))
+
+    @patch("requests.post")
+    def test_swap(self, post_mock):
+        self.backend.swap()
+        url = "{}/{}/{}/_search".format(self.backend.url, self.index, "host_swap_used")
+        post_mock.assert_called_with(url, data=json.dumps(self.backend.query(aggregation=self.aggregation)))
+
+    @patch("requests.post")
+    def test_disk(self, post_mock):
+        self.backend.disk()
+        url = "{}/{}/{}/_search".format(self.backend.url, self.index, "host_disk_used")
+        post_mock.assert_called_with(url, data=json.dumps(self.backend.query(aggregation=self.aggregation)))
+
+    def test_process(self):
+        data = {
+            "hits": {
+                "hits": [],
+                "total": 899,
+                "max_score": 0.0
+            },
+            "_shards": {
+                "successful": 2,
+                "failed": 0,
+                "total": 2
+            },
+            "took": 1400,
+            "aggregations": {
+                "date": {
+                    "buckets": [{
+                        "addrs": {
+                            "buckets": [{
+                                "avg": {"value": 10.1},
+                                "key": "127.0.0.1",
+                                "doc_count": 15
+                            }, {
+                                "avg": {"value": 9.2},
+                                "key": "128.0.0.1",
+                                "doc_count": 15
+                            }],
+                            "sum_other_doc_count": 0,
+                            "doc_count_error_upper_bound": 0
+                        },
+                        "key_as_string": "2015-07-21T19:35:00.000Z",
+                        "key": 1437507300000,
+                        "doc_count": 15
+                    }, {
+                        "addrs": {
+                            "buckets": [{
+                                "avg": {"value": 10},
+                                "key": "127.0.0.1",
+                                "doc_count": 15
+                            }, {
+                                "avg": {"value": 9.5},
+                                "key": "128.0.0.1",
+                                "doc_count": 15
+                            }],
+                            "sum_other_doc_count": 0,
+                            "doc_count_error_upper_bound": 0
+                        },
+                        "key_as_string": "2015-07-21T19:36:00.000Z",
+                        "key": 1437507360000,
+                        "doc_count": 15
+                    }]
+                }
+            }
+        }
+        expected = {
+            "data": {
+                "127.0.0.1": [[1437507300000, 20.2], [1437507360000, 20]],
+                "128.0.0.1": [[1437507300000, 18.4], [1437507360000, 19]],
+            },
+            "min": 0,
+            "max": 1
+        }
+        d = self.backend.process(data=data, formatter=lambda x: x * 2)
+        self.assertDictEqual(d, expected)
 
 
 class NodeMetricsBackendTest(TestCase):
