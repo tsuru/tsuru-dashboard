@@ -29126,17 +29126,18 @@ var Metrics = React.createClass({displayName: "Metrics",
       targetType: "app",
       legend: false,
       titles: {
-        cpu_max: "cpu (%)",
-        mem_max: "memory (MB)",
-        swap: "swap (MB)",
-        connections: "connections",
-        units: "units",
-        requests_min: "requests min",
-        response_time: "response time (seconds)",
-        http_methods: "http methods",
-        status_code: "status code",
-        nettx: "net up (KB/s)",
-        netrx: "net down (KB/s)"
+        cpu_max:        "cpu (%)",
+        mem_max:        "memory (MB)",
+        swap:           "swap (MB)",
+        connections:    "connections",
+        units:          "units",
+        requests_min:   "requests min",
+        response_time:  "response time (seconds)",
+        http_methods:   "http methods",
+        status_code:    "status code",
+        nettx:          "net up (KB/s)",
+        netrx:          "net down (KB/s)",
+        disk:           "disk space on / (MB)"
       },
       metrics: [
         "cpu_max", "mem_max", "swap",
@@ -29452,7 +29453,7 @@ var MetadataTab = React.createClass({displayName: "MetadataTab",
 var MetricsTab = React.createClass({displayName: "MetricsTab",
   render: function() {
     return (
-      React.createElement(Metrics, {metrics: ["load", "cpu_max", "mem_max", "nettx", "netrx"], 
+      React.createElement(Metrics, {metrics: ["load", "cpu_max", "mem_max", "nettx", "netrx", "disk", "swap"], 
         targetName: this.props.addr, 
         targetType: "node"}
       )
@@ -29495,7 +29496,11 @@ var DeleteNodeConfirmation = React.createClass({displayName: "DeleteNodeConfirma
     }
   },
   componentDidMount: function() {
-    $(ReactDOM.findDOMNode(this)).modal('show');
+    var domElem = $(ReactDOM.findDOMNode(this));
+    if(domElem !== undefined){
+      domElem.modal('show');
+    }
+
   },
   handleConfirmationChange: function(e) {
     var state = this.state;

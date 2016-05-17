@@ -78,7 +78,7 @@ class ElasticSearchFilterTest(TestCase):
                     {
                         "bool": {
                             "should": [
-                                {"term": {"addr.raw": "127.0.0.1"}},
+                                {"terms": {"addr.raw": ["127.0.0.1"]}},
                             ]
                         },
                     },

@@ -188,7 +188,7 @@ describe('MetricsTab', function() {
     var props = metricsTab.find(Metrics).props();
     expect(props.targetName).toBe("127.0.0.1");
     expect(props.targetType).toBe("node");
-    expect(props.metrics).toEqual(["load", "cpu_max", "mem_max", "nettx", "netrx"]);
+    expect(props.metrics).toEqual(["load", "cpu_max", "mem_max", "nettx", "netrx", "disk", "swap"]);
   });
 });
 

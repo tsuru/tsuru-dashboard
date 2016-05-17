@@ -82,7 +82,8 @@ class NodeMetricsBackendTest(TestCase):
             }
         }
         self.backend.cpu_max()
-        url = "{}/{}/{}/_search".format(self.backend.url, self.index, "host_cpu_user,host_cpu_sys")
+        url = "{}/{}/{}/_search".format(
+            self.backend.url, self.index, "host_cpu_user,host_cpu_sys,host_cpu_wait")
         post_mock.assert_called_with(url, data=json.dumps(self.backend.query(aggregation=aggregation)))
 
     @patch("requests.post")
@@ -95,6 +96,30 @@ class NodeMetricsBackendTest(TestCase):
         }
         self.backend.load()
         url = "{}/{}/{}/_search".format(self.backend.url, self.index, "host_load1,host_load5,host_load15")
+        post_mock.assert_called_with(url, data=json.dumps(self.backend.query(aggregation=aggregation)))
+
+    @patch("requests.post")
+    def test_swap(self, post_mock):
+        aggregation = {
+            "stats": {
+                "terms": {"field": "_type"},
+                "aggs": {"stats": {"stats": {"field": "value"}}}
+            }
+        }
+        self.backend.swap()
+        url = "{}/{}/{}/_search".format(self.backend.url, self.index, "host_swap_used,host_swap_total")
+        post_mock.assert_called_with(url, data=json.dumps(self.backend.query(aggregation=aggregation)))
+
+    @patch("requests.post")
+    def test_disk(self, post_mock):
+        aggregation = {
+            "stats": {
+                "terms": {"field": "_type"},
+                "aggs": {"stats": {"stats": {"field": "value"}}}
+            }
+        }
+        self.backend.disk()
+        url = "{}/{}/{}/_search".format(self.backend.url, self.index, "host_disk_used,host_disk_total")
         post_mock.assert_called_with(url, data=json.dumps(self.backend.query(aggregation=aggregation)))
 
     def test_load_process(self):
@@ -218,6 +243,12 @@ class NodeMetricsBackendTest(TestCase):
                                             "avg": 0.015
                                         },
                                         "key": "host_cpu_user"
+                                    },
+                                    {
+                                        "stats": {
+                                            "avg": 0.001
+                                        },
+                                        "key": "host_cpu_wait"
                                     }
                                 ]
                             }
@@ -239,6 +270,12 @@ class NodeMetricsBackendTest(TestCase):
                                             "avg": 0.016
                                         },
                                         "key": "host_cpu_user"
+                                    },
+                                    {
+                                        "stats": {
+                                            "avg": 0.000
+                                        },
+                                        "key": "host_cpu_wait"
                                     }
                                 ]
                             }
@@ -251,6 +288,7 @@ class NodeMetricsBackendTest(TestCase):
             "data": {
                 "sys": [[1437507300000, 2.1], [1437507360000, 2.0]],
                 "user": [[1437507300000, 1.5], [1437507360000, 1.6]],
+                "wait": [[1437507300000, 0.1], [1437507360000, 0]],
             },
             "min": 0,
             "max": 1

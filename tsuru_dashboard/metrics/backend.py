@@ -66,6 +66,11 @@ class ElasticSearchFilter(object):
     def term_filter(self, field, value):
         return {"term": {field: value}}
 
+    def terms_filter(self, field, values):
+        if(type(values) is not list):
+            values = [values]
+        return {"terms": {field: values}}
+
     def timestamp_filter(self, date_range):
         if date_range is None:
             date_range = "1h"
@@ -90,7 +95,7 @@ class NodeFilter(ElasticSearchFilter):
         self.filter = self.node_filter(node)
 
     def node_filter(self, node):
-        return self.metric_filter(self.term_filter("addr.raw", node))
+        return self.metric_filter(self.terms_filter("addr.raw", node))
 
 
 class ComponentFilter(ElasticSearchFilter):
@@ -459,34 +464,38 @@ class NodeMetricsBackend(TsuruMetricsBackend):
         return self.multi_index_avg(result, bucket)
 
     def cpu_max_process(self, result, bucket):
-        def formatter(x):
-            return x * 100
         if not result:
             result = {
                 "user": [],
-                "sys": []
+                "sys": [],
+                "wait": [],
             }
-        return self.multi_index_avg(result, bucket, formatter)
+        return self.multi_index_avg(result, bucket, formatter=lambda x: x * 100)
 
-    def load(self, interval=None):
-        aggregation = {
+    def disk_process(self, result, bucket):
+        if not result:
+            result = {
+                "used": [],
+                "total": []
+            }
+        return self.multi_index_avg(result, bucket, formatter=lambda x: x / (1024 * 1024))
+
+    def per_type_agg(self):
+        return {
             "stats": {
                 "terms": {"field": "_type"},
                 "aggs": {"stats": {"stats": {"field": "value"}}}
             }
         }
-        query = self.query(interval=interval, aggregation=aggregation)
+
+    def load(self, interval=None):
+        query = self.query(interval=interval, aggregation=self.per_type_agg())
         return self.base_process(self.post(query, "host_load1,host_load5,host_load15"), self.load_process)
 
     def cpu_max(self, interval=None):
-        aggregation = {
-            "stats": {
-                "terms": {"field": "_type"},
-                "aggs": {"stats": {"stats": {"field": "value"}}}
-            }
-        }
-        query = self.query(interval=interval, aggregation=aggregation)
-        process = self.base_process(self.post(query, "host_cpu_user,host_cpu_sys"), self.cpu_max_process)
+        query = self.query(interval=interval, aggregation=self.per_type_agg())
+        process = self.base_process(self.post(
+            query, "host_cpu_user,host_cpu_sys,host_cpu_wait"), self.cpu_max_process)
         return process
 
     def mem_max(self, interval=None):
@@ -498,3 +507,11 @@ class NodeMetricsBackend(TsuruMetricsBackend):
 
     def nettx(self, interval=None):
         return self.net_metric("host_nettx", interval)
+
+    def swap(self, interval=None):
+        query = self.query(interval=interval, aggregation=self.per_type_agg())
+        return self.base_process(self.post(query, "host_swap_used,host_swap_total"), self.disk_process)
+
+    def disk(self, interval=None):
+        query = self.query(interval=interval, aggregation=self.per_type_agg())
+        return self.base_process(self.post(query, "host_disk_used,host_disk_total"), self.disk_process)

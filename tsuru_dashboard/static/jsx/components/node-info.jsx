@@ -130,7 +130,7 @@ var MetadataTab = React.createClass({
 var MetricsTab = React.createClass({
   render: function() {
     return (
-      <Metrics metrics={["load", "cpu_max", "mem_max", "nettx", "netrx"]}
+      <Metrics metrics={["load", "cpu_max", "mem_max", "nettx", "netrx", "disk", "swap"]}
         targetName={this.props.addr}
         targetType={"node"}
       />
