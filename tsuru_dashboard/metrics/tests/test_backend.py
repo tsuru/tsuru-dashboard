@@ -82,6 +82,26 @@ class NodesMetricsBackendTest(TestCase):
         post_mock.assert_called_with(url, data=json.dumps(self.backend.query(aggregation=self.aggregation)))
 
     @patch("requests.post")
+    def test_cpu_wait(self, post_mock):
+        self.backend.cpu_wait()
+        url = "{}/{}/{}/_search".format(self.backend.url, self.index, "host_cpu_wait")
+        post_mock.assert_called_with(url, data=json.dumps(self.backend.query(aggregation=self.aggregation)))
+
+    @patch("requests.post")
+    def test_load(self, post_mock):
+        self.backend.load1()
+        url = "{}/{}/{}/_search".format(self.backend.url, self.index, "host_load1")
+        post_mock.assert_called_with(url, data=json.dumps(self.backend.query(aggregation=self.aggregation)))
+
+        self.backend.load5()
+        url = "{}/{}/{}/_search".format(self.backend.url, self.index, "host_load5")
+        post_mock.assert_called_with(url, data=json.dumps(self.backend.query(aggregation=self.aggregation)))
+
+        self.backend.load15()
+        url = "{}/{}/{}/_search".format(self.backend.url, self.index, "host_load15")
+        post_mock.assert_called_with(url, data=json.dumps(self.backend.query(aggregation=self.aggregation)))
+
+    @patch("requests.post")
     def test_mem_max(self, post_mock):
         self.backend.mem_max()
         url = "{}/{}/{}/_search".format(self.backend.url, self.index, "host_mem_used")

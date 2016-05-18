@@ -29079,7 +29079,7 @@ var GraphContainer = React.createClass({displayName: "GraphContainer",
       this.setState({
         model: data.data,
         renderGraph: Object.keys(data.data).length > 0
-      })
+      });
     }.bind(this));
   },
   configureRefreshInterval: function() {
@@ -29169,6 +29169,7 @@ var Metrics = React.createClass({displayName: "Metrics",
       legend: false,
       titles: {
         cpu_max:        "cpu (%)",
+        cpu_wait:       "cpu wait (%)",
         mem_max:        "memory (MB)",
         swap:           "swap (MB)",
         connections:    "connections",
@@ -29179,7 +29180,10 @@ var Metrics = React.createClass({displayName: "Metrics",
         status_code:    "status code",
         nettx:          "net up (KB/s)",
         netrx:          "net down (KB/s)",
-        disk:           "disk space on / (MB)"
+        disk:           "disk space on / (MB)",
+        load1:          "load 1 min",
+        load5:          "load 5 min",
+        load15:         "load 15 min",
       },
       metrics: [
         "cpu_max", "mem_max", "swap",

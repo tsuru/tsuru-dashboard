@@ -563,6 +563,10 @@ class NodesMetricsBackend(TsuruMetricsBackend):
         query = self.query(interval=interval, aggregation=self.per_addr_agg())
         return self.process(self.post(query, "host_cpu_busy"), formatter=lambda x: x * 100)
 
+    def cpu_wait(self, interval=None):
+        query = self.query(interval=interval, aggregation=self.per_addr_agg())
+        return self.process(self.post(query, "host_cpu_wait"), formatter=lambda x: x * 100)
+
     def swap(self, interval=None):
         query = self.query(interval=interval, aggregation=self.per_addr_agg())
         return self.process(self.post(query, "host_swap_used"), formatter=lambda x: x / (1024 * 1024))
@@ -580,6 +584,19 @@ class NodesMetricsBackend(TsuruMetricsBackend):
         query = self.query(interval=interval, aggregation=self.per_addr_agg(
             aggs=NET_AGGREGATION["units"]["aggs"]))
         return self.process(self.post(query, "host_nettx"), processor=self.net_processor)
+
+    def load1(self, interval=None):
+        return self.load(mins=1, interval=interval)
+
+    def load5(self, interval=None):
+        return self.load(mins=5, interval=interval)
+
+    def load15(self, interval=None):
+        return self.load(mins=15, interval=interval)
+
+    def load(self, mins, interval=None):
+        query = self.query(interval=interval, aggregation=self.per_addr_agg())
+        return self.process(self.post(query, "host_load" + str(mins)))
 
     def net_processor(self, result, bucket):
         if not result:
