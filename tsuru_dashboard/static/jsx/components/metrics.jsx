@@ -25,10 +25,10 @@ var GraphContainer = React.createClass({
     this.refreshData();
   },
   componentWillReceiveProps: function(nextProps) {
-    var state = this.state;
-    state.data_url = nextProps.data_url;
-    state.refresh = nextProps.refresh;
-    this.setState(state);
+    this.setState({
+      data_url: nextProps.data_url,
+      refresh: nextProps.refresh
+    });
     this.refreshData();
   },
   componentWillUnmount: function() {
@@ -42,11 +42,7 @@ var GraphContainer = React.createClass({
   },
   loadData: function(url) {
     $.getJSON(url, function(data) {
-      if (Object.keys(data.data).length === 0)
-        data.data = {" ": [1,1]};
-      var state = this.state;
-      state.model = data.data;
-      this.setState(state);
+      this.setState({model: data.data})
     }.bind(this));
   },
   configureRefreshInterval: function() {
@@ -60,12 +56,16 @@ var GraphContainer = React.createClass({
     this.setState(state);
   },
   render: function() {
-    return (
-      <div className="graph-container">
-        <h2>{this.props.title}</h2>
-        <Graph id={this.props.id} legend={this.props.legend} model={this.state.model} />
-      </div>
-    );
+    if(Object.keys(this.state.model).length > 0){
+      return (
+        <div className="graph-container">
+          <h2>{this.props.title}</h2>
+          <Graph id={this.props.id} legend={this.props.legend} model={this.state.model} />
+        </div>
+      );
+    } else {
+      return null;
+    }
   }
 });
 

@@ -28909,10 +28909,10 @@ var GraphContainer = React.createClass({displayName: "GraphContainer",
     this.refreshData();
   },
   componentWillReceiveProps: function(nextProps) {
-    var state = this.state;
-    state.data_url = nextProps.data_url;
-    state.refresh = nextProps.refresh;
-    this.setState(state);
+    this.setState({
+      data_url: nextProps.data_url,
+      refresh: nextProps.refresh
+    });
     this.refreshData();
   },
   componentWillUnmount: function() {
@@ -28926,11 +28926,7 @@ var GraphContainer = React.createClass({displayName: "GraphContainer",
   },
   loadData: function(url) {
     $.getJSON(url, function(data) {
-      if (Object.keys(data.data).length === 0)
-        data.data = {" ": [1,1]};
-      var state = this.state;
-      state.model = data.data;
-      this.setState(state);
+      this.setState({model: data.data})
     }.bind(this));
   },
   configureRefreshInterval: function() {
@@ -28944,12 +28940,16 @@ var GraphContainer = React.createClass({displayName: "GraphContainer",
     this.setState(state);
   },
   render: function() {
-    return (
-      React.createElement("div", {className: "graph-container"}, 
-        React.createElement("h2", null, this.props.title), 
-        React.createElement(Graph, {id: this.props.id, legend: this.props.legend, model: this.state.model})
-      )
-    );
+    if(Object.keys(this.state.model).length > 0){
+      return (
+        React.createElement("div", {className: "graph-container"}, 
+          React.createElement("h2", null, this.props.title), 
+          React.createElement(Graph, {id: this.props.id, legend: this.props.legend, model: this.state.model})
+        )
+      );
+    } else {
+      return null;
+    }
   }
 });
 
