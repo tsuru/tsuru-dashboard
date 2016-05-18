@@ -125,15 +125,23 @@ describe('WebTransactionsMetrics', function() {
 });
 
 describe('GraphContainer', function() {
-
+  var data = {
+    max: 1.5,
+    data: {
+      max: [[0,1], [1,1.5]],
+      min: [[0,0.5], [1,1]]
+    },
+    min: 0
+  };
   beforeEach(() => {
     $.plot = jest.genMockFunction();
-    $.getJSON.mockClear();
+    $.getJSON = jest.fn(function(url, callback) {
+      callback(data);
+    });
   });
 
   it('has graph-container as className', function(){
-    const graphContainer = Enzyme.shallow(<GraphContainer />);
-
+    const graphContainer = Enzyme.mount(<GraphContainer data_url={"/"}/>);
     expect(graphContainer.find(".graph-container").length).toBe(1);
   });
 
@@ -149,38 +157,26 @@ describe('GraphContainer', function() {
   });
 
   it('renders the graph title', function() {
-    const graphContainer = Enzyme.shallow(
-      <GraphContainer title="This is a cool graph!"/>
+    const graphContainer = Enzyme.mount(
+      <GraphContainer title="This is a cool graph!" data_url={"url"}/>
     );
 
     expect(graphContainer.find("h2").text()).toBe("This is a cool graph!");
   });
 
   it('renders the Graph component', function() {
-    const graphContainer = Enzyme.shallow(<GraphContainer id="cpu_max" />);
+    const graphContainer = Enzyme.mount(<GraphContainer id="cpu_max" data_url={"url"}/>);
     var graph = graphContainer.find(Graph);
+
 
     expect(graph.props().id).toBe("cpu_max");
   });
 
   it('sends fetched data to child Graph', function() {
-    var prev_get = $.getJSON;
-    var data = {
-      max: 1.5,
-      data: {
-        max: [[0,1], [1,1.5]],
-        min: [[0,0.5], [1,1]]
-      },
-      min: 0
-    };
-    $.getJSON = function(url, callback) {
-      callback(data);
-    };
-    const graphContainer = Enzyme.mount(<GraphContainer kind="cpu_max" />);
+    const graphContainer = Enzyme.mount(<GraphContainer kind="cpu_max" data_url={"url"}/>);
     var graph = graphContainer.find(Graph);
 
     expect(graph.props().model).toBe(data.data);
-    $.getJSON = prev_get;
   });
 
   it('re-fetches data when props change', function() {
@@ -216,6 +212,23 @@ describe('GraphContainer', function() {
     expect($.getJSON.mock.calls.length).toBe(2);
     jest.runOnlyPendingTimers();
     expect($.getJSON.mock.calls.length).toBe(3);
+  });
+
+  it('doesnt renders when no data is fetched', function() {
+    $.getJSON = jest.fn(function(url, callback) {
+      callback({data: {}});
+    });
+    const graphContainer = Enzyme.mount(<GraphContainer data_url={"/"}/>);
+    expect(graphContainer.find(".graph-container").length).toBe(0);
+  });
+
+  it('clears the timer when unmounting', function() {
+    const graphContainer = Enzyme.mount(
+      <GraphContainer data_url={"/"} refresh={true}/>
+    );
+    expect(clearInterval.mock.calls.length).toBe(0);
+    graphContainer.unmount();
+    expect(clearInterval.mock.calls.length).toBe(1);
   });
 
 });

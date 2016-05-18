@@ -29038,12 +29038,16 @@ if(typeof window.jQuery === 'undefined') {
 }
 
 var GraphContainer = React.createClass({displayName: "GraphContainer",
+  propTypes: {
+      data_url: React.PropTypes.string.isRequired
+  },
   getInitialState: function() {
     return {
       model: {},
       data_url: this.props.data_url,
       intervalID: null,
-      refresh: this.props.refresh
+      refresh: this.props.refresh,
+      renderGraph: true
     }
   },
   getDefaultProps: function() {
@@ -29059,8 +29063,7 @@ var GraphContainer = React.createClass({displayName: "GraphContainer",
     this.setState({
       data_url: nextProps.data_url,
       refresh: nextProps.refresh
-    });
-    this.refreshData();
+    }, this.refreshData);
   },
   componentWillUnmount: function() {
     if(this.state.intervalID !== null){
@@ -29073,21 +29076,24 @@ var GraphContainer = React.createClass({displayName: "GraphContainer",
   },
   loadData: function(url) {
     $.getJSON(url, function(data) {
-      this.setState({model: data.data})
+      this.setState({
+        model: data.data,
+        renderGraph: Object.keys(data.data).length > 0
+      })
     }.bind(this));
   },
   configureRefreshInterval: function() {
-    var state = this.state;
-    if(state.refresh && state.intervalID === null) {
-      state.intervalID = setInterval(this.refreshData, 60000);
-    } else if(!state.refresh && state.intervalID !== null) {
-      clearInterval(state.intervalID);
-      state.intervalID = null;
-    }
-    this.setState(state);
+    this.setState(function(previousState, currentProps) {
+      if(previousState.refresh && previousState.intervalID === null) {
+        return {intervalID: setInterval(this.refreshData, 60000)};
+      } else if(!previousState.refresh && previousState.intervalID !== null) {
+        clearInterval(previousState.intervalID);
+        return {intervalID: null};
+      }
+    });
   },
   render: function() {
-    if(Object.keys(this.state.model).length > 0){
+    if(this.state.renderGraph){
       return (
         React.createElement("div", {className: "graph-container"}, 
           React.createElement("h2", null, this.props.title), 
@@ -29208,28 +29214,19 @@ var Metrics = React.createClass({displayName: "Metrics",
     );
   },
   updateFrom: function(from) {
-    var newState = this.state;
-    newState.from = from;
-    this.setState(newState);
+    this.setState({from: from});
     if(this.props.onFromChange) {
       this.props.onFromChange(from);
     }
   },
   updateInterval: function(interval) {
-    var newState = this.state;
-    newState.interval = interval;
-    this.setState(newState);
+    this.setState({interval: interval});
   },
   updateSize: function(size) {
-    var newState = this.state;
-    newState.size = size;
-    newState.legend = size === "large";
-    this.setState(newState);
+    this.setState({size: size, legend: size === "large"});
   },
   updateRefresh: function(refresh) {
-    var newState = this.state;
-    newState.refresh = refresh;
-    this.setState(newState);
+    this.setState({refresh: refresh});
   },
   render: function() {
     var self = this;
