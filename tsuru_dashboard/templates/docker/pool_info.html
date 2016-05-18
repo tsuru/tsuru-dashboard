@@ -3,6 +3,7 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static "css/pages/node-create.css" %}">
+<link rel="stylesheet" href="{% static "css/metrics/components/metrics.css" %}">
 {% endblock %}
 
 {% block sidebar %}
@@ -90,11 +91,20 @@
 </div>
 </div>
 </div>
+<div class="col-md-12" id="metrics-container">
+    <div id="pool-metrics">
+    </div>
+</div>
+
 {% endblock %}
 
 {% block extra_js %}
+<script src="{% static "js/jquery.min.js" %}"></script>
+<script src="{% static "js/jquery.flot.min.js" %}"></script>
+<script src="{% static "js/jquery.flot.time.min.js" %}"></script>
+<script src="{% static "js/jquery.flot.tooltip.min.js" %}"></script>
 <script src="{% static "js/confirmation.js" %}"></script>
-<script src="{% static "js/node-create.js" %}"></script>
+<script src="{% static "js/pool-info.js" %}"></script>
 {#<script src="{% static "js/pool-rebalance.js" %}"></script>#}
 <script type="text/javascript">
   $.confirmation(".btn-rebalance", ".rebalance-confirmation", "{{ pool }}");

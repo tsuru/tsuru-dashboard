@@ -587,6 +587,5 @@ class NodesMetricsBackend(TsuruMetricsBackend):
             for addr in self.addrs:
                 result[addr] = []
         for b in bucket["addrs"]["buckets"]:
-            print b
             result[b["key"]].append([bucket["key"], b["delta"]["value"]])
         return result, None, None
