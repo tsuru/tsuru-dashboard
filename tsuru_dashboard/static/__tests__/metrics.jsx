@@ -1,5 +1,5 @@
 jest.dontMock('../jsx/components/metrics.jsx');
-
+jest.dontMock('../jsx/components/loading.jsx');
 
 var React = require('react'),
     Enzyme = require('enzyme'),
@@ -8,7 +8,8 @@ var React = require('react'),
     Metrics = Module.Metrics,
     WebTransactionsMetrics = Module.WebTransactionsMetrics,
     GraphContainer = Module.GraphContainer,
-    Graph = Module.Graph;
+    Graph = Module.Graph,
+    Loading = require('../jsx/components/loading.jsx');
 
 describe('Metrics', function() {
 
@@ -110,6 +111,22 @@ describe('Metrics', function() {
     expect(metrics.state().legend).toBe(false);
   });
 
+  it('renders <Loading/> when graphs are loading', function() {
+    var getJSON = $.getJSON;
+    $.getJSON = jest.fn(function(url, callback) {});
+    const metrics = Enzyme.mount(<Metrics targetName={"myApp"} targetType={"app"} metrics={["cpu_max"]} />);
+    expect(metrics.find(Loading).length).toBe(1);
+    $.getJSON = getJSON;
+  });
+
+  it('doesnt renders <Loading/> when graphs finish loading', function() {
+    var getJSON = $.getJSON;
+    $.getJSON = jest.fn(function(url, callback) {callback({data: {}})});
+    const metrics = Enzyme.mount(<Metrics targetName={"myApp"} targetType={"app"} metrics={["cpu_max"]} />);
+    expect(metrics.find(Loading).length).toBe(0);
+    $.getJSON = getJSON;
+  });
+
 });
 
 describe('WebTransactionsMetrics', function() {
@@ -146,14 +163,20 @@ describe('GraphContainer', function() {
   });
 
   it('fetches the data url', function() {
+    var loadMock = jest.genMockFunction();
     const graphContainer = Enzyme.mount(
-      <GraphContainer data_url={"/metrics/app/myApp/?metric=cpu_max&interval=1m&date_range=1h&process_name=myProcess"}/>
+      <GraphContainer data_url={"/metrics/app/myApp/?metric=cpu_max&interval=1m&date_range=1h&process_name=myProcess"}
+        onLoad={loadMock}
+      />
     );
 
     expect($.getJSON.mock.calls.length).toBe(1);
     expect($.getJSON.mock.calls[0][0]).toBe(
       "/metrics/app/myApp/?metric=cpu_max&interval=1m&date_range=1h&process_name=myProcess"
     );
+    expect(loadMock.mock.calls.length).toBe(2);
+    expect(loadMock.mock.calls[0][0]).toBe(true);
+    expect(loadMock.mock.calls[1][0]).toBe(false);
   });
 
   it('renders the graph title', function() {

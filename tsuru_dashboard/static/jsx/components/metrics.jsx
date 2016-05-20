@@ -1,4 +1,5 @@
-var React = require('react');
+var React = require('react'),
+  Loading = require('./loading.jsx');
 
 if(typeof window.jQuery === 'undefined') {
   var $ = require('jquery');
@@ -16,23 +17,27 @@ var GraphContainer = React.createClass({
       data_url: this.props.data_url,
       intervalID: null,
       refresh: this.props.refresh,
-      renderGraph: true
+      renderGraph: false
     }
   },
   getDefaultProps: function() {
     return {
       legend: false,
-      refresh: false
+      refresh: false,
+      onLoad: function(isLoading) {}
     }
   },
   componentDidMount: function() {
     this.refreshData();
   },
   componentWillReceiveProps: function(nextProps) {
-    this.setState({
-      data_url: nextProps.data_url,
-      refresh: nextProps.refresh
-    }, this.refreshData);
+    if(this.props.data_url !== nextProps.data_url ||
+      this.props.refresh !== nextProps.refresh) {
+      this.setState({
+        data_url: nextProps.data_url,
+        refresh: nextProps.refresh
+      }, this.refreshData);
+    }
   },
   componentWillUnmount: function() {
     if(this.state.intervalID !== null){
@@ -44,11 +49,13 @@ var GraphContainer = React.createClass({
     this.configureRefreshInterval();
   },
   loadData: function(url) {
+    this.props.onLoad(true);
     $.getJSON(url, function(data) {
       this.setState({
         model: data.data,
         renderGraph: Object.keys(data.data).length > 0
       });
+      this.props.onLoad(false);
     }.bind(this));
   },
   configureRefreshInterval: function() {
@@ -128,6 +135,7 @@ var Metrics = React.createClass({
       "size": "small",
       "legend": this.props.legend,
       "refresh": true,
+      "graphsLoadingCount": 0
     }
   },
   getDefaultProps: function() {
@@ -182,7 +190,7 @@ var Metrics = React.createClass({
       <GraphContainer id={id} title={title}
         data_url={this.getMetricDataUrl(metric)}
         legend={this.state.legend} key={id}
-        refresh={this.state.refresh}
+        refresh={this.state.refresh} onLoad={this.updateGraphLoadCount}
       />
     );
   },
@@ -201,6 +209,15 @@ var Metrics = React.createClass({
   updateRefresh: function(refresh) {
     this.setState({refresh: refresh});
   },
+  updateGraphLoadCount: function(isLoading) {
+    this.setState(function(previousState, currentProps) {
+      if(isLoading) {
+        return {graphsLoadingCount: previousState.graphsLoadingCount+1};
+      } else {
+        return {graphsLoadingCount: previousState.graphsLoadingCount-1};
+      }
+    });
+  },
   render: function() {
     var self = this;
     var className = "graphs-" + this.state.size;
@@ -211,6 +228,7 @@ var Metrics = React.createClass({
           <PeriodSelector onChange={self.updateInterval}/>
           <SizeSelector onChange={self.updateSize}/>
           <AutoRefresh onChange={self.updateRefresh} checked={self.state.refresh}/>
+          {self.state.graphsLoadingCount > 0 ? <Loading className={"metrics-loader"}/> : ""}
         </div>
         <div className={className}>
           {self.props.metrics.map(function(metric) {

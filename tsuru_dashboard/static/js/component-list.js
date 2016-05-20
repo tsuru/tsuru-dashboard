@@ -29017,9 +29017,14 @@ var React = require('react'),
 
 var Loading = React.createClass({displayName: "Loading",
   mixins: [PureRenderMixin],
+  getDefaultProps: function() {
+    return {
+        className: "loader"
+    }
+  },
   render: function() {
     return (
-      React.createElement("div", {className: "loader"}, 
+      React.createElement("div", {className: this.props.className}, 
         "Loading..."
       )
     );
@@ -29029,7 +29034,8 @@ var Loading = React.createClass({displayName: "Loading",
 module.exports = Loading;
 
 },{"react":162,"react-addons-pure-render-mixin":30}],165:[function(require,module,exports){
-var React = require('react');
+var React = require('react'),
+  Loading = require('./loading.jsx');
 
 if(typeof window.jQuery === 'undefined') {
   var $ = require('jquery');
@@ -29047,23 +29053,27 @@ var GraphContainer = React.createClass({displayName: "GraphContainer",
       data_url: this.props.data_url,
       intervalID: null,
       refresh: this.props.refresh,
-      renderGraph: true
+      renderGraph: false
     }
   },
   getDefaultProps: function() {
     return {
       legend: false,
-      refresh: false
+      refresh: false,
+      onLoad: function(isLoading) {}
     }
   },
   componentDidMount: function() {
     this.refreshData();
   },
   componentWillReceiveProps: function(nextProps) {
-    this.setState({
-      data_url: nextProps.data_url,
-      refresh: nextProps.refresh
-    }, this.refreshData);
+    if(this.props.data_url !== nextProps.data_url ||
+      this.props.refresh !== nextProps.refresh) {
+      this.setState({
+        data_url: nextProps.data_url,
+        refresh: nextProps.refresh
+      }, this.refreshData);
+    }
   },
   componentWillUnmount: function() {
     if(this.state.intervalID !== null){
@@ -29075,11 +29085,13 @@ var GraphContainer = React.createClass({displayName: "GraphContainer",
     this.configureRefreshInterval();
   },
   loadData: function(url) {
+    this.props.onLoad(true);
     $.getJSON(url, function(data) {
       this.setState({
         model: data.data,
         renderGraph: Object.keys(data.data).length > 0
       });
+      this.props.onLoad(false);
     }.bind(this));
   },
   configureRefreshInterval: function() {
@@ -29159,6 +29171,7 @@ var Metrics = React.createClass({displayName: "Metrics",
       "size": "small",
       "legend": this.props.legend,
       "refresh": true,
+      "graphsLoadingCount": 0
     }
   },
   getDefaultProps: function() {
@@ -29213,7 +29226,7 @@ var Metrics = React.createClass({displayName: "Metrics",
       React.createElement(GraphContainer, {id: id, title: title, 
         data_url: this.getMetricDataUrl(metric), 
         legend: this.state.legend, key: id, 
-        refresh: this.state.refresh}
+        refresh: this.state.refresh, onLoad: this.onGraphLoad}
       )
     );
   },
@@ -29232,6 +29245,15 @@ var Metrics = React.createClass({displayName: "Metrics",
   updateRefresh: function(refresh) {
     this.setState({refresh: refresh});
   },
+  onGraphLoad: function(isLoading) {
+    this.setState(function(previousState, currentProps) {
+      if(isLoading) {
+        return {graphsLoadingCount: previousState.graphsLoadingCount+1};
+      } else {
+        return {graphsLoadingCount: previousState.graphsLoadingCount-1};
+      }
+    });
+  },
   render: function() {
     var self = this;
     var className = "graphs-" + this.state.size;
@@ -29241,7 +29263,8 @@ var Metrics = React.createClass({displayName: "Metrics",
           React.createElement(TimeRangeFilter, {onChange: self.updateFrom}), 
           React.createElement(PeriodSelector, {onChange: self.updateInterval}), 
           React.createElement(SizeSelector, {onChange: self.updateSize}), 
-          React.createElement(AutoRefresh, {onChange: self.updateRefresh, checked: self.state.refresh})
+          React.createElement(AutoRefresh, {onChange: self.updateRefresh, checked: self.state.refresh}), 
+          self.state.graphsLoadingCount > 0 ? React.createElement(Loading, {className: "metrics-loader"}) : ""
         ), 
         React.createElement("div", {className: className}, 
           self.props.metrics.map(function(metric) {
@@ -29357,7 +29380,7 @@ module.exports = {
     Graph: Graph
 };
 
-},{"jquery":28,"react":162}],166:[function(require,module,exports){
+},{"./loading.jsx":164,"jquery":28,"react":162}],166:[function(require,module,exports){
 var React = require('react'),
     ReactDOM = require('react-dom'),
     Components = require("../components/component-list.jsx"),
