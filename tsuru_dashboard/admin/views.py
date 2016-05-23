@@ -24,6 +24,9 @@ addr_re = re.compile(r"^https?://(.*):\d{1,5}/?")
 class PoolList(LoginRequiredView, TemplateView):
     template_name = "admin/pool_list.html"
 
+    def extract_ip(self, address):
+        return address.split("http://")[-1].split(":")[0]
+
     def get_node(self, address, data):
         for response in data:
             if response.status_code != 200:
@@ -36,7 +39,7 @@ class PoolList(LoginRequiredView, TemplateView):
             if 'HostAddr' not in node_units[0]:
                 continue
 
-            if node_units[0]['HostAddr'] in address:
+            if self.extract_ip(node_units[0]['HostAddr']) == self.extract_ip(address):
                 return node_units
         return []
 
