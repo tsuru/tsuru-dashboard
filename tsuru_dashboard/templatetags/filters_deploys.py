@@ -14,4 +14,8 @@ def string_to_date(value):
 
 @register.filter
 def time_to_string(value):
-    return time.strftime('%Mm%Ss', time.gmtime(float(value)/1000000000))
+    t = time.gmtime(float(value) / (1000 * 1000 * 1000))
+    fmt = '%Mm%Ss'
+    if t.tm_hour > 0:
+        fmt = '%Hh{}'.format(fmt)
+    return time.strftime(fmt, t)

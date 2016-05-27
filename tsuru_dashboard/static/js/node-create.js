@@ -11119,6 +11119,9 @@ var currentQueue;
 var queueIndex = -1;
 
 function cleanUpNextTick() {
+    if (!draining || !currentQueue) {
+        return;
+    }
     draining = false;
     if (currentQueue.length) {
         queue = currentQueue.concat(queue);
@@ -29103,6 +29106,7 @@ var NodeCreate = React.createClass({displayName: "NodeCreate",
     this.addMetadata("", "");
   },
   loadTemplates: function() {
+<<<<<<< HEAD
   $.ajax({
     type: 'GET',
     url: "/admin/templates.json",
@@ -29110,6 +29114,15 @@ var NodeCreate = React.createClass({displayName: "NodeCreate",
         this.setState({templates: data});
     }.bind(this)
   });
+=======
+  	$.ajax({
+  	  type: 'GET',
+  	  url: "/admin/templates.json",
+  	  success: function(data) {
+          this.setState({templates: data});
+  	  }.bind(this)
+  	});
+>>>>>>> master
   },
   componentDidMount: function() {
     this.loadTemplates();
@@ -29130,7 +29143,11 @@ var NodeCreate = React.createClass({displayName: "NodeCreate",
     var data = {};
     this.state.metadata.forEach(function(metadata) {
       data[metadata.key] = metadata.value;
+<<<<<<< HEAD
   });
+=======
+    });
+>>>>>>> master
     if (this.state.iaas.length > 0) {
       data["iaas"] = this.state.iaas;
     }
@@ -29152,6 +29169,7 @@ var NodeCreate = React.createClass({displayName: "NodeCreate",
   },
   render: function() {
     return (
+<<<<<<< HEAD
       React.createElement("div", {className: "node-create"}, 
         React.createElement("div", {className: "modal-dialog", role: "dialog"}, 
           React.createElement("div", {className: "modal-content"}, 
@@ -29169,6 +29187,23 @@ var NodeCreate = React.createClass({displayName: "NodeCreate",
               React.createElement(Button, {text: "Add metadata", onClick: this.add, disabled: this.state.disabled}), 
               React.createElement(Button, {text: "Create node", onClick: this.addNode, disabled: this.state.disabled})
             )
+=======
+      React.createElement("div", {className: "node-create modal-dialog"}, 
+        React.createElement("div", {className: "modal-content"}, 
+          React.createElement("div", {className: "modal-header"}, 
+            React.createElement("h3", {id: "myModalLabel"}, "Create node")
+          ), 
+          React.createElement("div", {className: "modal-body"}, 
+            this.state.templates.length > 0 ? React.createElement(Template, {templates: this.state.templates, selectTemplate: this.selectTemplate}) : "", 
+            React.createElement(Register, {register: this.state.register, onClick: this.registerToggle}), 
+    	      React.createElement(Iaas, {iaas: this.state.iaas}), 
+            React.createElement(Meta, {metadata: this.state.metadata, removeMetadata: this.removeMetadata, editMetadata: this.editMetadata})
+          ), 
+          React.createElement("div", {className: "modal-footer"}, 
+            React.createElement(CancelBtn, {onClick: this.cancel, disabled: this.state.disabled}), 
+            React.createElement(Button, {text: "Add metadata", onClick: this.add, disabled: this.state.disabled}), 
+            React.createElement(Button, {text: "Create node", onClick: this.addNode, disabled: this.state.disabled})
+>>>>>>> master
           )
         )
       )

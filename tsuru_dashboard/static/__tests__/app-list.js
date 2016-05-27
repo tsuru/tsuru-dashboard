@@ -22,7 +22,7 @@ describe('AppList', function() {
     const wrapper = Enzyme.shallow(
       <AppList url="http://localhost:80/apps/list.json" />
     );
-    expect(wrapper.find(".app-list").children().length).toBe(3)
+    expect(wrapper.find(".app-list").children().length).toBe(2);
     expect(wrapper.find(AppSearch).length).toBe(1);
     expect(wrapper.find(AppTable).length).toBe(1);
   });

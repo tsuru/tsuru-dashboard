@@ -3,9 +3,14 @@ var React = require('react'),
 
 var Loading = React.createClass({
   mixins: [PureRenderMixin],
+  getDefaultProps: function() {
+    return {
+        className: "loader"
+    }
+  },
   render: function() {
     return (
-      <div className="loader">
+      <div className={this.props.className}>
         Loading...
       </div>
     );

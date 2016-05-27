@@ -6,44 +6,10 @@ import datetime
 import re
 
 
-class MetricNotEnabled(Exception):
-    pass
-
-
-def get_backend(app, token, component_name=None, date_range=None, process_name=None):
-    if component_name is not None:
-        es_query = ComponentFilter(component=component_name, date_range=date_range).query()
-        return ElasticSearch(url=settings.ELASTICSEARCH_HOST, query=es_query, date_range=date_range)
-    else:
-        headers = {'authorization': token}
-        url = "{}/apps/{}/metric/envs".format(settings.TSURU_HOST, app["name"])
-        response = requests.get(url, headers=headers)
-
-        es_query = AppFilter(app=app["name"], process_name=process_name, date_range=date_range).query()
-
-        if response.status_code == 200:
-            data = response.json()
-            if "METRICS_ELASTICSEARCH_HOST" in data:
-                return ElasticSearch(
-                    url=data["METRICS_ELASTICSEARCH_HOST"],
-                    query=es_query,
-                    date_range=date_range
-                )
-
-        if "envs" in app and "ELASTICSEARCH_HOST" in app["envs"]:
-            return ElasticSearch(
-                url=app["envs"]["ELASTICSEARCH_HOST"],
-                query=es_query,
-                date_range=date_range
-            )
-
-        raise MetricNotEnabled
-
-
 NET_AGGREGATION = {
     "units": {
         "terms": {
-            "field": "host"
+            "field": "host.raw"
         },
         "aggs": {
             "delta": {
@@ -100,10 +66,36 @@ class ElasticSearchFilter(object):
     def term_filter(self, field, value):
         return {"term": {field: value}}
 
+    def terms_filter(self, field, values):
+        if(type(values) is not list):
+            values = [values]
+        return {"terms": {field: values}}
+
     def timestamp_filter(self, date_range):
         if date_range is None:
             date_range = "1h"
         return {"range": {"@timestamp": {"gte": "now-" + date_range, "lt": "now"}}}
+
+    def metric_filter(self, *filters):
+        bool_filter = {
+            "bool": {
+                "must": [
+                    self.timestamp_filter(self.date_range)
+                ]
+            }
+        }
+        bool_filter["bool"]["must"].append({"bool": {"should": list(filters)}})
+
+        return bool_filter
+
+
+class NodeFilter(ElasticSearchFilter):
+    def __init__(self, node, date_range=None):
+        self.date_range = date_range
+        self.filter = self.node_filter(node)
+
+    def node_filter(self, node):
+        return self.metric_filter(self.terms_filter("addr.raw", node))
 
 
 class ComponentFilter(ElasticSearchFilter):
@@ -112,21 +104,8 @@ class ComponentFilter(ElasticSearchFilter):
         self.filter = self.component_filter(component)
 
     def component_filter(self, component):
-        return {
-            "bool": {
-                "must": [
-                    {
-                        "bool": {
-                            "should": [
-                                self.term_filter("container", component),
-                                self.term_filter("container.raw", component)
-                            ]
-                        }
-                    },
-                    self.timestamp_filter(self.date_range)
-                ],
-            }
-        }
+        return self.metric_filter(
+            self.term_filter("container", component), self.term_filter("container.raw", component))
 
 
 class AppFilter(ElasticSearchFilter):
@@ -135,21 +114,7 @@ class AppFilter(ElasticSearchFilter):
         self.filter = self.app_filter(app, process_name)
 
     def app_filter(self, app, process_name):
-        f = {
-            "bool": {
-                "must": [
-                    {
-                        "bool": {
-                            "should": [
-                                self.term_filter("app", app),
-                                self.term_filter("app.raw", app)
-                            ]
-                        }
-                    },
-                    self.timestamp_filter(self.date_range)
-                ],
-            }
-        }
+        f = self.metric_filter(self.term_filter("app", app), self.term_filter("app.raw", app))
 
         if process_name:
             p = {
@@ -166,6 +131,8 @@ class AppFilter(ElasticSearchFilter):
 
 class ElasticSearch(object):
     def __init__(self, url, query, date_range="1h"):
+        if date_range is None:
+            date_range = "1h"
         if date_range == "1h":
             self.index = ".measure-tsuru-{}".format(datetime.datetime.utcnow().strftime("%Y.%m.%d"))
         else:
@@ -204,6 +171,9 @@ class ElasticSearch(object):
 
     def cpu_max(self, interval=None):
         query = self.query(interval=interval)
+        query["query"]["filtered"]["filter"]["bool"]["must"].append(
+            {"range": {"value": {"lt": 500}}}
+        )
         response = self.post(query, "cpu_max")
         process = self.process(response)
         return process
@@ -432,3 +402,207 @@ class ElasticSearch(object):
                 }
             }
         }
+
+
+class MetricNotEnabled(Exception):
+    pass
+
+
+class AppBackend(ElasticSearch):
+    def __init__(self, app, token, process_name=None, date_range=None):
+        headers = {'authorization': token}
+        url = "{}/apps/{}/metric/envs".format(settings.TSURU_HOST, app["name"])
+        response = requests.get(url, headers=headers)
+
+        es_query = AppFilter(app=app["name"], process_name=process_name, date_range=date_range).query()
+
+        if response.status_code == 200:
+            data = response.json()
+            if "METRICS_ELASTICSEARCH_HOST" in data:
+                return super(AppBackend, self).__init__(
+                    url=data["METRICS_ELASTICSEARCH_HOST"],
+                    query=es_query,
+                    date_range=date_range
+                )
+
+        if "envs" in app and "ELASTICSEARCH_HOST" in app["envs"]:
+            return super(AppBackend, self).__init__(
+                url=app["envs"]["ELASTICSEARCH_HOST"],
+                query=es_query,
+                date_range=date_range
+            )
+
+        raise MetricNotEnabled
+
+
+class TsuruMetricsBackend(ElasticSearch):
+    def __init__(self, filter, date_range=None):
+        return super(TsuruMetricsBackend, self).__init__(
+            url=settings.ELASTICSEARCH_HOST, query=filter.query(), date_range=date_range)
+
+
+class NodeMetricsBackend(TsuruMetricsBackend):
+    def __init__(self, addr, date_range=None):
+        filter = NodeFilter(node=addr, date_range=date_range)
+        return super(NodeMetricsBackend, self).__init__(filter=filter, date_range=date_range)
+
+    def multi_index_avg(self, result, bucket, formatter=None):
+        if formatter is None:
+            def formatter(x):
+                return x
+        for b in bucket["stats"]["buckets"]:
+            result[b["key"].split('_')[-1]].append([bucket["key"], formatter(b["stats"]["avg"])])
+        return result, None, None
+
+    def load_process(self, result, bucket):
+        if not result:
+            result = {
+                "load1": [],
+                "load5": [],
+                "load15": [],
+            }
+        return self.multi_index_avg(result, bucket)
+
+    def cpu_max_process(self, result, bucket):
+        if not result:
+            result = {
+                "user": [],
+                "sys": [],
+                "wait": [],
+            }
+        return self.multi_index_avg(result, bucket, formatter=lambda x: x * 100)
+
+    def disk_process(self, result, bucket):
+        if not result:
+            result = {
+                "used": [],
+                "total": []
+            }
+        return self.multi_index_avg(result, bucket, formatter=lambda x: x / (1024 * 1024))
+
+    def per_type_agg(self):
+        return {
+            "stats": {
+                "terms": {"field": "_type"},
+                "aggs": {"stats": {"stats": {"field": "value"}}}
+            }
+        }
+
+    def load(self, interval=None):
+        query = self.query(interval=interval, aggregation=self.per_type_agg())
+        return self.base_process(self.post(query, "host_load1,host_load5,host_load15"), self.load_process)
+
+    def cpu_max(self, interval=None):
+        query = self.query(interval=interval, aggregation=self.per_type_agg())
+        process = self.base_process(self.post(
+            query, "host_cpu_user,host_cpu_sys,host_cpu_wait"), self.cpu_max_process)
+        return process
+
+    def mem_max(self, interval=None):
+        query = self.query(interval=interval)
+        return self.process(self.post(query, "host_mem_used"), formatter=lambda x: x / (1024 * 1024))
+
+    def netrx(self, interval=None):
+        return self.net_metric("host_netrx", interval)
+
+    def nettx(self, interval=None):
+        return self.net_metric("host_nettx", interval)
+
+    def swap(self, interval=None):
+        query = self.query(interval=interval, aggregation=self.per_type_agg())
+        return self.base_process(self.post(query, "host_swap_used,host_swap_total"), self.disk_process)
+
+    def disk(self, interval=None):
+        query = self.query(interval=interval, aggregation=self.per_type_agg())
+        return self.base_process(self.post(query, "host_disk_used,host_disk_total"), self.disk_process)
+
+
+class NodesMetricsBackend(TsuruMetricsBackend):
+    def __init__(self, addrs, date_range=None):
+        self.addrs = addrs
+        filter = NodeFilter(node=addrs, date_range=date_range)
+        return super(NodesMetricsBackend, self).__init__(filter=filter, date_range=date_range)
+
+    def process(self, data, formatter=None, processor=None):
+        if formatter is None:
+            def default_formatter(x):
+                return x
+            formatter = default_formatter
+        if processor is None:
+            def default_processor(result, bucket):
+                if not result:
+                    result = {}
+                    for addr in self.addrs:
+                        result[addr] = []
+
+                for b in bucket["addrs"]["buckets"]:
+                    result[b["key"]].append([bucket["key"], formatter(b["avg"]["value"])])
+                return result, None, None
+            processor = default_processor
+        return self.base_process(data=data, processor=processor)
+
+    def per_addr_agg(self, aggs=None):
+        if aggs is None:
+            aggs = {"avg": {"avg": {"field": "value"}}}
+        return {
+            "addrs": {
+                "terms": {
+                    "field": "addr.raw",
+                    "include": '|'.join(self.addrs),
+                    "size": len(self.addrs)
+                },
+                "aggs": aggs
+            }
+        }
+
+    def mem_max(self, interval=None):
+        query = self.query(interval=interval, aggregation=self.per_addr_agg())
+        return self.process(self.post(query, "host_mem_used"), formatter=lambda x: x / (1024 * 1024))
+
+    def cpu_max(self, interval=None):
+        query = self.query(interval=interval, aggregation=self.per_addr_agg())
+        return self.process(self.post(query, "host_cpu_busy"), formatter=lambda x: x * 100)
+
+    def cpu_wait(self, interval=None):
+        query = self.query(interval=interval, aggregation=self.per_addr_agg())
+        return self.process(self.post(query, "host_cpu_wait"), formatter=lambda x: x * 100)
+
+    def swap(self, interval=None):
+        query = self.query(interval=interval, aggregation=self.per_addr_agg())
+        return self.process(self.post(query, "host_swap_used"), formatter=lambda x: x / (1024 * 1024))
+
+    def disk(self, interval=None):
+        query = self.query(interval=interval, aggregation=self.per_addr_agg())
+        return self.process(self.post(query, "host_disk_used"), formatter=lambda x: x / (1024 * 1024))
+
+    def netrx(self, interval=None):
+        query = self.query(interval=interval, aggregation=self.per_addr_agg(
+            aggs=NET_AGGREGATION["units"]["aggs"]))
+        return self.process(self.post(query, "host_netrx"), processor=self.net_processor)
+
+    def nettx(self, interval=None):
+        query = self.query(interval=interval, aggregation=self.per_addr_agg(
+            aggs=NET_AGGREGATION["units"]["aggs"]))
+        return self.process(self.post(query, "host_nettx"), processor=self.net_processor)
+
+    def load1(self, interval=None):
+        return self.load(mins=1, interval=interval)
+
+    def load5(self, interval=None):
+        return self.load(mins=5, interval=interval)
+
+    def load15(self, interval=None):
+        return self.load(mins=15, interval=interval)
+
+    def load(self, mins, interval=None):
+        query = self.query(interval=interval, aggregation=self.per_addr_agg())
+        return self.process(self.post(query, "host_load" + str(mins)))
+
+    def net_processor(self, result, bucket):
+        if not result:
+            result = {}
+            for addr in self.addrs:
+                result[addr] = []
+        for b in bucket["addrs"]["buckets"]:
+            result[b["key"]].append([bucket["key"], b["delta"]["value"]])
+        return result, None, None

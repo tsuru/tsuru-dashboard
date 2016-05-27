@@ -5,6 +5,7 @@
 {{ block.super }}
 <link rel="stylesheet" href="{% static "css/abyss.widget.css" %}">
 <link rel="stylesheet" href="{% static "css/detail.css" %}">
+<link rel="stylesheet" href="{% static "css/metrics/components/metrics.css" %}">
 {% endblock %}
 
 {% block app-content %}
@@ -29,7 +30,7 @@
 					{% for instance in app.service_instances %}
                     <tr>
                         <td>{{ instance.servicename }}</td>
-                        <td>{{ instance.name }}</td>
+                        <td><a href="{% url 'service-detail' instance.servicename instance.name %}"> {{ instance.name }} </a></td>
                     </tr>
                     {% endfor %}
                     </tbody>

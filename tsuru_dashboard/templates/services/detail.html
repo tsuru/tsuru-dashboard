@@ -31,7 +31,7 @@
 						<li>
 						<div class="row">
 							<div class="col-md-3">
-								{{ app }}
+								<a href="{% url 'detail-app' app %}"> {{ app }} </a>
 							</div>
 							<div class="col-md-8">
 								<a class="btn btn-primary" href="{% url 'unbind' service_name instance_name app %}">Unbind</a>

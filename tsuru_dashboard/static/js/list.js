@@ -11257,6 +11257,9 @@ var currentQueue;
 var queueIndex = -1;
 
 function cleanUpNextTick() {
+    if (!draining || !currentQueue) {
+        return;
+    }
     draining = false;
     if (currentQueue.length) {
         queue = currentQueue.concat(queue);
@@ -29223,9 +29226,14 @@ var React = require('react'),
 
 var Loading = React.createClass({displayName: "Loading",
   mixins: [PureRenderMixin],
+  getDefaultProps: function() {
+    return {
+        className: "loader"
+    }
+  },
   render: function() {
     return (
-      React.createElement("div", {className: "loader"}, 
+      React.createElement("div", {className: this.props.className}, 
         "Loading..."
       )
     );

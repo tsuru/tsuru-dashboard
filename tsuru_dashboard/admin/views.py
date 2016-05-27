@@ -25,6 +25,9 @@ addr_re = re.compile(r"^https?://(.*):\d{1,5}/?")
 class PoolList(LoginRequiredView, TemplateView):
     template_name = "admin/pool_list.html"
 
+    def extract_ip(self, address):
+        return address.split("http://")[-1].split(":")[0]
+
     def get_node(self, address, data):
         for response in data:
             if response.status_code != 200:
@@ -37,7 +40,7 @@ class PoolList(LoginRequiredView, TemplateView):
             if 'HostAddr' not in node_units[0]:
                 continue
 
-            if node_units[0]['HostAddr'] in address:
+            if self.extract_ip(node_units[0]['HostAddr']) == self.extract_ip(address):
                 return node_units
         return []
 
@@ -101,6 +104,8 @@ class PoolList(LoginRequiredView, TemplateView):
 class NodeInfo(LoginRequiredView, TemplateView):
     template_name = "admin/node_info.html"
 
+
+class NodeInfoJson(LoginRequiredView):
     def get_containers(self, node_address):
         url = "{}/docker/node/{}/containers".format(settings.TSURU_HOST, node_address)
         response = requests.get(url, headers=self.authorization)
@@ -127,14 +132,19 @@ class NodeInfo(LoginRequiredView, TemplateView):
 
         return None
 
-    def get_context_data(self, *args, **kwargs):
-        context = super(NodeInfo, self).get_context_data(*args, **kwargs)
-        context.update({
-            "containers": self.get_containers(kwargs["address"]),
-            "address": kwargs["address"],
-            "node": self.get_node(kwargs["address"]),
+    def get(self, *args, **kwargs):
+        containers = self.get_containers(kwargs["address"])
+        for container in containers:
+            if "AppName" in container:
+                container["DashboardURL"] = reverse(
+                    'detail-app', kwargs={'app_name': container["AppName"]})
+        return JsonResponse({
+            "node": {
+                "info": self.get_node(kwargs["address"]),
+                "containers": containers,
+                "nodeRemovalURL": reverse('node-remove', kwargs={'address': kwargs["address"]})
+            }
         })
-        return context
 
 
 class ListDeploy(LoginRequiredView, TemplateView):

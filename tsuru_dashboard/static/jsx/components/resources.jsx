@@ -1,5 +1,8 @@
 var React = require('react'),
-    Metrics = require("../components/metrics.jsx").Metrics;
+    Metrics = require("../components/metrics.jsx").Metrics,
+    WebTransactionsMetrics = require("../components/metrics.jsx").WebTransactionsMetrics,
+    TopSlow = require("../components/top-slow.jsx").TopSlow,
+    Tabs = require("../components/base.jsx").Tabs;
 
 if(typeof window.jQuery === 'undefined') {
   var $ = require('jquery');
@@ -12,13 +15,13 @@ var Resources = React.createClass({
     return {app: null};
   },
   appInfo: function(url) {
-	$.ajax({
-	  type: 'GET',
-	  url: this.props.url,
-	  success: function(data) {
-        this.setState({app: data.app});
-	  }.bind(this)
-	});
+    $.ajax({
+  	  type: 'GET',
+  	  url: this.props.url,
+  	  success: function(data) {
+          this.setState({app: data.app});
+  	  }.bind(this)
+    });
   },
   componentDidMount: function() {
     this.appInfo();
@@ -26,57 +29,8 @@ var Resources = React.createClass({
   render: function() {
     return (
       <div className="resources">
-        {this.state.app === null ? "" : <Process app={this.state.app} />}
+        {this.state.app === null ? "" : <Resource app={this.state.app} />}
       </div>
-    );
-  }
-});
-
-var ProcessTab = React.createClass({
-  onClick: function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-
-    if (this.props.active)
-      return;
-
-    this.props.setActive(this.props.process);
-  },
-  render: function() {
-    return (
-      <li className={this.props.active ? "active" : ''}>
-        <a href="#" onClick={this.onClick}>{this.props.process}</a>
-      </li>
-    );
-  }
-});
-
-var ProcessTabs = React.createClass({
-  getInitialState: function() {
-    return {active: ""};
-  },
-  setActive: function(process) {
-    this.setState({active: process});
-    this.props.setActive(process);
-  },
-  componentDidUpdate: function() {
-    var keys = Object.keys(this.props.process);
-    if ((this.state.active === "") && keys.length > 0) {
-      this.setActive(keys[0]);
-    }
-  },
-  render: function() {
-    var processList = [];
-    for (process in this.props.process) {
-      processList.push(<ProcessTab key={process}
-                                   process={process}
-                                   active={process === this.state.active}
-                                   setActive={this.setActive} />);
-    };
-    return (
-      <ul className="nav nav-pills">
-        {processList}
-      </ul>
     );
   }
 });
@@ -161,12 +115,35 @@ var ProcessContent = React.createClass({
   }
 });
 
-var Process = React.createClass({
+var WebTransactionsContent = React.createClass({
   getInitialState: function() {
-    return {process: {}, active: null};
+    return {
+      from: this.props.from
+    }
   },
-  setActive: function(process) {
-    this.setState({active: this.state.process[process]});
+  updateFrom: function(from) {
+    this.setState({from: from});
+  },
+  render: function() {
+    return (
+      <div className='resources-content' id="metrics-container">
+        <WebTransactionsMetrics appName={this.props.appName} onFromChange={this.updateFrom}/>
+        <TopSlow kind={"top_slow"} appName={this.props.appName} from={this.state.from}/>
+      </div>
+    )
+  }
+});
+
+var Resource = React.createClass({
+  getInitialState: function() {
+    return {process: {}, activeProcess: null, tab: null};
+  },
+  setActive: function(name) {
+    if(this.state.process[name] !== undefined) {
+      this.setState({activeProcess: this.state.process[name], tab: "process"});
+    } else {
+      this.setState({tab: name, activeProcess: null});
+    }
   },
   unitsByProcess: function() {
     var process = {};
@@ -183,10 +160,15 @@ var Process = React.createClass({
     this.unitsByProcess();
   },
   render: function() {
+    tabs = Object.keys(this.state.process);
+    if(tabs.length > 0){
+      tabs.push("Web transactions");
+    }
     return (
       <div>
-        <ProcessTabs process={this.state.process} setActive={this.setActive} />
-        {this.state.active === null ? "" : <ProcessContent process={this.state.active} appName={this.props.app.name} />}
+        <Tabs tabs={tabs} setActive={this.setActive} />
+        {this.state.tab === "process" ? <ProcessContent process={this.state.activeProcess} appName={this.props.app.name} /> : ""}
+        {this.state.tab === "Web transactions" ? <WebTransactionsContent appName={this.props.app.name} /> : ""}
       </div>
     );
   }

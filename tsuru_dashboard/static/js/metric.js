@@ -28899,19 +28899,25 @@ var GraphContainer = React.createClass({displayName: "GraphContainer",
     }
   },
   componentDidMount: function() {
-    $.getJSON(this.props.data_url, function(data) {
+    this.loadData(this.props.data_url);
+  },
+  componentWillReceiveProps: function(nextProps) {
+    this.loadData(nextProps.data_url);
+  },
+  loadData: function(url) {
+    $.getJSON(url, function(data) {
       if (Object.keys(data.data).length === 0)
         data.data = {" ": [1,1]};
-      this.setState({model: data.data});
+      var state = this.state;
+      state.model = data.data;
+      this.setState(state);
     }.bind(this));
   },
   render: function() {
     return (
       React.createElement("div", {className: "graph-container"}, 
         React.createElement("h2", null, this.props.title), 
-        React.createElement("a", {href: this.props.detail_url}, 
-          React.createElement(Graph, {id: this.props.id, legend: this.props.legend, model: this.state.model})
-        )
+        React.createElement(Graph, {id: this.props.id, legend: this.props.legend, model: this.state.model})
       )
     );
   }
@@ -28963,11 +28969,20 @@ var Graph = React.createClass({displayName: "Graph",
 });
 
 var Metrics = React.createClass({displayName: "Metrics",
+  getInitialState: function() {
+    return {
+      "interval": this.props.interval,
+      "from": this.props.from,
+      "size": "small",
+      "legend": this.props.legend
+    }
+  },
   getDefaultProps: function() {
     return {
       interval: "1m",
       from: "1h",
       targetType: "app",
+      legend: false,
       titles: {
         cpu_max: "cpu (%)",
         mem_max: "memory (MB)",
@@ -28983,57 +28998,151 @@ var Metrics = React.createClass({displayName: "Metrics",
       },
       metrics: [
         "cpu_max", "mem_max", "swap",
-        "connections", "units",
-        "requests_min", "response_time",
-        "http_methods", "status_code",
-        "nettx", "netrx"
+        "connections", "units"
       ]
     }
   },
   getMetricDataUrl: function(metric) {
     var targetType = this.props.targetType;
     var targetName = this.props.targetName;
-    var interval = this.props.interval;
-    var from = this.props.from;
+    var interval = this.state.interval;
+    var from = this.state.from;
 
     var url = "/metrics/" + targetType + "/" + targetName;
     url += "/?metric=" + metric + "&interval=" + interval + "&date_range=" + from;
 
-    if (this.props.processName !== undefined) {
-        url += "&process_name=" + this.props.processName;
+    if(this.props.processName !== undefined) {
+      url += "&process_name=" + this.props.processName;
     }
 
     return url;
-  },
-  getMetricDetailUrl: function(metric) {
-    var targetName = this.props.targetName;
-    var targetType = this.props.targetType;
-    return "/" + targetType + "s/" + targetName + "/metrics/details/?kind=" + metric + "&from=1h&serie=1m";
   },
   getGraphContainer: function(metric) {
     var id = this.props.targetName + "_" + metric;
     return (
       React.createElement(GraphContainer, {id: id, title: this.props.titles[metric], 
         data_url: this.getMetricDataUrl(metric), 
-        detail_url: this.getMetricDetailUrl(metric), 
-        legend: this.props.legend, key: id}
+        legend: this.state.legend, key: id}
       )
     );
   },
+  updateFrom: function(from) {
+    var newState = this.state;
+    newState.from = from;
+    this.setState(newState);
+    if(this.props.onFromChange) {
+      this.props.onFromChange(from);
+    }
+  },
+  updateInterval: function(interval) {
+    var newState = this.state;
+    newState.interval = interval;
+    this.setState(newState);
+  },
+  updateSize: function(size) {
+    var newState = this.state;
+    newState.size = size;
+    newState.legend = size === "large";
+    this.setState(newState);
+  },
   render: function() {
     var self = this;
+    var className = "graphs-" + this.state.size;
     return (
       React.createElement("div", {className: "metrics"}, 
-        self.props.metrics.map(function(metric) {
-          return self.getGraphContainer(metric);
-        })
+        React.createElement("div", {className: "metrics-options"}, 
+          React.createElement(TimeRangeFilter, {onChange: self.updateFrom}), 
+          React.createElement(PeriodSelector, {onChange: self.updateInterval}), 
+          React.createElement(SizeSelector, {onChange: self.updateSize})
+        ), 
+        React.createElement("div", {className: className}, 
+          self.props.metrics.map(function(metric) {
+            return self.getGraphContainer(metric);
+          })
+        )
       )
     );
   }
 });
 
+var TimeRangeFilter = React.createClass({displayName: "TimeRangeFilter",
+  handleChange: function(event) {
+    this.props.onChange(event.target.value);
+  },
+  render: function() {
+    return (
+      React.createElement("div", {className: "metrics-range"}, 
+        React.createElement("label", null, "Time range:"), 
+        React.createElement("select", {name: "from", onChange: this.handleChange}, 
+          React.createElement("option", {value: "1h"}, "last hour"), 
+          React.createElement("option", {value: "3h"}, "last 3 hours"), 
+          React.createElement("option", {value: "6h"}, "last 6 hours"), 
+          React.createElement("option", {value: "12h"}, "last 12 hours"), 
+          React.createElement("option", {value: "1d"}, "last 24 hours"), 
+          React.createElement("option", {value: "3d"}, "last 3 days"), 
+          React.createElement("option", {value: "1w"}, "last 1 week"), 
+          React.createElement("option", {value: "2w"}, "last 2 weeks")
+        )
+      )
+    )
+  }
+});
+
+var PeriodSelector = React.createClass({displayName: "PeriodSelector",
+  handleChange: function(event) {
+    this.props.onChange(event.target.value);
+  },
+  render: function() {
+    return (
+      React.createElement("div", {className: "metrics-period"}, 
+        React.createElement("label", null, "Period:"), 
+        React.createElement("select", {name: "serie", onChange: this.handleChange}, 
+          React.createElement("option", {value: "1m"}, "1 minute"), 
+          React.createElement("option", {value: "5m"}, "5 minutes"), 
+          React.createElement("option", {value: "15m"}, "15 minutes"), 
+          React.createElement("option", {value: "1h"}, "1 hour"), 
+          React.createElement("option", {value: "6h"}, "6 hours"), 
+          React.createElement("option", {value: "1d"}, "1 day")
+        )
+      )
+    )
+  }
+});
+
+var SizeSelector = React.createClass({displayName: "SizeSelector",
+  handleChange: function(event) {
+    this.props.onChange(event.target.value);
+  },
+  render: function() {
+    return (
+      React.createElement("div", {className: "metrics-size"}, 
+        React.createElement("label", null, "Size:"), 
+        React.createElement("select", {name: "size", onChange: this.handleChange}, 
+          React.createElement("option", {value: "small"}, "Small"), 
+          React.createElement("option", {value: "medium"}, "Medium"), 
+          React.createElement("option", {value: "large"}, "Large")
+        )
+      )
+    )
+  }
+});
+
+var WebTransactionsMetrics = React.createClass({displayName: "WebTransactionsMetrics",
+  render: function() {
+    return (
+      React.createElement(Metrics, {metrics: ["requests_min", "response_time",
+        "http_methods", "status_code", "nettx", "netrx"], 
+        targetName: this.props.appName, 
+        targetType: "app", 
+        onFromChange: this.props.onFromChange}
+      )
+    )
+  }
+});
+
 module.exports = {
     Metrics: Metrics,
+    WebTransactionsMetrics: WebTransactionsMetrics,
     GraphContainer: GraphContainer,
     Graph: Graph
 };

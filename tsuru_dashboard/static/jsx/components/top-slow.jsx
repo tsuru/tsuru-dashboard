@@ -35,11 +35,11 @@ var RequestRow = React.createClass({
 
 var TopTable = React.createClass({
   render: function() {
-    var topNodes = this.props.top.map(function(result) {
-            return (
-              <RequestRow key={result.method + result.path + result.status_code + result.time} request={result} />
-            );
-        });
+    var topRequests = this.props.top.map(function(result) {
+      return (
+        <RequestRow key={result.method + result.path + result.status_code + result.time} request={result} />
+      );
+    });
     return (
       <table className="table">
         <thead>
@@ -52,12 +52,11 @@ var TopTable = React.createClass({
           </tr>
         </thead>
         <tbody>
-          {topNodes}
+          {topRequests.length > 0 ? topRequests : <tr><td colSpan="5">No requests found.</td></tr>}
         </tbody>
       </table>
     );
   }
-
 });
 
 var TopSlow = React.createClass({
@@ -71,16 +70,18 @@ var TopSlow = React.createClass({
     return {top: [], requests: []};
   },
   componentDidMount: function() {
-    this.loadData();
+    this.loadData(this.props.from);
   },
-  loadData: function() {
+  componentWillReceiveProps: function(nextProps) {
+    if(this.props.from !== nextProps.from){
+      this.loadData(nextProps.from);
+    }
+  },
+  loadData: function(from) {
     var appName = this.props.appName;
     var kind = this.props.kind;
-    var from = this.props.from;
     var url = "/metrics/app/" + appName + "/?metric=" + kind + "&date_range=" + from;
     $.getJSON(url, function(data) {
-      if (Object.keys(data.data).length === 0)
-        data.data = {" ": [1,1]};
         this.sortData(data);
     }.bind(this));
   },

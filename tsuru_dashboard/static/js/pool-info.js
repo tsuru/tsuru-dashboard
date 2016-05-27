@@ -28956,117 +28956,6 @@ module.exports = validateDOMNesting;
 module.exports = require('./lib/React');
 
 },{"./lib/React":55}],163:[function(require,module,exports){
-var React = require('react');
-
-var Output = React.createClass({displayName: "Output",
-  render: function() {
-    return (
-      React.createElement("div", {id: "output"}, 
-        React.createElement("img", {src: "/static/img/ajax-loader.gif"}), 
-        React.createElement("div", {className: "messages", dangerouslySetInnerHTML: {__html: this.props.message}})
-      )
-    )
-  }
-});
-
-var Button = React.createClass({displayName: "Button",
-  getDefaultProps: function() {
-    return {disabled: false, onClick: function(){}, type:"button"}
-  },
-  render: function() {
-    return (
-      React.createElement("button", {type: this.props.type, 
-              disabled: this.props.disabled, 
-              onClick: this.props.onClick, 
-              className: "btn"}, 
-        this.props.text
-      )
-    );
-  }
-});
-
-var CancelBtn = React.createClass({displayName: "CancelBtn",
-  getDefaultProps: function() {
-    return {disabled: false}
-  },
-  render: function() {
-    return (
-      React.createElement("button", {"data-dismiss": "modal", 
-			  disabled: this.props.disabled, 
-              "aria-hidden": "true", 
-              className: "btn", 
-              onClick: this.props.onClick}, 
-        "Cancel"
-      )
-    )
-  }
-});
-
-var Tab = React.createClass({displayName: "Tab",
-  onClick: function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-
-    if (this.props.active)
-      return;
-    if(this.props.setActive !== undefined){
-      this.props.setActive(this.props.name);
-    }
-  },
-  render: function() {
-    return (
-      React.createElement("li", {className: this.props.active ? "active" : ''}, 
-        React.createElement("a", {href: "#", onClick: this.onClick}, this.props.name)
-      )
-    );
-  }
-});
-
-var Tabs = React.createClass({displayName: "Tabs",
-  getInitialState: function() {
-    return {active: ""};
-  },
-  setActive: function(name) {
-    this.setState({active: name});
-    if(this.props.setActive !== undefined){
-      this.props.setActive(name);
-    }
-  },
-  componentWillReceiveProps: function(nextProps) {
-    if ((this.state.active === "") && nextProps.tabs.length > 0) {
-      this.setActive(nextProps.tabs[0]);
-    }
-  },
-  componentDidMount: function() {
-    if ((this.state.active === "") && this.props.tabs.length > 0) {
-      this.setActive(this.props.tabs[0]);
-    }
-  },
-  render: function() {
-    var self = this;
-    return (
-      React.createElement("ul", {className: "nav nav-pills"}, 
-        this.props.tabs.map(function(tab) {
-          return React.createElement(Tab, {key: tab, 
-                  name: tab, 
-                  active: tab === self.state.active, 
-                  setActive: self.setActive})
-        })
-      )
-    );
-  }
-});
-
-var Components = {
-  Button: Button,
-  CancelBtn: CancelBtn,
-  Tab: Tab,
-  Tabs: Tabs
-};
-
-module.exports = Components;
-
-},{"react":162}],164:[function(require,module,exports){
 var React = require('react'),
     PureRenderMixin = require('react-addons-pure-render-mixin');
 
@@ -29088,7 +28977,7 @@ var Loading = React.createClass({displayName: "Loading",
 
 module.exports = Loading;
 
-},{"react":162,"react-addons-pure-render-mixin":30}],165:[function(require,module,exports){
+},{"react":162,"react-addons-pure-render-mixin":30}],164:[function(require,module,exports){
 var React = require('react'),
   Loading = require('./loading.jsx');
 
@@ -29435,331 +29324,319 @@ module.exports = {
     Graph: Graph
 };
 
-},{"./loading.jsx":164,"jquery":28,"react":162}],166:[function(require,module,exports){
+},{"./loading.jsx":163,"jquery":28,"react":162}],165:[function(require,module,exports){
 var React = require('react'),
-    Metrics = require("../components/metrics.jsx").Metrics,
-    WebTransactionsMetrics = require("../components/metrics.jsx").WebTransactionsMetrics,
-    TopSlow = require("../components/top-slow.jsx").TopSlow,
-    Tabs = require("../components/base.jsx").Tabs;
+    $ = require('jquery');
 
-if(typeof window.jQuery === 'undefined') {
-  var $ = require('jquery');
-} else {
-  var $ = window.jQuery;
-}
+var Option = React.createClass({displayName: "Option",
+  render: function() {
+    return (
+      React.createElement("option", {
+        key: this.props.value, 
+        value: this.props.value}, 
+          this.props.value
+      )
+    );
+  }
+});
 
-var Resources = React.createClass({displayName: "Resources",
-  getInitialState: function() {
-    return {app: null};
+var Template = React.createClass({displayName: "Template",
+  onChange: function(e) {
+    this.props.selectTemplate(e.target.value);
   },
-  appInfo: function(url) {
-    $.ajax({
-  	  type: 'GET',
-  	  url: this.props.url,
-  	  success: function(data) {
-          this.setState({app: data.app});
-  	  }.bind(this)
+  render: function() {
+    var options = [];
+    this.props.templates.forEach(function(template) {
+      options.push(React.createElement(Option, {key: template.Name, value: template.Name}));
     });
-  },
-  componentDidMount: function() {
-    this.appInfo();
-  },
-  render: function() {
     return (
-      React.createElement("div", {className: "resources"}, 
-        this.state.app === null ? "" : React.createElement(Resource, {app: this.state.app})
-      )
-    );
-  }
-});
-
-var Tr = React.createClass({displayName: "Tr",
-  render: function() {
-    var unit = this.props.unit;
-    return (
-      React.createElement("tr", null, 
-        React.createElement("td", null, unit.ID), 
-        React.createElement("td", null, unit.HostAddr), 
-        React.createElement("td", null, unit.HostPort)
-      )
-    );
-  }
-});
-
-var Trs = React.createClass({displayName: "Trs",
-  render: function() {
-    var units = this.props.units;
-    var trs = [];
-    for (i in units) {
-      trs.push(React.createElement(Tr, {key: i, unit: units[i]}));
-    }
-    return (
-      React.createElement("tbody", null, trs)
-    );
-  }
-});
-
-var ProcessInfo = React.createClass({displayName: "ProcessInfo",
-  getInitialState: function() {
-    return {hide: true};
-  },
-  onClick: function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    this.setState({hide: !this.state.hide});
-  },
-  render: function() {
-    var units = this.props.process;
-    var kind = this.props.kind;
-    var classNames = "table containers-app";
-    if (this.state.hide)
-      classNames += " hide";
-    return (
-      React.createElement("div", {className: "units-toggle", onClick: this.onClick}, 
-        React.createElement("p", null, React.createElement("a", {href: "#"}, "▼"), " ", units.length, " ", kind, " units"), 
-        React.createElement("table", {className: classNames}, 
-          React.createElement(Trs, {units: units})
+      React.createElement("div", {className: "template"}, 
+        React.createElement("label", null, 
+          "Template:", 
+          React.createElement("select", {onChange: this.onChange}, 
+            React.createElement("option", null, "Select a template"), 
+            options
+          )
         )
       )
     );
   }
 });
 
-var ProcessContent = React.createClass({displayName: "ProcessContent",
-  processByStatus: function() {
-    var status = {};
-    for (i in this.props.process) {
-      var unit = this.props.process[i];
-      if (!(unit.Status in status)) {
-        status[unit.Status] = [];
-      }
-      status[unit.Status].push(unit);
-    };
-    return status;
-  },
+var Register = React.createClass({displayName: "Register",
   render: function() {
-    var info = [];
-    var process = this.processByStatus()
-    for (i in process) {
-        info.push(React.createElement(ProcessInfo, {key: i, process: process[i], kind: i}));
-    };
-    var processName = this.props.process[0].ProcessName;
     return (
-      React.createElement("div", {className: "resources-content", id: "metrics-container"}, 
-        info, 
-        React.createElement(Metrics, {targetName: this.props.appName, processName: processName})
+      React.createElement("div", {className: "register", onClick: this.props.onClick}, 
+        React.createElement("label", null, 
+          "Register an already created node:", 
+          React.createElement("input", {type: "checkbox", onClick: this.onClick})
+        )
       )
     );
   }
 });
 
-var WebTransactionsContent = React.createClass({displayName: "WebTransactionsContent",
+var Meta = React.createClass({displayName: "Meta",
+  render: function() {
+    var items = [];
+    this.props.metadata.forEach(function(metadata) {
+      items.push(React.createElement(MetaItem, {key: metadata.id, name: metadata.key, value: metadata.value, removeMetadata: this.props.removeMetadata, editMetadata: this.props.editMetadata}));
+    }.bind(this));
+    return (
+      React.createElement("div", {className: "meta"}, 
+        items
+      )
+    );
+  }
+});
+
+var MetaItem = React.createClass({displayName: "MetaItem",
   getInitialState: function() {
-    return {
-      from: this.props.from
-    }
+    return {name: this.props.name, value: this.props.value};
   },
-  updateFrom: function(from) {
-    this.setState({from: from});
+  getDefaultProps: function() {
+    return {name: "", value: ""}
+  },
+  onChange: function(e) {
+    this.props.editMetadata(this.state.name, this.refs.name.value, this.refs.value.value);
+  },
+  removeMetadata: function() {
+    this.props.removeMetadata(this.refs.name.value);
+  },
+  componentWillReceiveProps: function(nextProps) {
+    this.setState({name: nextProps.name, value: nextProps.value});
   },
   render: function() {
     return (
-      React.createElement("div", {className: "resources-content", id: "metrics-container"}, 
-        React.createElement(WebTransactionsMetrics, {appName: this.props.appName, onFromChange: this.updateFrom}), 
-        React.createElement(TopSlow, {kind: "top_slow", appName: this.props.appName, from: this.state.from})
+      React.createElement("div", {className: "meta-item"}, 
+        React.createElement("label", null, 
+          "Key:", 
+          React.createElement("input", {type: "text", name: "name", ref: "name", value: this.state.name, onChange: this.onChange})
+        ), 
+        React.createElement("label", null, 
+          "Value:", 
+          React.createElement("input", {type: "text", name: "value", ref: "value", value: this.state.value, onChange: this.onChange})
+        ), 
+        React.createElement("button", {onClick: this.removeMetadata}, "Remove item")
+      )
+    );
+  }
+});
+
+var Button = React.createClass({displayName: "Button",
+  getDefaultProps: function() {
+    return {disabled: false, onClick: function(){}, type:"button"}
+  },
+  render: function() {
+    return (
+      React.createElement("button", {type: this.props.type, 
+              disabled: this.props.disabled, 
+              onClick: this.props.onClick, 
+              className: "btn"}, 
+        this.props.text
+      )
+    );
+  }
+});
+
+var CancelBtn = React.createClass({displayName: "CancelBtn",
+  getDefaultProps: function() {
+    return {disabled: false}
+  },
+  render: function() {
+    return (
+      React.createElement("button", {"data-dismiss": "modal", 
+			  disabled: this.props.disabled, 
+              "aria-hidden": "true", 
+              className: "btn", 
+              onClick: this.props.onClick}, 
+        "Cancel"
       )
     )
   }
 });
 
-var Resource = React.createClass({displayName: "Resource",
+var Iaas = React.createClass({displayName: "Iaas",
   getInitialState: function() {
-    return {process: {}, activeProcess: null, tab: null};
+    return {iaas: this.props.iaas};
   },
-  setActive: function(name) {
-    if(this.state.process[name] !== undefined) {
-      this.setState({activeProcess: this.state.process[name], tab: "process"});
+  onChange: function(e) {
+    this.props.setIaas(e.target.value);
+  },
+  componentWillReceiveProps: function(nextProps) {
+    this.setState({iaas: nextProps.iaas});
+  },
+  render: function() {
+    return (
+      React.createElement("div", {className: "iaas"}, 
+        React.createElement("label", null, "Iaas name: ", React.createElement("input", {type: "text", value: this.state.iaas, onChange: this.onChange}))
+      )
+    );
+  }
+});
+
+var NodeCreate = React.createClass({displayName: "NodeCreate",
+  getInitialState: function() {
+    function idMaker() { var initial = 0; return function() { initial++; return initial}}
+    return {
+      templates: [],
+      iaas: "",
+      register: false,
+      metadata: [],
+      id: 0,
+      getId: idMaker(),
+      disabled: false
+     };
+  },
+  cancel: function() {
+    this.setState({metadata: [], register: false});
+  },
+  registerToggle: function() {
+    if (!this.state.register) {
+        this.addMetadata("address", "");
     } else {
-      this.setState({tab: name, activeProcess: null});
+        this.removeMetadata("address");
+    }
+    this.setState({register: !this.state.register});
+  },
+  getId: function() {
+    return this.state.getId();
+  },
+  metaIndexByKey: function(key) {
+    var index = -1;
+    var meta = this.state.metadata;
+    meta.forEach(function(metadata, i) {
+      if (metadata.key === key) {
+        index = i;
+      }
+    });
+    return index;
+  },
+  addMetadata: function(key, value) {
+    var metadata = this.state.metadata;
+    var m = {key: key, value: value};
+    var index = this.metaIndexByKey(key);
+    if (index === -1) {
+        m.id = this.getId();
+        metadata.push(m);
+        this.setState({metadata: metadata});
+    } else {
+        this.editMetadata(key, key, value);
     }
   },
-  unitsByProcess: function() {
-    var process = {};
-    for (index in this.props.app.units) {
-      var unit = this.props.app.units[index];
-      if (!(unit.ProcessName in process)) {
-        process[unit.ProcessName] = [];
-      }
-      process[unit.ProcessName].push(unit);
-    }
-    this.setState({process: process});
+  removeMetadata: function(key) {
+    var index = this.metaIndexByKey(key);
+    if (index === -1 )
+      return;
+    var meta = this.state.metadata;
+    meta.splice(index, 1);
+    this.setState({metadata: meta});
+  },
+  editMetadata: function(key, newKey, newValue) {
+    var index = this.metaIndexByKey(key);
+    if (index === -1)
+        return;
+
+    var metadata = this.state.metadata;
+    var m = metadata[index];
+    m.key = newKey;
+    m.value = newValue;
+    metadata[index] = m;
+    this.setState({metadata: metadata});
+  },
+  add: function(e) {
+    e.preventDefault();
+    this.addMetadata("", "");
+  },
+  loadTemplates: function() {
+  	$.ajax({
+  	  type: 'GET',
+  	  url: "/admin/templates.json",
+  	  success: function(data) {
+          this.setState({templates: data});
+  	  }.bind(this)
+  	});
   },
   componentDidMount: function() {
-    this.unitsByProcess();
+    this.loadTemplates();
   },
-  render: function() {
-    tabs = Object.keys(this.state.process);
-    if(tabs.length > 0){
-      tabs.push("Web transactions");
-    }
-    return (
-      React.createElement("div", null, 
-        React.createElement(Tabs, {tabs: tabs, setActive: this.setActive}), 
-        this.state.tab === "process" ? React.createElement(ProcessContent, {process: this.state.activeProcess, appName: this.props.app.name}) : "", 
-        this.state.tab === "Web transactions" ? React.createElement(WebTransactionsContent, {appName: this.props.app.name}) : ""
-      )
-    );
-  }
-});
-
-module.exports = Resources;
-
-},{"../components/base.jsx":163,"../components/metrics.jsx":165,"../components/top-slow.jsx":167,"jquery":28,"react":162}],167:[function(require,module,exports){
-var React = require('react');
-
-var SelectTopInterval = React.createClass({displayName: "SelectTopInterval",
-  handleChange: function(e) {
-    e.preventDefault();
-    var topSize = e.target.value.trim();
-    this.props.selectTopRequests(this.props.requests, topSize);
+  selectTemplate: function(templateName) {
+    this.state.templates.forEach(function(template) {
+      if (template.Name === templateName) {
+        this.setIaas(template.IaaSName);
+        template.Data.forEach(function(metaData) {
+          this.addMetadata(metaData.Name, metaData.Value);
+        }.bind(this));
+      }
+    }.bind(this));
   },
-  render: function() {
-    return (
-      React.createElement("select", {onChange: this.handleChange}, 
-        React.createElement("option", {value: "10"}, "10"), 
-        React.createElement("option", {value: "20"}, "20"), 
-        React.createElement("option", {value: "30"}, "30"), 
-        React.createElement("option", {value: "40"}, "40"), 
-        React.createElement("option", {value: "50"}, "50")
-      )
-    );
-  }
-});
-
-var RequestRow = React.createClass({displayName: "RequestRow",
-  render: function() {
-    return (
-      React.createElement("tr", null, 
-        React.createElement("td", null, this.props.request.method), 
-        React.createElement("td", null, this.props.request.path), 
-        React.createElement("td", null, this.props.request.status_code), 
-        React.createElement("td", null, this.props.request.response), 
-        React.createElement("td", null, this.props.request.time)
-      )
-    );
-  }
-});
-
-var TopTable = React.createClass({displayName: "TopTable",
-  render: function() {
-    var topRequests = this.props.top.map(function(result) {
-      return (
-        React.createElement(RequestRow, {key: result.method + result.path + result.status_code + result.time, request: result})
-      );
+  addNode: function() {
+    this.setState({disabled: true});
+    var url = "/admin/node/add/?register=" + this.state.register;
+    var data = {};
+    this.state.metadata.forEach(function(metadata) {
+      data[metadata.key] = metadata.value;
     });
+    if (this.state.iaas.length > 0) {
+      data["iaas"] = this.state.iaas;
+    }
+    $.ajax({
+      type: "POST",
+      url: url,
+      data: data,
+      success: function() {
+  		location.reload();
+      }.bind(this)
+    });
+  },
+  setIaas: function(iaas) {
+    this.setState({iaas: iaas});
+  },
+  render: function() {
     return (
-      React.createElement("table", {className: "table"}, 
-        React.createElement("thead", null, 
-          React.createElement("tr", null, 
-            React.createElement("th", null, "Method"), 
-            React.createElement("th", null, "Path"), 
-            React.createElement("th", null, "Status Code"), 
-            React.createElement("th", null, "Response time"), 
-            React.createElement("th", null, "Time")
+      React.createElement("div", {className: "node-create modal-dialog"}, 
+        React.createElement("div", {className: "modal-content"}, 
+          React.createElement("div", {className: "modal-header"}, 
+            React.createElement("h3", {id: "myModalLabel"}, "Create node")
+          ), 
+          React.createElement("div", {className: "modal-body"}, 
+            this.state.templates.length > 0 ? React.createElement(Template, {templates: this.state.templates, selectTemplate: this.selectTemplate}) : "", 
+            React.createElement(Register, {register: this.state.register, onClick: this.registerToggle}), 
+    	      React.createElement(Iaas, {iaas: this.state.iaas}), 
+            React.createElement(Meta, {metadata: this.state.metadata, removeMetadata: this.removeMetadata, editMetadata: this.editMetadata})
+          ), 
+          React.createElement("div", {className: "modal-footer"}, 
+            React.createElement(CancelBtn, {onClick: this.cancel, disabled: this.state.disabled}), 
+            React.createElement(Button, {text: "Add metadata", onClick: this.add, disabled: this.state.disabled}), 
+            React.createElement(Button, {text: "Create node", onClick: this.addNode, disabled: this.state.disabled})
           )
-        ), 
-        React.createElement("tbody", null, 
-          topRequests.length > 0 ? topRequests : React.createElement("tr", null, React.createElement("td", {colSpan: "5"}, "No requests found."))
         )
       )
     );
   }
 });
 
-var TopSlow = React.createClass({displayName: "TopSlow",
-  getDefaultProps: function() {
-    return {
-      from: "1h",
-      topInterval: 10,
-    }
-  },
-  getInitialState: function() {
-    return {top: [], requests: []};
-  },
-  componentDidMount: function() {
-    this.loadData(this.props.from);
-  },
-  componentWillReceiveProps: function(nextProps) {
-    if(this.props.from !== nextProps.from){
-      this.loadData(nextProps.from);
-    }
-  },
-  loadData: function(from) {
-    var appName = this.props.appName;
-    var kind = this.props.kind;
-    var url = "/metrics/app/" + appName + "/?metric=" + kind + "&date_range=" + from;
-    $.getJSON(url, function(data) {
-        this.sortData(data);
-    }.bind(this));
-  },
-  sortData: function(result) {
-    var requests = [];
-    for(key in result.data) {
-      for(i in result.data[key]){
-        var dt = new Date(result.data[key][i][0]);
-        var date = dt.toString().split(" ");
-        requests.push({
-            time: date[1] + " " + date[2] + " " + date[4],
-            response: result.data[key][i][1],
-            status_code: result.data[key][i][2],
-            method: result.data[key][i][3],
-            path: key
-        });
-      }
-    }
-    requests.sort(function(a,b){
-      return (a.response >= b.response ? -1 : a.response < b.response ? 1 : 0);
-    });
-    this.selectTopRequests(requests, this.props.topInterval);
-  },
-  selectTopRequests: function(requests, topSize){
-    if(requests.length < topSize){
-      this.setState({top: requests, requests: requests});
-      return;
-    }
-    var topSlow = [];
-    for(var i = 0; i < topSize; i++) {
-      topSlow.push(requests[i]);
-    }
-    this.setState({top: topSlow, requests: requests});
-  },
-  render: function() {
-    return (
-      React.createElement("div", null, 
-        React.createElement("div", null, 
-          React.createElement("h3", null, 
-            "Top slow: ", React.createElement(SelectTopInterval, {selectTopRequests: this.selectTopRequests, requests: this.state.requests})
-          )
-        ), 
-        React.createElement(TopTable, {top: this.state.top})
-      )
-    );
-  }
-});
+module.exports = NodeCreate;
 
-module.exports = {
-    TopSlow: TopSlow,
-};
-
-},{"react":162}],168:[function(require,module,exports){
+},{"jquery":28,"react":162}],166:[function(require,module,exports){
 var React = require('react'),
     ReactDOM = require('react-dom'),
-    Resources = require("../components/resources.jsx");
+    NodeCreate = require("../components/node-create.jsx"),
+    Metrics = require("../components/metrics.jsx").Metrics;
 
-var url = "/apps/" + window.location.pathname.split("/")[2] + ".json";
 ReactDOM.render(
-  React.createElement(Resources, {url: url}),
-  document.getElementById('resources')
+  React.createElement(NodeCreate, null),
+  document.getElementById('node-create')
 );
 
-},{"../components/resources.jsx":166,"react":162,"react-dom":31}]},{},[168]);
+var pool = window.location.pathname.split('/')[3];
+ReactDOM.render(
+  React.createElement(Metrics, {targetType: "pool", targetName: pool, 
+    metrics: [
+        "cpu_max", "cpu_wait", "load1", "load5", "load15",
+        "mem_max", "disk", "swap", "nettx", "netrx"
+    ]}),
+  document.getElementById('pool-metrics')
+);
+
+},{"../components/metrics.jsx":164,"../components/node-create.jsx":165,"react":162,"react-dom":31}]},{},[166]);

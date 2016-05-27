@@ -18,3 +18,10 @@ class TestFilter(TestCase):
         template = Template(html)
         context = Context({'duration': '203902854662'})
         self.assertEqual("03m23s", template.render(context))
+
+    def test_time_to_string_filter_with_hour(self):
+        html = '{% load filters_deploys %}'
+        html += '{{ duration|time_to_string }}'
+        template = Template(html)
+        context = Context({'duration': '7403902854662'})
+        self.assertEqual("02h03m23s", template.render(context))
