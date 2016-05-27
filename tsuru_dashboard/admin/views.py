@@ -210,14 +210,16 @@ class ListHealing(LoginRequiredView, TemplateView):
         context = super(ListHealing, self).get_context_data(*args, **kwargs)
         url = '{}/docker/healing'.format(settings.TSURU_HOST)
         response = requests.get(url, headers=self.authorization)
-        events = response.json() or []
         formatted_events = []
+        if response.status_code == 200:
+            events = response.json() or []
+            formatted_events = []
 
-        for event in events:
-            event['FailingContainer']['ID'] = event['FailingContainer']['ID'][:12]
-            event['CreatedContainer']['ID'] = event['CreatedContainer']['ID'][:12]
-            event['App'] = event['FailingContainer']['AppName']
-            formatted_events.append(event)
+            for event in events:
+                event['FailingContainer']['ID'] = event['FailingContainer']['ID'][:12]
+                event['CreatedContainer']['ID'] = event['CreatedContainer']['ID'][:12]
+                event['App'] = event['FailingContainer']['AppName']
+                formatted_events.append(event)
 
         context.update({"events": formatted_events})
         return context

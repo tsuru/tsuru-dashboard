@@ -32,8 +32,7 @@ class ListHealingViewTest(TestCase):
     @patch("tsuru_dashboard.auth.views.token_is_valid")
     def test_null_events(self, token_is_valid, get):
         token_is_valid.return_value = True
-        response_mock = Mock()
-        response_mock.json.return_value = None
+        response_mock = Mock(status_code=204)
         get.return_value = response_mock
         response = ListHealing.as_view()(self.request)
         self.assertIn("docker/list_healing.html", response.template_name)
