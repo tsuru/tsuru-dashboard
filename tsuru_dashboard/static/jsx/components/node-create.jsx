@@ -222,13 +222,13 @@ var NodeCreate = React.createClass({
     this.addMetadata("", "");
   },
   loadTemplates: function() {
-  	$.ajax({
-  	  type: 'GET',
-  	  url: "/admin/templates.json",
-  	  success: function(data) {
+    $.ajax({
+      type: 'GET',
+      url: "/admin/templates.json",
+      success: function(data) {
           this.setState({templates: data});
-  	  }.bind(this)
-  	});
+      }.bind(this)
+    });
   },
   componentDidMount: function() {
     this.loadTemplates();
@@ -277,9 +277,9 @@ var NodeCreate = React.createClass({
             <h3 id='myModalLabel'>Create node</h3>
           </div>
           <div className='modal-body'>
-            {this.state.templates.length > 0 ? <Template templates={this.state.templates} selectTemplate={this.selectTemplate} /> : ""}
+            {this.state.templates != null && this.state.templates.length > 0 ? <Template templates={this.state.templates} selectTemplate={this.selectTemplate} /> : ""}
             <Register register={this.state.register} onClick={this.registerToggle} />
-    	      <Iaas iaas={this.state.iaas} />
+            <Iaas iaas={this.state.iaas} />
             <Meta metadata={this.state.metadata} removeMetadata={this.removeMetadata} editMetadata={this.editMetadata} />
           </div>
           <div className='modal-footer'>
