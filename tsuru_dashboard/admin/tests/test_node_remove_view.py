@@ -34,9 +34,10 @@ class NodeRemoveViewTest(TestCase):
         self.assertEqual(302, response.status_code)
         self.assertRedirects(response, reverse("pool-list"))
 
-        api_url = "http://localhost:8080/docker/node/http://localhost:2345?remove-iaas=false&no-rebalance=true"
+        api_url = "http://localhost:8080/docker/node/http://localhost:2345"
+        query = "?remove-iaas=false&no-rebalance=true"
         headers = {'authorization': u'admin'}
-        delete.assert_called_with(api_url, headers=headers)
+        delete.assert_called_with(api_url + query, headers=headers)
 
     @patch("requests.get")
     @patch("requests.delete")
@@ -57,9 +58,10 @@ class NodeRemoveViewTest(TestCase):
         self.assertEqual(302, response.status_code)
         self.assertRedirects(response, reverse("pool-list"))
 
-        api_url = "http://localhost:8080/docker/node/http://localhost:2345?remove-iaas=true&no-rebalance=false"
+        api_url = "http://localhost:8080/docker/node/http://localhost:2345"
+        query = "?remove-iaas=true&no-rebalance=false"
         headers = {'authorization': u'admin'}
-        delete.assert_called_with(api_url, headers=headers)
+        delete.assert_called_with(api_url + query, headers=headers)
 
     @patch("requests.get")
     @patch("requests.delete")
@@ -80,9 +82,10 @@ class NodeRemoveViewTest(TestCase):
         self.assertEqual(302, response.status_code)
         self.assertRedirects(response, reverse("pool-list"))
 
-        api_url = "http://localhost:8080/docker/node/http://localhost:2345?remove-iaas=false&no-rebalance=true"
+        api_url = "http://localhost:8080/docker/node/http://localhost:2345"
+        query = "?remove-iaas=false&no-rebalance=true"
         headers = {'authorization': u'admin'}
-        delete.assert_called_with(api_url, headers=headers)
+        delete.assert_called_with(api_url + query, headers=headers)
 
     @patch("requests.delete")
     @patch("tsuru_dashboard.auth.views.token_is_valid")
@@ -102,9 +105,10 @@ class NodeRemoveViewTest(TestCase):
         self.assertEqual(404, response.status_code)
         self.assertEqual("custom error", response.content)
 
-        api_url = "http://localhost:8080/docker/node/http://localhost:2345?remove-iaas=true&no-rebalance=false"
+        api_url = "http://localhost:8080/docker/node/http://localhost:2345"
+        query = "?remove-iaas=true&no-rebalance=false"
         headers = {'authorization': u'admin'}
-        delete.assert_called_with(api_url, headers=headers)
+        delete.assert_called_with(api_url + query, headers=headers)
 
     @patch("requests.get")
     @patch("requests.delete")

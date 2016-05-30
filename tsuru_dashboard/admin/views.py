@@ -323,7 +323,9 @@ class NodeRemove(LoginRequiredView):
         no_rebalance = "false" if rebalance == "true" else "true"
 
         response = requests.delete(
-            '{}/docker/node/{}?remove-iaas={}&no-rebalance={}'.format(settings.TSURU_HOST, address, destroy, no_rebalance),
+            '{}/docker/node/{}?remove-iaas={}&no-rebalance={}'.format(
+                settings.TSURU_HOST, address, destroy, no_rebalance
+            ),
             headers=self.authorization
         )
 
