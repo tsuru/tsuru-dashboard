@@ -22,7 +22,7 @@ class NodeRemoveViewTest(TestCase):
     def test_remove_node_with_default_params(self, token_is_valid, delete, get):
         token_is_valid.return_value = True
 
-        response_mock = Mock(status_code=204)
+        response_mock = Mock(status_code=200)
         delete.return_value = response_mock
 
         self.session["tsuru_token"] = "admin"
@@ -34,10 +34,9 @@ class NodeRemoveViewTest(TestCase):
         self.assertEqual(302, response.status_code)
         self.assertRedirects(response, reverse("pool-list"))
 
-        api_url = "http://localhost:8080/docker/node?no-rebalance=true"
+        api_url = "http://localhost:8080/docker/node/http://localhost:2345?remove-iaas=false&no-rebalance=true"
         headers = {'authorization': u'admin'}
-        data = '{"remove_iaas": "false", "address": "http://localhost:2345"}'
-        delete.assert_called_with(api_url, headers=headers, data=data)
+        delete.assert_called_with(api_url, headers=headers)
 
     @patch("requests.get")
     @patch("requests.delete")
@@ -45,7 +44,7 @@ class NodeRemoveViewTest(TestCase):
     def test_remove_node_with_detroy_and_rebalance_true(self, token_is_valid, delete, get):
         token_is_valid.return_value = True
 
-        response_mock = Mock(status_code=204)
+        response_mock = Mock(status_code=200)
         delete.return_value = response_mock
 
         self.session["tsuru_token"] = "admin"
@@ -58,10 +57,9 @@ class NodeRemoveViewTest(TestCase):
         self.assertEqual(302, response.status_code)
         self.assertRedirects(response, reverse("pool-list"))
 
-        api_url = "http://localhost:8080/docker/node?no-rebalance=false"
+        api_url = "http://localhost:8080/docker/node/http://localhost:2345?remove-iaas=true&no-rebalance=false"
         headers = {'authorization': u'admin'}
-        data = '{"remove_iaas": "true", "address": "http://localhost:2345"}'
-        delete.assert_called_with(api_url, headers=headers, data=data)
+        delete.assert_called_with(api_url, headers=headers)
 
     @patch("requests.get")
     @patch("requests.delete")
@@ -82,10 +80,9 @@ class NodeRemoveViewTest(TestCase):
         self.assertEqual(302, response.status_code)
         self.assertRedirects(response, reverse("pool-list"))
 
-        api_url = "http://localhost:8080/docker/node?no-rebalance=true"
+        api_url = "http://localhost:8080/docker/node/http://localhost:2345?remove-iaas=false&no-rebalance=true"
         headers = {'authorization': u'admin'}
-        data = '{"remove_iaas": "false", "address": "http://localhost:2345"}'
-        delete.assert_called_with(api_url, headers=headers, data=data)
+        delete.assert_called_with(api_url, headers=headers)
 
     @patch("requests.delete")
     @patch("tsuru_dashboard.auth.views.token_is_valid")
@@ -105,10 +102,9 @@ class NodeRemoveViewTest(TestCase):
         self.assertEqual(404, response.status_code)
         self.assertEqual("custom error", response.content)
 
-        api_url = "http://localhost:8080/docker/node?no-rebalance=false"
+        api_url = "http://localhost:8080/docker/node/http://localhost:2345?remove-iaas=true&no-rebalance=false"
         headers = {'authorization': u'admin'}
-        data = '{"remove_iaas": "true", "address": "http://localhost:2345"}'
-        delete.assert_called_with(api_url, headers=headers, data=data)
+        delete.assert_called_with(api_url, headers=headers)
 
     @patch("requests.get")
     @patch("requests.delete")

@@ -322,15 +322,9 @@ class NodeRemove(LoginRequiredView):
             return HttpResponse(msg.format("rebalance"), status=400)
         no_rebalance = "false" if rebalance == "true" else "true"
 
-        data = {
-            "address": address,
-            "remove_iaas": destroy,
-        }
-
         response = requests.delete(
-            '{}/docker/node?no-rebalance={}'.format(settings.TSURU_HOST, no_rebalance),
-            headers=self.authorization,
-            data=json.dumps(data)
+            '{}/docker/node/{}?remove-iaas={}&no-rebalance={}'.format(settings.TSURU_HOST, address, destroy, no_rebalance),
+            headers=self.authorization
         )
 
         if response.status_code > 399:
