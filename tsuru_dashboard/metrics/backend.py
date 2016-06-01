@@ -134,9 +134,11 @@ class ElasticSearch(object):
         if date_range is None:
             date_range = "1h"
         if date_range == "1h":
-            self.index = ".measure-tsuru-{}".format(datetime.datetime.utcnow().strftime("%Y.%m.%d"))
+            self.index = ".{}-{}".format(settings.ELASTICSEARCH_INDEX,
+                                         datetime.datetime.utcnow().strftime("%Y.%m.%d"))
         else:
-            self.index = ".measure-tsuru-{}.*".format(datetime.datetime.utcnow().strftime("%Y"))
+            self.index = ".{}-{}.*".format(settings.ELASTICSEARCH_INDEX,
+                                           datetime.datetime.utcnow().strftime("%Y"))
         self.url = url
         self.filtered_query = query
         self.date_range = date_range
