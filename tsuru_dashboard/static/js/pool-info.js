@@ -29544,7 +29544,7 @@ var NodeCreate = React.createClass({displayName: "NodeCreate",
   },
   addNode: function() {
     this.setState({disabled: true});
-    var url = "/admin/node/add/?register=" + this.state.register;
+    var url = "/admin/node/add/";
     var data = {};
     this.state.metadata.forEach(function(metadata) {
       data[metadata.key] = metadata.value;
@@ -29553,6 +29553,7 @@ var NodeCreate = React.createClass({displayName: "NodeCreate",
       data["iaas"] = this.state.iaas;
     }
     data["pool"] = this.props.pool;
+    data["register"] = this.state.register;
     $.ajax({
       type: "POST",
       url: url,
@@ -29600,8 +29601,10 @@ var React = require('react'),
     NodeCreate = require("../components/node-create.jsx"),
     Metrics = require("../components/metrics.jsx").Metrics;
 
+var pool = window.location.pathname.split("/")[3];
+
 ReactDOM.render(
-  React.createElement(NodeCreate, null),
+  React.createElement(NodeCreate, {pool: pool}),
   document.getElementById('node-create')
 );
 

@@ -3,8 +3,10 @@ var React = require('react'),
     NodeCreate = require("../components/node-create.jsx"),
     Metrics = require("../components/metrics.jsx").Metrics;
 
+var pool = window.location.pathname.split("/")[3];
+
 ReactDOM.render(
-  <NodeCreate />,
+  <NodeCreate pool={pool} />,
   document.getElementById('node-create')
 );
 

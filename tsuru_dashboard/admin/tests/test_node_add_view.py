@@ -24,7 +24,7 @@ class NodeAddViewTest(TestCase):
         token_is_valid.return_value = True
 
         factory = RequestFactory()
-        request = factory.post('/?register=false', data={"key": "value"})
+        request = factory.post('/', data={"key": "value", "register": "false"})
         request.session = {'tsuru_token': 'tokentest'}
 
         url = "{}/docker/node".format(settings.TSURU_HOST)
@@ -38,15 +38,15 @@ class NodeAddViewTest(TestCase):
         response = NodeAdd.as_view()(request)
 
         self.assertEqual(response.status_code, 200)
-        self.assertIn("register", httpretty.last_request().querystring)
-        self.assertEqual("false", httpretty.last_request().querystring["register"][0])
+        self.assertIn("register", httpretty.last_request().body)
+        self.assertIn("false", httpretty.last_request().body)
 
     @patch("tsuru_dashboard.auth.views.token_is_valid")
     def test_view_register_true(self, token_is_valid):
         token_is_valid.return_value = True
 
         factory = RequestFactory()
-        request = factory.post('/?register=true', data={"key": "value"})
+        request = factory.post('/', data={"key": "value", "register": "true"})
         request.session = {'tsuru_token': 'tokentest'}
 
         url = "{}/docker/node".format(settings.TSURU_HOST)
@@ -61,5 +61,5 @@ class NodeAddViewTest(TestCase):
         response = NodeAdd.as_view()(request)
 
         self.assertEqual(response.status_code, 200)
-        self.assertIn("register", httpretty.last_request().querystring)
-        self.assertEqual("true", httpretty.last_request().querystring["register"][0])
+        self.assertIn("register", httpretty.last_request().body)
+        self.assertIn("true", httpretty.last_request().body)

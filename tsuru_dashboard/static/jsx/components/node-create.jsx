@@ -245,7 +245,7 @@ var NodeCreate = React.createClass({
   },
   addNode: function() {
     this.setState({disabled: true});
-    var url = "/admin/node/add/?register=" + this.state.register;
+    var url = "/admin/node/add/";
     var data = {};
     this.state.metadata.forEach(function(metadata) {
       data[metadata.key] = metadata.value;
@@ -254,6 +254,7 @@ var NodeCreate = React.createClass({
       data["iaas"] = this.state.iaas;
     }
     data["pool"] = this.props.pool;
+    data["register"] = this.state.register;
     $.ajax({
       type: "POST",
       url: url,
