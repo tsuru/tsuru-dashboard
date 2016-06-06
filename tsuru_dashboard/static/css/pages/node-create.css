@@ -1,10 +1,3 @@
-table td, table th {
-    width: 200px;
-    overflow: hidden;
-    display: inline-block;
-    white-space: nowrap;
-}
-
 .meta-item {
     clear: both;
     margin: 15px 0px;
