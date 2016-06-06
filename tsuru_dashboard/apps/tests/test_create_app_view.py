@@ -107,7 +107,7 @@ class CreateAppViewTest(TestCase):
         url = '{}/apps'.format(settings.TSURU_HOST)
         post.assert_called_with(
             url,
-            data={"platform": "django", "name": "myepe", "plan": {"name": "basic"}},
+            data={"platform": "django", "name": "myepe", "plan": "basic"},
             headers={'authorization': request.session['tsuru_token']}
         )
 

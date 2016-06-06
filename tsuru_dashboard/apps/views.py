@@ -203,9 +203,6 @@ class CreateApp(LoginRequiredView):
             # removing keys with empty values
             data = {key: value for key, value in form.cleaned_data.items() if value}
 
-            if 'plan' in data:
-                data['plan'] = {'name': data['plan']}
-
             url = '{}/apps'.format(settings.TSURU_HOST)
             response = requests.post(url, data=data, headers=authorization)
 
