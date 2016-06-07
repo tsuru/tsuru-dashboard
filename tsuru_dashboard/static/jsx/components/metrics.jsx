@@ -84,6 +84,8 @@ var GraphContainer = React.createClass({
 
 var Graph = React.createClass({
   getOptions: function() {
+    var seriesCount = Object.keys(this.props.model).length
+    var showLegend = this.props.legend && seriesCount < 10
     return {
       xaxis: {
         mode: "time",
@@ -98,7 +100,7 @@ var Graph = React.createClass({
       },
       legend: {
         position: "sw",
-        show: this.props.legend
+        show: showLegend
       }
     }
   },
