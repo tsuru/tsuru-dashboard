@@ -29545,19 +29545,19 @@ var NodeCreate = React.createClass({displayName: "NodeCreate",
   addNode: function() {
     this.setState({disabled: true});
     var url = "/admin/node/add/";
-    var data = {};
+    var data = [];
     this.state.metadata.forEach(function(metadata) {
-      data[metadata.key] = metadata.value;
+      data.push("Metadata." + metadata.key + "=" + metadata.value);
     });
     if (this.state.iaas.length > 0) {
-      data["iaas"] = this.state.iaas;
+      data.push("Metadata.iaas=" + this.state.iaas);
     }
-    data["pool"] = this.props.pool;
-    data["register"] = this.state.register;
+    data.push("Metadata.pool=" + this.props.pool);
+    data.push("Register=" + this.state.register);
     $.ajax({
       type: "POST",
       url: url,
-      data: data,
+      data: data.join("&"),
       success: function() {
         location.reload();
       }.bind(this),
