@@ -34,7 +34,8 @@ class InfoViewTest(TestCase):
                                         deploy="53e143cb874ccb1f68000001")
         self.assertIn("deploys/deploy_details.html", response.template_name)
         expected = copy.deepcopy(self.data)
-        expected["Diff"] = u"<div class=\"highlight\"><pre>%s\n</pre></div>\n" % self.data["Diff"]
+        diff = u"<div class=\"highlight\"><pre><span></span>%s\n</pre></div>\n"
+        expected["Diff"] = diff % self.data["Diff"]
         self.assertDictEqual(expected, response.context_data['deploy'])
         get.assert_called_with(
             '{0}/deploys/{1}'.format(settings.TSURU_HOST,
