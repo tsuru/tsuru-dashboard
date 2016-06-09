@@ -38,8 +38,10 @@ class NodeAddViewTest(TestCase):
         response = NodeAdd.as_view()(request)
 
         self.assertEqual(response.status_code, 200)
-        self.assertIn("register", httpretty.last_request().body)
-        self.assertIn("false", httpretty.last_request().body)
+        self.assertIn("register", httpretty.last_request().parsed_body)
+        self.assertEqual("false", httpretty.last_request().parsed_body["register"][0])
+        self.assertIn("key", httpretty.last_request().parsed_body)
+        self.assertEqual("value", httpretty.last_request().parsed_body["key"][0])
 
     @patch("tsuru_dashboard.auth.views.token_is_valid")
     def test_view_register_true(self, token_is_valid):
@@ -61,5 +63,7 @@ class NodeAddViewTest(TestCase):
         response = NodeAdd.as_view()(request)
 
         self.assertEqual(response.status_code, 200)
-        self.assertIn("register", httpretty.last_request().body)
-        self.assertIn("true", httpretty.last_request().body)
+        self.assertIn("register", httpretty.last_request().parsed_body)
+        self.assertEqual("true", httpretty.last_request().parsed_body["register"][0])
+        self.assertIn("key", httpretty.last_request().parsed_body)
+        self.assertEqual("value", httpretty.last_request().parsed_body["key"][0])

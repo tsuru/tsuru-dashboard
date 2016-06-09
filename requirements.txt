@@ -1,7 +1,7 @@
-Django==1.9.6
+Django==1.9.7
 tsuru_dashboard==0.2.21
-gunicorn==19.5.0
+gunicorn==19.6.0
 gevent==1.1.1
 raven==4.2.3
 grequests==0.3.0
-Pygments==2.1
+Pygments==2.1.3

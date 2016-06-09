@@ -46,7 +46,8 @@ class InfoViewTest(TestCase):
         )
 
         expected = copy.deepcopy(self.data)
-        expected["Diff"] = u"""<div class="highlight"><pre>%s\n</pre></div>\n""" % self.data["Diff"]
+        diff = u"""<div class="highlight"><pre><span></span>%s\n</pre></div>\n"""
+        expected["Diff"] = diff % self.data["Diff"]
         self.assertEqual("apps/deploy.html", response.template_name[0])
         self.assertDictEqual(expected, response.context_data['deploy'])
         self.assertIn('app', response.context_data.keys())
