@@ -134,8 +134,8 @@ class ElasticSearch(object):
         if date_range is None:
             date_range = "1h"
         if date_range == "1h":
-            self.index = ".{}-{}".format(settings.ELASTICSEARCH_INDEX,
-                                         datetime.datetime.utcnow().strftime("%Y.%m.%d"))
+            self.index = ".{}-{}*".format(settings.ELASTICSEARCH_INDEX,
+                                          datetime.datetime.utcnow().strftime("%Y.%m.%d"))
         else:
             self.index = ".{}-{}.*".format(settings.ELASTICSEARCH_INDEX,
                                            datetime.datetime.utcnow().strftime("%Y"))

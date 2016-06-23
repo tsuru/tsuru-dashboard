@@ -9,7 +9,7 @@ class ElasticSearchTest(TestCase):
     def setUp(self):
         self.maxDiff = None
         self.es = ElasticSearch("http://url.com", AppFilter(app="app_name").query())
-        self.index = ".measure-tsuru-{}".format(datetime.datetime.utcnow().strftime("%Y.%m.%d"))
+        self.index = ".measure-tsuru-{}*".format(datetime.datetime.utcnow().strftime("%Y.%m.%d"))
 
     @patch("requests.post")
     def test_cpu_max(self, post_mock):
