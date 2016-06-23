@@ -52,7 +52,7 @@ class TsuruMetricsBackendTest(TestCase):
 class NodesMetricsBackendTest(TestCase):
     def setUp(self):
         self.backend = NodesMetricsBackend(addrs=["127.0.0.1", "128.0.0.1"])
-        self.index = ".measure-tsuru-{}".format(datetime.datetime.utcnow().strftime("%Y.%m.%d"))
+        self.index = ".measure-tsuru-{}*".format(datetime.datetime.utcnow().strftime("%Y.%m.%d"))
         self.aggregation = {
             "addrs": {
                 "terms": {
@@ -201,7 +201,7 @@ class NodesMetricsBackendTest(TestCase):
 class NodeMetricsBackendTest(TestCase):
     def setUp(self):
         self.backend = NodeMetricsBackend(addr="127.0.0.1")
-        self.index = ".measure-tsuru-{}".format(datetime.datetime.utcnow().strftime("%Y.%m.%d"))
+        self.index = ".measure-tsuru-{}*".format(datetime.datetime.utcnow().strftime("%Y.%m.%d"))
 
     @patch("requests.post")
     def test_nettx(self, post_mock):
