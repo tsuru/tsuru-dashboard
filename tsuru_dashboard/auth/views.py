@@ -243,3 +243,13 @@ class KeysAdd(LoginRequiredMixin, FormView):
 class KeysList(LoginRequiredMixin, TemplateView):
     template_name = 'auth/key_list.html'
 
+    def get_context_data(self, *args, **kwargs):
+        context = super(KeysList, self).get_context_data(*args, **kwargs)
+        url = '{}/users/keys'.format(settings.TSURU_HOST)
+        response = requests.get(url, headers=self.authorization)
+        print response.json()
+        if response.status_code == 200:
+            keys = response.json()
+        context.update({"keys": keys})
+        return context
+
