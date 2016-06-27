@@ -237,7 +237,7 @@ class KeysAdd(LoginRequiredMixin, FormView):
             messages.success(self.request, "The key was successfully added", fail_silently=True)
         else:
             messages.error(self.request, response.text, fail_silently=True)
-        return super(KeyAdd, self).form_valid(form)
+        return super(KeysAdd, self).form_valid(form)
 
 
 class KeysList(LoginRequiredMixin, TemplateView):
