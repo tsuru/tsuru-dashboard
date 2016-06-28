@@ -261,7 +261,6 @@ class KeysRemove(LoginRequiredView):
         key = kwargs["key"]
 
         url = '{}/users/keys/{}'.format(settings.TSURU_HOST, key)
-        req = requests.delete(url, headers=self.authorization)
-        print req.json()
+        requests.delete(url, headers=self.authorization)
 
         return redirect(reverse('list-keys'))
