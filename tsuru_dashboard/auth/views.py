@@ -258,9 +258,9 @@ class KeysList(LoginRequiredMixin, TemplateView):
 
 class KeysRemove(LoginRequiredView):
     def get(self, request, *args, **kwargs):
-        key = kwargs["key"]
+        key_name = kwargs["key"]
+        payload = {'name': key_name}
 
-        url = '{}/users/keys/{}'.format(settings.TSURU_HOST, key)
-        requests.delete(url, headers=self.authorization)
-
+        url = '{}/users/keys'.format(settings.TSURU_HOST)
+        requests.delete(url, data=json.dumps(payload), headers=self.authorization)
         return redirect(reverse('list-keys'))

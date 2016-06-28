@@ -1,3 +1,5 @@
+import json
+
 from mock import patch, Mock
 
 from django.test import TestCase
@@ -18,8 +20,9 @@ class KeysRemoveViewTest(TestCase):
         key = "rsa"
 
         response = KeysRemove.as_view()(request, key=key)
+        payload = {'name': key}
 
         self.assertEqual(302, response.status_code)
         self.assertEqual(reverse("list-keys"), response.items()[1][1])
-        url = '{}/users/keys/{}'.format(settings.TSURU_HOST, key)
-        delete.assert_called_with(url, headers={'authorization': 'admin'})
+        url = '{}/users/keys'.format(settings.TSURU_HOST)
+        delete.assert_called_with(url, data=json.dumps(payload), headers={'authorization': 'admin'})
