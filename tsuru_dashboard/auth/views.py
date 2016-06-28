@@ -1,5 +1,6 @@
 import json
 import requests
+
 from tsuruclient import client
 
 from tsuru_dashboard import settings
@@ -253,4 +254,3 @@ class KeysList(LoginRequiredMixin, TemplateView):
 
         context.update({"keys": keys})
         return context
-
