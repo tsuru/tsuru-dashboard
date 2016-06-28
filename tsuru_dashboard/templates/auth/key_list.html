@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block header %}
+<h1>My Keys</h1>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <p>
+                <a href="add">
+                    <button type="button" class="btn btn-default">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add SSH Key
+                    </button>
+                </a>
+            </p>
+            {% for name, value in keys.items %}
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{{ name }}</h3>
+                    </div>
+                    <div class="panel-body ssh-key">{{ value }}</div>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <a href="remove/{{ name }}">
+                                <button type="button" class="btn btn-default">
+                                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Delete
+                                </button>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

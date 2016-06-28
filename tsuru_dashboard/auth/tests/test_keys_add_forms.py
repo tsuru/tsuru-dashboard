@@ -4,7 +4,7 @@ from django.forms import CharField, Textarea
 from tsuru_dashboard.auth import forms
 
 
-class KeyFormTest(TestCase):
+class KeysAddFormTest(TestCase):
     def test_forms_should_have_KeyForm(self):
         self.assertTrue(hasattr(forms, 'KeyForm'))
 
