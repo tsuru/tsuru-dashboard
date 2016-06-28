@@ -228,7 +228,7 @@ class Callback(View):
 class KeysAdd(LoginRequiredMixin, FormView):
     form_class = KeyForm
     template_name = 'auth/key_add.html'
-    success_url = '/auth/key/'
+    success_url = '/auth/keys/add'
 
     def form_valid(self, form):
         url = '{}/users/keys'.format(settings.TSURU_HOST)
@@ -247,9 +247,10 @@ class KeysList(LoginRequiredMixin, TemplateView):
         context = super(KeysList, self).get_context_data(*args, **kwargs)
         url = '{}/users/keys'.format(settings.TSURU_HOST)
         response = requests.get(url, headers=self.authorization)
-        print response.json()
+        keys = {}
         if response.status_code == 200:
             keys = response.json()
+
         context.update({"keys": keys})
         return context
 

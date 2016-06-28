@@ -8,7 +8,21 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
-            EITA
+            {% for name, value in keys.items %}
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{{ name }}</h3>
+                    </div>
+                    <div class="panel-body ssh-key">{{ value }}</div>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <button type="button" class="btn btn-default">
+                                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Delete
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            {% endfor %}
         </div>
     </div>
 </div>

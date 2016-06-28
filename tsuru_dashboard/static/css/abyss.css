@@ -132,3 +132,8 @@ select {
 .text-right-important {
 	text-align: right !important;
 }
+
+.ssh-key {
+    word-break: break-all;
+    color: #555;
+}
