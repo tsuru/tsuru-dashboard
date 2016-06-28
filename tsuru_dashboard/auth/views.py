@@ -254,3 +254,14 @@ class KeysList(LoginRequiredMixin, TemplateView):
 
         context.update({"keys": keys})
         return context
+
+
+class KeysRemove(LoginRequiredView):
+    def get(self, request, *args, **kwargs):
+        key = kwargs["key"]
+
+        url = '{}/users/keys/{}'.format(settings.TSURU_HOST, key)
+        req = requests.delete(url, headers=self.authorization)
+        print req.json()
+
+        return redirect(reverse('list-keys'))
