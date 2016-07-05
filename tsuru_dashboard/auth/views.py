@@ -1,5 +1,6 @@
 import json
 import requests
+
 from tsuruclient import client
 
 from tsuru_dashboard import settings
@@ -225,10 +226,10 @@ class Callback(View):
         return redirect('/auth/login')
 
 
-class KeyAdd(LoginRequiredMixin, FormView):
+class KeysAdd(LoginRequiredMixin, FormView):
     form_class = KeyForm
     template_name = 'auth/key_add.html'
-    success_url = '/auth/key/'
+    success_url = '/auth/keys/add'
 
     def form_valid(self, form):
         url = '{}/users/keys'.format(settings.TSURU_HOST)
@@ -237,4 +238,29 @@ class KeyAdd(LoginRequiredMixin, FormView):
             messages.success(self.request, "The key was successfully added", fail_silently=True)
         else:
             messages.error(self.request, response.text, fail_silently=True)
-        return super(KeyAdd, self).form_valid(form)
+        return super(KeysAdd, self).form_valid(form)
+
+
+class KeysList(LoginRequiredMixin, TemplateView):
+    template_name = 'auth/key_list.html'
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(KeysList, self).get_context_data(*args, **kwargs)
+        url = '{}/users/keys'.format(settings.TSURU_HOST)
+        response = requests.get(url, headers=self.authorization)
+        keys = {}
+        if response.status_code == 200:
+            keys = response.json()
+
+        context.update({"keys": keys})
+        return context
+
+
+class KeysRemove(LoginRequiredView):
+    def get(self, request, *args, **kwargs):
+        key_name = kwargs["key"]
+        payload = {'name': key_name}
+
+        url = '{}/users/keys'.format(settings.TSURU_HOST)
+        requests.delete(url, data=json.dumps(payload), headers=self.authorization)
+        return redirect(reverse('list-keys'))
