@@ -11,83 +11,91 @@
 {% endblock %}
 
 {% block header %}
-<h1>Admin/Nodes</h1>
+<h1>Admin/Nodes{{ key }}</h1>
 {% endblock %}
 
 {% block content %}
 <div class="container-fluid">
     <div class="col-md-12">
-        <div class="content">
-            <a class="btn" href="#node-create" data-toggle="modal">
-                Create node</a>
-            <a class="btn" href="#pool-rebalance" data-toggle="modal">
-                Rebalance</a>
-        </div>
-	</div>
+        <ul class="nav nav-tabs">
+            <li role="presentation" class="active">
+                <a class="btn" href="#">Nodes</a>
+            </li>
+            <li role="presentation">
+                <a href="#node-create" data-toggle="modal">Create node</a>
+            </li>
+            <li role="presentation">
+                <a class="btn" href="#pool-rebalance" data-toggle="modal">Rebalance</a>
+            </li>
+        </ul>
+    </div>
     {% for key, nodes in pools.items %}
     <div class="row">
         <div class="col-md-12">
             <div id="node-create"
-                 class="modal fade"
-                 tabindex="-1"
-                 role="dialog"
-                 aria-labelledby="myModalLabel"
-                 aria-hidden="true">
-            </div>
+            class="modal fade"
+            tabindex="-1"
+            role="dialog"
+            aria-labelledby="myModalLabel"
+            aria-hidden="true">
         </div>
-        <div class="col-md-12">
-            <h3>{{ key }}</h3>
+    </div>
+    <div class="col-md-12">
+        <br>
+        <div class="panel panel-default">
+            <div class="panel-heading">Nodes</div>
             <table class="table">
                 <thead>
-                <tr>
-                    <th>Host</th>
-                    <th>Started units</th>
-                    <th>Stopped units</th>
-                    <th>Total units</th>
-                    <th>Last success</th>
-                    <th>Status</th>
-                </tr>
+                    <tr>
+                        <th>Host</th>
+                        <th>Started units</th>
+                        <th>Stopped units</th>
+                        <th>Total units</th>
+                        <th>Last success</th>
+                        <th>Status</th>
+                    </tr>
                 </thead>
                 <tbody>
-                {% for node in nodes %}
-                <tr>
-                    <td>
-                        <a href="{% url 'node-info' node.Address %}" title="Containers List">
-                            {{ node.Address }}
-                        </a>
-                    </td>
-                    <td>{{ node.Units.started|default:"0" }}</td>
-                    <td>{{ node.Units.stopped|default:"0" }}</td>
-                    <td>{{ node.Units.total|default:"0" }}</td>
-                    <td>{{ node.Metadata.LastSuccess|date:"Y/m/d H:i:s e" }}</td>
-                    <td>{{ node.Status }}</td>
-                </tr>
-                {% endfor %}
+                    {% for node in nodes %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'node-info' node.Address %}" title="Containers List">
+                                {{ node.Address }}
+                            </a>
+                        </td>
+                        <td>{{ node.Units.started|default:"0" }}</td>
+                        <td>{{ node.Units.stopped|default:"0" }}</td>
+                        <td>{{ node.Units.total|default:"0" }}</td>
+                        <td>{{ node.Metadata.LastSuccess|date:"Y/m/d H:i:s e" }}</td>
+                        <td>{{ node.Status }}</td>
+                    </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>
     </div>
-    {% endfor %}
+</div>
+{% endfor %}
 </div>
 
 <div id="pool-rebalance" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
-  <div class="modal-content">
-    <form method="post" action="{% url "pool-rebalance" pool %}">
-	    <div class="modal-header">
-		    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-		    <h3 id="myModalLabel">Are you sure?</h3>
-	    </div>
-	    <div class="modal-body">
+      <div class="modal-content">
+        <form method="post" action="{% url "pool-rebalance" pool %}">
+           <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+              <h3 id="myModalLabel">Are you sure?</h3>
+          </div>
+          <div class="modal-body">
             <p>This action <strong>CANNOT</strong> be undone. This will permanently rebalance the <strong>{{ pool }}</strong> pool.</p>
-		    <p>Please type in the pool name to confirm.</p>
-		    <input type="text" class="rebalance-confirmation" />
-	    </div>
-	    <div class="modal-footer">
-			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-			<button class="btn btn-danger btn-rebalance" disabled="disabled">I understand the consequences, rebalance this pool</button>
-	    </div>
-	</form>
+            <p>Please type in the pool name to confirm.</p>
+            <input type="text" class="rebalance-confirmation" />
+        </div>
+        <div class="modal-footer">
+         <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+         <button class="btn btn-danger btn-rebalance" disabled="disabled">I understand the consequences, rebalance this pool</button>
+     </div>
+ </form>
 </div>
 </div>
 </div>
