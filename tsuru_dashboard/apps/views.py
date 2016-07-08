@@ -255,6 +255,7 @@ class CreateApp(LoginRequiredView):
         if response.status_code != 204:
             teams = response.json()
             result.extend([(t['name'], t['name']) for t in teams])
+        result = sorted(result)
         return result
 
     def platforms(self, request):
@@ -263,6 +264,7 @@ class CreateApp(LoginRequiredView):
         platforms = response.json()
         result = [(', ')]
         result.extend([(p['Name'], p['Name']) for p in platforms])
+        result = sorted(result)
         return result
 
     def plans(self, request):
@@ -278,6 +280,7 @@ class CreateApp(LoginRequiredView):
             if p.get('default'):
                 default = p['name']
             plan_list.append((p['name'], p['name']))
+        plan_list = sorted(plan_list)
         return default, plan_list
 
 
