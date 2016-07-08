@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static "css/pages/node-create.css" %}">
+<link rel="stylesheet" href="{% static "css/metrics/components/metrics.css" %}">
+{% endblock %}
+
+{% block sidebar %}
+{% include "sidebar.html" with active="docker" %}
+{% endblock %}
+
+{% block header %}
+<h1>Admin/Nodes{{ key }}</h1>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="col-md-12">
+        {% block content_menu %}
+        <ul class="nav nav-tabs">
+            <li role="presentation" class="active">
+                <a class="btn" href="#">Nodes</a>
+            </li>
+            <li role="presentation">
+                <a href="#node-create" data-toggle="modal">Create node</a>
+            </li>
+            <li role="presentation">
+                <a class="btn" href="#pool-rebalance" data-toggle="modal">Rebalance</a>
+            </li>
+        </ul>
+        {% endblock %}
+    </div>
+    {% block content_body %}
+    {% for key, nodes in pools.items %}
+    <div class="row">
+        <div class="col-md-12">
+            <div id="node-create"
+            class="modal fade"
+            tabindex="-1"
+            role="dialog"
+            aria-labelledby="myModalLabel"
+            aria-hidden="true">
+        </div>
+    </div>
+    <div class="col-md-12">
+        <br>
+        <div class="panel panel-default">
+            <div class="panel-heading">Nodes</div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Host</th>
+                        <th>Started units</th>
+                        <th>Stopped units</th>
+                        <th>Total units</th>
+                        <th>Last success</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for node in nodes %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'node-info' node.Address %}" title="Containers List">
+                                {{ node.Address }}
+                            </a>
+                        </td>
+                        <td>{{ node.Units.started|default:"0" }}</td>
+                        <td>{{ node.Units.stopped|default:"0" }}</td>
+                        <td>{{ node.Units.total|default:"0" }}</td>
+                        <td>{{ node.Metadata.LastSuccess|date:"Y/m/d H:i:s e" }}</td>
+                        <td>{{ node.Status }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endfor %}
+    {% endblock %}
+</div>
+
+<div id="pool-rebalance" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form method="post" action="{% url "pool-rebalance" pool %}">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3 id="myModalLabel">Are you sure?</h3>
+                </div>
+                <div class="modal-body">
+                    <p>This action <strong>CANNOT</strong> be undone. This will permanently rebalance the <strong>{{ pool }}</strong> pool.</p>
+                    <p>Please type in the pool name to confirm.</p>
+                    <input type="text" class="rebalance-confirmation" />
+                </div>
+                <div class="modal-footer">
+                    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                    <button class="btn btn-danger btn-rebalance" disabled="disabled">I understand the consequences, rebalance this pool</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% block metrics %}
+<div class="col-md-12" id="metrics-container">
+    <div id="pool-metrics">
+    </div>
+</div>
+{% endblock %}
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static "js/jquery.min.js" %}"></script>
+<script src="{% static "js/jquery.flot.min.js" %}"></script>
+<script src="{% static "js/jquery.flot.time.min.js" %}"></script>
+<script src="{% static "js/jquery.flot.tooltip.min.js" %}"></script>
+<script src="{% static "js/confirmation.js" %}"></script>
+<script src="{% static "js/pool-info.js" %}"></script>
+{#<script src="{% static "js/pool-rebalance.js" %}"></script>#}
+<script type="text/javascript">
+  $.confirmation(".btn-rebalance", ".rebalance-confirmation", "{{ pool }}");
+</script>
+{% endblock %}
