@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block header %}
+<h1>Events</h1>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <table class="events table" id="list">
+        <thead>
+          <tr>
+            <th>Action</th>
+            <th>Target</th>
+            <th>Start</th>
+            <th>End</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for event in events %}
+          <tr>
+            <td>{{ event.Kind.Name }}</td>
+            <td>{{ event.Target.Value }}</td>
+            <td>{{ event.StartTime }}</td>
+            <td>{{ event.EndTime }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
