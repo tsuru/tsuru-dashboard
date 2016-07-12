@@ -21,7 +21,7 @@
           {% for event in events %}
           <tr>
             <td>{{ event.Kind.Name }}</td>
-            <td>{{ event.Target.Value }}</td>
+            <td>{{ event.Target.Name }}: {{ event.Target.Value }}</td>
             <td>{{ event.StartTime }}</td>
             <td>{{ event.EndTime }}</td>
           </tr>
