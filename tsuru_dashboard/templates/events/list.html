@@ -8,6 +8,15 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-12">
+      <form action="" method="GET">
+        <select name="kindName">
+          <option value="">filter by kind</option>
+          {% for kind in kinds %}
+          <option value="{{ kind.Name }}">{{ kind.Name }}</option>
+          {% endfor %}
+        </select>
+        <button>filter</button>
+      </form>
       <table class="events table" id="list">
         <thead>
           <tr>
