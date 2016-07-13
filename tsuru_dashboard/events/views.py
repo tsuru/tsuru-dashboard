@@ -19,7 +19,18 @@ class ListEvent(LoginRequiredView, TemplateView):
 
         return response.json()
 
+    def get_kinds(self):
+        url = '{}/events/kinds'.format(settings.TSURU_HOST)
+        response = requests.get(
+            url, headers=self.authorization, params=self.request.GET)
+
+        if response.status_code == 204:
+            return []
+
+        return response.json()
+
     def get_context_data(self, *args, **kwargs):
         context = super(ListEvent, self).get_context_data(*args, **kwargs)
         context['events'] = self.get_events()
+        context['kinds'] = self.get_kinds()
         return context
