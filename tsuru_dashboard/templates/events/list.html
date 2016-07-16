@@ -29,10 +29,26 @@
         <tbody>
           {% for event in events %}
           <tr>
-            <td>{{ event.Kind.Name }}</td>
-            <td>{{ event.Target.Name }}: {{ event.Target.Value }}</td>
-            <td>{{ event.StartTime }}</td>
-            <td>{{ event.EndTime }}</td>
+            <td>
+              <a href="{% url 'event-info' event.UniqueID %}">
+              {{ event.Kind.Name }}
+              </a>
+            </td>
+            <td>
+              <a href="{% url 'event-info' event.UniqueID %}">
+              {{ event.Target.Name }}: {{ event.Target.Value }}
+              </a>
+            </td>
+            <td>
+              <a href="{% url 'event-info' event.UniqueID %}">
+              {{ event.StartTime }}
+              </a>
+            </td>
+            <td>
+              <a href="{% url 'event-info' event.UniqueID %}">
+              {{ event.EndTime }}
+              </a>
+            </td>
           </tr>
           {% endfor %}
         </tbody>
