@@ -7,7 +7,7 @@ from django.test.client import RequestFactory
 
 from tsuru_dashboard import settings
 
-from .views import ListEvent
+from .views import ListEvent, EventInfo
 
 
 class ListEventViewTest(TestCase):
@@ -107,3 +107,38 @@ class ListEventViewTest(TestCase):
         request.session = {"tsuru_token": "admin"}
         response = ListEvent.as_view()(request)
         self.assertEqual(len(response.context_data['events']), 0)
+
+
+class EventInfoViewTest(TestCase):
+    def setUp(self):
+        self.request = RequestFactory().get("/?page=2")
+        self.request.session = {"tsuru_token": "admin"}
+
+    @httpretty.activate
+    @mock.patch("tsuru_dashboard.auth.views.token_is_valid")
+    def test_event_info(self, token_is_valid):
+        token_is_valid.return_value = True
+
+        event_id = "abc123"
+        url = '{}/events/{}'.format(settings.TSURU_HOST, event_id)
+        body = json.dumps(range(10000))
+        httpretty.register_uri(httpretty.GET, url, body=body, status=200)
+
+        response = EventInfo.as_view()(self.request, uuid="abc123")
+
+        self.assertIn("events/info.html", response.template_name)
+        self.assertIn('event', response.context_data.keys())
+
+    @httpretty.activate
+    @mock.patch("tsuru_dashboard.auth.views.token_is_valid")
+    def test_event_info_not_found(self, token_is_valid):
+        token_is_valid.return_value = True
+
+        event_id = "abc123"
+        url = '{}/events/{}'.format(settings.TSURU_HOST, event_id)
+        httpretty.register_uri(httpretty.GET, url, status=400)
+
+        response = EventInfo.as_view()(self.request, uuid="abc123")
+
+        self.assertIn("events/info.html", response.template_name)
+        self.assertIn('event', response.context_data.keys())
