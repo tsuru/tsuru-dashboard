@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block header %}
+<h1>Events</h1>
+{% endblock %}
+
+{% block content %}
+<p>{{ event.Kind.Name}}</p>
+<p>{{ event.Target.Name}}</p>
+<p>{{ event.StartTime }}</p>
+<p>{{ event.EndTime }}</p>
+{% endblock %}
