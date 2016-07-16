@@ -5,8 +5,23 @@
 {% endblock %}
 
 {% block content %}
-<p>{{ event.Kind.Name}}</p>
-<p>{{ event.Target.Name}}</p>
-<p>{{ event.StartTime }}</p>
-<p>{{ event.EndTime }}</p>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <h3>Info</h3>
+      <div class="content">
+        <p><strong>unique id:</strong> {{ event.UniqueID }}</p>
+        <p><strong>kind:</strong> {{ event.Kind.Name }}</p>
+        <p><strong>{{ event.Owner.Type }}:</strong> {{ event.Owner.Name }}</p>
+        <p><strong>{{ event.Target.Name}}:</strong> {{ event.Target.Value }}</p>
+        <p><strong>started at:</strong> {{ event.StartTime }}</p>
+        <p><strong>finished at:</strong> {{ event.EndTime }}</p>
+        {% if event.Log %}
+          <p><strong>Log:</strong></p>
+          <div><pre>{{ event.Log|escape }}</pre></div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
