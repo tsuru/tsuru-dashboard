@@ -1,12 +1,10 @@
-jest.dontMock('../jsx/components/loading.jsx');
+import React from "react";
+import { shallow } from "enzyme";
+import Loading from "../jsx/components/loading.js";
 
-var React = require('react'),
-    Enzyme = require('enzyme'),
-    Loading = require('../jsx/components/loading.jsx');
-
-describe('Loading', function() {
-  it('renders an element with "loader" class', function() {
-    var wrapper = Enzyme.shallow(<Loading />)
+describe('Loading', () => {
+  it('renders an element with "loader" class', () => {
+    var wrapper = shallow(<Loading />);
     expect(wrapper.find(".loader").length).toBe(1);
   });
 });

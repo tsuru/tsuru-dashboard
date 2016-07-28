@@ -21,9 +21,10 @@
     "reactify": "^1.1.1"
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest --verbose"
   },
   "jest": {
+    "automock": false,
     "collectCoverage": true,
     "scriptPreprocessor": "<rootDir>/node_modules/babel-jest",
     "testFileExtensions": [
@@ -34,13 +35,6 @@
       "js",
       "jsx",
       "json"
-    ],
-    "unmockedModulePathPatterns": [
-      "<rootDir>/node_modules/react",
-      "<rootDir>/node_modules/react-dom",
-      "<rootDir>/node_modules/fbjs",
-      "<rootDir>/node_modules/react-addons-test-utils",
-      "<rootDir>/node_modules/enzyme"
     ]
   },
   "repository": {
