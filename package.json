@@ -24,7 +24,7 @@
     "reactify": "^1.1.1"
   },
   "scripts": {
-    "test": "jest --verbose"
+    "test": "jest --silent"
   },
   "jest": {
     "automock": false,
