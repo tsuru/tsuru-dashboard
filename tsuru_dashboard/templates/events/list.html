@@ -29,7 +29,7 @@
         <tbody>
           {% for event in events %}
           <tr>
-          <tr class="{% if event.Error %}bg-danger{% endif %}{% if event.Running %}bg-info{% endif %}">
+          <tr class="{% if event.Running %}bg-info{% endif %}{% if event.CancelInfo.Canceled %}bg-warning{% else %}{% if event.Error %}bg-danger{% endif %}{% endif %}">
             <td>
               <a href="{% url 'event-info' event.UniqueID %}">
               {{ event.Kind.Name }}
