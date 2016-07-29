@@ -26,9 +26,9 @@ If all is well you should able to run the local server:
 
 ## Browserifying jsx files
 
-To generate all javascript files based on jsx file you can use the command:
+To generate all javascript files based on `js` file you can use the command:
 
-    $ make rebuild-all-js
+    $ make build-js
 
 # Running tests
 
