@@ -14,7 +14,7 @@ DeployBox.defaultProps = {
   message: "drop files here to deploy"
 }
 
-calss StartDeployBtn extends Component {
+class StartDeployBtn extends Component {
   constructor(props) {
     super(props);
 
@@ -37,7 +37,7 @@ calss StartDeployBtn extends Component {
   }
 }
 
-class CancelBtn exntends Component {
+class CancelBtn extends Component {
   render() {
     return (
       <button disabled={this.props.disabled}

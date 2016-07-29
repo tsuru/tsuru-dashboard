@@ -22,4 +22,4 @@ node-deps:
 	@npm install .
 
 build-js: node-deps
-	@bash -c 'for i in `find . -regex ".*jsx/pages/.*.js"`; do A=`echo $$i | sed s/pages.//g`; ./node_modules/browserify/bin/cmd.js -t babelify -t reactify -o $$A $$i; done'
+	@bash -c 'for i in `find . -regex ".*jsx/pages/.*.js"`; do A=`echo $$i | sed s/jsx/js/g | sed s/pages.//g`; ./node_modules/browserify/bin/cmd.js -t babelify -t reactify -o $$A $$i; done'
