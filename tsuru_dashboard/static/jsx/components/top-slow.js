@@ -42,7 +42,7 @@ class RequestRow extends Component {
 
 class TopTable extends Component {
   render() {
-    var topRequests = this.props.top.map(function(result) {
+    var topRequests = this.props.top.map((result) => {
       return (
         <RequestRow key={result.method + result.path + result.status_code + result.time} request={result} />
       );
@@ -69,7 +69,7 @@ class TopTable extends Component {
 export class TopSlow extends Component {
   constructor(props) {
     super(props);
-    
+
     this.state = {top: [], requests: []};
   }
 
@@ -87,9 +87,9 @@ export class TopSlow extends Component {
     var appName = this.props.appName;
     var kind = this.props.kind;
     var url = "/metrics/app/" + appName + "/?metric=" + kind + "&date_range=" + from;
-    $.getJSON(url, function(data) {
+    $.getJSON(url, (data) => {
       this.sortData(data);
-    }.bind(this));
+    });
   }
 
   sortData(result) {
@@ -107,7 +107,7 @@ export class TopSlow extends Component {
         });
       }
     }
-    requests.sort(function(a,b){
+    requests.sort((a, b) => {
       return (a.response >= b.response ? -1 : a.response < b.response ? 1 : 0);
     });
     this.selectTopRequests(requests, this.props.topInterval);

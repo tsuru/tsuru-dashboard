@@ -54,7 +54,7 @@ export class App extends Component {
 
 export class AppTable extends Component {
   render() {
-    var appNodes = this.props.data.map(function(app) {
+    var appNodes = this.props.data.map((app) => {
       return (
         <App key={app.name} name={app.name} url={app.url}/>
       );
@@ -86,7 +86,7 @@ export class AppList extends Component {
     $.ajax({
       type: 'GET',
       url: this.props.url,
-      success: function(data) {
+      success: (data) => {
         this.setState({cached: data.apps, apps: data.apps, loading: false});
 
         if (this.state.term.length > 0) {
@@ -94,7 +94,7 @@ export class AppList extends Component {
           this.setState({term: ''});
         }
 
-      }.bind(this)
+      }
     });
   }
 
@@ -109,10 +109,10 @@ export class AppList extends Component {
       return;
     }
     var options = {
-      extract: function(el) { return el.name }
+      extract: (el) => { return el.name }
     };
     var results = fuzzy.filter(name, this.state.cached, options);
-    this.setState({apps: results.map(function(el) { return el.original; })});
+    this.setState({apps: results.map((el) => { return el.original; })});
   }
 
   componentDidMount() {

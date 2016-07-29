@@ -23,9 +23,9 @@ export class ComponentList extends React.Component {
     $.ajax({
       type: 'GET',
       url: this.props.url,
-      success: function(data) {
+      success: (data) => {
         this.setState({components: data.components, loading: false});
-      }.bind(this)
+      }
     });
   }
 
@@ -33,7 +33,7 @@ export class ComponentList extends React.Component {
     return (
       <div className="component-list">
         {this.state.loading ? <Loading /> : ''}
-        {this.state.components.map(function(component) {
+        {this.state.components.map((component) => {
           return (<Component name={component} key={component}/>);
         })}
       </div>

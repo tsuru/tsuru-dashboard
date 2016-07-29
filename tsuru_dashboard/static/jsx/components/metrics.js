@@ -44,17 +44,17 @@ export class GraphContainer extends Component {
 
   loadData(url) {
     this.onLoad(true);
-    $.getJSON(url, function(data) {
+    $.getJSON(url, (data) => {
       this.setState({
         model: data.data,
         renderGraph: Object.keys(data.data).length > 0
       });
       this.onLoad(false);
-    }.bind(this));
+    });
   }
 
   configureRefreshInterval() {
-    this.setState(function(previousState, currentProps) {
+    this.setState((previousState, currentProps) => {
 
       if(previousState.refresh && previousState.intervalID === null) {
         return {intervalID: setInterval(this.refreshData.bind(this), 60000)};
@@ -63,7 +63,7 @@ export class GraphContainer extends Component {
         return {intervalID: null};
       }
 
-    }.bind(this));
+    });
   }
 
   render() {
@@ -206,7 +206,7 @@ export class Metrics extends Component {
   }
 
   updateGraphLoadCount(isLoading) {
-    this.setState(function(previousState, currentProps) {
+    this.setState((previousState, currentProps) => {
       if(isLoading) {
         return {graphsLoadingCount: previousState.graphsLoadingCount+1};
       } else {
@@ -228,7 +228,7 @@ export class Metrics extends Component {
           {self.state.graphsLoadingCount > 0 ? <Loading className={"metrics-loader"}/> : ""}
         </div>
         <div className={className}>
-          {self.props.metrics.map(function(metric) {
+          {self.props.metrics.map((metric) => {
             return self.getGraphContainer(metric);
           })}
         </div>

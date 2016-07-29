@@ -18,11 +18,11 @@ export class PoolRebalance extends Component {
     this.setState({disabled: true, output: 'Wait until rebalance is started.'});
     var xhr = new XMLHttpRequest();
     xhr.open('POST', this.props.url, true);
-    xhr.onprogress = function() {
+    xhr.onprogress = () => {
       this.setState({output: xhr.responseText});
-    }.bind(this);
-    xhr.onload = function() {
-        setTimeout(function() {
+    };
+    xhr.onload = () => {
+        setTimeout(() => {
             location.reload();
         }, 2000);
     }

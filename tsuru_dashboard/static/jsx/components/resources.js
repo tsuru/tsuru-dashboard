@@ -22,9 +22,9 @@ export class Resources extends Component {
     $.ajax({
   	  type: 'GET',
   	  url: this.props.url,
-  	  success: function(data) {
+  	  success: (data) => {
           this.setState({app: data.app});
-  	  }.bind(this)
+  	  }
     });
   }
 

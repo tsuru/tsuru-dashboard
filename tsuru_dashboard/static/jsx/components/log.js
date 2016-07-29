@@ -22,28 +22,28 @@ class Follow extends Component {
   handleScroll(e) {
     var scroll = window.scrollY;
 
-  	if (scroll < this.state.lastScroll) {
-  		this.props.unFollow();
-  	}
+    if (scroll < this.state.lastScroll) {
+      this.props.unFollow();
+    }
 
-  	var top = window.scrollY - 230;
-  	if (top < 0) {
-  		top = 0;
-  	}
+    var top = window.scrollY - 230;
+    if (top < 0) {
+      top = 0;
+    }
 
     ReactDOM.findDOMNode(this.refs.logTail).style.top = top + 'px';
     this.setState({lastScroll: window.scrollY});
   }
 
   render() {
-  	var classNames = "tail-status";
-  	if (this.props.follow) {
-  		classNames += " active";
-  	}
+    var classNames = "tail-status";
+    if (this.props.follow) {
+      classNames += " active";
+    }
     return (
       <a ref="logTail" className="log-tail" href="#" onClick={this.props.onClick}>
-        <span className={classNames}></span>
-        <span className="tail-label">Scroll to End of Log</span>
+      <span className={classNames}></span>
+      <span className="tail-label">Scroll to End of Log</span>
       </a>
     )
   }
@@ -59,11 +59,11 @@ class Top extends Component {
   }
 
   handleScroll(e) {
-  	var scroll = window.scrollY;
-  	var windowSize = window.innerHeight;
-  	var pageSize = window.document.getElementsByTagName('body')[0].clientHeight;
-  	var bottom = pageSize - windowSize - scroll;
-      ReactDOM.findDOMNode(this.refs.toTop).style.bottom = bottom + 'px';
+    var scroll = window.scrollY;
+    var windowSize = window.innerHeight;
+    var pageSize = window.document.getElementsByTagName('body')[0].clientHeight;
+    var bottom = pageSize - windowSize - scroll;
+    ReactDOM.findDOMNode(this.refs.toTop).style.bottom = bottom + 'px';
   }
 
   render() {
@@ -109,26 +109,26 @@ export class Log extends Component {
   }
 
   componentDidMount() {
-    oboe(this.props.url).done(function(things) {
+    oboe(this.props.url).done((things) => {
       this.setState({logging: true});
 
-      $.each(things, function(i, data) {
+      $.each(things, (i, data) => {
         var msg = "<p><strong>" + data.Date + " [ " + data.Source + " ][ " + data.Unit + " ]:</strong> - " + data.Message + "</p>";
         $(".log").append("<p>" + msg + "</p>");
-      }.bind(this));
+      });
 
-	  if (this.state.follow) {
-      	this.follow();
-	  }
-    }.bind(this));
+      if (this.state.follow) {
+        this.follow();
+      }
+    });
   }
 
   render() {
     return (
       <div>
-        { this.state.logging ? <Follow onClick={this.followToggle} follow={this.state.follow} unFollow={this.unFollow} /> : '' }
-		    { this.state.logging ? <div className='log'></div> : '' }
-        { this.state.logging ? <Top onClick={this.top} /> : '' }
+      { this.state.logging ? <Follow onClick={this.followToggle} follow={this.state.follow} unFollow={this.unFollow} /> : '' }
+      { this.state.logging ? <div className='log'></div> : '' }
+      { this.state.logging ? <Top onClick={this.top} /> : '' }
       </div>
     )
   }

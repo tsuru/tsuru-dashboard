@@ -107,7 +107,7 @@ describe('Metrics', () => {
 
   it('renders <Loading/> when graphs are loading', () => {
     var getJSON = $.getJSON;
-    $.getJSON = jest.fn(function(url, callback) {});
+    $.getJSON = jest.fn((url, callback) => {});
 
     const metrics = mount(<Metrics targetName={"myApp"} targetType={"app"} metrics={["cpu_max"]} />);
 
@@ -117,7 +117,7 @@ describe('Metrics', () => {
 
   it('doesnt renders <Loading/> when graphs finish loading', () => {
     var getJSON = $.getJSON;
-    $.getJSON = jest.fn(function(url, callback) {callback({data: {}})});
+    $.getJSON = jest.fn((url, callback) => {callback({data: {}})});
 
     const metrics = mount(<Metrics targetName={"myApp"} targetType={"app"} metrics={["cpu_max"]} />);
 

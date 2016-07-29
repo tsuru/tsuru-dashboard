@@ -53,7 +53,7 @@ class CancelBtn extends Component {
 
 class Files extends Component {
   render() {
-    var files = this.props.files.map(function(file) {
+    var files = this.props.files.map((file) => {
       return (
        <p key={file}>{file}</p>
       );
@@ -117,7 +117,7 @@ export class DeployPopin extends Component {
         this.setState({files: files});
     }
 
-    this.readFile(entry, function(name, result) {
+    this.readFile(entry, (name, result) => {
       zip.file(name, result, {binary: true});
     });
   }
@@ -130,22 +130,26 @@ export class DeployPopin extends Component {
 
     var dirReader = entry.createReader();
     var folder = zip.folder(entry.name);
-    dirReader.readEntries(function(results) {
-      results.forEach(function(entry) {
+
+    dirReader.readEntries((results) => {
+
+      results.forEach((entry) => {
+
         if (entry.isFile) {
           this.addFile(entry, folder);
         } else {
           this.addDir(entry, folder);
         }
-      }.bind(this));
-    }.bind(this));
+
+      });
+    });
   }
 
   readFile(entry, callback) {
-    entry.file(function(file) {
+    entry.file((file) => {
       var reader = new FileReader();
 
-      reader.onloadend = function() {
+      reader.onloadend = () => {
         callback(entry.name, this.result);
       };
 
@@ -167,11 +171,11 @@ export class DeployPopin extends Component {
 
     var xhr = new XMLHttpRequest();
     xhr.open('POST', location.pathname, true);
-    xhr.onprogress = function() {
+    xhr.onprogress = () => {
       this.setState({output: xhr.responseText});
-    }.bind(this);
-    xhr.onload = function() {
-        setTimeout(function() {
+    }
+    xhr.onload = () => {
+        setTimeout(() => {
             location.reload();
         }, 2000);
     }

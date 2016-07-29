@@ -31,7 +31,7 @@ describe('NodeInfo', () => {
         containers: []
       }
     };
-    $.ajax = jest.genMockFunction().mockImplementation(function(p) {
+    $.ajax = jest.genMockFunction().mockImplementation((p) => {
       p.success(data)
     });
     const nodeInfo = mount(<NodeInfo url="url"/>);

@@ -17,9 +17,9 @@ export class NodeInfo extends Component {
     $.ajax({
       type: 'GET',
       url: this.props.url,
-      success: function(data) {
+      success: (data) => {
         this.setState({node: data.node});
-      }.bind(this)
+      }
     });
   }
 
@@ -84,7 +84,7 @@ export class ContainersTab extends Component {
               <th>HostPort</th>
               <th>Status</th>
             </tr>
-            {this.props.containers.map(function(c) {
+            {this.props.containers.map((c) => {
               return <ContainerRow key={c.ID} container={c}/>
             })}
           </tbody>
@@ -118,7 +118,7 @@ export class MetadataTab extends Component {
       <div className="metadata">
         <table className="table">
           <tbody>
-            {Object.keys(self.props.metadata).map(function(m){
+            {Object.keys(self.props.metadata).map((m) => {
               return (
                 <tr key={m}>
                   <td><strong>{m}</strong></td>

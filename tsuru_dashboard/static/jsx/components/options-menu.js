@@ -12,7 +12,7 @@ class OptionItem extends Component {
 
 class OptionItems extends Component {
   render() {
-    var items = this.props.items.map(function(item) {
+    var items = this.props.items.map((item) => {
       return <OptionItem key={item} item={item} />
     });
     return (

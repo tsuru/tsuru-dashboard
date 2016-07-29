@@ -111,7 +111,7 @@ export class Tabs extends Component {
     var self = this;
     return (
       <ul className="nav nav-pills">
-      {this.props.tabs.map(function(tab) {
+      {this.props.tabs.map((tab) => {
         return <Tab key={tab}
         name={tab}
         active={tab === self.state.active}

@@ -135,7 +135,7 @@ class Button extends Component {
 
 Button.defaultProps = {
   disabled: false,
-  onClick: function(){},
+  onClick: () => {},
   type: "button"
 }
 
@@ -189,7 +189,7 @@ export class NodeCreate extends Component {
   constructor(props) {
     super(props);
 
-    function idMaker() { var initial = 0; return function() { initial++; return initial}}
+    let idMaker = () => { var initial = 0; return () => { initial++; return initial}};
     this.state = {
       templates: [],
       iaas: "",
@@ -223,7 +223,7 @@ export class NodeCreate extends Component {
   metaIndexByKey(key) {
     var index = -1;
     var meta = this.state.metadata;
-    meta.forEach(function(metadata, i) {
+    meta.forEach((metadata, i) => {
       if (metadata.key === key) {
         index = i;
       }
@@ -275,9 +275,9 @@ export class NodeCreate extends Component {
     $.ajax({
       type: 'GET',
       url: "/admin/templates.json",
-      success: function(data) {
+      success: (data) => {
           this.setState({templates: data});
-      }.bind(this)
+      }
     });
   }
 
@@ -286,21 +286,21 @@ export class NodeCreate extends Component {
   }
 
   selectTemplate(templateName) {
-    this.state.templates.forEach(function(template) {
+    this.state.templates.forEach((template) => {
       if (template.Name === templateName) {
         this.setIaas(template.IaaSName);
-        template.Data.forEach(function(metaData) {
+        template.Data.forEach((metaData) => {
           this.addMetadata(metaData.Name, metaData.Value);
-        }.bind(this));
+        });
       }
-    }.bind(this));
+    });
   }
 
   addNode() {
     this.setState({disabled: true});
     var url = "/admin/node/add/";
     var data = [];
-    this.state.metadata.forEach(function(metadata) {
+    this.state.metadata.forEach((metadata) => {
       data.push("Metadata." + metadata.key + "=" + metadata.value);
     });
     if (this.state.iaas.length > 0) {
@@ -312,12 +312,12 @@ export class NodeCreate extends Component {
       type: "POST",
       url: url,
       data: data.join("&"),
-      success: function() {
+      success: () => {
         location.reload();
-      }.bind(this),
-      error: function(){
+      },
+      error: () => {
         location.reload();
-      } .bind(this)
+      }
     });
   }
 
