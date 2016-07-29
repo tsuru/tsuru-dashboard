@@ -4,56 +4,48 @@ class Ouput extends Component {
   render() {
     return (
       <div id='output'>
-        <img src="/static/img/ajax-loader.gif" />
-        <div className='messages' dangerouslySetInnerHTML={{__html: this.props.message}} />
+      <img src="/static/img/ajax-loader.gif" />
+      <div className='messages' dangerouslySetInnerHTML={{__html: this.props.message}} />
       </div>
     )
   }
 }
 
 export class Button extends Component {
-  constructor(props) {
-    super(props);
-
-    this.props = {
-      disabled: false,
-      onClick: () => {},
-      type: "button"
-    }
-  }
-
   render() {
     return (
       <button type={this.props.type}
-              disabled={this.props.disabled}
-              onClick={this.props.onClick}
-              className='btn'>
-        {this.props.text}
+      disabled={this.props.disabled}
+      onClick={this.props.onClick}
+      className='btn'>
+      {this.props.text}
       </button>
     );
   }
 }
 
+Button.defaultProps = {
+  disabled: false,
+  onClick: () => {},
+  type: "button"
+}
+
 export class CancelBtn extends Component {
-  constructor(props) {
-      super(props);
-
-      this.props = {
-        disabled: false
-      }
-  }
-
   render() {
     return (
       <button data-dismiss='modal'
-			  disabled={this.props.disabled}
-              aria-hidden='true'
-              className='btn'
-              onClick={this.props.onClick}>
-        Cancel
+      disabled={this.props.disabled}
+      aria-hidden='true'
+      className='btn'
+      onClick={this.props.onClick}>
+      Cancel
       </button>
     )
   }
+}
+
+CancelBtn.defaultProps = {
+  disabled: false
 }
 
 export class Tab extends Component {
@@ -79,7 +71,7 @@ export class Tab extends Component {
   render() {
     return (
       <li className={this.props.active ? "active" : ''}>
-        <a href="#" onClick={this.onClick}>{this.props.name}</a>
+      <a href="#" onClick={this.onClick}>{this.props.name}</a>
       </li>
     )
   }
@@ -92,6 +84,8 @@ export class Tabs extends Component {
     this.state = {
       active: ""
     }
+
+    this.setActive = this.setActive.bind(this);
   }
 
   setActive(name) {
@@ -117,12 +111,12 @@ export class Tabs extends Component {
     var self = this;
     return (
       <ul className="nav nav-pills">
-        {this.props.tabs.map(function(tab) {
-          return <Tab key={tab}
-                  name={tab}
-                  active={tab === self.state.active}
-                  setActive={self.setActive} />
-        })}
+      {this.props.tabs.map(function(tab) {
+        return <Tab key={tab}
+        name={tab}
+        active={tab === self.state.active}
+        setActive={self.setActive} />
+      })}
       </ul>
     )
   }

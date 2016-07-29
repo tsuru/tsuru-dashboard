@@ -1,11 +1,6 @@
 import React, { Component } from "react";
 import { Loading } from "./loading";
-
-if (typeof window.jQuery === 'undefined') {
-  var $ = require('jquery');
-} else {
-  var $ = window.jQuery;
-}
+import $ from "jquery";
 
 export class GraphContainer extends Component {
   constructor(props) {
