@@ -16,6 +16,14 @@
         <p><strong>{{ event.Target.Type }}:</strong> {{ event.Target.Value }}</p>
         <p><strong>started at:</strong> {{ event.StartTime }}</p>
         <p><strong>finished at:</strong> {{ event.EndTime }}</p>
+        {% if event.StartCustomData.Kind %}
+        <p><strong>Start Custom Data: </strong>
+        <p>{{ event.StartCustomData.Data }}</p>
+        {% endif %}
+        {% if event.EndCustomData.Kind %}
+        <p><strong>End Custom Data: </strong>
+        <p>{{ event.EndCustomData.Data }}</p>
+        {% endif %}
         {% if event.Log %}
           <p><strong>Log:</strong></p>
           <div><pre>{{ event.Log|escape }}</pre></div>
