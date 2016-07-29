@@ -1,6 +1,6 @@
 import React from "react";
 import { shallow, mount } from "enzyme";
-import { Tab, Tabs } from "../jsx/components/base.js";
+import { Tab, Tabs } from "../jsx/components/base";
 
 describe('Tabs', () => {
   it('should render a tab with correct name', () => {
