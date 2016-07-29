@@ -30993,10 +30993,6 @@ var _react2 = _interopRequireDefault(_react);
 
 var _loading = require("./loading");
 
-var _jquery = require("jquery");
-
-var _jquery2 = _interopRequireDefault(_jquery);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -31004,6 +31000,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+if (typeof window.jQuery === 'undefined') {
+  var $ = require('jquery');
+} else {
+  var $ = window.jQuery;
+}
 
 var GraphContainer = exports.GraphContainer = function (_Component) {
   _inherits(GraphContainer, _Component);
@@ -31059,7 +31061,7 @@ var GraphContainer = exports.GraphContainer = function (_Component) {
       var _this2 = this;
 
       this.onLoad(true);
-      _jquery2.default.getJSON(url, function (data) {
+      $.getJSON(url, function (data) {
         _this2.setState({
           model: data.data,
           renderGraph: Object.keys(data.data).length > 0
@@ -31157,7 +31159,7 @@ var Graph = exports.Graph = function (_Component2) {
   }, {
     key: "renderGraph",
     value: function renderGraph() {
-      var $elem = (0, _jquery2.default)("#" + this.props.id);
+      var $elem = $("#" + this.props.id);
       var d = [];
       for (var key in this.props.model) {
         d.push({
@@ -31166,7 +31168,7 @@ var Graph = exports.Graph = function (_Component2) {
           label: key
         });
       }
-      _jquery2.default.plot($elem, d, this.getOptions());
+      $.plot($elem, d, this.getOptions());
     }
   }, {
     key: "render",

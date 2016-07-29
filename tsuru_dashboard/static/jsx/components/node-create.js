@@ -1,5 +1,10 @@
 import React, { Component } from "react";
-import $ from "jquery";
+
+if(typeof window.jQuery === 'undefined') {
+  var $ = require('jquery');
+} else {
+  var $ = window.jQuery;
+}
 
 class Options extends Component {
   render() {

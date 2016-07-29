@@ -30881,10 +30881,6 @@ var _react2 = _interopRequireDefault(_react);
 
 var _loading = require("./loading");
 
-var _jquery = require("jquery");
-
-var _jquery2 = _interopRequireDefault(_jquery);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -30892,6 +30888,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+if (typeof window.jQuery === 'undefined') {
+  var $ = require('jquery');
+} else {
+  var $ = window.jQuery;
+}
 
 var GraphContainer = exports.GraphContainer = function (_Component) {
   _inherits(GraphContainer, _Component);
@@ -30947,7 +30949,7 @@ var GraphContainer = exports.GraphContainer = function (_Component) {
       var _this2 = this;
 
       this.onLoad(true);
-      _jquery2.default.getJSON(url, function (data) {
+      $.getJSON(url, function (data) {
         _this2.setState({
           model: data.data,
           renderGraph: Object.keys(data.data).length > 0
@@ -31045,7 +31047,7 @@ var Graph = exports.Graph = function (_Component2) {
   }, {
     key: "renderGraph",
     value: function renderGraph() {
-      var $elem = (0, _jquery2.default)("#" + this.props.id);
+      var $elem = $("#" + this.props.id);
       var d = [];
       for (var key in this.props.model) {
         d.push({
@@ -31054,7 +31056,7 @@ var Graph = exports.Graph = function (_Component2) {
           label: key
         });
       }
-      _jquery2.default.plot($elem, d, this.getOptions());
+      $.plot($elem, d, this.getOptions());
     }
   }, {
     key: "render",
@@ -31480,7 +31482,7 @@ var WebTransactionsMetrics = exports.WebTransactionsMetrics = function (_Compone
 
 
 },{"./loading":176,"jquery":27,"react":175}],178:[function(require,module,exports){
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -31489,13 +31491,9 @@ exports.NodeCreate = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _react = require("react");
+var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
-
-var _jquery = require("jquery");
-
-var _jquery2 = _interopRequireDefault(_jquery);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -31504,6 +31502,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+if (typeof window.jQuery === 'undefined') {
+  var $ = require('jquery');
+} else {
+  var $ = window.jQuery;
+}
 
 var Options = function (_Component) {
   _inherits(Options, _Component);
@@ -31515,10 +31519,10 @@ var Options = function (_Component) {
   }
 
   _createClass(Options, [{
-    key: "render",
+    key: 'render',
     value: function render() {
       return _react2.default.createElement(
-        "option",
+        'option',
         {
           key: this.props.value,
           value: this.props.value },
@@ -31543,12 +31547,12 @@ var Template = function (_Component2) {
   }
 
   _createClass(Template, [{
-    key: "onChange",
+    key: 'onChange',
     value: function onChange(e) {
       this.props.selectTemplate(e.target.value);
     }
   }, {
-    key: "render",
+    key: 'render',
     value: function render() {
       var options = [];
 
@@ -31557,19 +31561,19 @@ var Template = function (_Component2) {
       });
 
       return _react2.default.createElement(
-        "div",
-        { className: "template" },
+        'div',
+        { className: 'template' },
         _react2.default.createElement(
-          "label",
+          'label',
           null,
-          "Template:",
+          'Template:',
           _react2.default.createElement(
-            "select",
+            'select',
             { onChange: this.onChange },
             _react2.default.createElement(
-              "option",
+              'option',
               null,
-              "Select a template"
+              'Select a template'
             ),
             options
           )
@@ -31591,16 +31595,16 @@ var Register = function (_Component3) {
   }
 
   _createClass(Register, [{
-    key: "render",
+    key: 'render',
     value: function render() {
       return _react2.default.createElement(
-        "div",
-        { className: "register", onClick: this.props.onClick },
+        'div',
+        { className: 'register', onClick: this.props.onClick },
         _react2.default.createElement(
-          "label",
+          'label',
           null,
-          "Register an already created node:",
-          _react2.default.createElement("input", { type: "checkbox", onClick: this.onClick })
+          'Register an already created node:',
+          _react2.default.createElement('input', { type: 'checkbox', onClick: this.onClick })
         )
       );
     }
@@ -31619,7 +31623,7 @@ var Meta = function (_Component4) {
   }
 
   _createClass(Meta, [{
-    key: "render",
+    key: 'render',
     value: function render() {
       var _this5 = this;
 
@@ -31630,8 +31634,8 @@ var Meta = function (_Component4) {
       });
 
       return _react2.default.createElement(
-        "div",
-        { className: "meta" },
+        'div',
+        { className: 'meta' },
         items
       );
     }
@@ -31658,42 +31662,42 @@ var MetaItem = function (_Component5) {
   }
 
   _createClass(MetaItem, [{
-    key: "onChange",
+    key: 'onChange',
     value: function onChange(e) {
       this.props.editMetadata(this.state.name, this.refs.name.value, this.refs.value.value);
     }
   }, {
-    key: "removeMetadata",
+    key: 'removeMetadata',
     value: function removeMetadata() {
       this.props.removeMetadata(this.refs.name.value);
     }
   }, {
-    key: "componentWillReceiveProps",
+    key: 'componentWillReceiveProps',
     value: function componentWillReceiveProps(nextProps) {
       this.setState({ name: nextProps.name, value: nextProps.value });
     }
   }, {
-    key: "render",
+    key: 'render',
     value: function render() {
       return _react2.default.createElement(
-        "div",
-        { className: "meta-item" },
+        'div',
+        { className: 'meta-item' },
         _react2.default.createElement(
-          "label",
+          'label',
           null,
-          "Key:",
-          _react2.default.createElement("input", { type: "text", name: "name", ref: "name", value: this.state.name, onChange: this.onChange })
+          'Key:',
+          _react2.default.createElement('input', { type: 'text', name: 'name', ref: 'name', value: this.state.name, onChange: this.onChange })
         ),
         _react2.default.createElement(
-          "label",
+          'label',
           null,
-          "Value:",
-          _react2.default.createElement("input", { type: "text", name: "value", ref: "value", value: this.state.value, onChange: this.onChange })
+          'Value:',
+          _react2.default.createElement('input', { type: 'text', name: 'value', ref: 'value', value: this.state.value, onChange: this.onChange })
         ),
         _react2.default.createElement(
-          "button",
+          'button',
           { onClick: this.removeMetadata },
-          "Remove item"
+          'Remove item'
         )
       );
     }
@@ -31717,14 +31721,14 @@ var Button = function (_Component6) {
   }
 
   _createClass(Button, [{
-    key: "render",
+    key: 'render',
     value: function render() {
       return _react2.default.createElement(
-        "button",
+        'button',
         { type: this.props.type,
           disabled: this.props.disabled,
           onClick: this.props.onClick,
-          className: "btn" },
+          className: 'btn' },
         this.props.text
       );
     }
@@ -31749,16 +31753,16 @@ var CancelBtn = function (_Component7) {
   }
 
   _createClass(CancelBtn, [{
-    key: "render",
+    key: 'render',
     value: function render() {
       return _react2.default.createElement(
-        "button",
-        { "data-dismiss": "modal",
+        'button',
+        { 'data-dismiss': 'modal',
           disabled: this.props.disabled,
-          "aria-hidden": "true",
-          className: "btn",
+          'aria-hidden': 'true',
+          className: 'btn',
           onClick: this.props.onClick },
-        "Cancel"
+        'Cancel'
       );
     }
   }]);
@@ -31787,26 +31791,26 @@ var Iaas = function (_Component8) {
   }
 
   _createClass(Iaas, [{
-    key: "onChange",
+    key: 'onChange',
     value: function onChange(e) {
       this.props.setIaas(e.target.value);
     }
   }, {
-    key: "componentWillReceiveProps",
+    key: 'componentWillReceiveProps',
     value: function componentWillReceiveProps(nextProps) {
       this.setState({ iaas: nextProps.iaas });
     }
   }, {
-    key: "render",
+    key: 'render',
     value: function render() {
       return _react2.default.createElement(
-        "div",
-        { className: "iaas" },
+        'div',
+        { className: 'iaas' },
         _react2.default.createElement(
-          "label",
+          'label',
           null,
-          "Iaas name: ",
-          _react2.default.createElement("input", { type: "text", value: this.state.iaas, onChange: this.onChange })
+          'Iaas name: ',
+          _react2.default.createElement('input', { type: 'text', value: this.state.iaas, onChange: this.onChange })
         )
       );
     }
@@ -31843,12 +31847,12 @@ var NodeCreate = exports.NodeCreate = function (_Component9) {
   }
 
   _createClass(NodeCreate, [{
-    key: "cancel",
+    key: 'cancel',
     value: function cancel() {
       this.setState({ metadata: [], register: false });
     }
   }, {
-    key: "registerToggle",
+    key: 'registerToggle',
     value: function registerToggle() {
       if (!this.state.register) {
         this.addMetadata("address", "");
@@ -31858,12 +31862,12 @@ var NodeCreate = exports.NodeCreate = function (_Component9) {
       this.setState({ register: !this.state.register });
     }
   }, {
-    key: "getId",
+    key: 'getId',
     value: function getId() {
       return this.state.getId();
     }
   }, {
-    key: "metaIndexByKey",
+    key: 'metaIndexByKey',
     value: function metaIndexByKey(key) {
       var index = -1;
       var meta = this.state.metadata;
@@ -31875,7 +31879,7 @@ var NodeCreate = exports.NodeCreate = function (_Component9) {
       return index;
     }
   }, {
-    key: "addMetadata",
+    key: 'addMetadata',
     value: function addMetadata(key, value) {
       var metadata = this.state.metadata;
       var m = { key: key, value: value };
@@ -31889,7 +31893,7 @@ var NodeCreate = exports.NodeCreate = function (_Component9) {
       }
     }
   }, {
-    key: "removeMetadata",
+    key: 'removeMetadata',
     value: function removeMetadata(key) {
       var index = this.metaIndexByKey(key);
       if (index === -1) return;
@@ -31898,7 +31902,7 @@ var NodeCreate = exports.NodeCreate = function (_Component9) {
       this.setState({ metadata: meta });
     }
   }, {
-    key: "editMetadata",
+    key: 'editMetadata',
     value: function editMetadata(key, newKey, newValue) {
       var index = this.metaIndexByKey(key);
       if (index === -1) return;
@@ -31911,17 +31915,17 @@ var NodeCreate = exports.NodeCreate = function (_Component9) {
       this.setState({ metadata: metadata });
     }
   }, {
-    key: "add",
+    key: 'add',
     value: function add(e) {
       e.preventDefault();
       this.addMetadata("", "");
     }
   }, {
-    key: "loadTemplates",
+    key: 'loadTemplates',
     value: function loadTemplates() {
       var _this11 = this;
 
-      _jquery2.default.ajax({
+      $.ajax({
         type: 'GET',
         url: "/admin/templates.json",
         success: function success(data) {
@@ -31930,12 +31934,12 @@ var NodeCreate = exports.NodeCreate = function (_Component9) {
       });
     }
   }, {
-    key: "componentDidMount",
+    key: 'componentDidMount',
     value: function componentDidMount() {
       this.loadTemplates();
     }
   }, {
-    key: "selectTemplate",
+    key: 'selectTemplate',
     value: function selectTemplate(templateName) {
       var _this12 = this;
 
@@ -31949,7 +31953,7 @@ var NodeCreate = exports.NodeCreate = function (_Component9) {
       });
     }
   }, {
-    key: "addNode",
+    key: 'addNode',
     value: function addNode() {
       this.setState({ disabled: true });
       var url = "/admin/node/add/";
@@ -31962,7 +31966,7 @@ var NodeCreate = exports.NodeCreate = function (_Component9) {
       }
       data.push("Metadata.pool=" + this.props.pool);
       data.push("Register=" + this.state.register);
-      _jquery2.default.ajax({
+      $.ajax({
         type: "POST",
         url: url,
         data: data.join("&"),
@@ -31975,42 +31979,42 @@ var NodeCreate = exports.NodeCreate = function (_Component9) {
       });
     }
   }, {
-    key: "setIaas",
+    key: 'setIaas',
     value: function setIaas(iaas) {
       this.setState({ iaas: iaas });
     }
   }, {
-    key: "render",
+    key: 'render',
     value: function render() {
       return _react2.default.createElement(
-        "div",
-        { className: "node-create modal-dialog" },
+        'div',
+        { className: 'node-create modal-dialog' },
         _react2.default.createElement(
-          "div",
-          { className: "modal-content" },
+          'div',
+          { className: 'modal-content' },
           _react2.default.createElement(
-            "div",
-            { className: "modal-header" },
+            'div',
+            { className: 'modal-header' },
             _react2.default.createElement(
-              "h3",
-              { id: "myModalLabel" },
-              "Create node"
+              'h3',
+              { id: 'myModalLabel' },
+              'Create node'
             )
           ),
           _react2.default.createElement(
-            "div",
-            { className: "modal-body" },
+            'div',
+            { className: 'modal-body' },
             this.state.templates != null && this.state.templates.length > 0 ? _react2.default.createElement(Template, { templates: this.state.templates, selectTemplate: this.selectTemplate }) : "",
             _react2.default.createElement(Register, { register: this.state.register, onClick: this.registerToggle }),
             _react2.default.createElement(Iaas, { iaas: this.state.iaas }),
             _react2.default.createElement(Meta, { metadata: this.state.metadata, removeMetadata: this.removeMetadata, editMetadata: this.editMetadata })
           ),
           _react2.default.createElement(
-            "div",
-            { className: "modal-footer" },
+            'div',
+            { className: 'modal-footer' },
             _react2.default.createElement(CancelBtn, { onClick: this.cancel, disabled: this.state.disabled }),
-            _react2.default.createElement(Button, { text: "Add metadata", onClick: this.add, disabled: this.state.disabled }),
-            _react2.default.createElement(Button, { text: "Create node", onClick: this.addNode, disabled: this.state.disabled })
+            _react2.default.createElement(Button, { text: 'Add metadata', onClick: this.add, disabled: this.state.disabled }),
+            _react2.default.createElement(Button, { text: 'Create node', onClick: this.addNode, disabled: this.state.disabled })
           )
         )
       );

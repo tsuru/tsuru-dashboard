@@ -2,7 +2,12 @@ import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import { Metrics } from "./metrics";
 import { Tabs} from "./base";
-import $ from "jquery";
+
+if(typeof window.jQuery === 'undefined') {
+  var $ = require('jquery');
+} else {
+  var $ = window.jQuery;
+}
 
 export class NodeInfo extends Component {
     constructor(props) {
