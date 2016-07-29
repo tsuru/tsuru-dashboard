@@ -94,8 +94,8 @@ export class TopSlow extends Component {
 
   sortData(result) {
     var requests = [];
-    for(key in result.data) {
-      for(i in result.data[key]){
+    for(let key in result.data) {
+      for(let i in result.data[key]){
         var dt = new Date(result.data[key][i][0]);
         var date = dt.toString().split(" ");
         requests.push({

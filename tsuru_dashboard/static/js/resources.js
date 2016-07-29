@@ -31823,7 +31823,7 @@ var Trs = function (_Component3) {
     value: function render() {
       var units = this.props.units;
       var trs = [];
-      for (i in units) {
+      for (var i in units) {
         trs.push(_react2.default.createElement(Tr, { key: i, unit: units[i] }));
       }
       return _react2.default.createElement(
@@ -31909,7 +31909,7 @@ var ProcessContent = function (_Component5) {
     key: "processByStatus",
     value: function processByStatus() {
       var status = {};
-      for (i in this.props.process) {
+      for (var i in this.props.process) {
         var unit = this.props.process[i];
         if (!(unit.Status in status)) {
           status[unit.Status] = [];
@@ -31923,7 +31923,7 @@ var ProcessContent = function (_Component5) {
     value: function render() {
       var info = [];
       var process = this.processByStatus();
-      for (i in process) {
+      for (var i in process) {
         info.push(_react2.default.createElement(ProcessInfo, { key: i, process: process[i], kind: i }));
       };
       var processName = this.props.process[0].ProcessName;
@@ -31988,6 +31988,8 @@ var Resource = function (_Component7) {
       activeProcess: null,
       tab: null
     };
+
+    _this8.setActive = _this8.setActive.bind(_this8);
     return _this8;
   }
 
@@ -32004,7 +32006,7 @@ var Resource = function (_Component7) {
     key: "unitsByProcess",
     value: function unitsByProcess() {
       var process = {};
-      for (index in this.props.app.units) {
+      for (var index in this.props.app.units) {
         var unit = this.props.app.units[index];
         if (!(unit.ProcessName in process)) {
           process[unit.ProcessName] = [];
@@ -32021,7 +32023,7 @@ var Resource = function (_Component7) {
   }, {
     key: "render",
     value: function render() {
-      tabs = Object.keys(this.state.process);
+      var tabs = Object.keys(this.state.process);
       if (tabs.length > 0) {
         tabs.push("Web transactions");
       }
@@ -32276,8 +32278,8 @@ var TopSlow = exports.TopSlow = function (_Component4) {
     key: "sortData",
     value: function sortData(result) {
       var requests = [];
-      for (key in result.data) {
-        for (i in result.data[key]) {
+      for (var key in result.data) {
+        for (var i in result.data[key]) {
           var dt = new Date(result.data[key][i][0]);
           var date = dt.toString().split(" ");
           requests.push({

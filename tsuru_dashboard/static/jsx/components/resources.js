@@ -58,7 +58,7 @@ class Trs extends Component {
   render() {
     var units = this.props.units;
     var trs = [];
-    for (i in units) {
+    for (let  i in units) {
       trs.push(<Tr key={i} unit={units[i]} />);
     }
     return (
@@ -104,7 +104,7 @@ class ProcessInfo extends Component {
 class ProcessContent extends Component {
   processByStatus() {
     var status = {};
-    for (i in this.props.process) {
+    for (let i in this.props.process) {
       var unit = this.props.process[i];
       if (!(unit.Status in status)) {
         status[unit.Status] = [];
@@ -117,7 +117,7 @@ class ProcessContent extends Component {
   render() {
     var info = [];
     var process = this.processByStatus()
-    for (i in process) {
+    for (let i in process) {
         info.push(<ProcessInfo key={i} process={process[i]} kind={i} />);
     };
     var processName = this.props.process[0].ProcessName;
@@ -164,6 +164,8 @@ class Resource extends Component {
       activeProcess: null,
       tab: null
     }
+
+    this.setActive = this.setActive.bind(this);
   }
 
   setActive(name) {
@@ -176,7 +178,7 @@ class Resource extends Component {
 
   unitsByProcess() {
     var process = {};
-    for (index in this.props.app.units) {
+    for (let index in this.props.app.units) {
       var unit = this.props.app.units[index];
       if (!(unit.ProcessName in process)) {
         process[unit.ProcessName] = [];
@@ -191,7 +193,7 @@ class Resource extends Component {
   }
 
   render() {
-    tabs = Object.keys(this.state.process);
+    let tabs = Object.keys(this.state.process);
     if(tabs.length > 0){
       tabs.push("Web transactions");
     }
