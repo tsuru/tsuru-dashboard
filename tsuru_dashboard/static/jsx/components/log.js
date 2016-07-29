@@ -9,6 +9,8 @@ class Follow extends Component {
     this.state = {
       lastScroll: 0
     }
+
+    this.handleScroll = this.handleScroll.bind(this);
   }
 
   componentDidMount() {
@@ -50,6 +52,12 @@ class Follow extends Component {
 }
 
 class Top extends Component {
+  constructor(props) {
+    super(props);
+
+    this.handleScroll = this.handleScroll.bind(this);
+  }
+
   componentDidMount() {
     window.addEventListener('scroll', this.handleScroll);
   }
@@ -81,6 +89,9 @@ export class Log extends Component {
       follow: true,
       logging: false
     }
+    
+    this.top = this.top.bind(this);
+    this.followToggle = this.followToggle.bind(this);
   }
 
   top(e) {

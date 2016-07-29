@@ -23487,6 +23487,8 @@ var Follow = function (_Component) {
     _this.state = {
       lastScroll: 0
     };
+
+    _this.handleScroll = _this.handleScroll.bind(_this);
     return _this;
   }
 
@@ -23543,10 +23545,13 @@ var Follow = function (_Component) {
 var Top = function (_Component2) {
   _inherits(Top, _Component2);
 
-  function Top() {
+  function Top(props) {
     _classCallCheck(this, Top);
 
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(Top).apply(this, arguments));
+    var _this2 = _possibleConstructorReturn(this, Object.getPrototypeOf(Top).call(this, props));
+
+    _this2.handleScroll = _this2.handleScroll.bind(_this2);
+    return _this2;
   }
 
   _createClass(Top, [{
@@ -23594,6 +23599,9 @@ var Log = exports.Log = function (_Component3) {
       follow: true,
       logging: false
     };
+
+    _this3.top = _this3.top.bind(_this3);
+    _this3.followToggle = _this3.followToggle.bind(_this3);
     return _this3;
   }
 
