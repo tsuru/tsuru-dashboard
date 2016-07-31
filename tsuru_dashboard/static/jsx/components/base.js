@@ -106,3 +106,21 @@ export class Tabs extends Component {
     )
   }
 }
+
+export class Select extends Component {
+  render() {
+    return (
+      <select>
+        {this.props.defaultOption.length > 0 ? <option>{this.props.defaultOption}</option>: ""}
+        {this.props.options.length > 0 ? this.props.options.map((option) => {
+          return <option>{option}</option>
+        }) : ""}
+      </select>
+    )
+  }
+}
+
+Select.defaultProps = {
+  defaultOption: "",
+  options: []
+}

@@ -1,6 +1,6 @@
 import React from "react";
 import { shallow, mount } from "enzyme";
-import { Tab, Tabs } from "../jsx/components/base";
+import { Tab, Tabs, Select } from "../jsx/components/base";
 
 describe('Tabs', () => {
   it('should render a tab with correct name', () => {
@@ -32,5 +32,23 @@ describe('Tab', () => {
     expect(setActive.mock.calls.length).toBe(0);
     tab.find("a").simulate("click");
     expect(setActive.mock.calls.length).toBe(1);
+  });
+});
+
+describe('Select', () => {
+  it('initial state', () => {
+    const select = shallow(<Select />);
+    expect(select.find("option").length).toBe(0);
+  });
+
+  it('suport custom options', () => {
+    const select = shallow(<Select options={["one", "two"]} />);
+    expect(select.find("option").length).toBe(2);
+  });
+
+  it('default option', () => {
+    const select = shallow(<Select defaultOption="ble" options={[]} />);
+    expect(select.find("option").text()).toBe("ble");
+    expect(select.find("option").length).toBe(1);
   });
 });
