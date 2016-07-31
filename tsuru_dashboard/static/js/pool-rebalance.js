@@ -30841,55 +30841,25 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var Ouput = function (_Component) {
-  _inherits(Ouput, _Component);
+var Output = function Output() {
+  return _react2.default.createElement(
+    "div",
+    { id: "output" },
+    _react2.default.createElement("img", { src: "/static/img/ajax-loader.gif" }),
+    _react2.default.createElement("div", { className: "messages", dangerouslySetInnerHTML: { __html: undefined.props.message } })
+  );
+};
 
-  function Ouput() {
-    _classCallCheck(this, Ouput);
-
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(Ouput).apply(this, arguments));
-  }
-
-  _createClass(Ouput, [{
-    key: "render",
-    value: function render() {
-      return _react2.default.createElement(
-        "div",
-        { id: "output" },
-        _react2.default.createElement("img", { src: "/static/img/ajax-loader.gif" }),
-        _react2.default.createElement("div", { className: "messages", dangerouslySetInnerHTML: { __html: this.props.message } })
-      );
-    }
-  }]);
-
-  return Ouput;
-}(_react.Component);
-
-var Button = exports.Button = function (_Component2) {
-  _inherits(Button, _Component2);
-
-  function Button() {
-    _classCallCheck(this, Button);
-
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(Button).apply(this, arguments));
-  }
-
-  _createClass(Button, [{
-    key: "render",
-    value: function render() {
-      return _react2.default.createElement(
-        "button",
-        { type: this.props.type,
-          disabled: this.props.disabled,
-          onClick: this.props.onClick,
-          className: "btn" },
-        this.props.text
-      );
-    }
-  }]);
-
-  return Button;
-}(_react.Component);
+var Button = exports.Button = function Button(props) {
+  return _react2.default.createElement(
+    "button",
+    { type: undefined.props.type,
+      disabled: undefined.props.disabled,
+      onClick: undefined.props.onClick,
+      className: "btn" },
+    undefined.props.text
+  );
+};
 
 Button.defaultProps = {
   disabled: false,
@@ -30897,47 +30867,32 @@ Button.defaultProps = {
   type: "button"
 };
 
-var CancelBtn = exports.CancelBtn = function (_Component3) {
-  _inherits(CancelBtn, _Component3);
-
-  function CancelBtn() {
-    _classCallCheck(this, CancelBtn);
-
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(CancelBtn).apply(this, arguments));
-  }
-
-  _createClass(CancelBtn, [{
-    key: "render",
-    value: function render() {
-      return _react2.default.createElement(
-        "button",
-        { "data-dismiss": "modal",
-          disabled: this.props.disabled,
-          "aria-hidden": "true",
-          className: "btn",
-          onClick: this.props.onClick },
-        "Cancel"
-      );
-    }
-  }]);
-
-  return CancelBtn;
-}(_react.Component);
+var CancelBtn = exports.CancelBtn = function CancelBtn(props) {
+  return _react2.default.createElement(
+    "button",
+    { "data-dismiss": "modal",
+      disabled: undefined.props.disabled,
+      "aria-hidden": "true",
+      className: "btn",
+      onClick: undefined.props.onClick },
+    "Cancel"
+  );
+};
 
 CancelBtn.defaultProps = {
   disabled: false
 };
 
-var Tab = exports.Tab = function (_Component4) {
-  _inherits(Tab, _Component4);
+var Tab = exports.Tab = function (_Component) {
+  _inherits(Tab, _Component);
 
   function Tab(props) {
     _classCallCheck(this, Tab);
 
-    var _this4 = _possibleConstructorReturn(this, Object.getPrototypeOf(Tab).call(this, props));
+    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Tab).call(this, props));
 
-    _this4.onClick = _this4.onClick.bind(_this4);
-    return _this4;
+    _this.onClick = _this.onClick.bind(_this);
+    return _this;
   }
 
   _createClass(Tab, [{
@@ -30972,20 +30927,20 @@ var Tab = exports.Tab = function (_Component4) {
   return Tab;
 }(_react.Component);
 
-var Tabs = exports.Tabs = function (_Component5) {
-  _inherits(Tabs, _Component5);
+var Tabs = exports.Tabs = function (_Component2) {
+  _inherits(Tabs, _Component2);
 
   function Tabs(props) {
     _classCallCheck(this, Tabs);
 
-    var _this5 = _possibleConstructorReturn(this, Object.getPrototypeOf(Tabs).call(this, props));
+    var _this2 = _possibleConstructorReturn(this, Object.getPrototypeOf(Tabs).call(this, props));
 
-    _this5.state = {
+    _this2.state = {
       active: ""
     };
 
-    _this5.setActive = _this5.setActive.bind(_this5);
-    return _this5;
+    _this2.setActive = _this2.setActive.bind(_this2);
+    return _this2;
   }
 
   _createClass(Tabs, [{
