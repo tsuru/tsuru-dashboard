@@ -20,19 +20,14 @@ Button.defaultProps = {
   type: "button"
 }
 
-export class CancelBtn extends Component {
-  render() {
-    return (
-      <button data-dismiss='modal'
-      disabled={this.props.disabled}
-      aria-hidden='true'
-      className='btn'
-      onClick={this.props.onClick}>
-      Cancel
-      </button>
-    )
-  }
-}
+export const CancelBtn = (props) =>
+  <button data-dismiss='modal'
+    disabled={this.props.disabled}
+    aria-hidden='true'
+    className='btn'
+    onClick={this.props.onClick}>
+    Cancel
+  </button>;
 
 CancelBtn.defaultProps = {
   disabled: false
