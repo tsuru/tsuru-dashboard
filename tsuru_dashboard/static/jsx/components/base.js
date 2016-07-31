@@ -1,15 +1,10 @@
 import React, { Component } from "react";
 
-class Ouput extends Component {
-  render() {
-    return (
-      <div id='output'>
-      <img src="/static/img/ajax-loader.gif" />
-      <div className='messages' dangerouslySetInnerHTML={{__html: this.props.message}} />
-      </div>
-    )
-  }
-}
+const Output = () =>
+  <div id='output'>
+    <img src="/static/img/ajax-loader.gif" />
+    <div className='messages' dangerouslySetInnerHTML={{__html: this.props.message}} />
+  </div>;
 
 export class Button extends Component {
   render() {
