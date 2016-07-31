@@ -6,18 +6,13 @@ const Output = () =>
     <div className='messages' dangerouslySetInnerHTML={{__html: this.props.message}} />
   </div>;
 
-export class Button extends Component {
-  render() {
-    return (
-      <button type={this.props.type}
-      disabled={this.props.disabled}
-      onClick={this.props.onClick}
-      className='btn'>
-      {this.props.text}
-      </button>
-    );
-  }
-}
+export const Button = (props) =>
+  <button type={this.props.type}
+    disabled={this.props.disabled}
+    onClick={this.props.onClick}
+    className='btn'>
+    {this.props.text}
+  </button>;
 
 Button.defaultProps = {
   disabled: false,
