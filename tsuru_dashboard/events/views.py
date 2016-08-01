@@ -1,6 +1,9 @@
 import requests
 import bson
 import base64
+import re
+
+import yaml
 
 from django.views.generic import TemplateView
 
@@ -56,7 +59,9 @@ class EventInfo(LoginRequiredView, TemplateView):
         fields = ["StartCustomData", "EndCustomData", "OtherCustomData"]
         for field in fields:
             if event.get(field) and event[field].get("Data"):
-                event[field]["Data"] = self.decode_bson(event[field])
+                data = self.decode_bson(event[field])
+                event[field]["Data"] = yaml.dump(data, default_flow_style=False, default_style='', Dumper=yaml.SafeDumper)
+
         return event
 
     def decode_bson(self, data):
