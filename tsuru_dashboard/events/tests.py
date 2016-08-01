@@ -1,4 +1,5 @@
 import json
+import yaml
 import httpretty
 import mock
 import base64
@@ -142,9 +143,12 @@ class EventInfoViewTest(TestCase):
         self.assertIn('event', response.context_data.keys())
 
         event = response.context_data["event"]
-        self.assertDictEqual({"start": 1}, event["StartCustomData"]["Data"])
-        self.assertDictEqual({"end": 1}, event["EndCustomData"]["Data"])
-        self.assertDictEqual({"other": 1}, event["OtherCustomData"]["Data"])
+        self.assertDictEqual(
+            {"start": 1}, yaml.load(event["StartCustomData"]["Data"]))
+        self.assertDictEqual(
+            {"end": 1}, yaml.load(event["EndCustomData"]["Data"]))
+        self.assertDictEqual(
+            {"other": 1}, yaml.load(event["OtherCustomData"]["Data"]))
 
     @httpretty.activate
     @mock.patch("tsuru_dashboard.auth.views.token_is_valid")

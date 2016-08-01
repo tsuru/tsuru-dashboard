@@ -1,7 +1,6 @@
 import requests
 import bson
 import base64
-import re
 
 import json
 import yaml
@@ -59,11 +58,12 @@ class EventInfo(LoginRequiredView, TemplateView):
 
     def decode_custom_data(self, event):
         fields = ["StartCustomData", "EndCustomData", "OtherCustomData"]
+
         for field in fields:
             if event.get(field) and event[field].get("Data"):
                 data = self.decode_bson(event[field])
                 data = json.loads(json.dumps(data, default=json_util.default))
-                event[field]["Data"] = yaml.dump(data, default_flow_style=False, default_style='', Dumper=yaml.SafeDumper)
+                event[field]["Data"] = yaml.safe_dump(data)
 
         return event
 
