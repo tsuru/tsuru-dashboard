@@ -1,6 +1,8 @@
 import json
 import httpretty
 import mock
+import base64
+import bson
 
 from django.test import TestCase
 from django.test.client import RequestFactory
@@ -121,13 +123,28 @@ class EventInfoViewTest(TestCase):
 
         event_id = "abc123"
         url = '{}/events/{}'.format(settings.TSURU_HOST, event_id)
-        body = json.dumps(range(10000))
+        body = json.dumps({
+            "StartCustomData": {
+                "Data": base64.b64encode(bson.BSON.encode({"start": 1}))
+            },
+            "EndCustomData": {
+                "Data": base64.b64encode(bson.BSON.encode({"end": 1}))
+            },
+            "OtherCustomData": {
+                "Data": base64.b64encode(bson.BSON.encode({"other": 1}))
+            }
+        })
         httpretty.register_uri(httpretty.GET, url, body=body, status=200)
 
         response = EventInfo.as_view()(self.request, uuid="abc123")
 
         self.assertIn("events/info.html", response.template_name)
         self.assertIn('event', response.context_data.keys())
+
+        event = response.context_data["event"]
+        self.assertDictEqual({"start": 1}, event["StartCustomData"]["Data"])
+        self.assertDictEqual({"end": 1}, event["EndCustomData"]["Data"])
+        self.assertDictEqual({"other": 1}, event["OtherCustomData"]["Data"])
 
     @httpretty.activate
     @mock.patch("tsuru_dashboard.auth.views.token_is_valid")

@@ -1,4 +1,6 @@
 import requests
+import bson
+import base64
 
 from django.views.generic import TemplateView
 
@@ -45,8 +47,20 @@ class EventInfo(LoginRequiredView, TemplateView):
             url, headers=self.authorization, params=self.request.GET)
 
         if response.status_code == 200:
-            return response.json()
+            event = response.json()
+            return self.decode_custom_data(event)
+
         return None
+
+    def decode_custom_data(self, event):
+        fields = ["StartCustomData", "EndCustomData", "OtherCustomData"]
+        for field in fields:
+            if event.get(field) and event[field].get("Data"):
+                event[field]["Data"] = self.decode_bson(event[field])
+        return event
+
+    def decode_bson(self, data):
+        return bson.BSON(base64.b64decode(data["Data"])).decode()
 
     def get_context_data(self, *args, **kwargs):
         context = super(EventInfo, self).get_context_data(*args, **kwargs)
