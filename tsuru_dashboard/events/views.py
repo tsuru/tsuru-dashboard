@@ -3,7 +3,9 @@ import bson
 import base64
 import re
 
+import json
 import yaml
+from bson import json_util
 
 from django.views.generic import TemplateView
 
@@ -60,6 +62,7 @@ class EventInfo(LoginRequiredView, TemplateView):
         for field in fields:
             if event.get(field) and event[field].get("Data"):
                 data = self.decode_bson(event[field])
+                data = json.loads(json.dumps(data, default=json_util.default))
                 event[field]["Data"] = yaml.dump(data, default_flow_style=False, default_style='', Dumper=yaml.SafeDumper)
 
         return event
