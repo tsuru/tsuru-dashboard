@@ -68,8 +68,10 @@ class EventInfo(LoginRequiredView, TemplateView):
         for field in fields:
             if event.get(field) and event[field].get("Data"):
                 data = self.decode_bson(event[field])
-                data = json.loads(json.dumps(data, default=event_serialization_default))
-                event[field]["Data"] = yaml.safe_dump(data, default_flow_style=False, default_style='')
+                data = json.loads(json.dumps(
+                    data, default=event_serialization_default))
+                event[field]["Data"] = yaml.safe_dump(
+                    data, default_flow_style=False, default_style='')
 
         return event
 
