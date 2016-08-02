@@ -1,11 +1,8 @@
 from django.conf.urls import url, include
-from django.conf import settings
-
-import os
+from django.contrib.staticfiles import views
 
 
 urlpatterns = [
     url(r'^', include('tsuru_dashboard.urls')),
-    url(r'^static/(?P<path>.*)$', 'django.views.static.serve',
-        {'document_root': os.path.join(settings.BASE_DIR, 'static')})
+    url(r'^static/(?P<path>.*)$', views.serve),
 ]

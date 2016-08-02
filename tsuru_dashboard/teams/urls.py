@@ -1,10 +1,9 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 
 import views
 
 
-urlpatterns = patterns(
-    '',
+urlpatterns = [
     url(r'^$', views.List.as_view(), name='team-list'),
     url(r'^(?P<team>[\s\w@\.-]+)/remove/$', views.Remove.as_view(),
         name='team-remove'),
@@ -15,4 +14,4 @@ urlpatterns = patterns(
     url(r'^(?P<team>[\s\w@\.-]+)/user/(?P<user>.*)/remove/$',
         views.RemoveUser.as_view(), name='team-user-remove'),
     url(r'^(?P<team>[\s\w@\.-]+)/$', views.Info.as_view(), name='team-info'),
-)
+]

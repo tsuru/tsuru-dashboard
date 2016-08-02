@@ -1,10 +1,9 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 from django.views.decorators.csrf import csrf_exempt
 
 import views
 
-urlpatterns = patterns(
-    '',
+urlpatterns = [
     url(r'^$', views.PoolList.as_view(), name='pool-list'),
     url(r'^pool/(?P<pool>[\w-]+)/$', views.PoolInfo.as_view(), name='pool-info'),
     url(r'^pool/(?P<pool>[\w-]+)/rebalance/$', csrf_exempt(views.PoolRebalance.as_view()),
@@ -20,4 +19,4 @@ urlpatterns = patterns(
         name='node-info-json'),
     url(r'^(?P<address>[http://\w.:1-9-]+)/$', views.NodeInfo.as_view(),
         name='node-info'),
-)
+]

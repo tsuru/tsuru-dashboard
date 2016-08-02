@@ -1,10 +1,9 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 
 import views
 
 
-urlpatterns = patterns(
-    '',
+urlpatterns = [
     url(r'^$', views.ListService.as_view(), name='service-list'),
     url(r'^(?P<service>[\w-]+)/instances/(?P<instance>[\w-]+)/$', views.ServiceInstanceDetail.as_view(),
         name='service-detail'),
@@ -16,4 +15,4 @@ urlpatterns = patterns(
         name='bind'),
     url(r'^(?P<service>[\w-]+)/instances/(?P<instance>[\w-]+)/(?P<app>[\w-]+)/unbind/$',
         views.Unbind.as_view(), name='unbind'),
-)
+]

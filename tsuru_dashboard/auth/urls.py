@@ -1,10 +1,9 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 
 import views
 
 
-urlpatterns = patterns(
-    '',
+urlpatterns = [
     url(r'^login/$', views.Login.as_view(), name='login'),
     url(r'^logout/$', views.Logout.as_view(), name='logout'),
     url(r'^keys/add$', views.KeysAdd.as_view(), name='add-keys'),
@@ -19,4 +18,4 @@ urlpatterns = patterns(
     url(r'^password-recovery/success/$', views.PasswordRecoverySuccess.as_view(),
         name='password-recovery-success'),
     url(r'^change-password/$', views.ChangePassword.as_view(), name='change-password'),
-)
+]

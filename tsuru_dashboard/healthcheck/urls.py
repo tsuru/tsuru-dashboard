@@ -1,7 +1,8 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
+
+from tsuru_dashboard.healthcheck.views import healthcheck
 
 
-urlpatterns = patterns(
-    '',
-    url(r'^$', "tsuru_dashboard.healthcheck.views.healthcheck", name='healthcheck'),
-)
+urlpatterns = [
+    url(r'^$', healthcheck, name='healthcheck'),
+]

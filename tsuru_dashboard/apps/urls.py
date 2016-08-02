@@ -1,11 +1,10 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 from django.views.decorators.csrf import csrf_exempt
 
 import views
 
 
-urlpatterns = patterns(
-    '',
+urlpatterns = [
     url(r'^$', views.ListApp.as_view(), name='list-app'),
     url(r'^list.json$', views.ListAppJson.as_view(), name='list-app-json'),
     url(r'^create/$', views.CreateApp.as_view(), name='create-app'),
@@ -26,4 +25,4 @@ urlpatterns = patterns(
         views.DeployInfo.as_view(), name='app-deploy'),
     url(r'^(?P<app_name>[\w-]+)/rollback/(?P<image>.+)/$',
         views.AppRollback.as_view(), name='app-rollback'),
-)
+]
