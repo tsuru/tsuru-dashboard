@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load filters_deploys %}
 
 {% block header %}
 <h1>Events</h1>
@@ -14,8 +15,12 @@
         <p><strong>kind:</strong> {{ event.Kind.Name }}</p>
         <p><strong>{{ event.Owner.Type }}:</strong> {{ event.Owner.Name }}</p>
         <p><strong>{{ event.Target.Type }}:</strong> {{ event.Target.Value }}</p>
-        <p><strong>started at:</strong> {{ event.StartTime }}</p>
-        <p><strong>finished at:</strong> {{ event.EndTime }}</p>
+        {% if event.StartTime %}
+          <p><strong>started at:</strong> {{ event.StartTime|string_to_date|date:" d-m-Y H:i:s " }}</p>
+        {% endif %}
+        {% if event.EndTime %}
+          <p><strong>finished at:</strong> {{ event.EndTime|string_to_date|date:" d-m-Y H:i:s " }}</p>
+        {% endif %}
         {% if event.StartCustomData.Kind %}
         <p><strong>Start Custom Data: </strong>
         <pre>{{ event.StartCustomData.Data | linebreaksbr }}</pre>
