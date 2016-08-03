@@ -3,64 +3,64 @@
 {% load staticfiles %}
 
 {% block sidebar %}
-    {% include "sidebar.html" with active="deploys" %}
+{% include "sidebar.html" with active="deploys" %}
 {% endblock %}
 
 {% block header %}
-    	<h1>Admin/Deploys</h1>
+<h1>Admin/Deploys</h1>
 {% endblock %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static "css/deploys.css" %}">
+<link rel="stylesheet" href="{% static "css/deploys.css" %}">
 {% endblock %}
 
 {% block content %}
 <div class="container-fluid">
-	<div class="row">
-		<div class="col-md-12">
-			<table class="deploys table" id="list">
-				<thead>
-					<tr>
-						<th>App</th>
-						<th>Duration</th>
-						<th>Origin</th>
-						<th class="to-right">Timestamp</th>
-					</tr>
-				</thead>
-				<tbody>
-					{% for deploy in deploys %}
-                    <tr class="{% if deploy.Error %}bg-danger{% endif %}{% if deploy.Image == "diff" %}bg-warning{% endif %}">
-						<td class='app'>
-							{% if  deploy.ID %}
-							<a href="{% url 'deploy-info' deploy.ID %}">{{ deploy.App }}</a>
-							{% else %}
-							{{ deploy.App }}
-							{% endif %}
-							{% if deploy.Error %} - {{ deploy.Error }}{% endif %}
-						</td>
-                        <td>
-                            {% if deploy.Image == "diff" %}
-                              <div class="loader"></div>
-                            {% else %}
-                              {{ deploy.Duration|time_to_string }}
-                            {% endif %}
-                        </td>
-						<td>{{ deploy.Origin }}</td>
-						<td class='to-right'>{{ deploy.Timestamp|string_to_date|date:" d-m-Y H:i:s " }}</td>
-					</tr>
-					{% endfor %}
-				</tbody>
-			</table>
-			{% include "deploys/paginator.html" %}
-		</div>
-	</div>
+  <div class="row">
+    <div class="col-md-12">
+      <table class="deploys table" id="list">
+        <thead>
+          <tr>
+            <th>App</th>
+            <th>Duration</th>
+            <th>Origin</th>
+            <th class="to-right">Timestamp</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for deploy in deploys %}
+          <tr class="{% if deploy.Error %}bg-danger{% endif %}{% if deploy.Image == "diff" %}bg-warning{% endif %}">
+            <td class='app'>
+              {% if  deploy.ID %}
+              <a href="{% url 'deploy-info' deploy.ID %}">{{ deploy.App }}</a>
+              {% else %}
+              {{ deploy.App }}
+              {% endif %}
+              {% if deploy.Error %} - {{ deploy.Error }}{% endif %}
+            </td>
+            <td>
+              {% if deploy.Image == "diff" %}
+              <div class="loader"></div>
+              {% else %}
+              {{ deploy.Duration|time_to_string }}
+              {% endif %}
+            </td>
+            <td>{{ deploy.Origin }}</td>
+            <td class='to-right'>{{ deploy.Timestamp|string_to_date|date:" d-m-Y H:i:s " }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% include "deploys/paginator.html" %}
+    </div>
+  </div>
 </div>
 {% endblock %}
 
 {% block extra_js %}
 <script>
-    $("#listfilter").change(function() {
-        $("#filter").submit();
-    });
+$("#listfilter").change(function() {
+  $("#filter").submit();
+});
 </script>
 {% endblock %}
