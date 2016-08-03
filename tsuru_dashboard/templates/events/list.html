@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load filters_deploys %}
 
 {% block header %}
 <h1>Events</h1>
@@ -41,14 +42,18 @@
               </a>
             </td>
             <td>
+              {% if event.StartTime %}
               <a href="{% url 'event-info' event.UniqueID %}">
-              {{ event.StartTime }}
+              {{ event.StartTime|string_to_date|date:" d-m-Y H:i:s " }}
               </a>
+              {% endif %}
             </td>
             <td>
+              {% if event.EndTime %}
               <a href="{% url 'event-info' event.UniqueID %}">
-              {{ event.EndTime }}
+              {{ event.EndTime|string_to_date|date:" d-m-Y H:i:s " }}
               </a>
+              {% endif %}
             </td>
           </tr>
           {% endfor %}
