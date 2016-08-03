@@ -23,6 +23,7 @@
           <tr>
             <th>Action</th>
             <th>Target</th>
+            <th>Owner</th>
             <th>Start</th>
             <th>End</th>
           </tr>
@@ -40,6 +41,9 @@
               <a href="{% url 'event-info' event.UniqueID %}">
               {{ event.Target.Type }}: {{ event.Target.Value }}
               </a>
+            </td>
+            <td>
+              {{ event.Owner.Type }}{% if event.Owner.Name %}: {{ event.Owner.Name }}{% endif %}
             </td>
             <td>
               {% if event.StartTime %}
