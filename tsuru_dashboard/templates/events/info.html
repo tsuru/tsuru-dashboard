@@ -11,6 +11,16 @@
     <div class="col-md-12">
       <h3>Info</h3>
       <div class="content">
+        {% if event.Running %}
+        <div class="bg-info">
+          <p>This event steel running</p>
+        </div>
+        {% endif %}
+        {% if event.Error %}
+        <div class="bg-danger">
+          <p><strong>Error:</strong> {{ event.Error }}</p>
+        </div>
+        {% endif %}
         <p><strong>unique id:</strong> {{ event.UniqueID }}</p>
         <p><strong>kind:</strong> {{ event.Kind.Name }}</p>
         <p><strong>{{ event.Owner.Type }}:</strong> {{ event.Owner.Name }}</p>
