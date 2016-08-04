@@ -38,6 +38,9 @@ class ListEventViewTest(TestCase):
 
         self.assertIn("events/list.html", response.template_name)
         self.assertIn('events', response.context_data.keys())
+        self.assertEqual(3, response.context_data["next"])
+        self.assertEqual(1, response.context_data["previous"])
+        self.assertIn("2", httpretty.last_request().querystring["page"])
 
     @httpretty.activate
     @mock.patch("tsuru_dashboard.auth.views.token_is_valid")

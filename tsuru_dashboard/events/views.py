@@ -15,8 +15,9 @@ from tsuru_dashboard.auth.views import LoginRequiredView
 class ListEvent(LoginRequiredView, TemplateView):
     template_name = "events/list.html"
 
-    def get_events(self):
-        url = '{}/events'.format(settings.TSURU_HOST)
+    def get_events(self, skip, limit):
+        url = '{}/events?skip={}&limit={}'.format(
+            settings.TSURU_HOST, skip, limit)
         response = requests.get(
             url, headers=self.authorization, params=self.request.GET)
 
@@ -37,8 +38,21 @@ class ListEvent(LoginRequiredView, TemplateView):
 
     def get_context_data(self, *args, **kwargs):
         context = super(ListEvent, self).get_context_data(*args, **kwargs)
-        context['events'] = self.get_events()
+
+        page = int(self.request.GET.get('page', '1'))
+
+        skip = (page * 20) - 20
+        limit = page * 20
+
+        context['events'] = self.get_events(skip, limit)
         context['kinds'] = self.get_kinds()
+
+        if len(context['events']) >= 20:
+            context['next'] = page + 1
+
+        if page > 0:
+            context['previous'] = page - 1
+
         return context
 
 
