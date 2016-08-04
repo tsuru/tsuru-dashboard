@@ -38,25 +38,19 @@
                 </a>
               </td>
               <td>
-                <a href="{% url 'event-info' event.UniqueID %}">
-                  {{ event.Target.Type }}: {{ event.Target.Value }}
-                </a>
+                {{ event.Target.Type }}: {{ event.Target.Value }}
               </td>
               <td>
                 {{ event.Owner.Type }}{% if event.Owner.Name %}: {{ event.Owner.Name }}{% endif %}
               </td>
               <td>
                 {% if event.StartTime %}
-                <a href="{% url 'event-info' event.UniqueID %}">
-                  {{ event.StartTime|string_to_date|date:" d-m-Y H:i:s " }}
-                </a>
+                {{ event.StartTime|string_to_date|date:" d-m-Y H:i:s " }}
                 {% endif %}
               </td>
               <td>
                 {% if event.EndTime %}
-                <a href="{% url 'event-info' event.UniqueID %}">
-                  {{ event.EndTime|string_to_date|date:" d-m-Y H:i:s " }}
-                </a>
+                {{ event.EndTime|string_to_date|date:" d-m-Y H:i:s " }}
                 {% endif %}
               </td>
             </tr>
