@@ -31,40 +31,52 @@
         <tbody>
           {% for event in events %}
           <tr>
-          <tr class="{% if event.Running %}bg-info{% endif %}{% if event.CancelInfo.Canceled %}bg-warning{% else %}{% if event.Error %}bg-danger{% endif %}{% endif %}">
-            <td>
-              <a href="{% url 'event-info' event.UniqueID %}">
-              {{ event.Kind.Name }}
-              </a>
-            </td>
-            <td>
-              <a href="{% url 'event-info' event.UniqueID %}">
-              {{ event.Target.Type }}: {{ event.Target.Value }}
-              </a>
-            </td>
-            <td>
-              {{ event.Owner.Type }}{% if event.Owner.Name %}: {{ event.Owner.Name }}{% endif %}
-            </td>
-            <td>
-              {% if event.StartTime %}
-              <a href="{% url 'event-info' event.UniqueID %}">
-              {{ event.StartTime|string_to_date|date:" d-m-Y H:i:s " }}
-              </a>
-              {% endif %}
-            </td>
-            <td>
-              {% if event.EndTime %}
-              <a href="{% url 'event-info' event.UniqueID %}">
-              {{ event.EndTime|string_to_date|date:" d-m-Y H:i:s " }}
-              </a>
-              {% endif %}
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-      {% include "deploys/paginator.html" %}
+            <tr class="{% if event.Running %}bg-info{% endif %}{% if event.CancelInfo.Canceled %}bg-warning{% else %}{% if event.Error %}bg-danger{% endif %}{% endif %}">
+              <td>
+                <a href="{% url 'event-info' event.UniqueID %}">
+                  {{ event.Kind.Name }}
+                </a>
+              </td>
+              <td>
+                <a href="{% url 'event-info' event.UniqueID %}">
+                  {{ event.Target.Type }}: {{ event.Target.Value }}
+                </a>
+              </td>
+              <td>
+                {{ event.Owner.Type }}{% if event.Owner.Name %}: {{ event.Owner.Name }}{% endif %}
+              </td>
+              <td>
+                {% if event.StartTime %}
+                <a href="{% url 'event-info' event.UniqueID %}">
+                  {{ event.StartTime|string_to_date|date:" d-m-Y H:i:s " }}
+                </a>
+                {% endif %}
+              </td>
+              <td>
+                {% if event.EndTime %}
+                <a href="{% url 'event-info' event.UniqueID %}">
+                  {{ event.EndTime|string_to_date|date:" d-m-Y H:i:s " }}
+                </a>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <div class="pager">
+          {% if previous %}
+          <span class="page">
+            <a href="?page={{ previous }}{% if request.GET.kindName %}&kindName={{ request.GET.kindName }}{% endif %}">&lt; Prev</a>
+          </span>
+          {% endif %}
+
+          {% if next %}
+          <span class="page">
+            <a href="?page={{ next }}{% if request.GET.kindName %}&kindName={{ request.GET.kindName }}{% endif %}">Next &gt;</a>
+          </span>
+          {% endif %}
+        </div>
+      </div>
     </div>
   </div>
-</div>
-{% endblock %}
+  {% endblock %}
