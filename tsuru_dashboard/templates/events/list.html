@@ -25,7 +25,7 @@
             <th>Target</th>
             <th>Owner</th>
             <th>Start</th>
-            <th>End</th>
+            <th>Duration</th>
           </tr>
         </thead>
         <tbody>
@@ -45,12 +45,12 @@
               </td>
               <td>
                 {% if event.StartTime %}
-                {{ event.StartTime|string_to_date|date:" d-m-Y H:i:s " }}
+                {{ event.StartTime|date:" d-m-Y H:i:s " }}
                 {% endif %}
               </td>
               <td>
                 {% if event.EndTime %}
-                {{ event.EndTime|string_to_date|date:" d-m-Y H:i:s " }}
+                {{ event.StartTime|timesince:event.EndTime }}
                 {% endif %}
               </td>
             </tr>

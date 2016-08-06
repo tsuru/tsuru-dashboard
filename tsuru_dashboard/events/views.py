@@ -8,6 +8,8 @@ from bson import json_util
 
 from django.views.generic import TemplateView
 
+from dateutil import parser
+
 from tsuru_dashboard import settings
 from tsuru_dashboard.auth.views import LoginRequiredView
 
@@ -24,7 +26,15 @@ class ListEvent(LoginRequiredView, TemplateView):
         if response.status_code == 204:
             return []
 
-        return response.json()
+        events = response.json()
+
+        for event in events:
+            if "StartTime" in event:
+                event["StartTime"] = parser.parse(event["StartTime"])
+            if "EndTime" in event:
+                event["EndTime"] = parser.parse(event["EndTime"])
+
+        return events
 
     def get_kinds(self):
         url = '{}/events/kinds'.format(settings.TSURU_HOST)

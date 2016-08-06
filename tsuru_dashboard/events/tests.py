@@ -20,7 +20,7 @@ class ListEventViewTest(TestCase):
 
     def mock_kinds(self):
         url = '{}/events/kinds'.format(settings.TSURU_HOST)
-        body = json.dumps(range(10000))
+        body = json.dumps([{}] * 1000)
         httpretty.register_uri(httpretty.GET, url, body=body, status=200)
 
     @httpretty.activate
@@ -31,7 +31,10 @@ class ListEventViewTest(TestCase):
         token_is_valid.return_value = True
 
         url = '{}/events'.format(settings.TSURU_HOST)
-        body = json.dumps(range(10000))
+        body = json.dumps([{
+            "EndTime": u'2016-08-05T16:35:28.946-03:00',
+            "StartTime": u'2016-08-05T16:35:28.835-03:00'
+        }] * 1000)
         httpretty.register_uri(httpretty.GET, url, body=body, status=200)
 
         response = ListEvent.as_view()(self.request)
@@ -50,7 +53,10 @@ class ListEventViewTest(TestCase):
         token_is_valid.return_value = True
 
         url = '{}/events'.format(settings.TSURU_HOST)
-        body = json.dumps(range(10000))
+        body = json.dumps([{
+            "EndTime": u'2016-08-05T16:35:28.946-03:00',
+            "StartTime": u'2016-08-05T16:35:28.835-03:00'
+        }] * 1000)
         httpretty.register_uri(httpretty.GET, url, body=body, status=200)
 
         response = ListEvent.as_view()(self.request)
