@@ -1,5 +1,4 @@
 import json
-import yaml
 import httpretty
 import mock
 import base64
