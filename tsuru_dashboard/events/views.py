@@ -8,6 +8,10 @@ from bson import json_util
 
 from django.views.generic import TemplateView
 
+from pygments import highlight
+from pygments.lexers import YamlLexer
+from pygments.formatters import HtmlFormatter
+
 from dateutil import parser
 
 from tsuru_dashboard import settings
@@ -94,8 +98,9 @@ class EventInfo(LoginRequiredView, TemplateView):
                 data = self.decode_bson(event[field])
                 data = json.loads(json.dumps(
                     data, default=event_serialization_default))
-                event[field]["Data"] = yaml.safe_dump(
-                    data, default_flow_style=False, default_style='')
+                data = yaml.safe_dump(data, default_flow_style=False, default_style='')
+                data = highlight(data, YamlLexer(), HtmlFormatter())
+                event[field]["Data"] = data
 
         return event
 

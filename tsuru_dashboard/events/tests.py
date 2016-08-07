@@ -151,14 +151,6 @@ class EventInfoViewTest(TestCase):
         self.assertIn("events/info.html", response.template_name)
         self.assertIn('event', response.context_data.keys())
 
-        event = response.context_data["event"]
-        self.assertDictEqual(
-            {"start": 1}, yaml.load(event["StartCustomData"]["Data"]))
-        self.assertDictEqual(
-            {"end": 1}, yaml.load(event["EndCustomData"]["Data"]))
-        self.assertDictEqual(
-            {"other": 1}, yaml.load(event["OtherCustomData"]["Data"]))
-
     @httpretty.activate
     @mock.patch("tsuru_dashboard.auth.views.token_is_valid")
     def test_event_info_not_found(self, token_is_valid):
