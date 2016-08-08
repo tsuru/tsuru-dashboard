@@ -7,6 +7,13 @@ from base64 import decodestring
 from dateutil import parser
 
 import requests
+import json
+import yaml
+import bson
+import base64
+
+from bson import json_util
+
 
 from django.template.response import TemplateResponse
 from django.http import HttpResponse, HttpResponseServerError, Http404, StreamingHttpResponse, JsonResponse
@@ -16,7 +23,7 @@ from django.views.generic import TemplateView
 from django.contrib import messages
 
 from pygments import highlight
-from pygments.lexers import DiffLexer
+from pygments.lexers import DiffLexer, YamlLexer
 from pygments.formatters import HtmlFormatter
 
 from tsuru_dashboard import settings
@@ -481,4 +488,47 @@ class EventList(AppMixin, TemplateView):
         if page > 0:
             context['previous'] = page - 1
 
+        return context
+
+
+def event_serialization_default(obj):
+    if hasattr(obj, 'isoformat'):
+        return obj.isoformat()
+    return json_util.default
+
+
+class EventInfo(AppMixin, TemplateView):
+    template_name = 'apps/event.html'
+
+    def get_event(self, uuid):
+        url = '{}/events/{}'.format(settings.TSURU_HOST, uuid)
+        response = requests.get(
+            url, headers=self.authorization, params=self.request.GET)
+
+        if response.status_code == 200:
+            event = response.json()
+            return self.decode_custom_data(event)
+
+        return None
+
+    def decode_custom_data(self, event):
+        fields = ["StartCustomData", "EndCustomData", "OtherCustomData"]
+
+        for field in fields:
+            if event.get(field) and event[field].get("Data"):
+                data = self.decode_bson(event[field])
+                data = json.loads(
+                    json.dumps(data, default=event_serialization_default))
+                data = yaml.safe_dump(data, default_flow_style=False, default_style='')
+                data = highlight(data, YamlLexer(), HtmlFormatter())
+                event[field]["Data"] = data
+
+        return event
+
+    def decode_bson(self, data):
+        return bson.BSON(base64.b64decode(data["Data"])).decode()
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(EventInfo, self).get_context_data(*args, **kwargs)
+        context['event'] = self.get_event(kwargs["uuid"])
         return context
