@@ -100,15 +100,15 @@
           <p><strong>finished at:</strong> {{ event.EndTime|string_to_date|date:" d-m-Y H:i:s " }}</p>
         {% endif %}
         {% if event.StartCustomData.Kind %}
-        <p><strong>Start Custom Data: </strong>
+        <p><strong>Start Custom Data: </strong></p>
         {{ event.StartCustomData.Data | safe }}
         {% endif %}
         {% if event.EndCustomData.Kind %}
-        <p><strong>End Custom Data: </strong>
+        <p><strong>End Custom Data: </strong></p>
         {{ event.EndCustomData.Data | safe }}
         {% endif %}
         {% if event.OtherCustomData.Kind %}
-        <p><strong>Other Custom Data: </strong>
+        <p><strong>Other Custom Data: </strong></p>
         {{ event.OtherCustomData.Data | safe }}
         {% endif %}
         {% if event.Log %}
