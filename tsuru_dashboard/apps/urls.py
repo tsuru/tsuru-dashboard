@@ -30,6 +30,6 @@ urlpatterns = [
         csrf_exempt(views.EventList.as_view()),
         name='app-events'
     ),
-    url(r'^(?P<app_name>[\w-]+)/events/(?P<event>[\s\w@\.-]+)/$',
+    url(r'^(?P<app_name>[\w-]+)/events/(?P<uuid>[\s\w@\.-]+)/$',
         views.EventInfo.as_view(), name='app-event'),
 ]
