@@ -16,6 +16,8 @@
           <option value="{{ kind.Name }}">{{ kind.Name }}</option>
           {% endfor %}
         </select>
+        <label><input type="checkbox" name="errorOnly" value="true">error only</label>
+        <label><input type="checkbox" name="running" value="true">running only</label>
         <button>filter</button>
       </form>
       <table class="events table" id="list">
