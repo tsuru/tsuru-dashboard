@@ -7,6 +7,9 @@
             <li{% if active == "deploys" %} class="active"{% endif %}>
                 <a title="deploys" href="{% url 'app-deploys' app.name %}">deploys</a>
             </li>
+            <li{% if active == "events" %} class="active"{% endif %}>
+                <a title="events" href="{% url 'app-events' app.name %}">events</a>
+            </li>
             <li{% if active == "log" %} class="active"{% endif %}>
                 <a title="log" href="{% url 'app_log' app.name %}">log</a>
             </li>
