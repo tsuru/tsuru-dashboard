@@ -25,4 +25,9 @@ urlpatterns = [
         views.DeployInfo.as_view(), name='app-deploy'),
     url(r'^(?P<app_name>[\w-]+)/rollback/(?P<image>.+)/$',
         views.AppRollback.as_view(), name='app-rollback'),
+    url(
+        r'^(?P<app_name>[\w-]+)/events/$',
+        csrf_exempt(views.EventList.as_view()),
+        name='app-events'
+    ),
 ]

@@ -4,6 +4,7 @@ import calendar
 from cStringIO import StringIO
 from zipfile import ZipFile
 from base64 import decodestring
+from dateutil import parser
 
 import requests
 
@@ -440,3 +441,44 @@ class Unlock(LoginRequiredView):
             messages.success(request, u'App was successfully unlocked', fail_silently=True)
 
         return redirect(reverse('app-settings', args=[app_name]))
+
+
+class EventList(AppMixin, TemplateView):
+    template_name = 'apps/events.html'
+
+    def get_events(self, skip, limit, app):
+        url = '{}/events?skip={}&limit={}&target.type=app&target.value={}'
+        url = url.format(settings.TSURU_HOST, skip, limit, app)
+        response = requests.get(url, headers=self.authorization)
+
+        if response.status_code != 200:
+            return []
+
+        events = response.json() or []
+
+        for event in events:
+            if "StartTime" in event:
+                event["StartTime"] = parser.parse(event["StartTime"])
+            if "EndTime" in event:
+                event["EndTime"] = parser.parse(event["EndTime"])
+
+        return events
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(EventList, self).get_context_data(*args, **kwargs)
+
+        page = int(self.request.GET.get('page', '1'))
+
+        skip = (page * 20) - 20
+        limit = page * 20
+
+        app_name = kwargs['app_name']
+        context['events'] = self.get_events(skip, limit, app_name)
+
+        if len(context['events']) >= 20:
+            context['next'] = page + 1
+
+        if page > 0:
+            context['previous'] = page - 1
+
+        return context
