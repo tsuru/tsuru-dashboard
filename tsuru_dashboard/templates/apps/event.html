@@ -71,7 +71,6 @@
 .highlight .vi { color: #19177C } /* Name.Variable.Instance */
 .highlight .il { color: #666666 } /* Literal.Number.Integer.Long */
 </style>
-<link rel="stylesheet" href="{% static "css/detail.css" %}">
 {% endblock %}
 
 {% block navbar %}
@@ -113,13 +112,13 @@
       {% endif %}
       {% if event.OtherCustomData.Kind %}
       <p><strong>Other Custom Data: </strong></p>
-        {{ event.OtherCustomData.Data | safe }}
-        {% endif %}
-        {% if event.Log %}
-        <p><strong>Log:</strong></p>
-        <div><pre>{{ event.Log | escape }}</pre></div>
-        {% endif %}
-      </div>
+      {{ event.OtherCustomData.Data | safe }}
+      {% endif %}
+      {% if event.Log %}
+      <p><strong>Log:</strong></p>
+      <div><pre>{{ event.Log | escape }}</pre></div>
+      {% endif %}
     </div>
   </div>
-  {% endblock %}
+</div>
+{% endblock %}
