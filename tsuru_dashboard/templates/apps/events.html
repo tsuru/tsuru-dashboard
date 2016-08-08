@@ -27,7 +27,9 @@
         <tr>
           <tr class="{% if event.Running %}bg-info{% endif %}{% if event.CancelInfo.Canceled %}bg-warning{% else %}{% if event.Error %}bg-danger{% endif %}{% endif %}">
             <td>
-              {{ event.Kind.Name }}
+              <a href="{% url 'app-event' app.name event.UniqueID %}">
+                {{ event.Kind.Name }}
+              </a>
             </td>
             <td>
               {{ event.Owner.Type }}{% if event.Owner.Name %}: {{ event.Owner.Name }}{% endif %}
