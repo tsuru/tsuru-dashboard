@@ -24,8 +24,8 @@
 			  </li>
         {% if request.session.permissions.healing %}
 				<li{% if active == "healing" %} class="active"{% endif %}>
-					<a href="{% url 'list-healing' %}">
-						<span>Healing</span>
+					<a href="{% url 'event-list' %}?kindName=healer">
+            <span>Healing</span>
 					</a>
         </li>
         {% endif %}
