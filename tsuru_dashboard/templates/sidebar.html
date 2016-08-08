@@ -18,8 +18,8 @@
 					</a>
 				</li>
 				<li{% if active == "deploys" %} class="active"{% endif %}>
-					<a href="{% url 'list-deploys' %}">
-						<span>Deploys</span>
+					<a href="{% url 'event-list' %}?kindName=app.deploy">
+            <span>Deploys</span>
 					</a>
 			  </li>
         {% if request.session.permissions.healing %}
