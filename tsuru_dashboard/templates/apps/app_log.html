@@ -2,21 +2,21 @@
 {% load staticfiles %}
 
 {% block extra_css %}
-    {{ block.super }}
-    <link rel="stylesheet" href="{% static "css/pages/app-log.css" %}" />
+{{ block.super }}
+<link rel="stylesheet" href="{% static "css/pages/app-log.css" %}" />
 {% endblock %}
 
 {% block navbar %}
-    {% include "apps/navbar.html" with active="log" %}
+{% include "apps/navbar.html" with active="log" %}
 {% endblock %}
 
 {% block app-content %}
 <div class="container-fluid">
-	<div class="row">
-		<div class="col-md-12">
-            <div id="logs"></div>
-		</div>
-	</div>
+  <div class="row">
+    <div class="col-md-12">
+      <div id="logs"></div>
+    </div>
+  </div>
 </div>
 {% endblock %}
 

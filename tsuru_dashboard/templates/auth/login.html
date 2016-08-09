@@ -1,49 +1,49 @@
 {% load staticfiles %}
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<title>tsuru web dashboard</title>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}" />
-        <link rel="stylesheet" href="{% static "css/abyss.css" %}" />
-        <link rel="stylesheet" href="{% static "css/abyss.login.css" %}" />
-        <link rel="icon" type="image/x-icon" href="{% static "img/favicon.ico" %}" />
-	</head>
-	<body>
-		<div class="container">
-			<div class="logo">
-                <img src="{% static "img/brand.svg" %}" />
+<head>
+	<title>tsuru web dashboard</title>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}" />
+	<link rel="stylesheet" href="{% static "css/abyss.css" %}" />
+	<link rel="stylesheet" href="{% static "css/abyss.login.css" %}" />
+	<link rel="icon" type="image/x-icon" href="{% static "img/favicon.ico" %}" />
+</head>
+<body>
+	<div class="container">
+		<div class="logo">
+			<img src="{% static "img/brand.svg" %}" />
+		</div>
+		{% if scheme_info.name == "oauth" %}
+		<form class="form-signin" action="" method="get">
+			<div class="form-actions">
+				<a href="{{ authorize_url }}" class="btn btn-default">Login</a>
 			</div>
-			{% if scheme_info.name == "oauth" %}
-			<form class="form-signin" action="" method="get">
-				<div class="form-actions">
-					<a href="{{ authorize_url }}" class="btn btn-default">Login</a>
-				</div>
-				</form>
+		</form>
+		{% else %}
+		<form class="form-signin" action="" method="post">
+			{% csrf_token %}
+			{% if form.non_field_errors|length > 0 %}
+			{% for error in form.non_field_errors %}<div class="alert alert-error">{{ error }}</div>{% endfor %}
 			{% else %}
-			<form class="form-signin" action="" method="post">
-				{% csrf_token %}
-				{% if form.non_field_errors|length > 0 %}
-					{% for error in form.non_field_errors %}<div class="alert alert-error">{{ error }}</div>{% endfor %}
-				{% else %}
-				<p>Enter username and password to continue.</p>
-				{% endif %}
-				<div class="input-wrapper">
-					{{ form.username }}
-					{{ form.username.errors }}
-				</div>
-				<div class="input-wrapper">
-					{{ form.password }}
-					{{ form.password.errors }}
-				</div>
-				<div class="form-actions">
-					<span class="pull-left"><a href="#" class="flip-link" id="to-recover">Lost password?</a></span>
-					<span class="pull-right"><input type="submit" class="btn btn-default" value="Login" /></span>
-                    <div class="clearfix"></div>
-				</div>
-			</form>
+			<p>Enter username and password to continue.</p>
 			{% endif %}
-		</div> <!-- /container -->
-	</body>
+			<div class="input-wrapper">
+				{{ form.username }}
+				{{ form.username.errors }}
+			</div>
+			<div class="input-wrapper">
+				{{ form.password }}
+				{{ form.password.errors }}
+			</div>
+			<div class="form-actions">
+				<span class="pull-left"><a href="#" class="flip-link" id="to-recover">Lost password?</a></span>
+				<span class="pull-right"><input type="submit" class="btn btn-default" value="Login" /></span>
+				<div class="clearfix"></div>
+			</div>
+		</form>
+		{% endif %}
+	</div> <!-- /container -->
+</body>
 </html>

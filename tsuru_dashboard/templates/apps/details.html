@@ -9,36 +9,36 @@
 {% endblock %}
 
 {% block app-content %}
-	<div class="row">
-		<div class="col-md-12">
-			<div id="resources"></div>
-        </div>
+<div class="row">
+	<div class="col-md-12">
+		<div id="resources"></div>
 	</div>
-	{% if app.service_instances %}
-	<div class="row">
-		<div class="col-md-12">
-            <h3>Services</h3>
-            <div class="content">
-                <table class="table containers-app">
-                    <thead>
-                    <tr>
-                        <th>service</th>
-                        <th>name</th>
-                    </tr>
-                    </thead>
-                    <tbody>
+</div>
+{% if app.service_instances %}
+<div class="row">
+	<div class="col-md-12">
+		<h3>Services</h3>
+		<div class="content">
+			<table class="table containers-app">
+				<thead>
+					<tr>
+						<th>service</th>
+						<th>name</th>
+					</tr>
+				</thead>
+				<tbody>
 					{% for instance in app.service_instances %}
-                    <tr>
-                        <td>{{ instance.servicename }}</td>
-                        <td><a href="{% url 'service-detail' instance.servicename instance.name %}"> {{ instance.name }} </a></td>
-                    </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
+					<tr>
+						<td>{{ instance.servicename }}</td>
+						<td><a href="{% url 'service-detail' instance.servicename instance.name %}"> {{ instance.name }} </a></td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
 	</div>
-    {% endif %}
+</div>
+{% endif %}
 </div>
 {% endblock %}
 

@@ -16,7 +16,7 @@
 	<div class="row">
 		<ul class="col-md-12 teams unstyled">
 			{% for team in teams %}
-                <li><a data-team-name="{{ team.name }}" href="{% url 'team-info' team.name %}">{{ team.name }}</a></li>
+			<li><a data-team-name="{{ team.name }}" href="{% url 'team-info' team.name %}">{{ team.name }}</a></li>
 			{% endfor %}
 		</ul>
 	</div>

@@ -2,12 +2,12 @@
 
 {% block extra_css %}
 <style>
-    table td, table th {
-        min-width: 200px;
-        overflow: hidden;
-        display: inline-block;
-        white-space: nowrap;
-    }
+table td, table th {
+  min-width: 200px;
+  overflow: hidden;
+  display: inline-block;
+  white-space: nowrap;
+}
 </style>
 {% endblock %}
 
@@ -21,46 +21,46 @@
 
 {% block content %}
 <div class="container-fluid">
-    {% for pool in pools %}
-    <div class="row">
-        <div class="col-md-12">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <a href="{% url "pool-info" pool.0 %}">
-                        <h4>{{ pool.0 }}</h4>
-                    </a>
-                </div>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Host</th>
-                            <th>Started units</th>
-                            <th>Stopped units</th>
-                            <th>Total units</th>
-                            <th>Last success</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for node in pool.1 %}
-                        <tr>
-                            <td>
-                                <a href="{% url 'node-info' node.Address %}" title="Containers List">
-                                    {{ node.Address }}
-                                </a>
-                            </td>
-                            <td>{{ node.Units.started|default:"0" }}</td>
-                            <td>{{ node.Units.stopped|default:"0" }}</td>
-                            <td>{{ node.Units.total|default:"0" }}</td>
-                            <td>{{ node.Metadata.LastSuccess|date:"Y/m/d H:i:s e" }}</td>
-                            <td>{{ node.Status }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+  {% for pool in pools %}
+  <div class="row">
+    <div class="col-md-12">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <a href="{% url "pool-info" pool.0 %}">
+            <h4>{{ pool.0 }}</h4>
+          </a>
         </div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Host</th>
+              <th>Started units</th>
+              <th>Stopped units</th>
+              <th>Total units</th>
+              <th>Last success</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for node in pool.1 %}
+            <tr>
+              <td>
+                <a href="{% url 'node-info' node.Address %}" title="Containers List">
+                  {{ node.Address }}
+                </a>
+              </td>
+              <td>{{ node.Units.started|default:"0" }}</td>
+              <td>{{ node.Units.stopped|default:"0" }}</td>
+              <td>{{ node.Units.total|default:"0" }}</td>
+              <td>{{ node.Metadata.LastSuccess|date:"Y/m/d H:i:s e" }}</td>
+              <td>{{ node.Status }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
     </div>
-    {% endfor %}
+  </div>
+  {% endfor %}
 </div>
 {% endblock %}

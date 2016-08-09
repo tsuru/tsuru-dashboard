@@ -53,14 +53,14 @@
 					<ul class="no-style">
 						{% for user in team.users %}
 						<li>
-						<div class="row">
-							<div class="col-md-3">
-								{{ user }}
+							<div class="row">
+								<div class="col-md-3">
+									{{ user }}
+								</div>
+								<div class="col-md-8">
+									<a class="btn btn-danger" href="{% url 'team-user-remove' team.name user %}" title="with team=team.name %}remove {{ user }} from {{ team }}">remove</a>
+								</div>
 							</div>
-							<div class="col-md-8">
-								<a class="btn btn-danger" href="{% url 'team-user-remove' team.name user %}" title="with team=team.name %}remove {{ user }} from {{ team }}">remove</a>
-							</div>
-						</div>
 						</li>
 						{% endfor %}
 					</ul>
@@ -86,22 +86,22 @@
 </div>
 <div id="confirmation" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-dialog" role="document">
-  <div class="modal-content">
-	<div class="modal-header">
-		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-		<h3 id="myModalLabel">Are you sure?</h3>
-	</div>
-	<div class="modal-body">
-		<p>with {{ team.name }} This action CANNOT be undone. This will delete the <strong>{{ team.name }}</strong></p>
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				<h3 id="myModalLabel">Are you sure?</h3>
+			</div>
+			<div class="modal-body">
+				<p>with {{ team.name }} This action CANNOT be undone. This will delete the <strong>{{ team.name }}</strong></p>
 
-		<p>Please type in the name of your team to confirm.</p>
-		<input type="text" class="remove-confirmation" />
-	</div>
-	<div class="modal-footer">
-		<form method="get" action="{% url 'team-remove' team.name %}">
-			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-			<button class="btn btn-danger btn-remove" disabled="disabled">Delete team</button>
-		</form>
+				<p>Please type in the name of your team to confirm.</p>
+				<input type="text" class="remove-confirmation" />
+			</div>
+			<div class="modal-footer">
+				<form method="get" action="{% url 'team-remove' team.name %}">
+					<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+					<button class="btn btn-danger btn-remove" disabled="disabled">Delete team</button>
+				</form>
 			</div>
 		</div>
 	</div>
@@ -111,6 +111,6 @@
 {% block extra_js %}
 <script src="{% static "js/confirmation.js" %}"></script>
 <script type="text/javascript">
-	$.confirmation(".btn-remove", ".remove-confirmation", '{{ team.name }}');
+$.confirmation(".btn-remove", ".remove-confirmation", '{{ team.name }}');
 </script>
 {% endblock %}

@@ -6,50 +6,50 @@
 {% endblock %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static "css/jquery.modal.css" %}">
-    <link rel="stylesheet" href="{% static "css/healings.css" %}">
+<link rel="stylesheet" href="{% static "css/jquery.modal.css" %}">
+<link rel="stylesheet" href="{% static "css/healings.css" %}">
 {% endblock %}
 
 {% block header %}
-    <h1>Admin/Healing</h1>
+<h1>Admin/Healing</h1>
 {% endblock %}
 
 {% block content %}
 <div class="container-fluid">
-	<div class="row">
-		<div class="col-md-12">
-			<table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>App</th>
-                        <th>Failing</th>
-                        <th>Created</th>
-                        <th>Start</th>
-                        <th>Finish</th>
-                    </tr>
-                </thead>
-                <tbody>
-				{% for event in events %}
-                    <tr class="{% if event.Error %}bg-danger{% endif %}">
-                        <td><a href="{% if event.App %}{% url 'detail-app' event.App %}{% endif %}"> {{ event.App }}</a></td>
-                        <td>{% if event.FailingNode.Address %}{{ event.FailingNode.Address }}{% else %}{{ event.FailingContainer.ID }}{% endif %}</td>
-                        <td>{% if event.CreatedNode.Address %}{{ event.CreatedNode.Address }}{% else %}{{ event.CreatedContainer.ID }}{% endif %}</td>
-                        <td>{{ event.StartTime }}</td>
-                        <td>{{ event.EndTime }}</td>
-                        {% if event.Error %}
-                        <td class="to-error">
-                            {{ event.Error }}
-                        </td>
-                        {% endif %}
-                    </tr>
-				{% endfor %}
-                </tbody>
-			</table>
-		</div>
-	</div>
+  <div class="row">
+    <div class="col-md-12">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>App</th>
+            <th>Failing</th>
+            <th>Created</th>
+            <th>Start</th>
+            <th>Finish</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for event in events %}
+          <tr class="{% if event.Error %}bg-danger{% endif %}">
+            <td><a href="{% if event.App %}{% url 'detail-app' event.App %}{% endif %}"> {{ event.App }}</a></td>
+            <td>{% if event.FailingNode.Address %}{{ event.FailingNode.Address }}{% else %}{{ event.FailingContainer.ID }}{% endif %}</td>
+            <td>{% if event.CreatedNode.Address %}{{ event.CreatedNode.Address }}{% else %}{{ event.CreatedContainer.ID }}{% endif %}</td>
+            <td>{{ event.StartTime }}</td>
+            <td>{{ event.EndTime }}</td>
+            {% if event.Error %}
+            <td class="to-error">
+              {{ event.Error }}
+            </td>
+            {% endif %}
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
 <div class="modal break-word">
-    <p></p>
+  <p></p>
 </div>
 {% endblock %}
 

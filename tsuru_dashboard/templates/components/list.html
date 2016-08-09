@@ -2,13 +2,13 @@
 {% load staticfiles %}
 
 {% block extra_css %}
-    {{ block.super }}
-    <link rel="stylesheet" href="{% static "css/loader.css" %}">
-    <link rel="stylesheet" href="{% static "css/metrics/components/metrics.css" %}">
+{{ block.super }}
+<link rel="stylesheet" href="{% static "css/loader.css" %}">
+<link rel="stylesheet" href="{% static "css/metrics/components/metrics.css" %}">
 {% endblock %}
 
 {% block sidebar %}
-    {% include "sidebar.html" with active="components" %}
+{% include "sidebar.html" with active="components" %}
 {% endblock %}
 
 {% block header %}
@@ -17,10 +17,10 @@
 
 {% block content %}
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-md-12" id="list-container">
-        </div>
+  <div class="row">
+    <div class="col-md-12" id="list-container">
     </div>
+  </div>
 </div>
 {% endblock %}
 

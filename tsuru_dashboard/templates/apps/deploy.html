@@ -10,28 +10,28 @@
 {% endblock %}
 
 {% block navbar %}
-    {% include "apps/navbar.html" with active="deploys" %}
+{% include "apps/navbar.html" with active="deploys" %}
 {% endblock %}
 
 {% block app-content %}
-    <div class="row">
-        <div class="col-md-12">
-            <h3>Info</h3>
-            <div class="content">
-                <p><strong>App:</strong> <a href="{% url 'detail-app' deploy.App %}">{{ deploy.App }}</a></p>
-                <p><strong>User:</strong> {{ deploy.User }}</p>
-                <p><strong>Duration:</strong> {{ deploy.Duration|time_to_string }}</p>
-                <p><strong>Timestamp:</strong> {{ deploy.Timestamp|string_to_date|date:" d-m-Y H:i:s " }}</p>
-                {% if deploy.Commit %}<p><strong>Last Commit:</strong> {{ deploy.Commit }}</p>{% endif %}
-                {% if deploy.Error %}<p><strong>Error:</strong> {{ deploy.Error }}</p>{% endif %}
-                {% if deploy.Diff %}
-                <p><strong>Diff:</strong></p>{{ deploy.Diff|safe }}
-                {% endif %}
-                <p><strong>Log:</strong></p>
-                <div>
-                    <pre>{{ deploy.Log|escape }}</pre>
-                </div>
-            </div>
-        </div>
+<div class="row">
+  <div class="col-md-12">
+    <h3>Info</h3>
+    <div class="content">
+      <p><strong>App:</strong> <a href="{% url 'detail-app' deploy.App %}">{{ deploy.App }}</a></p>
+      <p><strong>User:</strong> {{ deploy.User }}</p>
+      <p><strong>Duration:</strong> {{ deploy.Duration|time_to_string }}</p>
+      <p><strong>Timestamp:</strong> {{ deploy.Timestamp|string_to_date|date:" d-m-Y H:i:s " }}</p>
+      {% if deploy.Commit %}<p><strong>Last Commit:</strong> {{ deploy.Commit }}</p>{% endif %}
+      {% if deploy.Error %}<p><strong>Error:</strong> {{ deploy.Error }}</p>{% endif %}
+      {% if deploy.Diff %}
+      <p><strong>Diff:</strong></p>{{ deploy.Diff|safe }}
+      {% endif %}
+      <p><strong>Log:</strong></p>
+      <div>
+        <pre>{{ deploy.Log|escape }}</pre>
+      </div>
     </div>
+  </div>
+</div>
 {% endblock %}

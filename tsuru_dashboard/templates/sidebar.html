@@ -3,50 +3,50 @@
 		<div class="container-fluid">
 			<ul class="nav nav-pills navbar-nav">
 				<li{% if active == "apps" %} class="active"{% endif %}>
-        	<a href="{% url 'list-app' %}">
-          	<span>Apps</span>
-          </a>
-				</li>
-				<li{% if active == "services" %} class="active"{% endif %}>
-          <a href="{% url 'service-list' %}">
-            <span>Services</span>
-          </a>
-				</li>
-				<li{% if active == "docker" %} class="active"{% endif %}>
-					<a href="{% url 'pool-list' %}">
-						<span>Hosts</span>
-					</a>
-				</li>
-				<li{% if active == "deploys" %} class="active"{% endif %}>
-					<a href="{% url 'event-list' %}?kindName=app.deploy">
-            <span>Deploys</span>
-					</a>
-			  </li>
-        {% if request.session.permissions.healing %}
-				<li{% if active == "healing" %} class="active"{% endif %}>
-					<a href="{% url 'event-list' %}?kindName=healer">
-            <span>Healing</span>
-					</a>
-        </li>
-        {% endif %}
-				<li{% if active == "dashboard" %} class="active"{% endif %}>
-					<a href="{% url 'dashboard' %}">
-            <span>Dashboard</span>
-					</a>
-        </li>
-        {% if request.session.permissions.admin %}
-        <li{% if active == "components" %} class="active"{% endif %}>
-					<a href="{% url 'list-component' %}">
-            <span>Components</span>
-					</a>
-        </li>
-        {% endif %}
-        <li{% if active == "events" %} class="active"{% endif %}>
-					<a href="{% url 'event-list' %}">
-            <span>Events</span>
-					</a>
-				</li>
-			</ul>
-		</div> <!-- /container-user -->
-	</div> <!-- /inner -->
+				<a href="{% url 'list-app' %}">
+					<span>Apps</span>
+				</a>
+			</li>
+			<li{% if active == "services" %} class="active"{% endif %}>
+			<a href="{% url 'service-list' %}">
+				<span>Services</span>
+			</a>
+		</li>
+		<li{% if active == "docker" %} class="active"{% endif %}>
+		<a href="{% url 'pool-list' %}">
+			<span>Hosts</span>
+		</a>
+	</li>
+	<li{% if active == "deploys" %} class="active"{% endif %}>
+	<a href="{% url 'event-list' %}?kindName=app.deploy">
+		<span>Deploys</span>
+	</a>
+</li>
+{% if request.session.permissions.healing %}
+<li{% if active == "healing" %} class="active"{% endif %}>
+<a href="{% url 'event-list' %}?kindName=healer">
+	<span>Healing</span>
+</a>
+</li>
+{% endif %}
+<li{% if active == "dashboard" %} class="active"{% endif %}>
+<a href="{% url 'dashboard' %}">
+	<span>Dashboard</span>
+</a>
+</li>
+{% if request.session.permissions.admin %}
+<li{% if active == "components" %} class="active"{% endif %}>
+<a href="{% url 'list-component' %}">
+	<span>Components</span>
+</a>
+</li>
+{% endif %}
+<li{% if active == "events" %} class="active"{% endif %}>
+<a href="{% url 'event-list' %}">
+	<span>Events</span>
+</a>
+</li>
+</ul>
+</div> <!-- /container-user -->
+</div> <!-- /inner -->
 </div>

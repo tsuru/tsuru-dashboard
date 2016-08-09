@@ -10,26 +10,26 @@
 
 {% block content %}
 <div class="container-fluid">
-    {% for service in services %}
-    <div class="row">
-        <div class="col-md-12">
-            <h3>{{ service.service }}
-                <a class="btn btn-primary btn-mini pull-right" href="{% url 'service-add' service.service %}">
-                        <span class="icon"><i class="icon-white glyphicon-plus"></i>
-                </a>
-            </h3>
-            <table class="table">
-                {% for instance in service.instances %}
-                <tr>
-                    <td>
-                        <a href="{% url 'service-detail' service.service instance %}">{{ instance }}</a>
-                    </td>
-                </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
+  {% for service in services %}
+  <div class="row">
+    <div class="col-md-12">
+      <h3>{{ service.service }}
+        <a class="btn btn-primary btn-mini pull-right" href="{% url 'service-add' service.service %}">
+          <span class="icon"><i class="icon-white glyphicon-plus"></i>
+          </a>
+        </h3>
+        <table class="table">
+          {% for instance in service.instances %}
+          <tr>
+            <td>
+              <a href="{% url 'service-detail' service.service instance %}">{{ instance }}</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
-    {% endfor %}
+  </div>
+  {% endfor %}
 </div>
 {% endblock %}

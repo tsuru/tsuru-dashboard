@@ -2,19 +2,19 @@
 {% load staticfiles %}
 
 {% block extra_css %}
-    <link rel="stylesheet" type="text/css" href="{% static 'razorflow/files/css/razorflow.min.css'%}">
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+<link rel="stylesheet" type="text/css" href="{% static 'razorflow/files/css/razorflow.min.css'%}">
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
 {% endblock %}
 
 {% block sidebar %}
-    {% include "sidebar.html" with active="dashboard" %}
+{% include "sidebar.html" with active="dashboard" %}
 {% endblock %}
 
 {% block content %}
-    <div id="application" class="dashboard"></div>
+<div id="application" class="dashboard"></div>
 {% endblock %}
 
 {% block extra_js %}
-    <script src="{% static 'razorflow/files/js/razorflow.min.js' %}"></script>
-    <script src="{% static 'js/dashboard.js' %}"></script>
+<script src="{% static 'razorflow/files/js/razorflow.min.js' %}"></script>
+<script src="{% static 'js/dashboard.js' %}"></script>
 {% endblock %}

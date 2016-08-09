@@ -6,21 +6,21 @@
 {% endblock extra_css %}
 
 {% block app-content %}
-	<div class="row">
-		<div class="col-md-12">
-			<form action="{% url 'app-add-team' app_name %}" method="post">
-				{% csrf_token %}
-				<fieldset>
-					<div class="clearfix control-group{% if form.errors.team %} error{% endif %}">
-						<label>Team name</label>
-						<input type="text" class="input-xlarge" name="{{ form.team.name }}" id="autocomplete">
-						<span class="help-inline">{{ form.errors.team }}</span>
-					</div>
-					<button class="btn primary" type="submit">Add</button>
-				</fieldset>
-			</form>
-		</div>
+<div class="row">
+	<div class="col-md-12">
+		<form action="{% url 'app-add-team' app_name %}" method="post">
+			{% csrf_token %}
+			<fieldset>
+				<div class="clearfix control-group{% if form.errors.team %} error{% endif %}">
+					<label>Team name</label>
+					<input type="text" class="input-xlarge" name="{{ form.team.name }}" id="autocomplete">
+					<span class="help-inline">{{ form.errors.team }}</span>
+				</div>
+				<button class="btn primary" type="submit">Add</button>
+			</fieldset>
+		</form>
 	</div>
+</div>
 {% endblock %}
 
 {% block extra_js %}
@@ -29,12 +29,12 @@
 
 <script>
 var team = [
-{% for t in teams %}
-"{{ t }}"{% if not forloop.last %},{% endif %}
-{% endfor %}
+	{% for t in teams %}
+	"{{ t }}"{% if not forloop.last %},{% endif %}
+	{% endfor %}
 ];
 $( "#autocomplete" ).autocomplete({
-  source: $.first_word(team)
+	source: $.first_word(team)
 });
 </script>
 {% endblock %}

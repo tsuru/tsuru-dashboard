@@ -2,164 +2,164 @@
 {% load staticfiles %}
 
 {% block navbar %}
-    {% include "apps/navbar.html" with active="settings" %}
+{% include "apps/navbar.html" with active="settings" %}
 {% endblock %}
 
 {% block app-content %}
-	<div class="row">
-		<div class="col-md-12">
-            <h3>Info</h3>
-            <div class="content">
-                <p><strong>Git URL:</strong> {{ app.repository }}</p>
-                <p><strong>Platform:</strong> {{ app.platform }}</p>
-                <p><strong>Pool:</strong> {{ app.pool }}</p>
-            </div>
-            {% if app.lock.Locked %}
-            <h3>App locked</h3>
-            <div class="content">
-                <p><strong>Reason:</strong> {{ app.lock.Reason }}</p>
-                <p><strong>Acquire date:</strong> {{ app.lock.AcquireDate }}</p>
-					<a class="btn" href="#unlock-confirmation" data-toggle="modal">
-						Unlock app
-                    </a>
-            </div>
-            {% endif %}
-        </div>
-	</div>
-	<div class="row">
-		<div class="col-md-12">
-            <h3>Plan</h3>
-            <div class="content">
-                <p><strong>Name:</strong> {{ app.plan.name }}</p>
-                <p><strong>Memory:</strong> {{ app.plan.memory|filesizeformat }}</p>
-                <p><strong>Swap:</strong> {{ app.plan.swap|filesizeformat }}</p>
-            </div>
-        </div>
-	</div>
-	<div class="row">
-		<div class="col-md-10">
-            <div class="content">
-            <h3>Environment variables</h3>
-            <p class="settings-toggle"><a href=#>&#x25BC;</a> {{ app.envs|length }} enviroment variables</p>
-            <table class="table hide settings-content">
-                <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Value</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for env in app.envs %}
-                {% if env.public %}
-                <tr>
-                    <td>{{ env.name }}</td>
-                    <td>{{ env.value }}</td>
-                </tr>
-                {% endif %}
-                {% endfor %}
-                {% for env in app.envs %}
-                {% if not env.public %}
-                <tr>
-                    <td>{{ env.name }}</td>
-                    <td>******</td>
-                </tr>
-                {% endif %}
-                {% endfor %}
-                </tbody>
-            </table>
-            </div>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-md-12">
-            <h3>Domains</h3>
-				<div class="content">
-					<p>
-					{% if app.cname or app.ip %}
-						<strong>App url:</strong>
-						<a href="http://{{ app.ip }}" target="_blank">http://{{ app.ip }}</a>
-						{% for cname in app.cname %}
-							<a href="http://{{ cname }}" target="_blank">http://{{ cname }}</a>
-						{% endfor %}
-					{% endif %}
-					</p>
-				</div>
-			</div>
-	</div>
-	<div class="row">
-		<div class="col-md-12">
-            <h3>Ownership</h3>
-				<div class="content">
-					<p><strong>Owner:</strong> {{ app.owner }}</p>
-					<p><strong>Team owner:</strong> {{ app.teamowner }}</p>
-					<p><strong>Teams:</strong> {{ app.teams|join:", " }}</p>
-				</div>
-			</div>
-	</div>
-
-	<div class="row">
-		<div class="col-md-12">
-            <h3>Delete app</h3>
-				<div class="content">
-					<a class="btn btn-danger" href="#confirmation" data-toggle="modal">
-						Delete app</a>
-				</div>
-			</div>
-	</div>
-
-<div id="confirmation" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-  <div class="modal-content">
-	<div class="modal-header">
-		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-		<h3 id="myModalLabel">Are you sure?</h3>
-	</div>
-	<div class="modal-body">
-            <p>This action <strong>CANNOT</strong> be undone. This will permanently delete the <strong>{{ app.name }}</strong> application.</p>
-
-		<p>Please type in the name of your application to confirm.</p>
-		<input type="text" class="remove-confirmation" />
-	</div>
-	<div class="modal-footer">
-		<form method="get" action="{% url 'remove_app' app.name %}">
-			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-			<button class="btn btn-danger btn-remove" disabled="disabled">I understand the consequences, delete this application</button>
-		</form>
-	</div>
-</div>
-</div>
-</div>
-
-<div id="unlock-confirmation" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-  <div class="modal-content">
-  <div class="modal-header">
-		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3 id="myModalLabel">Unlock {{ app.name }}</h3>
-	</div>
-	<div class="modal-body">
-		<p>Please type in the name of your application to confirm.</p>
-		<input type="text" class="unlock-confirmation" />
-	</div>
-	<div class="modal-footer">
-        <form method="get" action="{% url "unlock-app"  app.name %}">
-			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-			<button class="btn btn-unlock" disabled="disabled">Unlock app</button>
-		</form>
+<div class="row">
+  <div class="col-md-12">
+    <h3>Info</h3>
+    <div class="content">
+      <p><strong>Git URL:</strong> {{ app.repository }}</p>
+      <p><strong>Platform:</strong> {{ app.platform }}</p>
+      <p><strong>Pool:</strong> {{ app.pool }}</p>
+    </div>
+    {% if app.lock.Locked %}
+    <h3>App locked</h3>
+    <div class="content">
+      <p><strong>Reason:</strong> {{ app.lock.Reason }}</p>
+      <p><strong>Acquire date:</strong> {{ app.lock.AcquireDate }}</p>
+      <a class="btn" href="#unlock-confirmation" data-toggle="modal">
+        Unlock app
+      </a>
+    </div>
+    {% endif %}
   </div>
 </div>
-	</div>
+<div class="row">
+  <div class="col-md-12">
+    <h3>Plan</h3>
+    <div class="content">
+      <p><strong>Name:</strong> {{ app.plan.name }}</p>
+      <p><strong>Memory:</strong> {{ app.plan.memory|filesizeformat }}</p>
+      <p><strong>Swap:</strong> {{ app.plan.swap|filesizeformat }}</p>
+    </div>
+  </div>
 </div>
-{% endblock %}
+<div class="row">
+  <div class="col-md-10">
+    <div class="content">
+      <h3>Environment variables</h3>
+      <p class="settings-toggle"><a href=#>&#x25BC;</a> {{ app.envs|length }} enviroment variables</p>
+      <table class="table hide settings-content">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for env in app.envs %}
+          {% if env.public %}
+          <tr>
+            <td>{{ env.name }}</td>
+            <td>{{ env.value }}</td>
+          </tr>
+          {% endif %}
+          {% endfor %}
+          {% for env in app.envs %}
+          {% if not env.public %}
+          <tr>
+            <td>{{ env.name }}</td>
+            <td>******</td>
+          </tr>
+          {% endif %}
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <h3>Domains</h3>
+    <div class="content">
+      <p>
+        {% if app.cname or app.ip %}
+        <strong>App url:</strong>
+        <a href="http://{{ app.ip }}" target="_blank">http://{{ app.ip }}</a>
+        {% for cname in app.cname %}
+        <a href="http://{{ cname }}" target="_blank">http://{{ cname }}</a>
+        {% endfor %}
+        {% endif %}
+      </p>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <h3>Ownership</h3>
+    <div class="content">
+      <p><strong>Owner:</strong> {{ app.owner }}</p>
+      <p><strong>Team owner:</strong> {{ app.teamowner }}</p>
+      <p><strong>Teams:</strong> {{ app.teams|join:", " }}</p>
+    </div>
+  </div>
+</div>
 
-{% block extra_js %}
-<script src="{% static "js/confirmation.js" %}"></script>
-<script type="text/javascript">
-var appName = "{{ app.name }}";
-$.confirmation(".btn-remove", ".remove-confirmation", appName);
-$.confirmation(".btn-unlock", ".unlock-confirmation", appName);
-$(".settings-toggle").on("click", function() {
+<div class="row">
+  <div class="col-md-12">
+    <h3>Delete app</h3>
+    <div class="content">
+      <a class="btn btn-danger" href="#confirmation" data-toggle="modal">
+        Delete app</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="confirmation" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <h3 id="myModalLabel">Are you sure?</h3>
+        </div>
+        <div class="modal-body">
+          <p>This action <strong>CANNOT</strong> be undone. This will permanently delete the <strong>{{ app.name }}</strong> application.</p>
+
+          <p>Please type in the name of your application to confirm.</p>
+          <input type="text" class="remove-confirmation" />
+        </div>
+        <div class="modal-footer">
+          <form method="get" action="{% url 'remove_app' app.name %}">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+            <button class="btn btn-danger btn-remove" disabled="disabled">I understand the consequences, delete this application</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="unlock-confirmation" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <h3 id="myModalLabel">Unlock {{ app.name }}</h3>
+        </div>
+        <div class="modal-body">
+          <p>Please type in the name of your application to confirm.</p>
+          <input type="text" class="unlock-confirmation" />
+        </div>
+        <div class="modal-footer">
+          <form method="get" action="{% url "unlock-app"  app.name %}">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+            <button class="btn btn-unlock" disabled="disabled">Unlock app</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endblock %}
+
+  {% block extra_js %}
+  <script src="{% static "js/confirmation.js" %}"></script>
+  <script type="text/javascript">
+  var appName = "{{ app.name }}";
+  $.confirmation(".btn-remove", ".remove-confirmation", appName);
+  $.confirmation(".btn-unlock", ".unlock-confirmation", appName);
+  $(".settings-toggle").on("click", function() {
     $(".settings-content").toggleClass("hide");
-});
-</script>
-{% endblock %}
+  });
+  </script>
+  {% endblock %}
