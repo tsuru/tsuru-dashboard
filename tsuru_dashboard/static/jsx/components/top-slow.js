@@ -33,7 +33,9 @@ class RequestRow extends Component {
       <td>{this.props.request.method}</td>
       <td>{this.props.request.path}</td>
       <td>{this.props.request.status_code}</td>
-      <td>{this.props.request.response}</td>
+      <td>{this.props.request.stats.max.toFixed(3)}</td>
+      <td>{this.props.request.stats.avg.toFixed(3)}</td>
+      <td>{this.props.request.percentiles["99.0"].toFixed(3)}</td>
       <td>{this.props.request.time}</td>
       </tr>
     )
@@ -54,7 +56,9 @@ class TopTable extends Component {
       <th>Method</th>
       <th>Path</th>
       <th>Status Code</th>
-      <th>Response time</th>
+      <th>Max</th>
+      <th>Avg</th>
+      <th>P99</th>
       <th>Time</th>
       </tr>
       </thead>
@@ -93,24 +97,12 @@ export class TopSlow extends Component {
   }
 
   sortData(result) {
-    var requests = [];
-    for(let key in result.data) {
-      for(let i in result.data[key]){
-        var dt = new Date(result.data[key][i][0]);
-        var date = dt.toString().split(" ");
-        requests.push({
-          time: date[1] + " " + date[2] + " " + date[4],
-          response: result.data[key][i][1],
-          status_code: result.data[key][i][2],
-          method: result.data[key][i][3],
-          path: key
-        });
-      }
+    for (let item of result) {
+      var dt = new Date(item.last_time);
+      var date = dt.toString().split(" ");
+      item.time = date[1] + " " + date[2] + " " + date[4];
     }
-    requests.sort((a, b) => {
-      return (a.response >= b.response ? -1 : a.response < b.response ? 1 : 0);
-    });
-    this.selectTopRequests(requests, this.props.topInterval);
+    this.selectTopRequests(result, this.props.topInterval);
   }
 
   selectTopRequests(requests, topSize){

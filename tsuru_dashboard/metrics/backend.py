@@ -3,7 +3,6 @@ from tsuru_dashboard import settings
 import requests
 import json
 import datetime
-import re
 
 
 NET_AGGREGATION = {
@@ -259,35 +258,56 @@ class ElasticSearch(object):
         return result, bucket_min, bucket_max
 
     def top_slow(self, interval=None):
-        aggregation = {
-            "top": {
-                "terms": {
-                    "script": "doc['method'].value +'U'+doc['path.raw'].value +'U'+doc['status_code'].value"
-                },
-                "aggs": {"max": {"max": {"field": "value"}}}
+        query = {
+            "query": self.filtered_query,
+            "size": 0,
+            "aggs": {
+                "top": {
+                    "terms": {
+                        "script": "doc['method'].value +'|-o-|'+doc['path.raw'].value +'|-o-|'+doc['status_code'].value",
+                        "order": {
+                            "stats.max": "desc"
+                        }
+                    },
+                    "aggs": {
+                        "stats": {"stats": {"field": "value"}},
+                        "percentiles": {"percentiles": {"field": "value"}},
+                        "max": {
+                            "top_hits": {
+                                "sort": [{"value": {"order": "desc"}}],
+                                "size": 1
+                            }
+                        }
+                    }
+                }
             }
         }
-        query = self.query(interval=interval, aggregation=aggregation)
-        return self.base_process(self.post(query, "response_time"), self.top_slow_process)
+        return self.top_slow_process(self.post(query, "response_time"))
 
-    def top_slow_process(self, result, bucket):
-        max_response = 0
-        for b in bucket["top"]["buckets"]:
-            response_time = b["max"]["value"]
-            if response_time > max_response:
-                max_response = response_time
-            r = r'(?P<method>\w+)U(?P<path>.*)U(?P<status_code>\d{3})'
-            info = re.search(r, b["key"])
-            path = info.groupdict()['path']
-            status_code = info.groupdict()['status_code']
-            method = info.groupdict()['method']
+    def top_slow_process(self, data):
+        buckets = []
+        result = []
+        if "aggregations" in data and len(data["aggregations"]["top"]["buckets"]) > 0:
+            buckets = data["aggregations"]["top"]["buckets"]
+        for b in buckets:
+            parts = b["key"].split("|-o-|")
+            if len(parts) != 3:
+                continue
+            method = parts[0]
+            path = parts[1]
+            status_code = parts[2]
 
-            if path not in result:
-                result[path] = []
+            last_ts = b["max"]["hits"]["hits"][0]["_source"]["@timestamp"]
+            result.append({
+                "last_time": last_ts,
+                "stats": b["stats"],
+                "percentiles": b["percentiles"]["values"],
+                "method": method,
+                "path": path,
+                "status_code": status_code,
+            })
 
-            result[path].append([bucket["key"], response_time, status_code, method])
-
-        return result, 0, max_response
+        return result
 
     def http_methods(self, interval=None):
         aggregation = {"method": {"terms": {"field": "method"}}}

@@ -74,15 +74,31 @@ class ElasticSearchTest(TestCase):
     def test_top_slow(self, post_mock):
         self.es.top_slow()
         url = "{}/{}/{}/_search".format(self.es.url, self.index, "response_time")
-        aggregation = {
-            "top": {
-                "terms": {
-                    "script": "doc['method'].value +'U'+doc['path.raw'].value +'U'+doc['status_code'].value"
-                },
-                "aggs": {"max": {"max": {"field": "value"}}}
+        query = {
+            "query": self.es.filtered_query,
+            "size": 0,
+            "aggs": {
+                "top": {
+                    "terms": {
+                        "script": "doc['method'].value +'|-o-|'+doc['path.raw'].value +'|-o-|'+doc['status_code'].value",
+                        "order": {
+                            "stats.max": "desc"
+                        }
+                    },
+                    "aggs": {
+                        "stats": {"stats": {"field": "value"}},
+                        "percentiles": {"percentiles": {"field": "value"}},
+                        "max": {
+                            "top_hits": {
+                                "sort": [{"value": {"order": "desc"}}],
+                                "size": 1
+                            }
+                        }
+                    }
+                }
             }
         }
-        post_mock.assert_called_with(url, data=json.dumps(self.es.query(aggregation=aggregation)))
+        post_mock.assert_called_with(url, data=json.dumps(query))
 
     @patch("requests.post")
     def test_connections(self, post_mock):

@@ -11390,7 +11390,6 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 
 },{}],29:[function(require,module,exports){
 // shim for using process in browser
-
 var process = module.exports = {};
 
 // cached from whatever global is present so that test runners that stub it
@@ -11402,21 +11401,63 @@ var cachedSetTimeout;
 var cachedClearTimeout;
 
 (function () {
-  try {
-    cachedSetTimeout = setTimeout;
-  } catch (e) {
-    cachedSetTimeout = function () {
-      throw new Error('setTimeout is not defined');
+    try {
+        cachedSetTimeout = setTimeout;
+    } catch (e) {
+        cachedSetTimeout = function () {
+            throw new Error('setTimeout is not defined');
+        }
     }
-  }
-  try {
-    cachedClearTimeout = clearTimeout;
-  } catch (e) {
-    cachedClearTimeout = function () {
-      throw new Error('clearTimeout is not defined');
+    try {
+        cachedClearTimeout = clearTimeout;
+    } catch (e) {
+        cachedClearTimeout = function () {
+            throw new Error('clearTimeout is not defined');
+        }
     }
-  }
 } ())
+function runTimeout(fun) {
+    if (cachedSetTimeout === setTimeout) {
+        //normal enviroments in sane situations
+        return setTimeout(fun, 0);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedSetTimeout(fun, 0);
+    } catch(e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+            return cachedSetTimeout.call(null, fun, 0);
+        } catch(e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+            return cachedSetTimeout.call(this, fun, 0);
+        }
+    }
+
+
+}
+function runClearTimeout(marker) {
+    if (cachedClearTimeout === clearTimeout) {
+        //normal enviroments in sane situations
+        return clearTimeout(marker);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedClearTimeout(marker);
+    } catch (e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+            return cachedClearTimeout.call(null, marker);
+        } catch (e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+            return cachedClearTimeout.call(this, marker);
+        }
+    }
+
+
+
+}
 var queue = [];
 var draining = false;
 var currentQueue;
@@ -11441,7 +11482,7 @@ function drainQueue() {
     if (draining) {
         return;
     }
-    var timeout = cachedSetTimeout.call(null, cleanUpNextTick);
+    var timeout = runTimeout(cleanUpNextTick);
     draining = true;
 
     var len = queue.length;
@@ -11458,7 +11499,7 @@ function drainQueue() {
     }
     currentQueue = null;
     draining = false;
-    cachedClearTimeout.call(null, timeout);
+    runClearTimeout(timeout);
 }
 
 process.nextTick = function (fun) {
@@ -11470,7 +11511,7 @@ process.nextTick = function (fun) {
     }
     queue.push(new Item(fun, args));
     if (queue.length === 1 && !draining) {
-        cachedSetTimeout.call(null, drainQueue, 0);
+        runTimeout(drainQueue);
     }
 };
 
@@ -30825,7 +30866,7 @@ module.exports = require('./lib/React');
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Tabs = exports.Tab = exports.CancelBtn = exports.Button = undefined;
+exports.Select = exports.Tabs = exports.Tab = exports.CancelBtn = exports.Button = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -30984,6 +31025,45 @@ var Tabs = exports.Tabs = function (_Component2) {
 
   return Tabs;
 }(_react.Component);
+
+var Select = exports.Select = function (_Component3) {
+  _inherits(Select, _Component3);
+
+  function Select() {
+    _classCallCheck(this, Select);
+
+    return _possibleConstructorReturn(this, Object.getPrototypeOf(Select).apply(this, arguments));
+  }
+
+  _createClass(Select, [{
+    key: "render",
+    value: function render() {
+      return _react2.default.createElement(
+        "select",
+        null,
+        this.props.defaultOption.length > 0 ? _react2.default.createElement(
+          "option",
+          null,
+          this.props.defaultOption
+        ) : "",
+        this.props.options.length > 0 ? this.props.options.map(function (option) {
+          return _react2.default.createElement(
+            "option",
+            null,
+            option
+          );
+        }) : ""
+      );
+    }
+  }]);
+
+  return Select;
+}(_react.Component);
+
+Select.defaultProps = {
+  defaultOption: "",
+  options: []
+};
 
 
 },{"react":175}],177:[function(require,module,exports){
@@ -32087,7 +32167,17 @@ var RequestRow = function (_Component2) {
         _react2.default.createElement(
           "td",
           null,
-          this.props.request.response
+          this.props.request.stats.max.toFixed(3)
+        ),
+        _react2.default.createElement(
+          "td",
+          null,
+          this.props.request.stats.avg.toFixed(3)
+        ),
+        _react2.default.createElement(
+          "td",
+          null,
+          this.props.request.percentiles["99.0"].toFixed(3)
         ),
         _react2.default.createElement(
           "td",
@@ -32143,7 +32233,17 @@ var TopTable = function (_Component3) {
             _react2.default.createElement(
               "th",
               null,
-              "Response time"
+              "Max"
+            ),
+            _react2.default.createElement(
+              "th",
+              null,
+              "Avg"
+            ),
+            _react2.default.createElement(
+              "th",
+              null,
+              "P99"
             ),
             _react2.default.createElement(
               "th",
@@ -32211,24 +32311,34 @@ var TopSlow = exports.TopSlow = function (_Component4) {
   }, {
     key: "sortData",
     value: function sortData(result) {
-      var requests = [];
-      for (var key in result.data) {
-        for (var i in result.data[key]) {
-          var dt = new Date(result.data[key][i][0]);
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = result[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var item = _step.value;
+
+          var dt = new Date(item.last_time);
           var date = dt.toString().split(" ");
-          requests.push({
-            time: date[1] + " " + date[2] + " " + date[4],
-            response: result.data[key][i][1],
-            status_code: result.data[key][i][2],
-            method: result.data[key][i][3],
-            path: key
-          });
+          item.time = date[1] + " " + date[2] + " " + date[4];
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
         }
       }
-      requests.sort(function (a, b) {
-        return a.response >= b.response ? -1 : a.response < b.response ? 1 : 0;
-      });
-      this.selectTopRequests(requests, this.props.topInterval);
+
+      this.selectTopRequests(result, this.props.topInterval);
     }
   }, {
     key: "selectTopRequests",
