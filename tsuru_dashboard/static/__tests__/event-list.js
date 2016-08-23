@@ -1,10 +1,10 @@
 import React from "react";
-import { shallow, mount } from "enzyme";
-import { KindSelect } from "../jsx/components/event-list";
+import { shallow } from "enzyme";
+import { EventFilters } from "../jsx/components/event-list";
 
-describe('KindSelect', () => {
+describe('<EventFilters />', () => {
   it('initial state', () => {
-    const select = mount(<KindSelect />);
-    expect(select.find("option").length).toBe(1);
+    const filters = shallow(<EventFilters />);
+    expect(filters.prop('id')).toBe("filter");
   });
 });
