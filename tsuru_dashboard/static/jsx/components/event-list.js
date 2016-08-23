@@ -8,20 +8,34 @@ export class EventFilters extends Component {
   constructor(props) {
     super(props);
 
+    this.state = { options: [] };
+  }
+
+  componentDidMount() {
+    this.loadKinds();
+  }
+
+  loadKinds() {
+    $.ajax({
+      type: 'GET',
+      url: "/events/kinds/",
+      success: (data) => {
+        let options = [];
+        data.forEach((item) => {
+          options.push(item.Name);
+        });
+        this.setState({ options: options });
+      }
+    });
   }
 
   render() {
-    const options = [
-      'admin.create',
-      'admin.delete',
-      'service-instance.update.grant',
-    ];
     return (
       <div id='filter'>
         <form action='' method='GET' ref='form'>
           <Dropdown
             placeholder='choose an event kind'
-            options={options}
+            options={this.state.options}
             style={styles.eventFilter}
             name='kindName'
           />

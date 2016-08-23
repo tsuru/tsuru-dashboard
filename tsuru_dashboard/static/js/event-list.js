@@ -21363,21 +21363,35 @@ var EventFilters = exports.EventFilters = function (_Component) {
 
     var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(EventFilters).call(this, props));
 
-    _this.submit = _this.submit.bind(_this);
+    _this.state = { options: [] };
     return _this;
   }
 
   _createClass(EventFilters, [{
-    key: 'submit',
-    value: function submit() {
-      // console.log(this.refs.form);
-      // this.refs.btn.click();
-      // this.refs.form.submit();
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      this.loadKinds();
+    }
+  }, {
+    key: 'loadKinds',
+    value: function loadKinds() {
+      var _this2 = this;
+
+      $.ajax({
+        type: 'GET',
+        url: "/events/kinds/",
+        success: function success(data) {
+          var options = [];
+          data.forEach(function (item) {
+            options.push(item.Name);
+          });
+          _this2.setState({ options: options });
+        }
+      });
     }
   }, {
     key: 'render',
     value: function render() {
-      var options = ['admin.create', 'admin.delete', 'service-instance.update.grant'];
       return _react2.default.createElement(
         'div',
         { id: 'filter' },
@@ -21386,22 +21400,19 @@ var EventFilters = exports.EventFilters = function (_Component) {
           { action: '', method: 'GET', ref: 'form' },
           _react2.default.createElement(_backstageDropdown2.default, {
             placeholder: 'choose an event kind',
-            options: options,
+            options: this.state.options,
             style: _eventList2.default.eventFilter,
-            name: 'kindName',
-            onChange: this.submit
+            name: 'kindName'
           }),
           _react2.default.createElement(_backstageSwitchButton2.default, {
             label: 'error only',
             name: 'errorOnly',
-            style: _eventList2.default.eventFilter,
-            onChange: this.submit
+            style: _eventList2.default.eventFilter
           }),
           _react2.default.createElement(_backstageSwitchButton2.default, {
             label: 'running only',
             name: 'running',
-            style: _eventList2.default.eventFilter,
-            onChange: this.submit
+            style: _eventList2.default.eventFilter
           }),
           _react2.default.createElement(
             'button',
