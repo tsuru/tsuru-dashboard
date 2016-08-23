@@ -25,11 +25,13 @@
             <th>Owner</th>
             <th>Start</th>
             <th>Duration</th>
+            <th>Status</th>
           </tr>
         </thead>
         <tbody>
           {% for event in events %}
-          <tr class="{% if event.Running %}bg-info{% endif %}{% if event.CancelInfo.Canceled %}bg-warning{% else %}{% if event.Error %}bg-danger{% endif %}{% endif %}">
+          <!-- <tr class="{% if event.Running %}bg-info{% endif %}{% if event.CancelInfo.Canceled %}bg-warning{% else %}{% if event.Error %}bg-danger{% endif %}{% endif %}"> -->
+          <tr>
             <td>
               <a href="{% url 'event-info' event.UniqueID %}">
                 {{ event.Kind.Name }}
@@ -49,6 +51,20 @@
             <td>
               {% if event.EndTime %}
               {{ event.StartTime|timesince:event.EndTime }}
+              {% endif %}
+            </td>
+            <td class="{% if not event.Running and not event.CancelInfo.Canceled and not event.Error %}status-success{% endif %}{% if event.Running %}status-running{% endif %}{% if event.CancelInfo.Canceled %}status-canceled{% endif %}{% if event.Error %}status-error{% endif %}">
+              {% if event.Running %}
+              Running
+              {% endif %}
+              {% if event.CancelInfo.Canceled %}
+              Canceled
+              {% endif %}
+              {% if event.Error %}
+              Error
+              {% endif %}
+              {% if not event.Running and not event.CancelInfo.Canceled and not event.Error %}
+              Success
               {% endif %}
             </td>
           </tr>

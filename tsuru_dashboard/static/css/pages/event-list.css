@@ -27,3 +27,19 @@ h1 {
 .events a {
   color: #2e2e2e;
 }
+
+.events .status-success {
+  color: #527c2b;
+}
+
+.events .status-running {
+  color: #333;
+}
+
+.events .status-canceled {
+  color: #999;
+}
+
+.events .status-error {
+  color: #bc2e1b;
+}
