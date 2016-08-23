@@ -9,7 +9,7 @@ from django.test.client import RequestFactory
 
 from tsuru_dashboard import settings
 
-from .views import ListEvent, EventInfo
+from .views import ListEvent, EventInfo, KindList
 
 
 class ListEventViewTest(TestCase):
@@ -163,3 +163,23 @@ class EventInfoViewTest(TestCase):
 
         self.assertIn("events/info.html", response.template_name)
         self.assertIn('event', response.context_data.keys())
+
+
+class KindListViewTest(TestCase):
+    def setUp(self):
+        self.request = RequestFactory().get("/?page=2")
+        self.request.session = {"tsuru_token": "admin"}
+
+    def mock_kinds(self):
+        url = '{}/events/kinds'.format(settings.TSURU_HOST)
+        body = json.dumps([{"Type": "permission", "Name": "app.update.cname.add"}])
+        httpretty.register_uri(httpretty.GET, url, body=body, status=200)
+
+    @httpretty.activate
+    @mock.patch("tsuru_dashboard.auth.views.token_is_valid")
+    def test_view(self, token_is_valid):
+        self.mock_kinds()
+
+        response = KindList.as_view()(self.request)
+        data = json.loads(response.content)
+        self.assertEqual(data[0]["Name"], "app.update.cname.add")

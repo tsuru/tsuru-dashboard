@@ -7,6 +7,7 @@ import yaml
 from bson import json_util
 
 from django.views.generic import TemplateView
+from django.http import JsonResponse
 
 from pygments import highlight
 from pygments.lexers import YamlLexer
@@ -16,6 +17,22 @@ from dateutil import parser
 
 from tsuru_dashboard import settings
 from tsuru_dashboard.auth.views import LoginRequiredView
+
+
+class KindList(LoginRequiredView):
+
+    def get_kinds(self):
+        url = '{}/events/kinds'.format(settings.TSURU_HOST)
+        response = requests.get(
+            url, headers=self.authorization, params=self.request.GET)
+
+        if response.status_code == 204:
+            return []
+
+        return response.json()
+
+    def get(self, *args, **kwargs):
+        return JsonResponse(self.get_kinds(), safe=False)
 
 
 class ListEvent(LoginRequiredView, TemplateView):
