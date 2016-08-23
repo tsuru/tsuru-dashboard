@@ -38,16 +38,19 @@ export class EventFilters extends Component {
             options={this.state.options}
             style={styles.eventFilter}
             name='kindName'
+            value={this.props.kind}
           />
           <SwitchButton
             label='error only'
             name='errorOnly'
             style={styles.eventFilter}
+            checked={this.props.errorOnly}
           />
           <SwitchButton
             label='running only'
             name='running'
             style={styles.eventFilter}
+            checked={this.props.running}
           />
           <button ref='btn' type='submit'>filter</button>
         </form>

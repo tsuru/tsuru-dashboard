@@ -21402,17 +21402,20 @@ var EventFilters = exports.EventFilters = function (_Component) {
             placeholder: 'choose an event kind',
             options: this.state.options,
             style: _eventList2.default.eventFilter,
-            name: 'kindName'
+            name: 'kindName',
+            value: this.props.kind
           }),
           _react2.default.createElement(_backstageSwitchButton2.default, {
             label: 'error only',
             name: 'errorOnly',
-            style: _eventList2.default.eventFilter
+            style: _eventList2.default.eventFilter,
+            checked: this.props.errorOnly
           }),
           _react2.default.createElement(_backstageSwitchButton2.default, {
             label: 'running only',
             name: 'running',
-            style: _eventList2.default.eventFilter
+            style: _eventList2.default.eventFilter,
+            checked: this.props.running
           }),
           _react2.default.createElement(
             'button',
@@ -21443,7 +21446,21 @@ var _eventList = require("../components/event-list");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-_reactDom2.default.render(_react2.default.createElement(_eventList.EventFilters, null), document.getElementById('controls'));
+function getParameterByName(name, url) {
+  if (!url) url = window.location.href;
+  name = name.replace(/[\[\]]/g, "\\$&");
+  var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+      results = regex.exec(url);
+  if (!results) return null;
+  if (!results[2]) return '';
+  return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
+_reactDom2.default.render(_react2.default.createElement(_eventList.EventFilters, {
+  kind: getParameterByName('kindName'),
+  errorOnly: getParameterByName('errorOnly') === 'true',
+  running: getParameterByName('running') === 'true'
+}), document.getElementById('controls'));
 
 
 },{"../components/event-list":178,"react":176,"react-dom":33}]},{},[179]);
