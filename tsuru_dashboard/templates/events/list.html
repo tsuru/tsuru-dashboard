@@ -1,9 +1,10 @@
-  {% extends "base.html" %}
+{% extends "base.html" %}
 {% load staticfiles %}
 {% load filters_deploys %}
 
 {% block extra_css %}
 <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+<link rel="stylesheet" href="{% static "css/pages/event-list.css" %}">
 {% endblock %}
 
 {% block header %}
@@ -15,13 +16,6 @@
   <div class="row">
     <div class="col-md-12">
       <div id="controls"></div>
-      <!-- <form action="" method="GET">
-        <select name="kindName">
-          <option value="">all events</option>
-          {% for kind in kinds %}
-          <option value="{{ kind.Name }}">{{ kind.Name }}</option>
-          {% endfor %}
-        </select> -->
       </form>
       <table class="events table" id="list">
         <thead>

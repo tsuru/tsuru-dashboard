@@ -1,0 +1,29 @@
+h1 {
+  font-family: 'Open Sans';
+  font-size: 34px;
+  letter-spacing: -1.5px;
+  font-weight: bold;
+  color: #2e2e2e;
+  line-height: 1.2;
+}
+
+.events.table {
+  font-family: Open Sans;
+  font-size: 14px;
+  margin-top: 20px;
+}
+
+.events thead {
+  background-color: #ddd;
+  color: #333;
+  font-weight: bold;
+  line-height: 1.1;
+}
+
+.events.table th, .events.table td {
+  padding: 14px 0 14px 14px;
+}
+
+.events a {
+  color: #2e2e2e;
+}
