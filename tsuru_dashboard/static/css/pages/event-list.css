@@ -24,6 +24,19 @@ h1 {
   padding: 14px 0 14px 14px;
 }
 
+.events tbody tr:hover {
+  background-color: #0769de;
+  color: #fff;
+  cursor: pointer;
+}
+
+.events tr:hover .status-success,
+.events tr:hover .status-running,
+.events tr:hover .status-error,
+.events tr:hover .status-canceled {
+  color: #fff;
+}
+
 .events a {
   color: #2e2e2e;
 }

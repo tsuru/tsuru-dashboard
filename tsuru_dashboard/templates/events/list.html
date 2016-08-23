@@ -30,12 +30,9 @@
         </thead>
         <tbody>
           {% for event in events %}
-          <!-- <tr class="{% if event.Running %}bg-info{% endif %}{% if event.CancelInfo.Canceled %}bg-warning{% else %}{% if event.Error %}bg-danger{% endif %}{% endif %}"> -->
-          <tr>
+          <tr onclick='window.document.location = "{% url 'event-info' event.UniqueID %}"'>
             <td>
-              <a href="{% url 'event-info' event.UniqueID %}">
                 {{ event.Kind.Name }}
-              </a>
             </td>
             <td>
               {{ event.Target.Type }}: {{ event.Target.Value }}
@@ -68,6 +65,7 @@
               {% endif %}
             </td>
           </tr>
+          </a>
           {% endfor %}
         </tbody>
       </table>
