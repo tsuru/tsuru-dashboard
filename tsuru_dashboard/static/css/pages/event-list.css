@@ -13,6 +13,10 @@ h1 {
   margin-top: 20px;
 }
 
+.events tr {
+  border-bottom: 2px solid #ddd;
+}
+
 .events thead {
   background-color: #ddd;
   color: #333;
