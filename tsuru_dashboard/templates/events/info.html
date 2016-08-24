@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load filters_deploys %}
 
-{% block header %}
+{% block extra_css %}
 <style>
 .highlight .hll { background-color: #ffffcc }
 .highlight  { background: #f8f8f8; }
@@ -68,8 +68,32 @@
 .highlight .vg { color: #19177C } /* Name.Variable.Global */
 .highlight .vi { color: #19177C } /* Name.Variable.Instance */
 .highlight .il { color: #666666 } /* Literal.Number.Integer.Long */
-</style>
 
+span.status-success {
+  color: #527c2b;
+}
+
+span.status-running {
+  color: #333;
+}
+
+span.status-canceled {
+  color: #999;
+}
+
+span.status-error {
+  color: #bc2e1b;
+}
+</style>
+{% endblock %}
+
+{% block bar %}
+<div class="bar">
+Dashboard > Events > {{ event.Kind.Name }} > <span class="active">{{ event.UniqueID }}</span>
+</div>
+{% endblock %}
+
+{% block header %}
 <h1>Events</h1>
 {% endblock %}
 
@@ -77,17 +101,26 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-12">
-      <h3>Info</h3>
       <div class="content">
-        {% if event.Running %}
-        <div class="bg-info">
-          <p>This event still running</p>
-        </div>
-        {% endif %}
+        <p>
+          Status:
+          <span class="{% if not event.Running and not event.CancelInfo.Canceled and not event.Error %}status-success{% endif %}{% if event.Running %}status-running{% endif %}{% if event.CancelInfo.Canceled %}status-canceled{% endif %}{% if event.Error %}status-error{% endif %}">
+          {% if event.Running %}
+          Running
+          {% endif %}
+          {% if event.CancelInfo.Canceled %}
+          Canceled
+          {% endif %}
+          {% if event.Error %}
+          Error
+          {% endif %}
+          {% if not event.Running and not event.CancelInfo.Canceled and not event.Error %}
+          Success
+          {% endif %}
+        </span>
+      </p>
         {% if event.Error %}
-        <div class="bg-danger">
-          <p><strong>Error:</strong> {{ event.Error }}</p>
-        </div>
+        <p><strong>Error message:</strong> {{ event.Error }}</p>
         {% endif %}
         <p><strong>unique id:</strong> {{ event.UniqueID }}</p>
         <p><strong>kind:</strong> {{ event.Kind.Name }}</p>
