@@ -90,6 +90,10 @@ span.status-error {
 {% block bar %}
 <div class="bar">
 Dashboard > Events > {{ event.Kind.Name }} > <span class="active">{{ event.UniqueID }}</span>
+
+{% if event.Cancelable and event.Running %}
+<button>Cancel</button>
+{% endif %}
 </div>
 {% endblock %}
 
