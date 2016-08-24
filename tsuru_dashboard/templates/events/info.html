@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load staticfiles %}
 {% load filters_deploys %}
 
 {% block extra_css %}
@@ -84,6 +85,19 @@ span.status-canceled {
 span.status-error {
   color: #bc2e1b;
 }
+
+#modal {
+  text-align: center;
+  padding: 0!important;
+}
+
+#modal:before {
+  content: '';
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+  margin-right: -4px;
+}
 </style>
 {% endblock %}
 
@@ -92,7 +106,7 @@ span.status-error {
 Dashboard > Events > {{ event.Kind.Name }} > <span class="active">{{ event.UniqueID }}</span>
 
 {% if event.Cancelable and event.Running %}
-<button>Cancel</button>
+<button id="cancel-button">Cancel</button>
 {% endif %}
 </div>
 {% endblock %}
@@ -102,6 +116,7 @@ Dashboard > Events > {{ event.Kind.Name }} > <span class="active">{{ event.Uniqu
 {% endblock %}
 
 {% block content %}
+<div id="modal"></div>
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-12">
@@ -156,4 +171,8 @@ Dashboard > Events > {{ event.Kind.Name }} > <span class="active">{{ event.Uniqu
     </div>
   </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static "js/event-info.js" %}"></script>
 {% endblock %}
