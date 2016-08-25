@@ -128,3 +128,14 @@ class EventInfo(LoginRequiredView, TemplateView):
         context = super(EventInfo, self).get_context_data(*args, **kwargs)
         context['event'] = self.get_event(kwargs["uuid"])
         return context
+
+
+class EventCancel(LoginRequiredView):
+
+    def cancel(self, uuid):
+        url = '{}/events/{}/cancel'.format(settings.TSURU_HOST, uuid)
+        requests.post(url, headers=self.authorization)
+
+    def get(self, *args, **kwargs):
+        uuid = kwargs["uuid"]
+        self.cancel(uuid)

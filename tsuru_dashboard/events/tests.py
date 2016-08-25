@@ -9,7 +9,7 @@ from django.test.client import RequestFactory
 
 from tsuru_dashboard import settings
 
-from .views import ListEvent, EventInfo, KindList
+from .views import ListEvent, EventInfo, KindList, EventCancel
 
 
 class ListEventViewTest(TestCase):
@@ -183,3 +183,21 @@ class KindListViewTest(TestCase):
         response = KindList.as_view()(self.request)
         data = json.loads(response.content)
         self.assertEqual(data[0]["Name"], "app.update.cname.add")
+
+
+class EventCancelViewTest(TestCase):
+    def setUp(self):
+        self.request = RequestFactory().get("   ")
+        self.request.session = {"tsuru_token": "admin"}
+
+    @httpretty.activate
+    @mock.patch("tsuru_dashboard.auth.views.token_is_valid")
+    def test_view(self, token_is_valid):
+        url = '{}/events/my-uuid/cancel'.format(settings.TSURU_HOST)
+        httpretty.register_uri(httpretty.POST, url, status=204)
+
+        EventCancel.as_view()(self.request, uuid="my-uuid")
+
+        request = httpretty.last_request()
+        self.assertEqual("POST", request.method)
+        self.assertEqual("/events/my-uuid/cancel", request.path)
