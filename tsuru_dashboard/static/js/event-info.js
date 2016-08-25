@@ -20926,6 +20926,7 @@ var EventCancel = function (_Component) {
       $.ajax({
         type: 'POST',
         url: "/events/" + this.props.uuid + "/cancel/",
+        data: { reason: this.refs.reason.value },
         success: function success() {
           window.location = window.location;
         }
@@ -20993,7 +20994,7 @@ var _eventCancel2 = _interopRequireDefault(_eventCancel);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 $("#cancel-button").on('click', function () {
-  _reactDom2.default.render(_react2.default.createElement(_eventCancel2.default, null), document.getElementById('modal'));
+  _reactDom2.default.render(_react2.default.createElement(_eventCancel2.default, { uuid: window.location.pathname.split('/')[2] }), document.getElementById('modal'));
 });
 
 

@@ -12,6 +12,7 @@ export default class EventCancel extends Component {
     $.ajax({
       type: 'POST',
       url: "/events/" + this.props.uuid + "/cancel/",
+      data: {reason: this.refs.reason.value},
       success: () => {
         window.location = window.location;
       }
