@@ -141,5 +141,4 @@ class EventCancel(LoginRequiredView):
     def post(self, *args, **kwargs):
         uuid = kwargs["uuid"]
         self.cancel(uuid, self.request.POST.get("reason", ""))
-        time.sleep(1)
         return HttpResponse()
