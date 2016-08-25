@@ -14,7 +14,7 @@ export default class EventCancel extends Component {
       url: "/events/" + this.props.uuid + "/cancel/",
       data: {reason: this.refs.reason.value},
       success: () => {
-        window.location = window.location;
+        window.location = "/events/";
       }
     });
   }

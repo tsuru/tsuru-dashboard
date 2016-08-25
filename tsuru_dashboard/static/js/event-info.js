@@ -20928,7 +20928,7 @@ var EventCancel = function (_Component) {
         url: "/events/" + this.props.uuid + "/cancel/",
         data: { reason: this.refs.reason.value },
         success: function success() {
-          window.location = window.location;
+          window.location = "/events/";
         }
       });
     }
