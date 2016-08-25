@@ -4,6 +4,7 @@ import base64
 
 import json
 import yaml
+import time
 from bson import json_util
 
 from django.views.generic import TemplateView
@@ -140,4 +141,5 @@ class EventCancel(LoginRequiredView):
     def post(self, *args, **kwargs):
         uuid = kwargs["uuid"]
         self.cancel(uuid, self.request.POST.get("reason", ""))
+        time.sleep(1)
         return HttpResponse()
