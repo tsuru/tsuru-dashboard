@@ -20884,6 +20884,98 @@ module.exports = validateDOMNesting;
 module.exports = require('./lib/React');
 
 },{"./lib/React":56}],174:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _backstageModal = require('backstage-modal');
+
+var _backstageModal2 = _interopRequireDefault(_backstageModal);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var EventCancel = function (_Component) {
+  _inherits(EventCancel, _Component);
+
+  function EventCancel(props) {
+    _classCallCheck(this, EventCancel);
+
+    var _this = _possibleConstructorReturn(this, (EventCancel.__proto__ || Object.getPrototypeOf(EventCancel)).call(this, props));
+
+    _this.cancel = _this.cancel.bind(_this);
+    return _this;
+  }
+
+  _createClass(EventCancel, [{
+    key: 'cancel',
+    value: function cancel() {
+      $.ajax({
+        type: 'POST',
+        url: "/events/" + this.props.uuid + "/cancel/",
+        success: function success() {
+          window.location = window.location;
+        }
+      });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(
+        _backstageModal2.default,
+        { title: 'cancel event', isOpen: true },
+        _react2.default.createElement(
+          'div',
+          null,
+          _react2.default.createElement(
+            'p',
+            null,
+            'This action CANNOT be undone. This will cancel this event.'
+          ),
+          _react2.default.createElement(
+            'p',
+            null,
+            'Type the reason here to continue:'
+          ),
+          _react2.default.createElement(
+            'p',
+            null,
+            _react2.default.createElement('input', { type: 'text', ref: 'reason' })
+          )
+        ),
+        _react2.default.createElement(
+          'div',
+          null,
+          _react2.default.createElement(
+            'button',
+            { className: 'button', onClick: this.cancel },
+            'cancel'
+          )
+        )
+      );
+    }
+  }]);
+
+  return EventCancel;
+}(_react.Component);
+
+exports.default = EventCancel;
+
+
+},{"backstage-modal":2,"react":173}],175:[function(require,module,exports){
 "use strict";
 
 var _react = require("react");
@@ -20894,46 +20986,15 @@ var _reactDom = require("react-dom");
 
 var _reactDom2 = _interopRequireDefault(_reactDom);
 
-var _backstageModal = require("backstage-modal");
+var _eventCancel = require("../components/event-cancel");
 
-var _backstageModal2 = _interopRequireDefault(_backstageModal);
+var _eventCancel2 = _interopRequireDefault(_eventCancel);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 $("#cancel-button").on('click', function () {
-  _reactDom2.default.render(_react2.default.createElement(
-    _backstageModal2.default,
-    { title: "cancel event", isOpen: true },
-    _react2.default.createElement(
-      "div",
-      null,
-      _react2.default.createElement(
-        "p",
-        null,
-        "This action CANNOT be undone. This will cancel this event."
-      ),
-      _react2.default.createElement(
-        "p",
-        null,
-        "Type the reason here to continue:"
-      ),
-      _react2.default.createElement(
-        "p",
-        null,
-        _react2.default.createElement("input", { type: "text" })
-      )
-    ),
-    _react2.default.createElement(
-      "div",
-      null,
-      _react2.default.createElement(
-        "button",
-        { className: "button" },
-        "cancel"
-      )
-    )
-  ), document.getElementById('modal'));
+  _reactDom2.default.render(_react2.default.createElement(_eventCancel2.default, null), document.getElementById('modal'));
 });
 
 
-},{"backstage-modal":2,"react":173,"react-dom":30}]},{},[174]);
+},{"../components/event-cancel":174,"react":173,"react-dom":30}]},{},[175]);

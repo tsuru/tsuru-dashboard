@@ -20767,7 +20767,7 @@ var DeployBox = exports.DeployBox = function (_Component) {
   function DeployBox() {
     _classCallCheck(this, DeployBox);
 
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(DeployBox).apply(this, arguments));
+    return _possibleConstructorReturn(this, (DeployBox.__proto__ || Object.getPrototypeOf(DeployBox)).apply(this, arguments));
   }
 
   _createClass(DeployBox, [{
@@ -20794,7 +20794,7 @@ var StartDeployBtn = function (_Component2) {
   function StartDeployBtn(props) {
     _classCallCheck(this, StartDeployBtn);
 
-    var _this2 = _possibleConstructorReturn(this, Object.getPrototypeOf(StartDeployBtn).call(this, props));
+    var _this2 = _possibleConstructorReturn(this, (StartDeployBtn.__proto__ || Object.getPrototypeOf(StartDeployBtn)).call(this, props));
 
     _this2.handleClick = _this2.handleClick.bind(_this2);
     return _this2;
@@ -20828,7 +20828,7 @@ var CancelBtn = function (_Component3) {
   function CancelBtn() {
     _classCallCheck(this, CancelBtn);
 
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(CancelBtn).apply(this, arguments));
+    return _possibleConstructorReturn(this, (CancelBtn.__proto__ || Object.getPrototypeOf(CancelBtn)).apply(this, arguments));
   }
 
   _createClass(CancelBtn, [{
@@ -20855,7 +20855,7 @@ var Files = function (_Component4) {
   function Files() {
     _classCallCheck(this, Files);
 
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(Files).apply(this, arguments));
+    return _possibleConstructorReturn(this, (Files.__proto__ || Object.getPrototypeOf(Files)).apply(this, arguments));
   }
 
   _createClass(Files, [{
@@ -20885,7 +20885,7 @@ var Output = function (_Component5) {
   function Output() {
     _classCallCheck(this, Output);
 
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(Output).apply(this, arguments));
+    return _possibleConstructorReturn(this, (Output.__proto__ || Object.getPrototypeOf(Output)).apply(this, arguments));
   }
 
   _createClass(Output, [{
@@ -20909,7 +20909,7 @@ var DeployPopin = exports.DeployPopin = function (_Component6) {
   function DeployPopin(props) {
     _classCallCheck(this, DeployPopin);
 
-    var _this6 = _possibleConstructorReturn(this, Object.getPrototypeOf(DeployPopin).call(this, props));
+    var _this6 = _possibleConstructorReturn(this, (DeployPopin.__proto__ || Object.getPrototypeOf(DeployPopin)).call(this, props));
 
     _this6.state = {
       files: [],

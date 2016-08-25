@@ -23478,7 +23478,7 @@ var Follow = function (_Component) {
   function Follow(props) {
     _classCallCheck(this, Follow);
 
-    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Follow).call(this, props));
+    var _this = _possibleConstructorReturn(this, (Follow.__proto__ || Object.getPrototypeOf(Follow)).call(this, props));
 
     _this.state = {
       lastScroll: 0
@@ -23544,7 +23544,7 @@ var Top = function (_Component2) {
   function Top(props) {
     _classCallCheck(this, Top);
 
-    var _this2 = _possibleConstructorReturn(this, Object.getPrototypeOf(Top).call(this, props));
+    var _this2 = _possibleConstructorReturn(this, (Top.__proto__ || Object.getPrototypeOf(Top)).call(this, props));
 
     _this2.handleScroll = _this2.handleScroll.bind(_this2);
     return _this2;
@@ -23589,7 +23589,7 @@ var Log = exports.Log = function (_Component3) {
   function Log(props) {
     _classCallCheck(this, Log);
 
-    var _this3 = _possibleConstructorReturn(this, Object.getPrototypeOf(Log).call(this, props));
+    var _this3 = _possibleConstructorReturn(this, (Log.__proto__ || Object.getPrototypeOf(Log)).call(this, props));
 
     _this3.state = {
       follow: true,

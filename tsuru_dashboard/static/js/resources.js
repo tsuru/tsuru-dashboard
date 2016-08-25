@@ -30885,7 +30885,7 @@ var Tab = exports.Tab = function (_Component) {
   function Tab(props) {
     _classCallCheck(this, Tab);
 
-    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Tab).call(this, props));
+    var _this = _possibleConstructorReturn(this, (Tab.__proto__ || Object.getPrototypeOf(Tab)).call(this, props));
 
     _this.onClick = _this.onClick.bind(_this);
     return _this;
@@ -30929,7 +30929,7 @@ var Tabs = exports.Tabs = function (_Component2) {
   function Tabs(props) {
     _classCallCheck(this, Tabs);
 
-    var _this2 = _possibleConstructorReturn(this, Object.getPrototypeOf(Tabs).call(this, props));
+    var _this2 = _possibleConstructorReturn(this, (Tabs.__proto__ || Object.getPrototypeOf(Tabs)).call(this, props));
 
     _this2.state = {
       active: ""
@@ -30987,7 +30987,7 @@ var Select = exports.Select = function (_Component3) {
   function Select() {
     _classCallCheck(this, Select);
 
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(Select).apply(this, arguments));
+    return _possibleConstructorReturn(this, (Select.__proto__ || Object.getPrototypeOf(Select)).apply(this, arguments));
   }
 
   _createClass(Select, [{
@@ -31080,7 +31080,7 @@ var GraphContainer = exports.GraphContainer = function (_Component) {
   function GraphContainer(props) {
     _classCallCheck(this, GraphContainer);
 
-    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(GraphContainer).call(this, props));
+    var _this = _possibleConstructorReturn(this, (GraphContainer.__proto__ || Object.getPrototypeOf(GraphContainer)).call(this, props));
 
     _this.state = {
       model: {},
@@ -31187,7 +31187,7 @@ var Graph = exports.Graph = function (_Component2) {
   function Graph() {
     _classCallCheck(this, Graph);
 
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(Graph).apply(this, arguments));
+    return _possibleConstructorReturn(this, (Graph.__proto__ || Object.getPrototypeOf(Graph)).apply(this, arguments));
   }
 
   _createClass(Graph, [{
@@ -31253,7 +31253,7 @@ var Metrics = exports.Metrics = function (_Component3) {
   function Metrics(props) {
     _classCallCheck(this, Metrics);
 
-    var _this5 = _possibleConstructorReturn(this, Object.getPrototypeOf(Metrics).call(this, props));
+    var _this5 = _possibleConstructorReturn(this, (Metrics.__proto__ || Object.getPrototypeOf(Metrics)).call(this, props));
 
     _this5.state = {
       interval: _this5.props.interval,
@@ -31397,7 +31397,7 @@ var TimeRangeFilter = function (_Component4) {
   function TimeRangeFilter(props) {
     _classCallCheck(this, TimeRangeFilter);
 
-    var _this6 = _possibleConstructorReturn(this, Object.getPrototypeOf(TimeRangeFilter).call(this, props));
+    var _this6 = _possibleConstructorReturn(this, (TimeRangeFilter.__proto__ || Object.getPrototypeOf(TimeRangeFilter)).call(this, props));
 
     _this6.handleChange = _this6.handleChange.bind(_this6);
     return _this6;
@@ -31476,7 +31476,7 @@ var PeriodSelector = function (_Component5) {
   function PeriodSelector(props) {
     _classCallCheck(this, PeriodSelector);
 
-    var _this7 = _possibleConstructorReturn(this, Object.getPrototypeOf(PeriodSelector).call(this, props));
+    var _this7 = _possibleConstructorReturn(this, (PeriodSelector.__proto__ || Object.getPrototypeOf(PeriodSelector)).call(this, props));
 
     _this7.handleChange = _this7.handleChange.bind(_this7);
     return _this7;
@@ -31545,7 +31545,7 @@ var SizeSelector = function (_Component6) {
   function SizeSelector(props) {
     _classCallCheck(this, SizeSelector);
 
-    var _this8 = _possibleConstructorReturn(this, Object.getPrototypeOf(SizeSelector).call(this, props));
+    var _this8 = _possibleConstructorReturn(this, (SizeSelector.__proto__ || Object.getPrototypeOf(SizeSelector)).call(this, props));
 
     _this8.handleChange = _this8.handleChange.bind(_this8);
     return _this8;
@@ -31599,7 +31599,7 @@ var AutoRefresh = function (_Component7) {
   function AutoRefresh(props) {
     _classCallCheck(this, AutoRefresh);
 
-    var _this9 = _possibleConstructorReturn(this, Object.getPrototypeOf(AutoRefresh).call(this, props));
+    var _this9 = _possibleConstructorReturn(this, (AutoRefresh.__proto__ || Object.getPrototypeOf(AutoRefresh)).call(this, props));
 
     _this9.state = {
       checked: _this9.props.checked
@@ -31642,7 +31642,7 @@ var WebTransactionsMetrics = exports.WebTransactionsMetrics = function (_Compone
   function WebTransactionsMetrics() {
     _classCallCheck(this, WebTransactionsMetrics);
 
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(WebTransactionsMetrics).apply(this, arguments));
+    return _possibleConstructorReturn(this, (WebTransactionsMetrics.__proto__ || Object.getPrototypeOf(WebTransactionsMetrics)).apply(this, arguments));
   }
 
   _createClass(WebTransactionsMetrics, [{
@@ -31700,7 +31700,7 @@ var Resources = exports.Resources = function (_Component) {
   function Resources(props) {
     _classCallCheck(this, Resources);
 
-    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Resources).call(this, props));
+    var _this = _possibleConstructorReturn(this, (Resources.__proto__ || Object.getPrototypeOf(Resources)).call(this, props));
 
     _this.state = {
       app: null
@@ -31746,7 +31746,7 @@ var Tr = function (_Component2) {
   function Tr() {
     _classCallCheck(this, Tr);
 
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(Tr).apply(this, arguments));
+    return _possibleConstructorReturn(this, (Tr.__proto__ || Object.getPrototypeOf(Tr)).apply(this, arguments));
   }
 
   _createClass(Tr, [{
@@ -31784,7 +31784,7 @@ var Trs = function (_Component3) {
   function Trs() {
     _classCallCheck(this, Trs);
 
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(Trs).apply(this, arguments));
+    return _possibleConstructorReturn(this, (Trs.__proto__ || Object.getPrototypeOf(Trs)).apply(this, arguments));
   }
 
   _createClass(Trs, [{
@@ -31812,7 +31812,7 @@ var ProcessInfo = function (_Component4) {
   function ProcessInfo(props) {
     _classCallCheck(this, ProcessInfo);
 
-    var _this5 = _possibleConstructorReturn(this, Object.getPrototypeOf(ProcessInfo).call(this, props));
+    var _this5 = _possibleConstructorReturn(this, (ProcessInfo.__proto__ || Object.getPrototypeOf(ProcessInfo)).call(this, props));
 
     _this5.state = {
       hide: true
@@ -31871,7 +31871,7 @@ var ProcessContent = function (_Component5) {
   function ProcessContent() {
     _classCallCheck(this, ProcessContent);
 
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(ProcessContent).apply(this, arguments));
+    return _possibleConstructorReturn(this, (ProcessContent.__proto__ || Object.getPrototypeOf(ProcessContent)).apply(this, arguments));
   }
 
   _createClass(ProcessContent, [{
@@ -31914,7 +31914,7 @@ var WebTransactionsContent = function (_Component6) {
   function WebTransactionsContent(props) {
     _classCallCheck(this, WebTransactionsContent);
 
-    var _this7 = _possibleConstructorReturn(this, Object.getPrototypeOf(WebTransactionsContent).call(this, props));
+    var _this7 = _possibleConstructorReturn(this, (WebTransactionsContent.__proto__ || Object.getPrototypeOf(WebTransactionsContent)).call(this, props));
 
     _this7.state = {
       from: _this7.props.from
@@ -31950,7 +31950,7 @@ var Resource = function (_Component7) {
   function Resource(props) {
     _classCallCheck(this, Resource);
 
-    var _this8 = _possibleConstructorReturn(this, Object.getPrototypeOf(Resource).call(this, props));
+    var _this8 = _possibleConstructorReturn(this, (Resource.__proto__ || Object.getPrototypeOf(Resource)).call(this, props));
 
     _this8.state = {
       process: {},
@@ -32038,7 +32038,7 @@ var SelectTopInterval = function (_Component) {
   function SelectTopInterval(props) {
     _classCallCheck(this, SelectTopInterval);
 
-    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(SelectTopInterval).call(this, props));
+    var _this = _possibleConstructorReturn(this, (SelectTopInterval.__proto__ || Object.getPrototypeOf(SelectTopInterval)).call(this, props));
 
     _this.handleChange = _this.handleChange.bind(_this);
     return _this;
@@ -32095,7 +32095,7 @@ var RequestRow = function (_Component2) {
   function RequestRow() {
     _classCallCheck(this, RequestRow);
 
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(RequestRow).apply(this, arguments));
+    return _possibleConstructorReturn(this, (RequestRow.__proto__ || Object.getPrototypeOf(RequestRow)).apply(this, arguments));
   }
 
   _createClass(RequestRow, [{
@@ -32152,7 +32152,7 @@ var TopTable = function (_Component3) {
   function TopTable() {
     _classCallCheck(this, TopTable);
 
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(TopTable).apply(this, arguments));
+    return _possibleConstructorReturn(this, (TopTable.__proto__ || Object.getPrototypeOf(TopTable)).apply(this, arguments));
   }
 
   _createClass(TopTable, [{
@@ -32233,7 +32233,7 @@ var TopSlow = exports.TopSlow = function (_Component4) {
   function TopSlow(props) {
     _classCallCheck(this, TopSlow);
 
-    var _this4 = _possibleConstructorReturn(this, Object.getPrototypeOf(TopSlow).call(this, props));
+    var _this4 = _possibleConstructorReturn(this, (TopSlow.__proto__ || Object.getPrototypeOf(TopSlow)).call(this, props));
 
     _this4.state = { top: [], requests: [] };
     return _this4;

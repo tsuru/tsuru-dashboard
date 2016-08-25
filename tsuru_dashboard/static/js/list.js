@@ -30993,7 +30993,7 @@ var AppSearch = exports.AppSearch = function (_Component) {
   function AppSearch(props) {
     _classCallCheck(this, AppSearch);
 
-    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(AppSearch).call(this, props));
+    var _this = _possibleConstructorReturn(this, (AppSearch.__proto__ || Object.getPrototypeOf(AppSearch)).call(this, props));
 
     _this.handleChange = _this.handleChange.bind(_this);
     return _this;
@@ -31031,7 +31031,7 @@ var AppAdd = function (_Component2) {
   function AppAdd() {
     _classCallCheck(this, AppAdd);
 
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(AppAdd).apply(this, arguments));
+    return _possibleConstructorReturn(this, (AppAdd.__proto__ || Object.getPrototypeOf(AppAdd)).apply(this, arguments));
   }
 
   _createClass(AppAdd, [{
@@ -31054,7 +31054,7 @@ var App = exports.App = function (_Component3) {
   function App() {
     _classCallCheck(this, App);
 
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(App).apply(this, arguments));
+    return _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).apply(this, arguments));
   }
 
   _createClass(App, [{
@@ -31085,7 +31085,7 @@ var AppTable = exports.AppTable = function (_Component4) {
   function AppTable() {
     _classCallCheck(this, AppTable);
 
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(AppTable).apply(this, arguments));
+    return _possibleConstructorReturn(this, (AppTable.__proto__ || Object.getPrototypeOf(AppTable)).apply(this, arguments));
   }
 
   _createClass(AppTable, [{
@@ -31115,7 +31115,7 @@ var AppList = exports.AppList = function (_Component5) {
   function AppList(props) {
     _classCallCheck(this, AppList);
 
-    var _this5 = _possibleConstructorReturn(this, Object.getPrototypeOf(AppList).call(this, props));
+    var _this5 = _possibleConstructorReturn(this, (AppList.__proto__ || Object.getPrototypeOf(AppList)).call(this, props));
 
     _this5.state = {
       cached: [],

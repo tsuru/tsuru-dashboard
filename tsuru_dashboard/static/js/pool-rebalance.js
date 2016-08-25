@@ -30885,7 +30885,7 @@ var Tab = exports.Tab = function (_Component) {
   function Tab(props) {
     _classCallCheck(this, Tab);
 
-    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Tab).call(this, props));
+    var _this = _possibleConstructorReturn(this, (Tab.__proto__ || Object.getPrototypeOf(Tab)).call(this, props));
 
     _this.onClick = _this.onClick.bind(_this);
     return _this;
@@ -30929,7 +30929,7 @@ var Tabs = exports.Tabs = function (_Component2) {
   function Tabs(props) {
     _classCallCheck(this, Tabs);
 
-    var _this2 = _possibleConstructorReturn(this, Object.getPrototypeOf(Tabs).call(this, props));
+    var _this2 = _possibleConstructorReturn(this, (Tabs.__proto__ || Object.getPrototypeOf(Tabs)).call(this, props));
 
     _this2.state = {
       active: ""
@@ -30987,7 +30987,7 @@ var Select = exports.Select = function (_Component3) {
   function Select() {
     _classCallCheck(this, Select);
 
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(Select).apply(this, arguments));
+    return _possibleConstructorReturn(this, (Select.__proto__ || Object.getPrototypeOf(Select)).apply(this, arguments));
   }
 
   _createClass(Select, [{
@@ -31057,7 +31057,7 @@ var PoolRebalance = exports.PoolRebalance = function (_Component) {
   function PoolRebalance(props) {
     _classCallCheck(this, PoolRebalance);
 
-    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(PoolRebalance).call(this, props));
+    var _this = _possibleConstructorReturn(this, (PoolRebalance.__proto__ || Object.getPrototypeOf(PoolRebalance)).call(this, props));
 
     _this.state = {
       output: "",

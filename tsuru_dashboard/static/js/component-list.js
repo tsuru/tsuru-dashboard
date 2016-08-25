@@ -30853,7 +30853,7 @@ var ComponentList = exports.ComponentList = function (_React$Component) {
   function ComponentList(props) {
     _classCallCheck(this, ComponentList);
 
-    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ComponentList).call(this, props));
+    var _this = _possibleConstructorReturn(this, (ComponentList.__proto__ || Object.getPrototypeOf(ComponentList)).call(this, props));
 
     _this.state = {
       components: [],
@@ -30899,7 +30899,7 @@ var Component = exports.Component = function (_React$Component2) {
   function Component() {
     _classCallCheck(this, Component);
 
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(Component).apply(this, arguments));
+    return _possibleConstructorReturn(this, (Component.__proto__ || Object.getPrototypeOf(Component)).apply(this, arguments));
   }
 
   _createClass(Component, [{
@@ -30986,7 +30986,7 @@ var GraphContainer = exports.GraphContainer = function (_Component) {
   function GraphContainer(props) {
     _classCallCheck(this, GraphContainer);
 
-    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(GraphContainer).call(this, props));
+    var _this = _possibleConstructorReturn(this, (GraphContainer.__proto__ || Object.getPrototypeOf(GraphContainer)).call(this, props));
 
     _this.state = {
       model: {},
@@ -31093,7 +31093,7 @@ var Graph = exports.Graph = function (_Component2) {
   function Graph() {
     _classCallCheck(this, Graph);
 
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(Graph).apply(this, arguments));
+    return _possibleConstructorReturn(this, (Graph.__proto__ || Object.getPrototypeOf(Graph)).apply(this, arguments));
   }
 
   _createClass(Graph, [{
@@ -31159,7 +31159,7 @@ var Metrics = exports.Metrics = function (_Component3) {
   function Metrics(props) {
     _classCallCheck(this, Metrics);
 
-    var _this5 = _possibleConstructorReturn(this, Object.getPrototypeOf(Metrics).call(this, props));
+    var _this5 = _possibleConstructorReturn(this, (Metrics.__proto__ || Object.getPrototypeOf(Metrics)).call(this, props));
 
     _this5.state = {
       interval: _this5.props.interval,
@@ -31303,7 +31303,7 @@ var TimeRangeFilter = function (_Component4) {
   function TimeRangeFilter(props) {
     _classCallCheck(this, TimeRangeFilter);
 
-    var _this6 = _possibleConstructorReturn(this, Object.getPrototypeOf(TimeRangeFilter).call(this, props));
+    var _this6 = _possibleConstructorReturn(this, (TimeRangeFilter.__proto__ || Object.getPrototypeOf(TimeRangeFilter)).call(this, props));
 
     _this6.handleChange = _this6.handleChange.bind(_this6);
     return _this6;
@@ -31382,7 +31382,7 @@ var PeriodSelector = function (_Component5) {
   function PeriodSelector(props) {
     _classCallCheck(this, PeriodSelector);
 
-    var _this7 = _possibleConstructorReturn(this, Object.getPrototypeOf(PeriodSelector).call(this, props));
+    var _this7 = _possibleConstructorReturn(this, (PeriodSelector.__proto__ || Object.getPrototypeOf(PeriodSelector)).call(this, props));
 
     _this7.handleChange = _this7.handleChange.bind(_this7);
     return _this7;
@@ -31451,7 +31451,7 @@ var SizeSelector = function (_Component6) {
   function SizeSelector(props) {
     _classCallCheck(this, SizeSelector);
 
-    var _this8 = _possibleConstructorReturn(this, Object.getPrototypeOf(SizeSelector).call(this, props));
+    var _this8 = _possibleConstructorReturn(this, (SizeSelector.__proto__ || Object.getPrototypeOf(SizeSelector)).call(this, props));
 
     _this8.handleChange = _this8.handleChange.bind(_this8);
     return _this8;
@@ -31505,7 +31505,7 @@ var AutoRefresh = function (_Component7) {
   function AutoRefresh(props) {
     _classCallCheck(this, AutoRefresh);
 
-    var _this9 = _possibleConstructorReturn(this, Object.getPrototypeOf(AutoRefresh).call(this, props));
+    var _this9 = _possibleConstructorReturn(this, (AutoRefresh.__proto__ || Object.getPrototypeOf(AutoRefresh)).call(this, props));
 
     _this9.state = {
       checked: _this9.props.checked
@@ -31548,7 +31548,7 @@ var WebTransactionsMetrics = exports.WebTransactionsMetrics = function (_Compone
   function WebTransactionsMetrics() {
     _classCallCheck(this, WebTransactionsMetrics);
 
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(WebTransactionsMetrics).apply(this, arguments));
+    return _possibleConstructorReturn(this, (WebTransactionsMetrics.__proto__ || Object.getPrototypeOf(WebTransactionsMetrics)).apply(this, arguments));
   }
 
   _createClass(WebTransactionsMetrics, [{

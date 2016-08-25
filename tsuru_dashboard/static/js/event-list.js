@@ -21361,7 +21361,7 @@ var EventFilters = exports.EventFilters = function (_Component) {
   function EventFilters(props) {
     _classCallCheck(this, EventFilters);
 
-    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(EventFilters).call(this, props));
+    var _this = _possibleConstructorReturn(this, (EventFilters.__proto__ || Object.getPrototypeOf(EventFilters)).call(this, props));
 
     _this.state = { options: [] };
     return _this;
