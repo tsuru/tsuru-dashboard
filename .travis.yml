@@ -4,8 +4,8 @@ cache: pip
 python:
   - "2.7"
 before_install:
-  - nvm install 4.2
-  - nvm use 4.2
+  - nvm install 6.4.2
+  - nvm use 6.4.2
 script:
   - make test
 notifications:
