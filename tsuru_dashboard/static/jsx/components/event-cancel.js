@@ -6,6 +6,7 @@ export default class EventCancel extends Component {
     super(props);
 
     this.cancel = this.cancel.bind(this);
+    this.state = { enabled: false };
   }
 
   cancel() {
@@ -30,7 +31,11 @@ export default class EventCancel extends Component {
           <p><input type="text" ref="reason" /></p>
         </div>
         <div>
-          <button className="button" onClick={this.cancel}>
+          <button
+            className="button"
+            onClick={this.cancel}
+            disabled={!this.state.enabled}
+          >
             cancel
           </button>
         </div>
