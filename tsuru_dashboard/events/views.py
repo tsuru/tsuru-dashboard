@@ -132,10 +132,11 @@ class EventInfo(LoginRequiredView, TemplateView):
 
 class EventCancel(LoginRequiredView):
 
-    def cancel(self, uuid):
+    def cancel(self, uuid, reason):
         url = '{}/events/{}/cancel'.format(settings.TSURU_HOST, uuid)
-        requests.post(url, headers=self.authorization)
+        data = {"reason": reason}
+        requests.post(url, data=data, headers=self.authorization)
 
-    def get(self, *args, **kwargs):
+    def post(self, *args, **kwargs):
         uuid = kwargs["uuid"]
-        self.cancel(uuid)
+        self.cancel(uuid, self.request.POST.get("reason", ""))

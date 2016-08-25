@@ -187,7 +187,7 @@ class KindListViewTest(TestCase):
 
 class EventCancelViewTest(TestCase):
     def setUp(self):
-        self.request = RequestFactory().get("   ")
+        self.request = RequestFactory().post("/", {"reason": "myreason"})
         self.request.session = {"tsuru_token": "admin"}
 
     @httpretty.activate
@@ -201,3 +201,4 @@ class EventCancelViewTest(TestCase):
         request = httpretty.last_request()
         self.assertEqual("POST", request.method)
         self.assertEqual("/events/my-uuid/cancel", request.path)
+        self.assertEqual("reason=myreason", request.body)
