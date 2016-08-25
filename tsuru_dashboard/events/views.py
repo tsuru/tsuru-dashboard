@@ -7,7 +7,7 @@ import yaml
 from bson import json_util
 
 from django.views.generic import TemplateView
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 
 from pygments import highlight
 from pygments.lexers import YamlLexer
@@ -140,3 +140,4 @@ class EventCancel(LoginRequiredView):
     def post(self, *args, **kwargs):
         uuid = kwargs["uuid"]
         self.cancel(uuid, self.request.POST.get("reason", ""))
+        return HttpResponse()
