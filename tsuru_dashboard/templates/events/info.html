@@ -127,9 +127,6 @@ Dashboard > Events > {{ event.Kind.Name }} > <span class="active">{{ event.Uniqu
           {% if event.Running %}
           Running
           {% endif %}
-          {% if event.CancelInfo.Canceled %}
-          Canceled
-          {% endif %}
           {% if event.Error %}
           Error
           {% endif %}

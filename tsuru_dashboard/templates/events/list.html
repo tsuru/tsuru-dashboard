@@ -49,12 +49,9 @@
               {{ event.StartTime|timesince:event.EndTime }}
               {% endif %}
             </td>
-            <td class="{% if not event.Running and not event.CancelInfo.Canceled and not event.Error %}status-success{% endif %}{% if event.Running %}status-running{% endif %}{% if event.CancelInfo.Canceled %}status-canceled{% endif %}{% if event.Error %}status-error{% endif %}">
+            <td class="{% if not event.Running and not event.CancelInfo.Canceled and not event.Error %}status-success{% endif %}{% if event.Running %}status-running{% endif %}{% if event.Error %}status-error{% endif %}">
               {% if event.Running %}
               Running
-              {% endif %}
-              {% if event.CancelInfo.Canceled %}
-              Canceled
               {% endif %}
               {% if event.Error %}
               Error
