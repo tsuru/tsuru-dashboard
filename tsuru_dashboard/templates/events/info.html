@@ -103,7 +103,7 @@ span.status-error {
 
 {% block bar %}
 <div class="bar">
-Dashboard > Events > {{ event.Kind.Name }} > <span class="active">{{ event.UniqueID }}</span>
+Dashboard > Events > <span class="active">{{ event.Kind.Name }} / {{ event.Target.Value }}</span>
 
 {% if event.Cancelable and event.Running %}
 <button id="cancel-button">Cancel</button>
