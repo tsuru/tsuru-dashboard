@@ -103,11 +103,11 @@ span.status-error {
 
 {% block bar %}
 <div class="bar">
-Dashboard > Events > <span class="active">{{ event.Kind.Name }} / {{ event.Target.Value }}</span>
+  Dashboard > Events > <span class="active">{{ event.Kind.Name }} / {{ event.Target.Value }}</span>
 
-{% if event.Cancelable and event.Running %}
-<button id="cancel-button">Cancel</button>
-{% endif %}
+  {% if event.Cancelable and event.Running %}
+  <button id="cancel-button">Cancel</button>
+  {% endif %}
 </div>
 {% endblock %}
 
@@ -124,29 +124,33 @@ Dashboard > Events > <span class="active">{{ event.Kind.Name }} / {{ event.Targe
         <p>
           Status:
           <span class="{% if not event.Running and not event.CancelInfo.Canceled and not event.Error %}status-success{% endif %}{% if event.Running %}status-running{% endif %}{% if event.Error %}status-error{% endif %}">
-          {% if event.Running %}
-          Running
-          {% endif %}
-          {% if event.Error %}
-          Error
-          {% endif %}
-          {% if not event.Running and not event.CancelInfo.Canceled and not event.Error %}
-          Success
-          {% endif %}
-        </span>
-      </p>
+            {% if event.Running %}
+            Running
+            {% endif %}
+            {% if event.Error %}
+            Error
+            {% endif %}
+            {% if not event.Running and not event.CancelInfo.Canceled and not event.Error %}
+            Success
+            {% endif %}
+          </span>
+        </p>
         {% if event.Error %}
         <p><strong>Error message:</strong> {{ event.Error }}</p>
+        {% endif %}
+        {% if event.CancelInfo.Canceled %}
+        <p><strong>Event canceled by:</strong> {{ event.CancelInfo.Owner }}</p>
+        <p><strong>Reason:</strong> {{ event.CancelInfo.Reason }}</p>
         {% endif %}
         <p><strong>unique id:</strong> {{ event.UniqueID }}</p>
         <p><strong>kind:</strong> {{ event.Kind.Name }}</p>
         <p><strong>{{ event.Owner.Type }}:</strong> {{ event.Owner.Name }}</p>
         <p><strong>{{ event.Target.Type }}:</strong> {{ event.Target.Value }}</p>
         {% if event.StartTime %}
-          <p><strong>started at:</strong> {{ event.StartTime|string_to_date|date:" d-m-Y H:i:s " }}</p>
+        <p><strong>started at:</strong> {{ event.StartTime|string_to_date|date:" d-m-Y H:i:s " }}</p>
         {% endif %}
         {% if event.EndTime %}
-          <p><strong>finished at:</strong> {{ event.EndTime|string_to_date|date:" d-m-Y H:i:s " }}</p>
+        <p><strong>finished at:</strong> {{ event.EndTime|string_to_date|date:" d-m-Y H:i:s " }}</p>
         {% endif %}
         {% if event.StartCustomData.Kind %}
         <p><strong>Start Custom Data: </strong></p>
@@ -161,8 +165,8 @@ Dashboard > Events > <span class="active">{{ event.Kind.Name }} / {{ event.Targe
         {{ event.OtherCustomData.Data | safe }}
         {% endif %}
         {% if event.Log %}
-          <p><strong>Log:</strong></p>
-          <div><pre>{{ event.Log | escape }}</pre></div>
+        <p><strong>Log:</strong></p>
+        <div><pre>{{ event.Log | escape }}</pre></div>
         {% endif %}
       </div>
     </div>
