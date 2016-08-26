@@ -6,6 +6,8 @@ export default class EventCancel extends Component {
     super(props);
 
     this.cancel = this.cancel.bind(this);
+    this.onChange = this.onChange.bind(this);
+
     this.state = { enabled: false };
   }
 
@@ -20,6 +22,11 @@ export default class EventCancel extends Component {
     });
   }
 
+  onChange() {
+    console.log("aaaaa", this.refs.reason.value);
+    this.setState({ enabled: this.refs.reason.value.length > 0 });
+  }
+
   render() {
     return (
       <Modal title="cancel event" isOpen>
@@ -28,7 +35,9 @@ export default class EventCancel extends Component {
           This will cancel this event.</p>
 
           <p>Type the reason here to continue:</p>
-          <p><input type="text" ref="reason" /></p>
+          <p>
+            <input type="text" ref="reason" onChange={this.onChange} />
+          </p>
         </div>
         <div>
           <button

@@ -20917,6 +20917,9 @@ var EventCancel = function (_Component) {
     var _this = _possibleConstructorReturn(this, (EventCancel.__proto__ || Object.getPrototypeOf(EventCancel)).call(this, props));
 
     _this.cancel = _this.cancel.bind(_this);
+    _this.onChange = _this.onChange.bind(_this);
+
+    _this.state = { enabled: false };
     return _this;
   }
 
@@ -20931,6 +20934,12 @@ var EventCancel = function (_Component) {
           window.location = "/events/";
         }
       });
+    }
+  }, {
+    key: 'onChange',
+    value: function onChange() {
+      console.log("aaaaa", this.refs.reason.value);
+      this.setState({ enabled: this.refs.reason.value.length > 0 });
     }
   }, {
     key: 'render',
@@ -20954,7 +20963,7 @@ var EventCancel = function (_Component) {
           _react2.default.createElement(
             'p',
             null,
-            _react2.default.createElement('input', { type: 'text', ref: 'reason' })
+            _react2.default.createElement('input', { type: 'text', ref: 'reason', onChange: this.onChange })
           )
         ),
         _react2.default.createElement(
@@ -20962,7 +20971,11 @@ var EventCancel = function (_Component) {
           null,
           _react2.default.createElement(
             'button',
-            { className: 'button', onClick: this.cancel },
+            {
+              className: 'button',
+              onClick: this.cancel,
+              disabled: !this.state.enabled
+            },
             'cancel'
           )
         )
