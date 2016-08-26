@@ -4,7 +4,6 @@ import base64
 
 import json
 import yaml
-import time
 from bson import json_util
 
 from django.views.generic import TemplateView
