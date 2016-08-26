@@ -123,7 +123,7 @@ Dashboard > Events > <span class="active">{{ event.Kind.Name }} / {{ event.Targe
       <div class="content">
         <p>
           Status:
-          <span class="{% if not event.Running and not event.CancelInfo.Canceled and not event.Error %}status-success{% endif %}{% if event.Running %}status-running{% endif %}{% if event.CancelInfo.Canceled %}status-canceled{% endif %}{% if event.Error %}status-error{% endif %}">
+          <span class="{% if not event.Running and not event.CancelInfo.Canceled and not event.Error %}status-success{% endif %}{% if event.Running %}status-running{% endif %}{% if event.Error %}status-error{% endif %}">
           {% if event.Running %}
           Running
           {% endif %}
