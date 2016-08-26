@@ -20985,13 +20985,11 @@ var DeployPopin = exports.DeployPopin = function (_Component6) {
   }, {
     key: "readFile",
     value: function readFile(entry, callback) {
-      var _this8 = this;
-
       entry.file(function (file) {
         var reader = new FileReader();
 
         reader.onloadend = function () {
-          callback(entry.name, _this8.result);
+          callback(entry.name, reader.result);
         };
 
         reader.readAsBinaryString(file);
@@ -21005,7 +21003,7 @@ var DeployPopin = exports.DeployPopin = function (_Component6) {
   }, {
     key: "deploy",
     value: function deploy() {
-      var _this9 = this;
+      var _this8 = this;
 
       this.setState({ deploy: true, output: 'Wait until deploy is started.', disabled: true, files: [] });
 
@@ -21017,7 +21015,7 @@ var DeployPopin = exports.DeployPopin = function (_Component6) {
       var xhr = new XMLHttpRequest();
       xhr.open('POST', location.pathname, true);
       xhr.onprogress = function () {
-        _this9.setState({ output: xhr.responseText });
+        _this8.setState({ output: xhr.responseText });
       };
       xhr.onload = function () {
         setTimeout(function () {

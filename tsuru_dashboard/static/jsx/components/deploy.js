@@ -150,7 +150,7 @@ export class DeployPopin extends Component {
       var reader = new FileReader();
 
       reader.onloadend = () => {
-        callback(entry.name, this.result);
+        callback(entry.name, reader.result);
       };
 
       reader.readAsBinaryString(file);
