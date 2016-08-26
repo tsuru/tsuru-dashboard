@@ -197,3 +197,8 @@ select {
 .button:hover {
 	background-color: #2445b1;
 }
+
+.button[disabled] {
+	cursor: not-allowed;
+	background-color: #dddddd;
+}
