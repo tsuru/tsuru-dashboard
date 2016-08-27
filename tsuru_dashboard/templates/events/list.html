@@ -6,6 +6,17 @@
 <link rel="stylesheet" href="{% static "css/pages/event-list.css" %}">
 {% endblock %}
 
+{% block bar %}
+<div class="bar">
+  <a href="/">dashboard</a> <span class="arrow">></span>
+  events
+
+  {% if event.Cancelable and event.Running %}
+  <button id="cancel-button">Cancel</button>
+  {% endif %}
+</div>
+{% endblock %}
+
 {% block header %}
 <h1>Events</h1>
 {% endblock %}
