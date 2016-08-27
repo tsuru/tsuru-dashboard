@@ -155,14 +155,21 @@ select {
 	box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
 	line-height: 72px;
 	padding-left: 23px;
-	font-size: 13px;
-	color: #999;
+	font-size: 14px;
+	letter-spacing: -0.2px;
+	color: #666;
 }
 
-.bar .active {
-	font-size: 13px;
-	line-height: 1.2;
-	color: #0669de;
+.bar a {
+	color: #0769de;
+}
+
+.bar a:hover {
+	color: #2445b1;
+}
+
+.bar span.arrow {
+	padding: 0 16px;
 }
 
 .bar button {
