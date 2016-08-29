@@ -14,6 +14,14 @@
 <h1>Admin/Nodes{{ key }}</h1>
 {% endblock %}
 
+{% block bar %}
+<div class="bar">
+  <a href="/">dashboard</a> <span class="arrow">></span>
+  <a href="{% url 'pool-list' %}">hosts</a> <span class="arrow">></span>
+  {{ pool }}
+</div>
+{% endblock %}
+
 {% block content %}
 <div class="container-fluid">
   <div class="col-md-12">
