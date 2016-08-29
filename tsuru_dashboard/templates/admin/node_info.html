@@ -11,6 +11,14 @@
 {% include "sidebar.html" with active="docker" %}
 {% endblock %}
 
+{% block bar %}
+<div class="bar">
+  <a href="/">dashboard</a> <span class="arrow">></span>
+  <a href="{% url 'pool-list' %}">hosts</a> <span class="arrow">></span>
+	node info
+</div>
+{% endblock %}
+
 {% block content %}
 <div class="container-fluid">
 	<div class="row">
