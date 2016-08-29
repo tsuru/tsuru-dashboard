@@ -8,6 +8,14 @@
 <h1>Add service instance for {{ service.name }}</h1>
 {% endblock %}
 
+{% block bar %}
+<div class="bar">
+  <a href="/">dashboard</a> <span class="arrow">></span>
+  <a href="{% url 'service-list' %}">services</a> <span class="arrow">></span>
+	{{ service.name }}
+</div>
+{% endblock %}
+
 {% block content %}
 <div class="container-fluid">
 	<div class="row">
