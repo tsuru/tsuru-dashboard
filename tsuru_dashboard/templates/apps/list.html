@@ -12,6 +12,13 @@
 {% include "sidebar.html" with active="apps" %}
 {% endblock %}
 
+{% block bar %}
+<div class="bar">
+  <a href="/">dashboard</a> <span class="arrow">></span>
+	apps
+</div>
+{% endblock %}
+
 {% block header %}
 <h1>Apps</h1>
 {% endblock %}
