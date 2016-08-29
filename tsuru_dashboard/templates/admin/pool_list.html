@@ -15,6 +15,13 @@ table td, table th {
 {% include "sidebar.html" with active="docker" %}
 {% endblock %}
 
+{% block bar %}
+<div class="bar">
+  <a href="/">dashboard</a> <span class="arrow">></span>
+  hosts
+</div>
+{% endblock %}
+
 {% block header %}
 <h1>Admin/Nodes</h1>
 {% endblock %}
