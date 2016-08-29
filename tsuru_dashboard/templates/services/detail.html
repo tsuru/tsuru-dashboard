@@ -14,6 +14,13 @@
 <h1>{{ instance.Name }}</h1>
 {% endblock %}
 
+{% block bar %}
+<div class="bar">
+  <a href="/">dashboard</a> <span class="arrow">></span>
+  <a href="{% url 'service-list' %}">services</a> <span class="arrow">></span>
+</div>
+{% endblock %}
+
 {% block content %}
 <div class="container-fluid">
 	<div class="row">
