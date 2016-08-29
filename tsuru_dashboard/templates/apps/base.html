@@ -9,6 +9,14 @@
 {% include "sidebar.html" with active="apps" %}
 {% endblock %}
 
+{% block bar %}
+<div class="bar">
+  <a href="/">dashboard</a> <span class="arrow">></span>
+  <a href="{% url 'list-app' %}">apps</a> <span class="arrow">></span>
+  {{ app.name }}
+</div>
+{% endblock %}
+
 {% block header %}
 <h1>{{ app.name }}</h1>
 - <a href="http://{{ app.ip }}" target="_blank">http://{{ app.ip }}</a>
