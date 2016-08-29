@@ -8,6 +8,13 @@
 <h1>Services</h1>
 {% endblock %}
 
+{% block bar %}
+<div class="bar">
+  <a href="/">dashboard</a> <span class="arrow">></span>
+  services
+</div>
+{% endblock %}
+
 {% block content %}
 <div class="container-fluid">
   {% for service in services %}
