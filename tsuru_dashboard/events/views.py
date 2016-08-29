@@ -4,7 +4,6 @@ import base64
 
 import json
 import yaml
-from bson import json_util
 
 from django.views.generic import TemplateView
 from django.http import JsonResponse, HttpResponse
@@ -90,7 +89,7 @@ class ListEvent(LoginRequiredView, TemplateView):
 def event_serialization_default(obj):
     if hasattr(obj, 'isoformat'):
         return obj.isoformat()
-    return json_util.default
+    return None
 
 
 class EventInfo(LoginRequiredView, TemplateView):
@@ -113,8 +112,7 @@ class EventInfo(LoginRequiredView, TemplateView):
         for field in fields:
             if event.get(field) and event[field].get("Data"):
                 data = self.decode_bson(event[field])
-                data = json.loads(json.dumps(
-                    data, default=event_serialization_default))
+                data = json.loads(json.dumps(data, default=event_serialization_default))
                 data = yaml.safe_dump(data, default_flow_style=False, default_style='')
                 data = highlight(data, YamlLexer(), HtmlFormatter())
                 event[field]["Data"] = data
