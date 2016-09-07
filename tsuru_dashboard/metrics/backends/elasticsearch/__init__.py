@@ -429,20 +429,15 @@ class ElasticSearch(object):
 
 class AppBackend(ElasticSearch):
     def __init__(self, app, token, process_name=None, date_range=None):
-        headers = {'authorization': token}
-        url = "{}/apps/{}/metric/envs".format(settings.TSURU_HOST, app["name"])
-        response = requests.get(url, headers=headers)
-
+        envs = base.get_envs_from_api(app, token)
         es_query = AppFilter(app=app["name"], process_name=process_name, date_range=date_range).query()
 
-        if response.status_code == 200:
-            data = response.json()
-            if "METRICS_ELASTICSEARCH_HOST" in data:
-                return super(AppBackend, self).__init__(
-                    url=data["METRICS_ELASTICSEARCH_HOST"],
-                    query=es_query,
-                    date_range=date_range
-                )
+        if envs and "METRICS_ELASTICSEARCH_HOST" in envs:
+            return super(AppBackend, self).__init__(
+                url=envs["METRICS_ELASTICSEARCH_HOST"],
+                query=es_query,
+                date_range=date_range
+            )
 
         if "envs" in app and "ELASTICSEARCH_HOST" in app["envs"]:
             return super(AppBackend, self).__init__(
