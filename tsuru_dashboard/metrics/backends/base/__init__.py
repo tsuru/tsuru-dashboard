@@ -1,0 +1,2 @@
+class MetricNotEnabled(Exception):
+    pass

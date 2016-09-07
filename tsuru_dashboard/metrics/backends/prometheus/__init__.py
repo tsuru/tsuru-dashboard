@@ -1,10 +1,7 @@
 from tsuru_dashboard import settings
+from tsuru_dashboard.metrics.backends import base
 
 import requests
-
-
-class MetricNotEnabled(Exception):
-    pass
 
 
 class Prometheus(object):
@@ -35,4 +32,4 @@ class AppBackend(Prometheus):
                     query='name=~"%s.*"' % app["name"]
                 )
 
-        raise MetricNotEnabled
+        raise base.MetricNotEnabled

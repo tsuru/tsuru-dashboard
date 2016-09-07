@@ -1,4 +1,5 @@
 from tsuru_dashboard import settings
+from tsuru_dashboard.metrics.backends import base
 
 import requests
 import json
@@ -426,10 +427,6 @@ class ElasticSearch(object):
         }
 
 
-class MetricNotEnabled(Exception):
-    pass
-
-
 class AppBackend(ElasticSearch):
     def __init__(self, app, token, process_name=None, date_range=None):
         headers = {'authorization': token}
@@ -454,7 +451,7 @@ class AppBackend(ElasticSearch):
                 date_range=date_range
             )
 
-        raise MetricNotEnabled
+        raise base.MetricNotEnabled
 
 
 class TsuruMetricsBackend(ElasticSearch):
