@@ -1,5 +1,5 @@
 from django.test import TestCase
-from tsuru_dashboard.metrics.backend import AppFilter, ComponentFilter, NodeFilter
+from tsuru_dashboard.metrics.backends.elasticsearch import AppFilter, ComponentFilter, NodeFilter
 
 
 class ElasticSearchFilterTest(TestCase):

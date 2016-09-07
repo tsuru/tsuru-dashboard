@@ -1,5 +1,5 @@
 from django.test import TestCase
-from tsuru_dashboard.metrics.backend import ElasticSearch, AppFilter, NET_AGGREGATION
+from tsuru_dashboard.metrics.backends.elasticsearch import ElasticSearch, AppFilter, NET_AGGREGATION
 from mock import patch, Mock
 import datetime
 import json

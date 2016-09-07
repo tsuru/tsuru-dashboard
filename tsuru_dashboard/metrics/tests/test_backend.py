@@ -1,7 +1,7 @@
 from django.test import TestCase
-from tsuru_dashboard.metrics.backend import AppBackend, MetricNotEnabled
-from tsuru_dashboard.metrics.backend import ElasticSearch, AppFilter, TsuruMetricsBackend, NodeMetricsBackend
-from tsuru_dashboard.metrics.backend import NET_AGGREGATION, NodesMetricsBackend
+from tsuru_dashboard.metrics.backends.elasticsearch import AppBackend, MetricNotEnabled
+from tsuru_dashboard.metrics.backends.elasticsearch import ElasticSearch, AppFilter, TsuruMetricsBackend, NodeMetricsBackend
+from tsuru_dashboard.metrics.backends.elasticsearch import NET_AGGREGATION, NodesMetricsBackend
 from mock import patch, Mock
 import datetime
 import json

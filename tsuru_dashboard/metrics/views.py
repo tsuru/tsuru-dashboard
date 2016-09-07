@@ -2,7 +2,7 @@ from django.http import HttpResponse, HttpResponseBadRequest
 
 from tsuru_dashboard import settings
 from tsuru_dashboard.auth.views import LoginRequiredView
-from .backend import AppBackend, TsuruMetricsBackend, ComponentFilter, NodeMetricsBackend, NodesMetricsBackend
+from .backends.elasticsearch import AppBackend, TsuruMetricsBackend, ComponentFilter, NodeMetricsBackend, NodesMetricsBackend
 import json
 import requests
 
