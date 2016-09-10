@@ -1,8 +1,9 @@
 from django.test import TestCase
+
 from tsuru_dashboard.metrics.backends.elasticsearch import AppBackend
 from tsuru_dashboard.metrics.backends.elasticsearch import ElasticSearch, AppFilter, TsuruMetricsBackend, NodeMetricsBackend
 from tsuru_dashboard.metrics.backends.elasticsearch import NET_AGGREGATION, NodesMetricsBackend
-from tsuru_dashboard.metrics.backends import base
+
 from mock import patch, Mock
 import datetime
 import json
@@ -21,7 +22,7 @@ class AppBackendTest(TestCase):
 
         app = {"name": "appname", "units": [{"ProcessName": "web"}]}
 
-        backend = AppBackend(app, 'token')
+        backend = AppBackend(app, url="http://easearch.com")
         self.assertIsInstance(backend, ElasticSearch)
 
     @patch("requests.get")
@@ -32,14 +33,6 @@ class AppBackendTest(TestCase):
 
         backend = AppBackend(app, 'token')
         self.assertIsInstance(backend, ElasticSearch)
-
-    @patch("requests.get")
-    def test_without_metrics(self, get_mock):
-        get_mock.return_value = Mock(status_code=404)
-        app = {"name": "appname"}
-
-        with self.assertRaises(base.MetricNotEnabled):
-            AppBackend(app, 'token')
 
 
 class TsuruMetricsBackendTest(TestCase):

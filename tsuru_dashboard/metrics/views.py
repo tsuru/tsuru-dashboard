@@ -44,7 +44,7 @@ class AppMetric(Metric):
 
     def get_metrics_backend(self, metric, target, date_range, token):
         process_name = self.request.GET.get("process_name")
-        return get_app_backend(target, token, date_range=date_range, process_name=process_name)
+        return get_app_backend(app_name=target, token=token, date_range=date_range, process_name=process_name)
 
 
 class ComponentMetric(Metric):

@@ -1,5 +1,6 @@
 from tsuru_dashboard import settings
 from tsuru_dashboard.metrics.backends.elasticsearch import AppBackend
+from tsuru_dashboard.metrics.backends import base
 
 import requests
 
@@ -23,5 +24,14 @@ def get_envs(app_name, token):
 
 def get_app_backend(app_name, token, **kwargs):
     app = get_app(app_name, token)
-    app["envs"] = get_envs(app_name, token)
-    return AppBackend(app=app, token=token, **kwargs)
+    envs = base.get_envs_from_api(app, token)
+    url = ""
+
+    if envs and "METRICS_ELASTICSEARCH_HOST" in envs:
+        url = envs["METRICS_ELASTICSEARCH_HOST"]
+    else:
+        app["envs"] = get_envs(app_name, token)
+        if "envs" in app and "ELASTICSEARCH_HOST" in app["envs"]:
+            url = app["envs"]["ELASTICSEARCH_HOST"]
+
+    return AppBackend(app=app, url=url, **kwargs)

@@ -44,15 +44,15 @@ class AppMetricViewTest(TestCase):
         headers = {"authorization": "token"}
         get_mock.assert_called_with(url, headers=headers)
 
-    @patch("requests.post")
+    @patch("tsuru_dashboard.metrics.backends.get_envs")
+    @patch("tsuru_dashboard.metrics.backends.get_app")
     @patch("requests.get")
+    @patch("requests.post")
     @patch("tsuru_dashboard.auth.views.token_is_valid")
-    def test_get_app_metric(self, token_mock, get_mock, post_mock):
-        response_mock = Mock(status_code=200)
-        response_mock.json.side_effect = [
-            {"name": "app_name"}, {}, {"METRICS_ELASTICSEARCH_HOST": "http://easearch.com"}
-        ]
-        get_mock.return_value = response_mock
+    def test_get_app_metric(self, token_mock, get_mock, post_mock, get_app, get_envs):
+        get_app.return_value = {"name": "app_name"}
+        get_envs.return_value = {"METRICS_ELASTICSEARCH_HOST": "http://easearch.com"}
+
         token_mock.return_value = True
         view = views.AppMetric.as_view()
 
