@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.test.client import RequestFactory
 from tsuru_dashboard import settings
 from tsuru_dashboard.metrics import views
-from mock import patch, Mock
+from mock import patch
 import httpretty
 import json
 
@@ -12,37 +12,6 @@ class AppMetricViewTest(TestCase):
         request = RequestFactory().get("/ble/" + string_params)
         request.session = {"tsuru_token": "token"}
         return request
-
-    @patch("requests.get")
-    def test_get_app(self, get_mock):
-        response_mock = Mock()
-        response_mock.json.return_value = {}
-        get_mock.return_value = response_mock
-
-        view = views.AppMetric()
-        view.request = self.request()
-        app = view.get_app("app_name")
-
-        self.assertDictEqual(app, {})
-        url = "{}/apps/app_name".format(settings.TSURU_HOST)
-        headers = {"authorization": "token"}
-        get_mock.assert_called_with(url, headers=headers)
-
-    @patch("requests.get")
-    def test_get_envs(self, get_mock):
-        env_mock = [{"name": "VAR", "value": "value"}]
-        response_mock = Mock()
-        response_mock.json.return_value = env_mock
-        get_mock.return_value = response_mock
-
-        view = views.AppMetric()
-        view.request = self.request()
-        envs = view.get_envs(self.request(), "app_name")
-
-        self.assertDictEqual(envs, {"VAR": "value"})
-        url = "{}/apps/app_name/env".format(settings.TSURU_HOST)
-        headers = {"authorization": "token"}
-        get_mock.assert_called_with(url, headers=headers)
 
     @patch("tsuru_dashboard.metrics.backends.get_envs")
     @patch("tsuru_dashboard.metrics.backends.get_app")

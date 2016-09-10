@@ -28,20 +28,6 @@ class Metric(LoginRequiredView):
 
 
 class AppMetric(Metric):
-    def get_app(self, app_name):
-        url = '{}/apps/{}'.format(settings.TSURU_HOST, app_name)
-        return requests.get(url, headers=self.authorization).json()
-
-    def get_envs(self, request, app_name):
-        url = '{}/apps/{}/env'.format(settings.TSURU_HOST, app_name)
-        data = requests.get(url, headers=self.authorization).json()
-        envs = {}
-
-        for env in data:
-            envs[env['name']] = env['value']
-
-        return envs
-
     def get_metrics_backend(self, metric, target, date_range, token):
         process_name = self.request.GET.get("process_name")
         return get_app_backend(app_name=target, token=token, date_range=date_range, process_name=process_name)
