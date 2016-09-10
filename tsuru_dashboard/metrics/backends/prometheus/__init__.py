@@ -1,5 +1,3 @@
-from tsuru_dashboard.metrics.backends import base
-
 import requests
 
 
@@ -18,13 +16,8 @@ class Prometheus(object):
 
 
 class AppBackend(Prometheus):
-    def __init__(self, app, token, process_name=None, date_range=None):
-        envs = base.get_envs_from_api(app, token)
-
-        if envs and "METRICS_PROMETHEUS_HOST" in envs:
-            return super(AppBackend, self).__init__(
-                url=envs["METRICS_PROMETHEUS_HOST"],
-                query='name=~"%s.*"' % app["name"]
-            )
-
-        raise base.MetricNotEnabled
+    def __init__(self, app, url, process_name=None, date_range=None):
+        return super(AppBackend, self).__init__(
+            url=url,
+            query='name=~"%s.*"' % app["name"]
+        )

@@ -27,9 +27,13 @@ def get_app_backend(app_name, token, **kwargs):
     envs = base.get_envs_from_api(app, token)
     url = ""
 
+    if envs and "METRICS_PROMETHEUS_HOST" in envs:
+        url = envs["METRICS_PROMETHEUS_HOST"]
+
     if envs and "METRICS_ELASTICSEARCH_HOST" in envs:
         url = envs["METRICS_ELASTICSEARCH_HOST"]
-    else:
+
+    if not url:
         app["envs"] = get_envs(app_name, token)
         if "envs" in app and "ELASTICSEARCH_HOST" in app["envs"]:
             url = app["envs"]["ELASTICSEARCH_HOST"]
