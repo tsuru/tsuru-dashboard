@@ -2,7 +2,8 @@ from django.http import HttpResponse, HttpResponseBadRequest
 
 from tsuru_dashboard import settings
 from tsuru_dashboard.auth.views import LoginRequiredView
-from .backends.elasticsearch import AppBackend, TsuruMetricsBackend, ComponentFilter, NodeMetricsBackend, NodesMetricsBackend
+from .backends.elasticsearch import TsuruMetricsBackend, ComponentFilter, NodeMetricsBackend, NodesMetricsBackend
+from .backends import get_app_backend
 import json
 import requests
 
@@ -43,9 +44,7 @@ class AppMetric(Metric):
 
     def get_metrics_backend(self, metric, target, date_range, token):
         process_name = self.request.GET.get("process_name")
-        app = self.get_app(target)
-        app["envs"] = self.get_envs(self.request, target)
-        return AppBackend(app=app, token=token, date_range=date_range, process_name=process_name)
+        return get_app_backend(target, token, date_range=date_range, process_name=process_name)
 
 
 class ComponentMetric(Metric):
