@@ -15,8 +15,16 @@ class Prometheus(object):
         return result.json()
 
     def mem_max(self, interval=None):
+        data = {}
         query = "query=avg(container_memory_usage_bytes{%s})/1024/1024&" % self.query
-        return self.get_metrics(query)
+        data["avg"] = self.get_metrics(query)
+
+        query = "query=max(container_memory_usage_bytes{%s})/1024/1024&" % self.query
+        data["max"] = self.get_metrics(query)
+
+        query = "query=min(container_memory_usage_bytes{%s})/1024/1024&" % self.query
+        data["min"] = self.get_metrics(query)
+        return {"data": data}
 
 
 class AppBackend(Prometheus):
