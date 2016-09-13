@@ -1,5 +1,5 @@
 from tsuru_dashboard import settings
-from tsuru_dashboard.metrics.backends.elasticsearch import AppBackend
+from tsuru_dashboard.metrics.backends import elasticsearch, prometheus
 from tsuru_dashboard.metrics.backends import base
 
 import requests
@@ -29,13 +29,15 @@ def get_app_backend(app_name, token, **kwargs):
 
     if envs and "METRICS_PROMETHEUS_HOST" in envs:
         url = envs["METRICS_PROMETHEUS_HOST"]
+        return prometheus.AppBackend(app=app, url=url, **kwargs)
 
     if envs and "METRICS_ELASTICSEARCH_HOST" in envs:
         url = envs["METRICS_ELASTICSEARCH_HOST"]
+        return elasticsearch.AppBackend(app=app, url=url, **kwargs)
 
     if not url:
         app["envs"] = get_envs(app_name, token)
         if "envs" in app and "ELASTICSEARCH_HOST" in app["envs"]:
             url = app["envs"]["ELASTICSEARCH_HOST"]
 
-    return AppBackend(app=app, url=url, **kwargs)
+    return elasticsearch.AppBackend(app=app, url=url, **kwargs)

@@ -12,7 +12,7 @@ class Prometheus(object):
         url += 'query=avg(container_memory_usage_bytes{%s})/1024/1024&' % self.query
         url += "start=1473209927.011&end=1473213527.011&step=14"
         result = requests.get(url)
-        return result.json()
+        return result.json()['data']['result'][0]['values']
 
     def mem_max(self, interval=None):
         data = {"min": 0, "max": 1024}
