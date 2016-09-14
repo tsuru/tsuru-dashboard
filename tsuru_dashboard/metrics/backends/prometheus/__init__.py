@@ -9,7 +9,7 @@ class Prometheus(object):
     def get_metrics(self, query):
         url = self.url
         url += "/api/v1/query_range?"
-        url += 'query=avg(container_memory_usage_bytes{%s})/1024/1024&' % self.query
+        url += query
         url += "start=1473209927.011&end=1473213527.011&step=14"
         result = requests.get(url)
         return result.json()['data']['result'][0]['values']
@@ -23,6 +23,18 @@ class Prometheus(object):
         data["max"] = self.get_metrics(query)
 
         query = "query=min(container_memory_usage_bytes{%s})/1024/1024&" % self.query
+        data["min"] = self.get_metrics(query)
+        return {"data": data}
+
+    def cpu_max(self, interval=None):
+        data = {"min": 0, "max": 1024}
+        query = "query=avg(rate(container_cpu_usage_seconds_total{%s}[2m]) * 100)" % self.query
+        data["avg"] = self.get_metrics(query)
+
+        query = "query=max(rate(container_cpu_usage_seconds_total{%s}[2m]) * 100)" % self.query
+        data["max"] = self.get_metrics(query)
+
+        query = "query=min(rate(container_cpu_usage_seconds_total{%s}[2m]) * 100)" % self.query
         data["min"] = self.get_metrics(query)
         return {"data": data}
 
