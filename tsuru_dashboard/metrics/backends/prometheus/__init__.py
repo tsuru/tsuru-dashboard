@@ -1,10 +1,29 @@
 import requests
 
+from datetime import datetime, timedelta
+
 
 class Prometheus(object):
-    def __init__(self, url, query):
+    def __init__(self, url, query, date_range=None):
         self.url = url
         self.query = query
+        self.date_range = date_range
+
+    @property
+    def delta(self):
+        if not self.date_range:
+            return {"hours": 1}
+
+        if "h" in self.date_range:
+            return {"hours": int(self.date_range.replace("h", ""))}
+
+    @property
+    def start(self):
+        return self.end - timedelta(**self.delta)
+
+    @property
+    def end(self):
+        return datetime.now()
 
     def get_metrics(self, query):
         url = self.url
