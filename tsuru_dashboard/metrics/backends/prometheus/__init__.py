@@ -1,6 +1,7 @@
 import requests
 
 from datetime import datetime, timedelta
+from time import mktime
 
 
 class Prometheus(object):
@@ -29,7 +30,9 @@ class Prometheus(object):
         url = self.url
         url += "/api/v1/query_range?"
         url += query
-        url += "start=1473209927.011&end=1473213527.011&step=14"
+        url += "start={}".format(mktime(self.start.timetuple()))
+        url += "&end={}".format(mktime(self.end.timetuple()))
+        url += "&step=14"
         result = requests.get(url)
         return result.json()['data']['result'][0]['values']
 
@@ -68,5 +71,6 @@ class AppBackend(Prometheus):
     def __init__(self, app, url, process_name=None, date_range=None):
         return super(AppBackend, self).__init__(
             url=url,
-            query='name=~"%s.*"' % app["name"]
+            query='name=~"%s.*"' % app["name"],
+            date_range=date_range,
         )
