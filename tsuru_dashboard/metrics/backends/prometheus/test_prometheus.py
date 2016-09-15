@@ -46,3 +46,21 @@ class PrometheusTest(TestCase):
         )
         self.assertEqual(backend.start, datetime.now() - timedelta(hours=3))
         self.assertEqual(backend.end, datetime.now())
+
+    @freeze_time("2012-04-01 16:32:15", tz_offset=0)
+    def test_date_range_by_days(self):
+        backend = Prometheus(
+            "http://url.com",
+            query="key=value",
+            date_range="1d",
+        )
+        self.assertEqual(backend.start, datetime.now() - timedelta(days=1))
+        self.assertEqual(backend.end, datetime.now())
+
+        backend = Prometheus(
+            "http://url.com",
+            query="key=value",
+            date_range="3d",
+        )
+        self.assertEqual(backend.start, datetime.now() - timedelta(days=3))
+        self.assertEqual(backend.end, datetime.now())
