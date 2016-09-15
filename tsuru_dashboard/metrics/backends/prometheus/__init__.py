@@ -21,6 +21,9 @@ class Prometheus(object):
         if "d" in self.date_range:
             return {"days": int(self.date_range.replace("d", ""))}
 
+        if "w" in self.date_range:
+            return {"days": int(self.date_range.replace("w", ""))*7}
+
     @property
     def start(self):
         return self.end - timedelta(**self.delta)
