@@ -32,13 +32,17 @@ class Prometheus(object):
     def end(self):
         return datetime.now()
 
+    @property
+    def resolution(self):
+        return (self.end - self.start).total_seconds() / 250
+
     def get_metrics(self, query):
         url = self.url
         url += "/api/v1/query_range?"
         url += query
         url += "start={}".format(mktime(self.start.timetuple()))
         url += "&end={}".format(mktime(self.end.timetuple()))
-        url += "&step=14"
+        url += "&step={}".format(self.resolution)
         result = requests.get(url)
         return result.json()['data']['result'][0]['values']
 

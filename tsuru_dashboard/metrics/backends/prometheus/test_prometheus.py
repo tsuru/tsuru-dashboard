@@ -17,7 +17,7 @@ class PrometheusTest(TestCase):
         expected = self.backend.url
         expected += "/api/v1/query_range?"
         expected += "query=min(container_memory_usage_bytes{key=value})/1024/1024"
-        expected += "&start=1333305135.0&end=1333308735.0&step=14"
+        expected += "&start=1333305135.0&end=1333308735.0&step={}".format(self.backend.resolution)
         get_mock.assert_called_with(expected)
 
     @freeze_time("2012-04-01 16:32:15", tz_offset=0)
@@ -82,3 +82,13 @@ class PrometheusTest(TestCase):
         )
         self.assertEqual(backend.start, datetime.now() - timedelta(days=14))
         self.assertEqual(backend.end, datetime.now())
+
+    @freeze_time("2012-04-01 16:32:15", tz_offset=0)
+    def test_resolution(self):
+        backend = Prometheus(
+            "http://url.com",
+            query="key=value",
+            date_range="1w",
+        )
+        resolution = (backend.end - backend.start).total_seconds() / 250
+        self.assertEqual(backend.resolution, resolution)
