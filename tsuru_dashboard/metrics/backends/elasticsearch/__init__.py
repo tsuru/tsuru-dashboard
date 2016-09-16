@@ -437,9 +437,11 @@ class AppBackend(ElasticSearch):
 
 
 class TsuruMetricsBackend(ElasticSearch):
-    def __init__(self, filter, date_range=None):
+    def __init__(self, filter, url=None, date_range=None):
+        if not url:
+            url = settings.ELASTICSEARCH_HOST
         return super(TsuruMetricsBackend, self).__init__(
-            url=settings.ELASTICSEARCH_HOST, query=filter.query(), date_range=date_range)
+            url=url, query=filter.query(), date_range=date_range)
 
 
 class NodeMetricsBackend(TsuruMetricsBackend):

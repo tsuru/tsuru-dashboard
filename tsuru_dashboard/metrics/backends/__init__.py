@@ -41,3 +41,16 @@ def get_app_backend(app_name, token, **kwargs):
             url = app["envs"]["ELASTICSEARCH_HOST"]
 
     return elasticsearch.AppBackend(app=app, url=url, **kwargs)
+
+
+def get_tsuru_backend(component, token, **kwargs):
+    date_range = kwargs["date_range"]
+    component_filter = elasticsearch.ComponentFilter(
+        component=component,
+        date_range=date_range
+    )
+    return elasticsearch.TsuruMetricsBackend(
+        url=settings.ELASTICSEARCH_HOST,
+        filter=component_filter,
+        date_range=date_range,
+    )

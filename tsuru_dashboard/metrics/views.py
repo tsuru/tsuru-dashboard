@@ -2,8 +2,8 @@ from django.http import HttpResponse, HttpResponseBadRequest
 
 from tsuru_dashboard import settings
 from tsuru_dashboard.auth.views import LoginRequiredView
-from .backends.elasticsearch import TsuruMetricsBackend, ComponentFilter, NodeMetricsBackend, NodesMetricsBackend
-from .backends import get_app_backend
+from .backends.elasticsearch import NodeMetricsBackend, NodesMetricsBackend
+from .backends import get_app_backend, get_tsuru_backend
 import json
 import requests
 
@@ -35,8 +35,7 @@ class AppMetric(Metric):
 
 class ComponentMetric(Metric):
     def get_metrics_backend(self, metric, target, date_range, token):
-        return TsuruMetricsBackend(filter=ComponentFilter(
-            component=target, date_range=date_range), date_range=date_range)
+        return get_tsuru_backend(component=target, token=token, date_range=date_range)
 
 
 class NodeMetric(Metric):
