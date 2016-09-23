@@ -16,20 +16,10 @@ class ElasticSearchFilterTest(TestCase):
                         }
                     },
                     {
-                        "bool": {
-                            "should": [
-                                {"term": {"app": "app_name"}},
-                                {"term": {"app.raw": "app_name"}},
-                            ]
-                        },
+                        "term": {"app.raw": "app_name"}
                     },
                     {
-                        "bool": {
-                            "should": [
-                                {"term": {"process": "process_name"}},
-                                {"term": {"process.raw": "process_name"}}
-                            ]
-                        }
+                        "term": {"process.raw": "process_name"}
                     }
                 ]
             }
@@ -50,12 +40,7 @@ class ElasticSearchFilterTest(TestCase):
                         }
                     },
                     {
-                        "bool": {
-                            "should": [
-                                {"term": {"container": "comp_name"}},
-                                {"term": {"container.raw": "comp_name"}},
-                            ]
-                        },
+                        "term": {"container.raw": "comp_name"}
                     },
                 ]
             }

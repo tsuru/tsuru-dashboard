@@ -83,7 +83,8 @@ class ElasticSearchFilter(object):
                 ]
             }
         }
-        bool_filter["bool"]["must"].append({"bool": {"should": list(filters)}})
+        if list(filters):
+            bool_filter["bool"]["must"].append({"bool": {"should": list(filters)}})
 
         return bool_filter
 
@@ -103,8 +104,9 @@ class ComponentFilter(ElasticSearchFilter):
         self.filter = self.component_filter(component)
 
     def component_filter(self, component):
-        return self.metric_filter(
-            self.term_filter("container", component), self.term_filter("container.raw", component))
+        f = self.metric_filter()
+        f["bool"]["must"].append(self.term_filter("container.raw", component))
+        return f
 
 
 class AppFilter(ElasticSearchFilter):
@@ -113,17 +115,11 @@ class AppFilter(ElasticSearchFilter):
         self.filter = self.app_filter(app, process_name)
 
     def app_filter(self, app, process_name):
-        f = self.metric_filter(self.term_filter("app", app), self.term_filter("app.raw", app))
+        f = self.metric_filter()
+        f["bool"]["must"].append(self.term_filter("app.raw", app))
 
         if process_name:
-            p = {
-                "bool": {
-                    "should": [
-                        self.term_filter("process", process_name),
-                        self.term_filter("process.raw", process_name)
-                    ]
-                }
-            }
+            p = self.term_filter("process.raw", process_name)
             f["bool"]["must"].append(p)
         return f
 
