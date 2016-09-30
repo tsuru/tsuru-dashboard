@@ -75,6 +75,7 @@ export class TopSlow extends Component {
     super(props);
 
     this.state = {top: [], requests: []};
+    this.selectTopRequests = this.selectTopRequests.bind(this);
   }
 
   componentDidMount() {
