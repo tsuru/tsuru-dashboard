@@ -1,11 +1,11 @@
 from django.test import TestCase
 
-from . import register, get, unregister, AppNotFound
+from . import register, get, unregister, AppNotFound, App
 
 
 class RegisterTest(TestCase):
     def test_register(self):
-        class MyApp(object):
+        class MyApp(App):
             name = 'myapp'
 
         register(MyApp)
@@ -14,7 +14,7 @@ class RegisterTest(TestCase):
         self.assertEqual(my_app, MyApp)
 
     def test_unregister(self):
-        class MyApp(object):
+        class MyApp(App):
             name = 'myapp'
 
         register(MyApp)

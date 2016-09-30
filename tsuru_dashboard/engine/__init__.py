@@ -5,7 +5,18 @@ class AppNotFound(Exception):
     pass
 
 
+class ObjectIsNotApp(Exception):
+    pass
+
+
+class App(object):
+    pass
+
+
 def register(app):
+    if not issubclass(app, App):
+        raise ObjectIsNotApp
+
     apps[app.name] = app
 
 
