@@ -10,7 +10,13 @@ class ObjectIsNotApp(Exception):
 
 
 class App(object):
-    pass
+    tabs = {}
+
+    def register_tab(self, tab):
+        self.tabs[tab.name] = tab
+
+    def get_tab(self, tab_name):
+        return self.tabs[tab_name]
 
 
 def register(app):

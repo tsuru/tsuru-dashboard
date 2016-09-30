@@ -22,3 +22,18 @@ class RegisterTest(TestCase):
 
         with self.assertRaises(AppNotFound):
             get('myapp')
+
+
+class AppTest(TestCase):
+    def test_register_tab(self):
+        class MyTab(object):
+            name = 'mytab'
+
+        class MyApp(App):
+            name = 'myapp'
+
+        my_app = MyApp()
+        my_app.register_tab(MyTab)
+        my_tab = my_app.get_tab('mytab')
+
+        self.assertEqual(my_tab, MyTab)
