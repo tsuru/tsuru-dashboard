@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from . import register, get, unregister, AppNotFound, App
+from . import register, get, unregister, AppNotFound, App, TabNotFound
 
 
 class RegisterTest(TestCase):
@@ -37,3 +37,18 @@ class AppTest(TestCase):
         my_tab = my_app.get_tab('mytab')
 
         self.assertEqual(my_tab, MyTab)
+
+    def test_unregister_tab(self):
+        class MyTab(object):
+            name = 'mytab'
+
+        class MyApp(App):
+            name = 'myapp'
+
+        my_app = MyApp()
+        my_app.register_tab(MyTab)
+
+        my_app.unregister_tab('mytab')
+
+        with self.assertRaises(TabNotFound):
+            my_app.get_tab('mytab')
