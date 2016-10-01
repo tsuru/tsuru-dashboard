@@ -26,7 +26,7 @@ from pygments import highlight
 from pygments.lexers import DiffLexer, YamlLexer
 from pygments.formatters import HtmlFormatter
 
-from tsuru_dashboard import settings
+from tsuru_dashboard import settings, engine
 from tsuru_dashboard.auth.views import LoginRequiredView, LoginRequiredMixin
 
 from .forms import AppForm
@@ -47,6 +47,7 @@ class AppMixin(LoginRequiredMixin):
 
         app_name = kwargs['app_name']
         context['app'] = self.get_app(app_name)
+        context['tabs'] = engine.get('app').tabs
         return context
 
 
