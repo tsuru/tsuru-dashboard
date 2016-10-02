@@ -1,21 +1,11 @@
 <div class="navbar navbar-default">
   <div class="navbar-inner">
     <ul class="nav navbar-nav">
-      <li{% if active == "resources" %} class="active"{% endif %}>
-      <a title="resources" href="{% url 'detail-app' app.name %}">resources</a>
-    </li>
-    <li{% if active == "deploys" %} class="active"{% endif %}>
-    <a title="deploys" href="{% url 'app-deploys' app.name %}">deploys</a>
-  </li>
-  <li{% if active == "events" %} class="active"{% endif %}>
-  <a title="events" href="{% url 'app-events' app.name %}">events</a>
-</li>
-<li{% if active == "log" %} class="active"{% endif %}>
-<a title="log" href="{% url 'app_log' app.name %}">log</a>
-</li>
-<li{% if active == "settings" %} class="active"{% endif %}>
-<a title="settings" href="{% url 'app-settings' app.name %}">settings</a>
-</li>
-</ul>
-</div>
+      {% for tab in tabs %}
+      <li{% if active == tab %} class="active"{% endif %}>
+        <a title="{{ tab.name }}" href="{% url tab.url_name app.name %}">{{ tab.name }}</a>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
 </div>

@@ -144,6 +144,7 @@ class ListDeploy(LoginRequiredView):
         context = {}
         context['deploys'] = deploys
         context['app'] = self.get_app(app_name)
+        context['tabs'] = engine.get('app').tabs
 
         if len(deploys) >= 20:
             context['next'] = page + 1

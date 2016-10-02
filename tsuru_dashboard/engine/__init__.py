@@ -13,6 +13,10 @@ class TabNotFound(Exception):
     pass
 
 
+class Tab(object):
+    pass
+
+
 class App(object):
     tabs = {}
 
