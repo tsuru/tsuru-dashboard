@@ -1,6 +1,6 @@
 clean:
 	@find . -name "*.pyc" -delete
-	@rm -rf node_modules tsuru_dashboard.egg-info build dist
+	@rm -rf tsuru_dashboard.egg-info build dist
 
 deps:
 	@pip install -r test-requirements.txt
@@ -18,8 +18,11 @@ node-test: node-deps
 
 test: python-test node-test
 
-node-deps:
+node-deps: node-deps-clean
 	@npm install .
+
+node-deps-clean:
+	@rm -rf node_modules
 
 build-js: node-deps build-js-only
 
