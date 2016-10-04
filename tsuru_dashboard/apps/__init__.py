@@ -28,7 +28,9 @@ class SettingsTab(engine.Tab):
 
 class App(engine.App):
     name = 'app'
-    tabs = [ResourcesTab, DeploysTab, EventsTab, LogTab, SettingsTab]
+
+    def __init__(self):
+        self.tabs = [ResourcesTab, DeploysTab, EventsTab, LogTab, SettingsTab]
 
 
 engine.register(App)
