@@ -18,25 +18,29 @@ class Tab(object):
 
 
 class App(object):
-    tabs = {}
+    def __init__(self):
+        self.tabs = []
 
     def register_tab(self, tab):
-        self.tabs[tab.name] = tab
+        self.tabs.append(tab)
 
     def get_tab(self, tab_name):
-        if tab_name not in self.tabs:
-            raise TabNotFound
-        return self.tabs[tab_name]
+        for tab in self.tabs:
+            if tab_name == tab.name:
+                return tab
+
+        raise TabNotFound
 
     def unregister_tab(self, tab_name):
-        del self.tabs[tab_name]
+        tab = self.get_tab(tab_name)
+        self.tabs.remove(tab)
 
 
 def register(app):
     if not issubclass(app, App):
         raise ObjectIsNotApp
 
-    apps[app.name] = app
+    apps[app.name] = app()
 
 
 def get(app_name):

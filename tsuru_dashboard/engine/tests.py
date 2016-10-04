@@ -11,7 +11,7 @@ class RegisterTest(TestCase):
         register(MyApp)
         my_app = get('myapp')
 
-        self.assertEqual(my_app, MyApp)
+        self.assertIsInstance(my_app, MyApp)
 
     def test_unregister(self):
         class MyApp(App):
