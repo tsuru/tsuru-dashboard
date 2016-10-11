@@ -18,11 +18,8 @@ node-test: node-deps
 
 test: python-test node-test
 
-node-deps: node-deps-clean
-	@npm install .
-
-node-deps-clean:
-	@rm -rf node_modules
+node-deps:
+	@bash -c 'yarn || (rm -rf node_modules && npm install .)'
 
 build-js: node-deps build-js-only
 
