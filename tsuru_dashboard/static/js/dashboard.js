@@ -19,7 +19,7 @@ $.ajax({
             value: data.total_nodes,
         });
         kpiGroup.addKPI('containers_by_nodes', {
-            caption: 'Units by node',
+            caption: 'Units per node',
             value: data.containers_by_nodes,
         });
     }
