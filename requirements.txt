@@ -1,4 +1,4 @@
-Django==1.10.2
+Django==1.10.3
 tsuru_dashboard==0.4.1
 gunicorn==19.6.0
 gevent==1.1.1
