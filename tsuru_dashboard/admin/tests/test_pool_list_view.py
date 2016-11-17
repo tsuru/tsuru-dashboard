@@ -54,15 +54,21 @@ class PoolListViewTest(TestCase):
                  "Metadata": {"LastSuccess": "2014-08-01T14:09:40-03:00",
                               "pool": "theonepool"},
                  "Status": "ready"},
+                {"Address": "https://myserver.com:2376",
+                 "Metadata": {"LastSuccess": "2014-08-01T14:09:40-03:00",
+                              "pool": "theonepool"},
+                 "Status": "ready"},
             ],
         }
         body = json.dumps(data)
         httpretty.register_uri(httpretty.GET, url, body=body)
 
-        for addr in ["http://128.0.0.1:4243", "http://myserver.com:2375", "http://127.0.0.1:2375"]:
+        addrs = ["http://128.0.0.1:4243", "http://myserver.com:2375", "http://127.0.0.1:2375", "https://myserver.com:2376"]
+        hostAddrs = ["128.0.0.1", "myserver.com", "127.0.0.1", "myserver.com"]
+        for addr, hostAddr in zip(addrs, hostAddrs):
             url = "{}/docker/node/{}/containers".format(settings.TSURU_HOST, addr)
             body = json.dumps(
-                [{"Status": "started", "HostAddr": addr}, {"Status": "stopped", "HostAddr": addr}])
+                [{"Status": "started", "HostAddr": hostAddr}, {"Status": "stopped", "HostAddr": hostAddr}])
             httpretty.register_uri(httpretty.GET, url, body=body, status=200)
 
         response = PoolList.as_view()(self.request)
@@ -78,6 +84,10 @@ class PoolListViewTest(TestCase):
              "Metadata": {"LastSuccess": date, "pool": "theonepool"},
              "Status": "ready"},
             {"Address": "http://myserver.com:2375",
+             "Units": {"started": 1, "stopped": 1, "total": 2},
+             "Metadata": {"LastSuccess": date, "pool": "theonepool"},
+             "Status": "ready"},
+            {"Address": "https://myserver.com:2376",
              "Units": {"started": 1, "stopped": 1, "total": 2},
              "Metadata": {"LastSuccess": date, "pool": "theonepool"},
              "Status": "ready"},

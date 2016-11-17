@@ -1,7 +1,7 @@
 import requests
 import grequests
 import json
-import re
+from urlparse import urlparse
 from dateutil import parser
 
 from django.views.generic import TemplateView
@@ -19,14 +19,13 @@ from tsuru_dashboard import settings
 from tsuru_dashboard.auth.views import LoginRequiredView
 
 
-addr_re = re.compile(r"^https?://(.*):\d{1,5}/?")
-
-
 class PoolList(LoginRequiredView, TemplateView):
     template_name = "admin/pool_list.html"
 
     def extract_ip(self, address):
-        return address.split("http://")[-1].split(":")[0]
+        if not urlparse(address).scheme:
+            address = "http://"+address
+        return urlparse(address).hostname
 
     def get_node(self, address, data):
         for response in data:
