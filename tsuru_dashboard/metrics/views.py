@@ -1,4 +1,5 @@
 from django.http import HttpResponse, HttpResponseBadRequest
+from urlparse import urlparse
 
 from tsuru_dashboard import settings
 from tsuru_dashboard.auth.views import LoginRequiredView
@@ -44,6 +45,11 @@ class NodeMetric(Metric):
 
 
 class PoolMetric(Metric):
+    def extract_ip(self, address):
+        if not urlparse(address).scheme:
+            address = "http://"+address
+        return urlparse(address).hostname
+
     def get_pool_nodes(self, pool_name):
         url = "{}/docker/node".format(settings.TSURU_HOST)
         response = requests.get(url, headers=self.authorization)
@@ -53,7 +59,7 @@ class PoolMetric(Metric):
 
             for node in nodes:
                 if node["Metadata"].get("pool", "") == pool_name:
-                    addr = node["Address"].split("http://")[-1].split(":")[0]
+                    addr = self.extract_ip(node["Address"])
                     pool_nodes.append(addr)
 
         return pool_nodes
