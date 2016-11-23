@@ -34,7 +34,7 @@ class Prometheus(object):
 
     @property
     def resolution(self):
-        return (self.end - self.start).total_seconds() // 250
+        return (self.end - self.start).total_seconds() / 250
 
     def get_metrics(self, query):
         url = self.url
@@ -44,7 +44,13 @@ class Prometheus(object):
         url += "&end={}".format(mktime(self.end.timetuple()))
         url += "&step={}".format(self.resolution)
         result = requests.get(url)
-        return result.json()['data']['result'][0]['values']
+
+        def toMs(x):
+            if len(x) == 2:
+                return [x[0]*1000, x[1]]
+            return x
+
+        return list(map(toMs, result.json()['data']['result'][0]['values']))
 
     def mem_max(self, interval=None):
         data = {"min": 0, "max": 1024}

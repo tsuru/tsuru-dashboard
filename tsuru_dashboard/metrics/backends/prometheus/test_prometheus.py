@@ -90,5 +90,5 @@ class PrometheusTest(TestCase):
             query="key=value",
             date_range="1w",
         )
-        resolution = (backend.end - backend.start).total_seconds() // 250
+        resolution = (backend.end - backend.start).total_seconds() / 250
         self.assertEqual(backend.resolution, resolution)
