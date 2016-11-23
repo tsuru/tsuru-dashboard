@@ -34,7 +34,7 @@ class Prometheus(object):
 
     @property
     def resolution(self):
-        return (self.end - self.start).total_seconds() / 250
+        return (self.end - self.start).total_seconds() // 250
 
     def get_metrics(self, query):
         url = self.url
