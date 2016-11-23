@@ -27,20 +27,20 @@ def get_app_backend(app_name, token, **kwargs):
     envs = base.get_envs_from_api(app, token)
     url = ""
 
-    if settings.PROMETHEUS_HOST:
-        url = settings.PROMETHEUS_HOST
-        return prometheus.AppBackend(app=app, url=url, **kwargs)
-
-    if settings.ELASTICSEARCH_HOST:
-        url = settings.ELASTICSEARCH_HOST
-        return elasticsearch.AppBackend(app=app, url=url, **kwargs)
-
     if envs and "METRICS_PROMETHEUS_HOST" in envs:
         url = envs["METRICS_PROMETHEUS_HOST"]
         return prometheus.AppBackend(app=app, url=url, **kwargs)
 
     if envs and "METRICS_ELASTICSEARCH_HOST" in envs:
         url = envs["METRICS_ELASTICSEARCH_HOST"]
+        return elasticsearch.AppBackend(app=app, url=url, **kwargs)
+
+    if settings.PROMETHEUS_HOST:
+        url = settings.PROMETHEUS_HOST
+        return prometheus.AppBackend(app=app, url=url, **kwargs)
+
+    if settings.ELASTICSEARCH_HOST:
+        url = settings.ELASTICSEARCH_HOST
         return elasticsearch.AppBackend(app=app, url=url, **kwargs)
 
     if not url:
