@@ -79,8 +79,11 @@ class Prometheus(object):
 
 class AppBackend(Prometheus):
     def __init__(self, app, url, process_name=None, date_range=None):
+        query = 'container_label_tsuru_app_name="%s"' % app["name"]
+        if process_name is not None:
+            query += ',container_label_tsuru_process_name="%s"' % process_name
         return super(AppBackend, self).__init__(
             url=url,
-            query='name=~"%s.*"' % app["name"],
+            query=query,
             date_range=date_range,
         )
