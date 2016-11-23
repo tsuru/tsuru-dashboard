@@ -78,7 +78,7 @@ class Prometheus(object):
 
     def units(self, interval=None):
         data = {"min": 0, "max": 100}
-        query = "query=max(count(rate(container_cpu_usage_seconds_total{%s}[2m])) by (slave))&" % self.query
+        query = "query=max(count(rate(container_memory_usage_bytes{%s}[2m])) by (slave))&" % self.query
         data["units"] = self.get_metrics(query)
         return {"data": data}
 
