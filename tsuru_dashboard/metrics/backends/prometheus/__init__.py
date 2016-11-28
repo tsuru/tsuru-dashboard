@@ -82,6 +82,30 @@ class Prometheus(object):
         data["units"] = self.get_metrics(query)
         return {"data": data}
 
+    def swap(self, interval=None):
+        data = {"min": 0, "max": 1024}
+        query = "query=avg(container_memory_swap{%s})/1024/1024&" % self.query
+        data["avg"] = self.get_metrics(query)
+
+        query = "query=max(container_memory_swap{%s})/1024/1024&" % self.query
+        data["max"] = self.get_metrics(query)
+
+        query = "query=min(container_memory_swap{%s})/1024/1024&" % self.query
+        data["min"] = self.get_metrics(query)
+        return {"data": data}
+
+    def netrx(self, interval=None):
+        data = {"min": 0, "max": 100}
+        query = "query=rate(container_network_receive_bytes_total{%s}[2m])/1024&" % self.query
+        data["netrx"] = self.get_metrics(query)
+        return {"data": data}
+
+    def nettx(self, interval=None):
+        data = {"min": 0, "max": 100}
+        query = "query=rate(container_network_transmit_bytes_total{%s}[2m])/1024&" % self.query
+        data["nettx"] = self.get_metrics(query)
+        return {"data": data}
+
 
 class AppBackend(Prometheus):
     def __init__(self, app, url, process_name=None, date_range=None):
