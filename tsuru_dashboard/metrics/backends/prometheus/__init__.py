@@ -36,7 +36,15 @@ class Prometheus(object):
     def resolution(self):
         return (self.end - self.start).total_seconds() / 250
 
-    def get_metrics(self, query):
+    def default_processor(self, results):
+        def toMs(x):
+            if len(x) == 2:
+                return [x[0]*1000, x[1]]
+            return x
+
+        return list(map(toMs, results))
+
+    def get_metrics(self, query, processor=None):
         url = self.url
         url += "/api/v1/query_range?"
         url += query
@@ -45,12 +53,11 @@ class Prometheus(object):
         url += "&step={}".format(self.resolution)
         result = requests.get(url)
 
-        def toMs(x):
-            if len(x) == 2:
-                return [x[0]*1000, x[1]]
-            return x
+        if processor is None:
+            result = result.json()['data']['result'][0]['values']
+            processor = self.default_processor
 
-        return list(map(toMs, result.json()['data']['result'][0]['values']))
+        return processor(result)
 
     def mem_max(self, interval=None):
         data = {"min": 0, "max": 1024}
@@ -105,6 +112,19 @@ class Prometheus(object):
         query = "query=rate(container_network_transmit_bytes_total{%s}[2m])/1024&" % self.query
         data["nettx"] = self.get_metrics(query)
         return {"data": data}
+
+    def connections(self, interval=None):
+        data = {"min": 0, "max": 100}
+        query = 'query=sum(container_connections{%s,state="ESTABLISHED",protocol="tcp"}) by (destination)&' % self.query
+        data['data'] = self.get_metrics(query, processor=self.connections_processor)
+        return data
+
+    def connections_processor(self, result):
+        results = result.json()['data']['result']
+        data = {}
+        for r in results:
+            data[r['metric']['destination']] = self.default_processor(r['values'])
+        return data
 
 
 class AppBackend(Prometheus):
