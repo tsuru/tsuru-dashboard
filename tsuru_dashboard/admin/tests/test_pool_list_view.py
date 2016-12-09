@@ -56,7 +56,7 @@ class PoolListViewTest(TestCase):
                  "Status": "ready"},
                 {"Address": "https://myserver.com:2376",
                  "Metadata": {"LastSuccess": "2014-08-01T14:09:40-03:00",
-                              "pool": "theonepool"},
+                              "pool": "dev\\dev.example.com"},
                  "Status": "ready"},
             ],
         }
@@ -74,24 +74,28 @@ class PoolListViewTest(TestCase):
         response = PoolList.as_view()(self.request)
 
         date = parser.parse("2014-08-01T14:09:40-03:00")
-        expected = {"theonepool": [
-            {"Address": "http://128.0.0.1:4243",
-             "Units": {"started": 1, "stopped": 1, "total": 2},
-             "Metadata": {"LastSuccess": date, "pool": "theonepool"},
-             "Status": "ready"},
-            {"Address": "http://127.0.0.1:2375",
-             "Units": {"started": 1, "stopped": 1, "total": 2},
-             "Metadata": {"LastSuccess": date, "pool": "theonepool"},
-             "Status": "ready"},
-            {"Address": "http://myserver.com:2375",
-             "Units": {"started": 1, "stopped": 1, "total": 2},
-             "Metadata": {"LastSuccess": date, "pool": "theonepool"},
-             "Status": "ready"},
-            {"Address": "https://myserver.com:2376",
-             "Units": {"started": 1, "stopped": 1, "total": 2},
-             "Metadata": {"LastSuccess": date, "pool": "theonepool"},
-             "Status": "ready"},
-        ]}
+        expected = {
+            "theonepool": [
+                {"Address": "http://128.0.0.1:4243",
+                 "Units": {"started": 1, "stopped": 1, "total": 2},
+                 "Metadata": {"LastSuccess": date, "pool": "theonepool"},
+                 "Status": "ready"},
+                {"Address": "http://127.0.0.1:2375",
+                 "Units": {"started": 1, "stopped": 1, "total": 2},
+                 "Metadata": {"LastSuccess": date, "pool": "theonepool"},
+                 "Status": "ready"},
+                {"Address": "http://myserver.com:2375",
+                 "Units": {"started": 1, "stopped": 1, "total": 2},
+                 "Metadata": {"LastSuccess": date, "pool": "theonepool"},
+                 "Status": "ready"},
+            ],
+            "dev\\dev.example.com": [
+                {"Address": "https://myserver.com:2376",
+                 "Units": {"started": 1, "stopped": 1, "total": 2},
+                 "Metadata": {"LastSuccess": date, "pool": "dev\\dev.example.com"},
+                 "Status": "ready"},
+            ],
+        }
         self.assertEqual(sorted(expected.items()), response.context_data["pools"])
 
     @httpretty.activate
