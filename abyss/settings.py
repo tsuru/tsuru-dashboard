@@ -15,7 +15,7 @@ DATABASES = {
     }
 }
 
-TIME_ZONE = 'America/Sao_Paulo'
+TIME_ZONE = os.environ.get('TSURU_DASHBOARD_TIME_ZONE', 'America/Sao_Paulo')
 
 LANGUAGE_CODE = 'en-us'
 
