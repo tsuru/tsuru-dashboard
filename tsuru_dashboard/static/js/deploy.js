@@ -20761,13 +20761,221 @@ module.exports = require('./lib/React');
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.DeployPopin = exports.DeployBox = undefined;
+exports.Select = exports.Tabs = exports.Tab = exports.CancelBtn = exports.Button = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require("react");
 
 var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Output = function Output() {
+  return _react2.default.createElement(
+    "div",
+    { id: "output" },
+    _react2.default.createElement("img", { src: "/static/img/ajax-loader.gif" }),
+    _react2.default.createElement("div", { className: "messages", dangerouslySetInnerHTML: { __html: undefined.props.message } })
+  );
+};
+
+var Button = exports.Button = function Button(props) {
+  return _react2.default.createElement(
+    "button",
+    { type: props.type,
+      disabled: props.disabled,
+      onClick: props.onClick,
+      className: "btn" },
+    props.text
+  );
+};
+
+Button.defaultProps = {
+  disabled: false,
+  onClick: function onClick() {},
+  type: "button"
+};
+
+var CancelBtn = exports.CancelBtn = function CancelBtn(props) {
+  return _react2.default.createElement(
+    "button",
+    { "data-dismiss": "modal",
+      disabled: props.disabled,
+      "aria-hidden": "true",
+      className: "btn",
+      onClick: props.onClick },
+    "Cancel"
+  );
+};
+
+CancelBtn.defaultProps = {
+  disabled: false
+};
+
+var Tab = exports.Tab = function (_Component) {
+  _inherits(Tab, _Component);
+
+  function Tab(props) {
+    _classCallCheck(this, Tab);
+
+    var _this = _possibleConstructorReturn(this, (Tab.__proto__ || Object.getPrototypeOf(Tab)).call(this, props));
+
+    _this.onClick = _this.onClick.bind(_this);
+    return _this;
+  }
+
+  _createClass(Tab, [{
+    key: "onClick",
+    value: function onClick(e) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      if (this.props.active) {
+        return;
+      }
+
+      if (this.props.setActive !== undefined) {
+        this.props.setActive(this.props.name);
+      }
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      return _react2.default.createElement(
+        "li",
+        { className: this.props.active ? "active" : '' },
+        _react2.default.createElement(
+          "a",
+          { href: "#", onClick: this.onClick },
+          this.props.name
+        )
+      );
+    }
+  }]);
+
+  return Tab;
+}(_react.Component);
+
+var Tabs = exports.Tabs = function (_Component2) {
+  _inherits(Tabs, _Component2);
+
+  function Tabs(props) {
+    _classCallCheck(this, Tabs);
+
+    var _this2 = _possibleConstructorReturn(this, (Tabs.__proto__ || Object.getPrototypeOf(Tabs)).call(this, props));
+
+    _this2.state = {
+      active: ""
+    };
+
+    _this2.setActive = _this2.setActive.bind(_this2);
+    return _this2;
+  }
+
+  _createClass(Tabs, [{
+    key: "setActive",
+    value: function setActive(name) {
+      this.setState({ active: name });
+      if (this.props.setActive !== undefined) {
+        this.props.setActive(name);
+      }
+    }
+  }, {
+    key: "componentWillReceiveProps",
+    value: function componentWillReceiveProps(nextProps) {
+      if (this.state.active === "" && nextProps.tabs.length > 0) {
+        this.setActive(nextProps.tabs[0]);
+      }
+    }
+  }, {
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      if (this.state.active === "" && this.props.tabs.length > 0) {
+        this.setActive(this.props.tabs[0]);
+      }
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var self = this;
+      return _react2.default.createElement(
+        "ul",
+        { className: "nav nav-pills" },
+        this.props.tabs.map(function (tab) {
+          return _react2.default.createElement(Tab, { key: tab,
+            name: tab,
+            active: tab === self.state.active,
+            setActive: self.setActive });
+        })
+      );
+    }
+  }]);
+
+  return Tabs;
+}(_react.Component);
+
+var Select = exports.Select = function (_Component3) {
+  _inherits(Select, _Component3);
+
+  function Select() {
+    _classCallCheck(this, Select);
+
+    return _possibleConstructorReturn(this, (Select.__proto__ || Object.getPrototypeOf(Select)).apply(this, arguments));
+  }
+
+  _createClass(Select, [{
+    key: "render",
+    value: function render() {
+      return _react2.default.createElement(
+        "select",
+        null,
+        this.props.defaultOption.length > 0 ? _react2.default.createElement(
+          "option",
+          null,
+          this.props.defaultOption
+        ) : "",
+        this.props.options.length > 0 ? this.props.options.map(function (option) {
+          return _react2.default.createElement(
+            "option",
+            null,
+            option
+          );
+        }) : ""
+      );
+    }
+  }]);
+
+  return Select;
+}(_react.Component);
+
+Select.defaultProps = {
+  defaultOption: "",
+  options: []
+};
+
+
+},{"react":171}],173:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.RollbackPopin = exports.DeployPopin = exports.DeployBox = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require("react");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _base = require("./base");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -20838,35 +21046,8 @@ var StartDeployBtn = function (_Component2) {
   return StartDeployBtn;
 }(_react.Component);
 
-var CancelBtn = function (_Component3) {
-  _inherits(CancelBtn, _Component3);
-
-  function CancelBtn() {
-    _classCallCheck(this, CancelBtn);
-
-    return _possibleConstructorReturn(this, (CancelBtn.__proto__ || Object.getPrototypeOf(CancelBtn)).apply(this, arguments));
-  }
-
-  _createClass(CancelBtn, [{
-    key: "render",
-    value: function render() {
-      return _react2.default.createElement(
-        "button",
-        { disabled: this.props.disabled,
-          "data-dismiss": "modal",
-          "aria-hidden": "true",
-          className: "btn",
-          onClick: this.props.onClick },
-        "Cancel"
-      );
-    }
-  }]);
-
-  return CancelBtn;
-}(_react.Component);
-
-var Files = function (_Component4) {
-  _inherits(Files, _Component4);
+var Files = function (_Component3) {
+  _inherits(Files, _Component3);
 
   function Files() {
     _classCallCheck(this, Files);
@@ -20895,8 +21076,8 @@ var Files = function (_Component4) {
   return Files;
 }(_react.Component);
 
-var Output = function (_Component5) {
-  _inherits(Output, _Component5);
+var Output = function (_Component4) {
+  _inherits(Output, _Component4);
 
   function Output() {
     _classCallCheck(this, Output);
@@ -20919,15 +21100,15 @@ var Output = function (_Component5) {
   return Output;
 }(_react.Component);
 
-var DeployPopin = exports.DeployPopin = function (_Component6) {
-  _inherits(DeployPopin, _Component6);
+var DeployPopin = exports.DeployPopin = function (_Component5) {
+  _inherits(DeployPopin, _Component5);
 
   function DeployPopin(props) {
     _classCallCheck(this, DeployPopin);
 
-    var _this6 = _possibleConstructorReturn(this, (DeployPopin.__proto__ || Object.getPrototypeOf(DeployPopin)).call(this, props));
+    var _this5 = _possibleConstructorReturn(this, (DeployPopin.__proto__ || Object.getPrototypeOf(DeployPopin)).call(this, props));
 
-    _this6.state = {
+    _this5.state = {
       files: [],
       output: '',
       deploy: false,
@@ -20935,10 +21116,10 @@ var DeployPopin = exports.DeployPopin = function (_Component6) {
       disabled: true
     };
 
-    _this6.handleDrop = _this6.handleDrop.bind(_this6);
-    _this6.cancel = _this6.cancel.bind(_this6);
-    _this6.deploy = _this6.deploy.bind(_this6);
-    return _this6;
+    _this5.handleDrop = _this5.handleDrop.bind(_this5);
+    _this5.cancel = _this5.cancel.bind(_this5);
+    _this5.deploy = _this5.deploy.bind(_this5);
+    return _this5;
   }
 
   _createClass(DeployPopin, [{
@@ -20976,7 +21157,7 @@ var DeployPopin = exports.DeployPopin = function (_Component6) {
   }, {
     key: "addDir",
     value: function addDir(entry, zip) {
-      var _this7 = this;
+      var _this6 = this;
 
       var files = this.state.files;
 
@@ -20991,9 +21172,9 @@ var DeployPopin = exports.DeployPopin = function (_Component6) {
         results.forEach(function (entry) {
 
           if (entry.isFile) {
-            _this7.addFile(entry, folder);
+            _this6.addFile(entry, folder);
           } else {
-            _this7.addDir(entry, folder);
+            _this6.addDir(entry, folder);
           }
         });
       });
@@ -21019,7 +21200,7 @@ var DeployPopin = exports.DeployPopin = function (_Component6) {
   }, {
     key: "deploy",
     value: function deploy() {
-      var _this8 = this;
+      var _this7 = this;
 
       this.setState({ deploy: true, output: 'Wait until deploy is started.', disabled: true, files: [] });
 
@@ -21031,7 +21212,7 @@ var DeployPopin = exports.DeployPopin = function (_Component6) {
       var xhr = new XMLHttpRequest();
       xhr.open('POST', location.pathname, true);
       xhr.onprogress = function () {
-        _this8.setState({ output: xhr.responseText });
+        _this7.setState({ output: xhr.responseText });
       };
       xhr.onload = function () {
         setTimeout(function () {
@@ -21085,7 +21266,7 @@ var DeployPopin = exports.DeployPopin = function (_Component6) {
               "div",
               { className: "modal-footer" },
               _react2.default.createElement("input", { type: "hidden", id: "filecontent", name: "filecontent" }),
-              _react2.default.createElement(CancelBtn, { disabled: this.state.deploy, onClick: this.cancel }),
+              _react2.default.createElement(_base.CancelBtn, { disabled: this.state.deploy, onClick: this.cancel }),
               _react2.default.createElement(StartDeployBtn, { deploy: this.deploy, disabled: this.state.disabled })
             )
           )
@@ -21097,8 +21278,108 @@ var DeployPopin = exports.DeployPopin = function (_Component6) {
   return DeployPopin;
 }(_react.Component);
 
+var RollbackPopin = exports.RollbackPopin = function (_Component6) {
+  _inherits(RollbackPopin, _Component6);
 
-},{"react":171}],173:[function(require,module,exports){
+  function RollbackPopin(props) {
+    _classCallCheck(this, RollbackPopin);
+
+    var _this8 = _possibleConstructorReturn(this, (RollbackPopin.__proto__ || Object.getPrototypeOf(RollbackPopin)).call(this, props));
+
+    _this8.state = {
+      disabled: true,
+      output: '',
+      rollback: false
+    };
+
+    _this8.rollback = _this8.rollback.bind(_this8);
+    _this8.handleConfirmation = _this8.handleConfirmation.bind(_this8);
+    return _this8;
+  }
+
+  _createClass(RollbackPopin, [{
+    key: "rollback",
+    value: function rollback(e) {
+      var _this9 = this;
+
+      e.preventDefault();
+      e.stopPropagation();
+      this.setState({ disabled: true, rollback: true, output: 'Wait until rollback is started.' });
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', this.props.url, true);
+      xhr.onprogress = function () {
+        _this9.setState({ output: xhr.responseText });
+      };
+      xhr.onload = function () {
+        setTimeout(function () {
+          location.reload();
+        }, 2000);
+      };
+      xhr.send();
+    }
+  }, {
+    key: "handleConfirmation",
+    value: function handleConfirmation(e) {
+      this.setState({ disabled: e.target.value !== this.props.app });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      return _react2.default.createElement(
+        "div",
+        { className: "rollback-popin" },
+        _react2.default.createElement(
+          "div",
+          { className: "modal-dialog", role: "document" },
+          _react2.default.createElement(
+            "div",
+            { className: "modal-content" },
+            _react2.default.createElement(
+              "div",
+              { className: "modal-header" },
+              _react2.default.createElement(
+                "h3",
+                { id: "myModalLabel" },
+                "Rollback"
+              )
+            ),
+            _react2.default.createElement(
+              "div",
+              { className: "modal-body" },
+              this.state.rollback ? '' : _react2.default.createElement(
+                "div",
+                null,
+                _react2.default.createElement(
+                  "p",
+                  null,
+                  "Are you sure you want to rollback your app?"
+                ),
+                _react2.default.createElement(
+                  "p",
+                  null,
+                  "Please type in the name of your app to confirm."
+                ),
+                _react2.default.createElement("input", { type: "text", onChange: this.handleConfirmation, placeholder: "app's name", className: "remove-confirmation" })
+              ),
+              this.state.output.length > 0 ? _react2.default.createElement(Output, { message: this.state.output }) : ''
+            ),
+            _react2.default.createElement(
+              "div",
+              { className: "modal-footer" },
+              _react2.default.createElement(_base.CancelBtn, { disabled: this.state.rollback }),
+              _react2.default.createElement(_base.Button, { text: "Rollback", disabled: this.state.disabled, onClick: this.rollback })
+            )
+          )
+        )
+      );
+    }
+  }]);
+
+  return RollbackPopin;
+}(_react.Component);
+
+
+},{"./base":172,"react":171}],174:[function(require,module,exports){
 "use strict";
 
 var _react = require("react");
@@ -21122,5 +21403,13 @@ if (isChrome || isSafari) {
   _reactDom2.default.render(_react2.default.createElement(_deploy.DeployPopin, null), document.getElementById('deploy'));
 }
 
+var app = window.location.pathname.split("/")[2];
 
-},{"../components/deploy":172,"react":171,"react-dom":28}]},{},[173]);
+$(".rollback").on('click', function (ev) {
+  ev.preventDefault();
+  var rollbackUrl = $(this).attr("rollback-url");
+  _reactDom2.default.render(_react2.default.createElement(_deploy.RollbackPopin, { app: app, url: rollbackUrl }), document.getElementById('rollback'));
+});
+
+
+},{"../components/deploy":173,"react":171,"react-dom":28}]},{},[174]);

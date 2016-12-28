@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Button, CancelBtn } from "./base";
 
 export class DeployBox extends Component {
   render() {
@@ -32,20 +33,6 @@ class StartDeployBtn extends Component {
               className='btn btn-rollback'
               onClick={this.handleClick}>
         Start deploy
-      </button>
-    )
-  }
-}
-
-class CancelBtn extends Component {
-  render() {
-    return (
-      <button disabled={this.props.disabled}
-              data-dismiss='modal'
-              aria-hidden='true'
-              className='btn'
-              onClick={this.props.onClick}>
-        Cancel
       </button>
     )
   }
@@ -217,3 +204,69 @@ export class DeployPopin extends Component {
     )
   }
 }
+
+export class RollbackPopin extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state  = {
+      disabled: true,
+      output: '',
+      rollback: false,
+    };
+
+    this.rollback = this.rollback.bind(this);
+    this.handleConfirmation = this.handleConfirmation.bind(this);
+  }
+
+  rollback(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    this.setState({disabled: true, rollback: true, output: 'Wait until rollback is started.'});
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', this.props.url, true);
+    xhr.onprogress = () => {
+      this.setState({output: xhr.responseText});
+    };
+    xhr.onload = () => {
+        setTimeout(() => {
+            location.reload();
+        }, 2000);
+    }
+    xhr.send();
+  }
+
+  handleConfirmation(e) {
+      this.setState({disabled: e.target.value !== this.props.app})
+  }
+
+  render() {
+      return (
+        <div className="rollback-popin">
+          <div className="modal-dialog" role="document">
+            <div className="modal-content">
+              <div className='modal-header'>
+                <h3 id='myModalLabel'>Rollback</h3>
+              </div>
+              <div className='modal-body'>
+                {
+                    this.state.rollback ? '' :
+                        <div>
+                            <p>Are you sure you want to rollback your app?</p>
+                            <p>Please type in the name of your app to confirm.</p>
+                            <input type="text" onChange={this.handleConfirmation} placeholder="app's name" className="remove-confirmation" />
+                        </div>
+                }
+                {this.state.output.length > 0 ? <Output message={this.state.output} /> : ''}
+              </div>
+              <div className='modal-footer'>
+                <CancelBtn disabled={this.state.rollback} />
+                <Button text="Rollback" disabled={this.state.disabled} onClick={this.rollback} />
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+  }
+
+ }

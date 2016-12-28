@@ -7,11 +7,11 @@ const Output = () =>
   </div>;
 
 export const Button = (props) =>
-  <button type={this.props.type}
-    disabled={this.props.disabled}
-    onClick={this.props.onClick}
+  <button type={props.type}
+    disabled={props.disabled}
+    onClick={props.onClick}
     className='btn'>
-    {this.props.text}
+    {props.text}
   </button>;
 
 Button.defaultProps = {
@@ -22,10 +22,10 @@ Button.defaultProps = {
 
 export const CancelBtn = (props) =>
   <button data-dismiss='modal'
-    disabled={this.props.disabled}
+    disabled={props.disabled}
     aria-hidden='true'
     className='btn'
-    onClick={this.props.onClick}>
+    onClick={props.onClick}>
     Cancel
   </button>;
 

@@ -24,14 +24,4 @@ class AppRollbackViewTest(TestCase):
         post.return_value = m
         response = AppRollback.as_view()(
             self.request, app_name='test', image='localhost:3030/tsuru/app-test:v44')
-        self.assertEqual(302, response.status_code)
-
-    @patch("requests.post")
-    @patch("tsuru_dashboard.auth.views.token_is_valid")
-    def test_post_with_invalid_app_and_image(self, token_is_valid, post):
-        token_is_valid.return_value = True
-        m = Mock(status_code=500, content="")
-        post.return_value = m
-        response = AppRollback.as_view()(
-            self.request, app_name='test', image='localhost:3030/tsuru/app-test:v44')
-        self.assertEqual('NOT OK', response.content)
+        self.assertEqual(200, response.status_code)

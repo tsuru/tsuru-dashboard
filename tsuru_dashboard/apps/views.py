@@ -16,7 +16,7 @@ from bson import json_util
 
 
 from django.template.response import TemplateResponse
-from django.http import HttpResponse, HttpResponseServerError, Http404, StreamingHttpResponse, JsonResponse
+from django.http import HttpResponse, Http404, StreamingHttpResponse, JsonResponse
 from django.shortcuts import redirect
 from django.core.urlresolvers import reverse
 from django.views.generic import TemplateView
@@ -420,10 +420,15 @@ class AppLog(AppMixin, TemplateView):
 
 class AppRollback(LoginRequiredView):
     def get(self, request, app_name, image):
-        origin = "rollback"
-        url = '{}/apps/{}/deploy/rollback?origin={}'.format(settings.TSURU_HOST, app_name, origin)
-        requests.post(url, headers=self.authorization, data={'image': image})
-        return redirect(reverse('app_log', args=[app_name]) + '?source=tsuru')
+
+        def sending_stream():
+            origin = "rollback"
+            url = '{}/apps/{}/deploy/rollback?origin={}'.format(settings.TSURU_HOST, app_name, origin)
+            r = requests.post(url, headers=self.authorization, data={'image': image}, stream=True)
+            for line in r.iter_lines():
+                yield "{}<br>".format(json.loads(line)["Message"])
+
+        return StreamingHttpResponse(sending_stream())
 
 
 class Settings(AppMixin, TemplateView):

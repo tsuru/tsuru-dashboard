@@ -31011,11 +31011,11 @@ var Output = function Output() {
 var Button = exports.Button = function Button(props) {
   return _react2.default.createElement(
     "button",
-    { type: undefined.props.type,
-      disabled: undefined.props.disabled,
-      onClick: undefined.props.onClick,
+    { type: props.type,
+      disabled: props.disabled,
+      onClick: props.onClick,
       className: "btn" },
-    undefined.props.text
+    props.text
   );
 };
 
@@ -31029,10 +31029,10 @@ var CancelBtn = exports.CancelBtn = function CancelBtn(props) {
   return _react2.default.createElement(
     "button",
     { "data-dismiss": "modal",
-      disabled: undefined.props.disabled,
+      disabled: props.disabled,
       "aria-hidden": "true",
       className: "btn",
-      onClick: undefined.props.onClick },
+      onClick: props.onClick },
     "Cancel"
   );
 };
