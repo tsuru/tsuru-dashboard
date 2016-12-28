@@ -24,4 +24,4 @@ node-deps:
 build-js: node-deps build-js-only
 
 build-js-only:
-	@bash -c 'for i in `find . -regex ".*jsx/pages/.*.js"`; do A=`echo $$i | sed s/jsx/js/g | sed s/pages.//g`; ./node_modules/browserify/bin/cmd.js -t babelify -t reactify -o $$A $$i; done'
+	@bash -c 'for i in `find . -regex ".*jsx/pages/.*.js"`; do A=`echo $$i | sed s/jsx/js/g | sed s/pages.//g`; echo "$$i -> $$A"; ./node_modules/browserify/bin/cmd.js -t babelify -t reactify -o $$A $$i; done; echo "Done."'
