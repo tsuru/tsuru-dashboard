@@ -66,6 +66,8 @@ class ServiceAdd(LoginRequiredView):
         data = {
             "name": request.POST["name"],
             "owner": request.POST["team"],
+            "description": request.POST["description"],
+            "plan": request.POST["plan"],
         }
         response = requests.post(url, data=data, headers=self.authorization)
 
@@ -81,9 +83,13 @@ class ServiceAdd(LoginRequiredView):
         url = "{}/teams".format(settings.TSURU_HOST)
         response = requests.get(url, headers=self.authorization)
         teams = response.json()
+        url = "{}/services/{}/plans".format(settings.TSURU_HOST, service_name)
+        response = requests.get(url, headers=self.authorization)
+        plans = response.json()
         context = {
             "service": {"name": service_name},
             "teams": teams,
+            "plans": plans,
         }
         return TemplateResponse(request, "services/add.html", context)
 

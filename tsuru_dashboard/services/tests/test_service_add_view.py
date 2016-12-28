@@ -14,7 +14,7 @@ class ServiceAddViewTest(TestCase):
     def test_post(self, get, post):
         get.return_value = mock.Mock(status_code=200)
         post.return_value = mock.Mock(status_code=201)
-        data = {"name": "name", "team": "team"}
+        data = {"name": "name", "team": "team", "description": "desc", "plan": "plan"}
         request = RequestFactory().post("/", data)
         request.session = {"tsuru_token": "admin"}
         response = ServiceAdd.as_view()(request, service_name="service")
@@ -23,7 +23,7 @@ class ServiceAddViewTest(TestCase):
         post.assert_called_with(
             '{0}/services/service/instances'.format(settings.TSURU_HOST),
             headers={'authorization': 'admin'},
-            data={"name": "name", "owner": "team"})
+            data={"name": "name", "owner": "team", "description": "desc", "plan": "plan"})
 
     @mock.patch("requests.get")
     def test_get(self, get):

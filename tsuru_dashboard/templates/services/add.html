@@ -33,6 +33,15 @@
 							<option value={{ team.name }}>{{ team.name }}</option>
 							{% endfor %}
 						</select>
+                        <label>Plan</label>
+                        <select name="plan">
+							<option></option>
+							{% for plan in plans %}
+							<option value={{ plan.Name }}>{{ plan.Name }}</option>
+							{% endfor %}
+						</select>
+                        <label>Description</label>
+                        <input type="text" class="input-xlarge" name="description">
 					</div>
 					<button class="btn primary" type="submit">Add</button>
 				</fieldset>
