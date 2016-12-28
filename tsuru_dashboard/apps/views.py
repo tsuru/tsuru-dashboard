@@ -398,9 +398,15 @@ class AppDetailJson(LoginRequiredView):
 class LogStream(LoginRequiredView):
     def get(self, request, *args, **kwargs):
         app_name = kwargs['app_name']
+        source = request.GET.get('source')
+        unit = request.GET.get('unit')
 
         def sending_stream():
             url = '{}/apps/{}/log?lines=15&follow=1'.format(settings.TSURU_HOST, app_name)
+            if source is not None:
+                url += "&source={}".format(source)
+            if unit is not None:
+                url += "&unit={}".format(unit)
             r = requests.get(url, headers=self.authorization, stream=True)
             for line in r.iter_lines():
                 yield line
@@ -416,10 +422,8 @@ class AppRollback(LoginRequiredView):
     def get(self, request, app_name, image):
         origin = "rollback"
         url = '{}/apps/{}/deploy/rollback?origin={}'.format(settings.TSURU_HOST, app_name, origin)
-        response = requests.post(url, headers=self.authorization, data={'image': image})
-        if response.status_code == 200:
-            return redirect(reverse('app-deploys', args=[app_name]))
-        return HttpResponseServerError('NOT OK')
+        requests.post(url, headers=self.authorization, data={'image': image})
+        return redirect(reverse('app_log', args=[app_name]) + '?source=tsuru')
 
 
 class Settings(AppMixin, TemplateView):
