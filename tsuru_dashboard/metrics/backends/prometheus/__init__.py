@@ -73,13 +73,13 @@ class Prometheus(object):
 
     def cpu_max(self, interval=None):
         data = {"min": 0, "max": 100}
-        query = "query=avg(rate(container_cpu_usage_seconds_total{%s}[2m]) * 100)&" % self.query
+        query = "query=avg(sum(rate(container_cpu_usage_seconds_total{%s}[1m])) by (name)) * 100&" % self.query
         data["avg"] = self.get_metrics(query)
 
-        query = "query=max(rate(container_cpu_usage_seconds_total{%s}[2m]) * 100)&" % self.query
+        query = "query=max(sum(rate(container_cpu_usage_seconds_total{%s}[1m])) by (name)) * 100&" % self.query
         data["max"] = self.get_metrics(query)
 
-        query = "query=min(rate(container_cpu_usage_seconds_total{%s}[2m]) * 100)&" % self.query
+        query = "query=min(sum(rate(container_cpu_usage_seconds_total{%s}[1m])) by (name)) * 100&" % self.query
         data["min"] = self.get_metrics(query)
         return {"data": data}
 
