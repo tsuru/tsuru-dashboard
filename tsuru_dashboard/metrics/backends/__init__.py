@@ -26,29 +26,31 @@ def get_app_backend(app_name, token, **kwargs):
     app = get_app(app_name, token)
     envs = base.get_envs_from_api(app, token)
     url = ""
+    backends = []
 
     if envs and "METRICS_PROMETHEUS_HOST" in envs:
         url = envs["METRICS_PROMETHEUS_HOST"]
-        return prometheus.AppBackend(app=app, url=url, **kwargs)
+        backends.append(prometheus.AppBackend(app=app, url=url, **kwargs))
 
     if envs and "METRICS_ELASTICSEARCH_HOST" in envs:
         url = envs["METRICS_ELASTICSEARCH_HOST"]
-        return elasticsearch.AppBackend(app=app, url=url, **kwargs)
+        backends.append(elasticsearch.AppBackend(app=app, url=url, **kwargs))
 
     if settings.PROMETHEUS_HOST:
         url = settings.PROMETHEUS_HOST
-        return prometheus.AppBackend(app=app, url=url, **kwargs)
+        backends.append(prometheus.AppBackend(app=app, url=url, **kwargs))
 
     if settings.ELASTICSEARCH_HOST:
         url = settings.ELASTICSEARCH_HOST
-        return elasticsearch.AppBackend(app=app, url=url, **kwargs)
+        backends.append(elasticsearch.AppBackend(app=app, url=url, **kwargs))
 
     if not url:
         app["envs"] = get_envs(app_name, token)
         if "envs" in app and "ELASTICSEARCH_HOST" in app["envs"]:
             url = app["envs"]["ELASTICSEARCH_HOST"]
+            backends.append(elasticsearch.AppBackend(app=app, url=url, **kwargs))
 
-    return elasticsearch.AppBackend(app=app, url=url, **kwargs)
+    return backends
 
 
 def get_tsuru_backend(component, token, **kwargs):

@@ -20,11 +20,23 @@ class Metric(LoginRequiredView):
         date_range = self.request.GET.get("date_range")
         target = kwargs['target']
 
-        backend = self.get_metrics_backend(metric=metric, target=target, date_range=date_range, token=token)
-        if backend is None:
+        backends = self.get_metrics_backend(metric=metric, target=target, date_range=date_range, token=token)
+        if backends is None:
             return HttpResponseBadRequest()
 
-        data = getattr(backend, metric)(interval=interval)
+        if not isinstance(backends, list):
+            backends = [backends]
+
+        data = {}
+        for backend in backends:
+            try:
+                data = getattr(backend, metric)(interval=interval)
+            except:
+                continue
+            if len(data["data"]) > 0:
+                data["source"] = backend.url
+                break
+
         return HttpResponse(json.dumps(data))
 
 
