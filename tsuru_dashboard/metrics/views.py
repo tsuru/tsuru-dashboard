@@ -33,7 +33,7 @@ class Metric(LoginRequiredView):
                 data = getattr(backend, metric)(interval=interval)
             except:
                 continue
-            if len(data["data"]) > 0:
+            if isinstance(data, dict) and len(data["data"]) > 0:
                 data["source"] = backend.url
                 break
 
