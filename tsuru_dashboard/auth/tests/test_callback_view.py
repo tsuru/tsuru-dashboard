@@ -33,7 +33,7 @@ class CallbackViewTest(TestCase):
         self.assertEqual(request.session["tsuru_token"], "type xpto")
         self.assertDictEqual(request.session["permissions"], {"healing": False, "admin": False})
 
-        expected_url = 'http://localhost:8080/auth/login'
+        expected_url = '{}/auth/login'.format(settings.TSURU_HOST)
         expected_data = {
             "redirectUrl": "http://localhost:3333/auth/callback/",
             "code": "somecode"
@@ -76,7 +76,7 @@ class CallbackViewTest(TestCase):
         self.assertEqual(request.session["tsuru_token"], "type xpto")
         self.assertDictEqual(request.session["permissions"], {"healing": True, "admin": True})
 
-        expected_url = 'http://localhost:8080/auth/login'
+        expected_url = '{}/auth/login'.format(settings.TSURU_HOST)
         expected_data = {
             "redirectUrl": "http://localhost:3333/auth/callback/",
             "code": "somecode"
