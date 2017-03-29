@@ -18,6 +18,7 @@ class FakeTsuruClient(object):
         attrs = {"create.return_value": create}
         self.nodes.configure_mock(**attrs)
 
+
 class NodeAddViewTest(TestCase):
     @patch.object(NodeAdd, "client", FakeTsuruClient(error="something is wrong"))
     @patch("tsuru_dashboard.auth.views.token_is_valid")
