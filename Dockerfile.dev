@@ -1,0 +1,30 @@
+FROM tsuru/python
+
+ENV PORT 8000
+ENV SOURCE_DIR /home/application/current
+ENV DEBUG true
+RUN mkdir -p $SOURCE_DIR
+WORKDIR $SOURCE_DIR
+EXPOSE $PORT
+
+COPY requirements.apt .
+RUN apt-get update && \
+    cat requirements.apt | xargs apt-get install -y --force-yes
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+COPY . .
+RUN python manage.py migrate --noinput
+RUN python manage.py createcachetable
+RUN python manage.py collectstatic --noinput
+RUN make deps
+
+# install nodejs & yarn
+RUN curl -sL https://deb.nodesource.com/setup_6.x | bash - && \
+    curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
+    echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list && \
+    apt-get update && \
+    apt-get install -y nodejs build-essential yarn && \
+    rm -rf /var/lib/apt/lists/*
+
+CMD gunicorn --access-logfile - -b 0.0.0.0:$PORT -w 2 abyss.wsgi -k gevent
