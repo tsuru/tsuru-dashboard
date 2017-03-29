@@ -17,7 +17,7 @@ setup(
         "python-dateutil>=2.4.2",
         "pytz>=2015.4",
         "Pygments>=2.0.2",
-        "tsuruclient==0.3.3",
+        "tsuruclient>=0.3.4",
         "grequests>=0.3.0",
         "Pygments>=2.1.3",
         "pymongo>=3.3.0",

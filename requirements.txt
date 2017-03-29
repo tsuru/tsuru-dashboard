@@ -1,5 +1,5 @@
 Django==1.10.6
-tsuruclient==0.3.3
+tsuruclient>=0.3.4
 tsuru_dashboard==0.4.10
 gunicorn==19.6.0
 gevent==1.1.1
