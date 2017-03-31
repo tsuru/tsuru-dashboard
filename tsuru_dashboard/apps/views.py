@@ -211,6 +211,15 @@ class CreateApp(LoginRequiredView):
         if form.is_valid():
             # removing keys with empty values
             data = {key: value for key, value in form.cleaned_data.items() if value}
+            if "tags" in data:
+                tag_list = []
+                for tag in data["tags"].split(","):
+                    tag = tag.strip()
+                    if len(tag) > 0:
+                        tag_list.append(tag)
+                if len(tag_list) > 0:
+                    data["tag"] = tag_list
+                del data["tags"]
 
             try:
                 self.client.apps.create(**data)

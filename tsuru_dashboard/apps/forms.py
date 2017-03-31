@@ -7,4 +7,4 @@ class AppForm(forms.Form):
     plan = forms.ChoiceField(required=False)
     teamOwner = forms.ChoiceField(required=False)
     pool = forms.ChoiceField(required=False)
-    tag = forms.CharField(max_length=100, required=False)
+    tags = forms.CharField(required=False)

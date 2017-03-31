@@ -114,6 +114,20 @@ class CreateAppViewTest(TestCase):
         CreateApp.client.apps.create.assert_called_with(name="myepe", platform="django")
 
     @patch.object(CreateApp, "client", FakeTsuruClient())
+    @patch('requests.get')
+    def test_post_should_split_tags(self, get):
+        data = {"name": "myepe", "platform": "django", "tags": " tag 1 , tag 2, tag 3  ,, , "}
+        request = RequestFactory().post("/", data)
+        request.session = {'tsuru_token': 'tokentest'}
+
+        view = CreateApp()
+        view.plans = lambda r: ("basic", [("basic", "basic")])
+        view.platforms = lambda r: [("django", "django")]
+        view.post(request)
+
+        CreateApp.client.apps.create.assert_called_with(name="myepe", platform="django", tag=["tag 1", "tag 2", "tag 3"])
+
+    @patch.object(CreateApp, "client", FakeTsuruClient())
     @patch("django.contrib.messages.success")
     @patch('requests.get')
     def test_post_with_success_should_redirect_to_app_list(self, get, success):

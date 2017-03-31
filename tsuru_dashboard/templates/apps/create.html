@@ -58,11 +58,11 @@ select {
             <span class="help-inline">{{ app_form.errors.pool }}</span>
           </div>
         </div>
-        <div class="form-group{% if app_form.errors.tag %}has-error{% endif %}">
-          <label for="{{ app_form.tag.name }}" class="col-sm-2 control-label">Tag</label>
-          <div class="col-sm-2">
-            <input type="text" class="form-control" id="{{ app_form.tag.name}}" value="{{ app_form.tag.value|default:"" }}" name="{{ app_form.tag.name }}">
-            <span class="help-inline">{{ app_form.errors.tag }}</span>
+        <div class="form-group{% if app_form.errors.tags %}has-error{% endif %}">
+          <label for="{{ app_form.tags.name }}" class="col-sm-2 control-label">Tags</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="{{ app_form.tags.name}}" value="{{ app_form.tags.value|default:"" }}" name="{{ app_form.tags.name }}">
+            <span class="help-inline">{{ app_form.errors.tags }}</span>
           </div>
         </div>
         <div class="form-group">
