@@ -28,6 +28,7 @@ from pygments.formatters import HtmlFormatter
 
 from tsuru_dashboard import settings, engine
 from tsuru_dashboard.auth.views import LoginRequiredView, LoginRequiredMixin
+from tsuruclient.base import TsuruAPIError
 
 from .forms import AppForm
 
@@ -208,19 +209,15 @@ class CreateApp(LoginRequiredView):
         form.fields['teamOwner'].choices = self.teams(request)
         form.fields['pool'].choices = self.pools(request)
         if form.is_valid():
-            authorization = {'authorization': request.session.get('tsuru_token')}
-
             # removing keys with empty values
             data = {key: value for key, value in form.cleaned_data.items() if value}
 
-            url = '{}/apps'.format(settings.TSURU_HOST)
-            response = requests.post(url, data=data, headers=authorization)
-
-            if response.status_code == 201:
+            try:
+                self.client.apps.create(**data)
                 messages.success(request, u'App was successfully created', fail_silently=True)
                 return redirect(reverse('list-app'))
-
-            messages.error(request, response.content, fail_silently=True)
+            except TsuruAPIError as e:
+                messages.error(request, e.message, fail_silently=True)
 
         form.fields['plan'].initial = default
         context['app_form'] = form
