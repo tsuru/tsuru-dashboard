@@ -58,6 +58,13 @@ select {
             <span class="help-inline">{{ app_form.errors.pool }}</span>
           </div>
         </div>
+        <div class="form-group{% if app_form.errors.tag %}has-error{% endif %}">
+          <label for="{{ app_form.tag.name }}" class="col-sm-2 control-label">Tag</label>
+          <div class="col-sm-2">
+            <input type="text" class="form-control" id="{{ app_form.tag.name}}" value="{{ app_form.tag.value|default:"" }}" name="{{ app_form.tag.name }}">
+            <span class="help-inline">{{ app_form.errors.tag }}</span>
+          </div>
+        </div>
         <div class="form-group">
           <div class="col-sm-offset-2 col-sm-10">
             <button type="submit" class="btn btn-default">Create app</button>
