@@ -10,9 +10,14 @@
 
 {% block extra_css %}
 <style>
-select {
-  float: left;
-}
+  select {
+    float: left;
+  }
+
+  .info-icon {
+    color: #337ab7;
+    margin-left: 5px;
+  }
 </style>
 {% endblock %}
 
@@ -58,6 +63,16 @@ select {
             <span class="help-inline">{{ app_form.errors.pool }}</span>
           </div>
         </div>
+        <div class="form-group{% if app_form.errors.tags %}has-error{% endif %}">
+          <label for="{{ app_form.tags.name }}" class="col-sm-2 control-label" data-toggle="tooltip">
+              Tags
+              <span class="glyphicon glyphicon-info-sign info-icon" title="Separate multiple tags with commas"></span>
+          </label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="{{ app_form.tags.name}}" value="{{ app_form.tags.value|default:"" }}" name="{{ app_form.tags.name }}">
+            <span class="help-inline">{{ app_form.errors.tags }}</span>
+          </div>
+        </div>
         <div class="form-group">
           <div class="col-sm-offset-2 col-sm-10">
             <button type="submit" class="btn btn-default">Create app</button>
@@ -94,29 +109,33 @@ select {
 
 {% block extra_js %}
 <script>
-$("button.add-team").on("click", function(e) {
-  e.preventDefault();
-  var form = $("#add-team-form");
-  var new_team = form.find("input#name").val();
-  var token = form.serialize();
-  var team = "&name=".concat(new_team)
-  var form_data = token.concat(team);
-  $.post(form.attr("action"), form_data, function(data){
-    $.get("/teams/", function(data) {
-      var teams = $(data).find(".teams li a");
-      $("#id_teamOwner").empty();
-      teams.each(function(index, item) {
-        var team = $(item).text();
-        var opt = $("<option/>");
-        opt.attr({"value": team}).text(team);
-        if (team === new_team) {
-          opt.attr({"selected": true})
-        }
-        $("#id_teamOwner").append(opt);
+  $("button.add-team").on("click", function(e) {
+    e.preventDefault();
+    var form = $("#add-team-form");
+    var new_team = form.find("input#name").val();
+    var token = form.serialize();
+    var team = "&name=".concat(new_team)
+    var form_data = token.concat(team);
+    $.post(form.attr("action"), form_data, function(data) {
+      $.get("/teams/", function(data) {
+        var teams = $(data).find(".teams li a");
+        $("#id_teamOwner").empty();
+        teams.each(function(index, item) {
+          var team = $(item).text();
+          var opt = $("<option/>");
+          opt.attr({"value": team}).text(team);
+          if (team === new_team) {
+            opt.attr({"selected": true})
+          }
+          $("#id_teamOwner").append(opt);
+        });
+        $("#add-team-modal").modal("hide");
       });
-      $("#add-team-modal").modal("hide");
     });
   });
-});
+
+  $(function () {
+    $('.info-icon').tooltip();
+  });
 </script>
 {% endblock %}

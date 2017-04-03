@@ -3,6 +3,7 @@ from django.core.urlresolvers import reverse
 from django.conf import settings
 
 from importlib import import_module
+from tsuru_dashboard import settings as tsuru_settings
 
 from mock import patch, Mock
 
@@ -34,7 +35,7 @@ class NodeRemoveViewTest(TestCase):
         self.assertEqual(302, response.status_code)
         self.assertRedirects(response, reverse("pool-list"))
 
-        api_url = "http://localhost:8080/docker/node/http://localhost:2345"
+        api_url = "{}/docker/node/http://localhost:2345".format(tsuru_settings.TSURU_HOST)
         query = "?remove-iaas=false&no-rebalance=true"
         headers = {'authorization': u'admin'}
         delete.assert_called_with(api_url + query, headers=headers)
@@ -58,7 +59,7 @@ class NodeRemoveViewTest(TestCase):
         self.assertEqual(302, response.status_code)
         self.assertRedirects(response, reverse("pool-list"))
 
-        api_url = "http://localhost:8080/docker/node/http://localhost:2345"
+        api_url = "{}/docker/node/http://localhost:2345".format(tsuru_settings.TSURU_HOST)
         query = "?remove-iaas=true&no-rebalance=false"
         headers = {'authorization': u'admin'}
         delete.assert_called_with(api_url + query, headers=headers)
@@ -82,7 +83,7 @@ class NodeRemoveViewTest(TestCase):
         self.assertEqual(302, response.status_code)
         self.assertRedirects(response, reverse("pool-list"))
 
-        api_url = "http://localhost:8080/docker/node/http://localhost:2345"
+        api_url = "{}/docker/node/http://localhost:2345".format(tsuru_settings.TSURU_HOST)
         query = "?remove-iaas=false&no-rebalance=true"
         headers = {'authorization': u'admin'}
         delete.assert_called_with(api_url + query, headers=headers)
@@ -105,7 +106,7 @@ class NodeRemoveViewTest(TestCase):
         self.assertEqual(404, response.status_code)
         self.assertEqual("custom error", response.content)
 
-        api_url = "http://localhost:8080/docker/node/http://localhost:2345"
+        api_url = "{}/docker/node/http://localhost:2345".format(tsuru_settings.TSURU_HOST)
         query = "?remove-iaas=true&no-rebalance=false"
         headers = {'authorization': u'admin'}
         delete.assert_called_with(api_url + query, headers=headers)
