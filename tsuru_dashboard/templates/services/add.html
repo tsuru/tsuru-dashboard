@@ -1,5 +1,14 @@
 {% extends "base.html" %}
 
+{% block extra_css %}
+<style>
+	.info-icon {
+		color: #337ab7;
+		margin-left: 5px;
+	}
+</style>
+{% endblock %}
+
 {% block sidebar %}
 {% include "sidebar.html" with active="services" %}
 {% endblock %}
@@ -10,8 +19,8 @@
 
 {% block bar %}
 <div class="bar">
-  <a href="/">dashboard</a> <span class="arrow">></span>
-  <a href="{% url 'service-list' %}">services</a> <span class="arrow">></span>
+	<a href="/">dashboard</a> <span class="arrow">></span>
+	<a href="{% url 'service-list' %}">services</a> <span class="arrow">></span>
 	{{ service.name }}
 </div>
 {% endblock %}
@@ -20,33 +29,73 @@
 <div class="container-fluid">
 	<div class="row">
 		<div class="col-md-12">
-			<form action="" method="post">
+			<form action="" method="post" class="form-horizontal">
 				{% csrf_token %}
 				<fieldset>
-					<div class="control-group">
-						<label>Name</label>
-						<input type="text" class="input-xlarge" name="name">
-						<label>Team</label>
-						<select name="team">
-							<option></option>
-							{% for team in teams %}
-							<option value={{ team.name }}>{{ team.name }}</option>
-							{% endfor %}
-						</select>
-                        <label>Plan</label>
-                        <select name="plan">
-							<option></option>
-							{% for plan in plans %}
-							<option value={{ plan.Name }}>{{ plan.Name }}</option>
-							{% endfor %}
-						</select>
-                        <label>Description</label>
-                        <input type="text" class="input-xlarge" name="description">
+					<div class="form-group">
+						<label class="col-sm-2 control-label" for="name">Name</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" name="name">
+						</div>
 					</div>
-					<button class="btn primary" type="submit">Add</button>
+
+					<div class="form-group">
+						<label class="col-sm-2 control-label" for="team">Team</label>
+						<div class="col-sm-10">
+							<select name="team">
+								<option></option>
+								{% for team in teams %}
+								<option value={{ team.name }}>{{ team.name }}</option>
+								{% endfor %}
+							</select>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-2 control-label" for="plan">Plan</label>
+						<div class="col-sm-10">
+							<select name="plan">
+								<option></option>
+								{% for plan in plans %}
+								<option value={{ plan.Name }}>{{ plan.Name }}</option>
+								{% endfor %}
+							</select>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-2 control-label" for="description">Description</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" name="description">
+						</div>
+					</div>
+
+				<div class="form-group">
+					<label for="tags" class="col-sm-2 control-label" data-toggle="tooltip">
+							Tags
+							<span class="glyphicon glyphicon-info-sign info-icon" title="Separate multiple tags with commas"></span>
+					</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="tags" name="tags">
+					</div>
+				</div>
+
+					<div class="form-group">
+						<div class="col-sm-offset-2 col-sm-10">
+							<button class="btn primary" type="submit">Add</button>
+						</div>
+					</div>
 				</fieldset>
 			</form>
 		</div>
 	</div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+	$(function () {
+		$('.info-icon').tooltip();
+	});
+</script>
 {% endblock %}

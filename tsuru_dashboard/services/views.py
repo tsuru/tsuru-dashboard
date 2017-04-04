@@ -69,6 +69,15 @@ class ServiceAdd(LoginRequiredView):
             "description": request.POST["description"],
             "plan": request.POST["plan"],
         }
+        if "tags" in request.POST:
+            tag_list = []
+            for tag in request.POST["tags"].split(","):
+                tag = tag.strip()
+                if len(tag) > 0:
+                    tag_list.append(tag)
+            if len(tag_list) > 0:
+                data["tag"] = tag_list
+
         response = requests.post(url, data=data, headers=self.authorization)
 
         if response.status_code == 201:
