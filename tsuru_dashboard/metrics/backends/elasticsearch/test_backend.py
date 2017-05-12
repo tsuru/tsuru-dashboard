@@ -49,7 +49,7 @@ class NodesMetricsBackendTest(TestCase):
         self.aggregation = {
             "addrs": {
                 "terms": {
-                    "field": "addr.raw",
+                    "field": "addr.keyword",
                     "include": "127.0.0.1|128.0.0.1",
                     "size": 2
                 },
@@ -60,7 +60,7 @@ class NodesMetricsBackendTest(TestCase):
         self.net_aggregation = {
             "addrs": {
                 "terms": {
-                    "field": "addr.raw",
+                    "field": "addr.keyword",
                     "include": "127.0.0.1|128.0.0.1",
                     "size": 2
                 },

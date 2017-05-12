@@ -16,10 +16,10 @@ class ElasticSearchFilterTest(TestCase):
                         }
                     },
                     {
-                        "term": {"app.raw": "app_name"}
+                        "term": {"app.keyword": "app_name"}
                     },
                     {
-                        "term": {"process.raw": "process_name"}
+                        "term": {"process.keyword": "process_name"}
                     }
                 ]
             }
@@ -40,7 +40,7 @@ class ElasticSearchFilterTest(TestCase):
                         }
                     },
                     {
-                        "term": {"container.raw": "comp_name"}
+                        "term": {"container.keyword": "comp_name"}
                     },
                 ]
             }
@@ -63,7 +63,7 @@ class ElasticSearchFilterTest(TestCase):
                     {
                         "bool": {
                             "should": [
-                                {"terms": {"addr.raw": ["127.0.0.1"]}},
+                                {"terms": {"addr.keyword": ["127.0.0.1"]}},
                             ]
                         },
                     },

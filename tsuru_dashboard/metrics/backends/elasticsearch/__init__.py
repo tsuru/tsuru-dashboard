@@ -8,16 +8,20 @@ import datetime
 NET_AGGREGATION = {
     "units": {
         "terms": {
-            "field": "host.raw"
+            "field": "host.keyword"
         },
         "aggs": {
             "delta": {
                 "scripted_metric": {
-                    "init_script": """
+                    "init_script": {
+                        "lang": "groovy",
+                        "inline": """
 _agg['max'] = [ts: 0, val: null]
 _agg['min'] = [ts: 0, val: null]
-""",
-                    "map_script": """
+"""},
+                    "map_script": {
+                        "lang": "groovy",
+                        "inline": """
 ts = doc['@timestamp'][0]
 val = doc['value'][0]
 if (ts > _agg.max.ts) {
@@ -28,8 +32,10 @@ if (_agg.min.ts == 0 || ts < _agg.min.ts) {
     _agg.min.ts = ts
     _agg.min.val = val
 }
-""",
-                    "reduce_script": """
+"""},
+                    "reduce_script": {
+                        "lang": "groovy",
+                        "inline": """
 max = null
 min = null
 for (a in _aggs) {
@@ -46,7 +52,7 @@ if (dt > 0) {
 } else {
     return 0
 }
-"""
+"""}
                 }
             }
         }
@@ -56,11 +62,7 @@ if (dt > 0) {
 
 class ElasticSearchFilter(object):
     def query(self):
-        return {
-            "filtered": {
-                "filter": self.filter
-            }
-        }
+        return self.filter
 
     def term_filter(self, field, value):
         return {"term": {field: value}}
@@ -95,7 +97,7 @@ class NodeFilter(ElasticSearchFilter):
         self.filter = self.node_filter(node)
 
     def node_filter(self, node):
-        return self.metric_filter(self.terms_filter("addr.raw", node))
+        return self.metric_filter(self.terms_filter("addr.keyword", node))
 
 
 class ComponentFilter(ElasticSearchFilter):
@@ -105,7 +107,7 @@ class ComponentFilter(ElasticSearchFilter):
 
     def component_filter(self, component):
         f = self.metric_filter()
-        f["bool"]["must"].append(self.term_filter("container.raw", component))
+        f["bool"]["must"].append(self.term_filter("container.keyword", component))
         return f
 
 
@@ -116,10 +118,10 @@ class AppFilter(ElasticSearchFilter):
 
     def app_filter(self, app, process_name):
         f = self.metric_filter()
-        f["bool"]["must"].append(self.term_filter("app.raw", app))
+        f["bool"]["must"].append(self.term_filter("app.keyword", app))
 
         if process_name:
-            p = self.term_filter("process.raw", process_name)
+            p = self.term_filter("process.keyword", process_name)
             f["bool"]["must"].append(p)
         return f
 
@@ -168,7 +170,7 @@ class ElasticSearch(object):
 
     def cpu_max(self, interval=None):
         query = self.query(interval=interval)
-        query["query"]["filtered"]["filter"]["bool"]["must"].append(
+        query["query"]["bool"]["must"].append(
             {"range": {"value": {"lt": 500}}}
         )
         response = self.post(query, "cpu_max")
@@ -203,7 +205,7 @@ class ElasticSearch(object):
         return result, value, value
 
     def units(self, interval=None):
-        aggregation = {"units": {"cardinality": {"field": "host.raw"}}}
+        aggregation = {"units": {"cardinality": {"field": "host.keyword"}}}
         query = self.query(interval=interval, aggregation=aggregation)
         return self.base_process(self.post(query, "cpu_max"), self.units_process)
 
@@ -260,7 +262,7 @@ class ElasticSearch(object):
             "aggs": {
                 "top": {
                     "terms": {
-                        "script": "doc['method'].value +'|-o-|'+doc['path.raw'].value +'|-o-|'+doc['status_code'].value",
+                        "script": "doc['method'].value +'|-o-|'+doc['path.keyword'].value +'|-o-|'+doc['status_code'].value",
                         "order": {
                             "stats.max": "desc"
                         }
@@ -358,7 +360,7 @@ class ElasticSearch(object):
     def connections(self, interval=None):
         aggregation = {
             "connection": {
-                "terms": {"field": "connection.raw"}
+                "terms": {"field": "connection.keyword"}
             }
         }
         query = self.query(interval=interval, aggregation=aggregation)
@@ -546,7 +548,7 @@ class NodesMetricsBackend(TsuruMetricsBackend):
         return {
             "addrs": {
                 "terms": {
-                    "field": "addr.raw",
+                    "field": "addr.keyword",
                     "include": '|'.join(self.addrs),
                     "size": len(self.addrs)
                 },

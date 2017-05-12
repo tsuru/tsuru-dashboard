@@ -36,7 +36,7 @@ class ElasticSearchTest(TestCase):
     def test_units(self, post_mock):
         self.es.units()
         url = "{}/{}/{}/_search".format(self.es.url, self.index, "cpu_max")
-        aggregation = {"units": {"cardinality": {"field": "host.raw"}}}
+        aggregation = {"units": {"cardinality": {"field": "host.keyword"}}}
         post_mock.assert_called_with(url, data=json.dumps(self.es.query(aggregation=aggregation)))
 
     @patch("requests.post")
@@ -80,7 +80,7 @@ class ElasticSearchTest(TestCase):
             "aggs": {
                 "top": {
                     "terms": {
-                        "script": "doc['method'].value +'|-o-|'+doc['path.raw'].value +'|-o-|'+doc['status_code'].value",
+                        "script": "doc['method'].value +'|-o-|'+doc['path.keyword'].value +'|-o-|'+doc['status_code'].value",
                         "order": {
                             "stats.max": "desc"
                         }
@@ -104,7 +104,7 @@ class ElasticSearchTest(TestCase):
     def test_connections(self, post_mock):
         self.es.connections()
         url = "{}/{}/{}/_search".format(self.es.url, self.index, "connection")
-        aggregation = {"connection": {"terms": {"field": "connection.raw"}}}
+        aggregation = {"connection": {"terms": {"field": "connection.keyword"}}}
         post_mock.assert_called_with(url, data=json.dumps(self.es.query(aggregation=aggregation)))
 
     @patch("requests.post")
