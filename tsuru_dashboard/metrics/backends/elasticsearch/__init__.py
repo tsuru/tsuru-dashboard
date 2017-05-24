@@ -1,4 +1,5 @@
 from tsuru_dashboard import settings
+from tsuru_dashboard.metrics.backends import base
 
 import requests
 import json
@@ -371,7 +372,7 @@ class ElasticSearch(object):
         max_value = 0
         for doc in bucket["connection"]["buckets"]:
             size = doc["doc_count"]
-            conn = doc["key"]
+            conn = base.set_destination_hostname(doc["key"])
             if conn not in result:
                 result[conn] = []
 

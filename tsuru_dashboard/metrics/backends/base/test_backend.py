@@ -1,6 +1,7 @@
 from django.test import TestCase
 from tsuru_dashboard.metrics.backends import base
 from mock import patch, Mock
+from tsuru_dashboard import settings
 
 
 class BackendTest(TestCase):
@@ -19,3 +20,20 @@ class BackendTest(TestCase):
 
         envs = base.get_envs_from_api(app, 'token')
         self.assertDictEqual(envs, data)
+
+    def test_set_destination_hostname(self):
+        tests = [
+            ("", ""),
+            ("x", "x"),
+            ("192.168.1.1", "192.168.1.1"),
+            ("192.168.1.1:1234", "192.168.1.1:1234"),
+            ("127.0.0.1", "127.0.0.1(localhost)"),
+            ("127.0.0.1:1234", "127.0.0.1:1234(localhost)"),
+        ]
+        settings.RESOLVE_CONNECTION_HOSTS = False
+        for v1, v2 in tests:
+            self.assertEqual(base.set_destination_hostname(v1), v1)
+        settings.RESOLVE_CONNECTION_HOSTS = True
+        for v1, v2 in tests:
+            self.assertEqual(base.set_destination_hostname(v1), v2)
+        settings.RESOLVE_CONNECTION_HOSTS = False

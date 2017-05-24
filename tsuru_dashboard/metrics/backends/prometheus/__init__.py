@@ -3,6 +3,8 @@ import requests
 from datetime import datetime, timedelta
 from time import mktime
 
+from tsuru_dashboard.metrics.backends import base
+
 
 class Prometheus(object):
     def __init__(self, url, query, date_range=None):
@@ -123,7 +125,7 @@ class Prometheus(object):
         results = result.json()['data']['result']
         data = {}
         for r in results:
-            data[r['metric']['destination']] = self.default_processor(r['values'])
+            data[base.set_destination_hostname(r['metric']['destination'])] = self.default_processor(r['values'])
         return data
 
 
