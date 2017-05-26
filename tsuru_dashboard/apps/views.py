@@ -448,6 +448,8 @@ class Settings(AppMixin, TemplateView):
         context = super(Settings, self).get_context_data(*args, **kwargs)
         app_name = kwargs['app_name']
         context['app']['envs'] = self.get_envs(app_name)
+        if context['app']['tags'] is not None:
+            context['app']['tags'] = ','.join(context['app']['tags'])
         return context
 
 

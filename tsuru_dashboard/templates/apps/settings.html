@@ -13,7 +13,7 @@
       <p><strong>Git URL:</strong> {{ app.repository }}</p>
       <p><strong>Platform:</strong> {{ app.platform }}</p>
       <p><strong>Pool:</strong> {{ app.pool }}</p>
-      <p><strong>Tags:</strong> {{ app.tags|join:", " }}</p>
+      <p><strong>Tags:</strong> {{ app.tags }}</p>
     </div>
     {% if app.lock.Locked %}
     <h3>App locked</h3>
