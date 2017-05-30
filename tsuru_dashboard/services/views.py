@@ -39,7 +39,12 @@ class ServiceInstanceDetail(LoginRequiredView, TemplateView):
     def get_instance(self, service_name, instance_name):
         url = "{}/services/{}/instances/{}".format(settings.TSURU_HOST, service_name, instance_name)
         response = requests.get(url, headers=self.authorization)
-        return response.json()
+        respjson = response.json()
+        if respjson["Tags"] is None or '' or []:
+            respjson["Tags"] = ''
+        else:
+            respjson["Tags"] = ','.join(respjson["Tags"])
+        return respjson
 
     def get_context_data(self, *args, **kwargs):
         context = super(ServiceInstanceDetail, self).get_context_data(*args, **kwargs)
