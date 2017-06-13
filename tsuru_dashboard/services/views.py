@@ -43,7 +43,7 @@ class ServiceInstanceDetail(LoginRequiredView, TemplateView):
         if respjson["Tags"] is None or '' or []:
             respjson["Tags"] = ''
         else:
-            respjson["Tags"] = ','.join(respjson["Tags"])
+            respjson["Tags"] = ', '.join(respjson["Tags"])
         return respjson
 
     def get_context_data(self, *args, **kwargs):

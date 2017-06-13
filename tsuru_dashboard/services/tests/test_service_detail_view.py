@@ -24,7 +24,7 @@ class ServiceInstanceDetailViewTest(TestCase):
                                                    instance="instance")
 
         self.assertIn("services/detail.html", response.template_name)
-        self.assertDictEqual({u'Name': u'instance', u'Tags': u'tag1,tag2'}, response.context_data['instance'])
+        self.assertDictEqual({u'Name': u'instance', u'Tags': u'tag1, tag2'}, response.context_data['instance'])
         url = '{}/services/{}/instances/{}'.format(settings.TSURU_HOST, "service", "instance")
         get.assert_called_with(url, headers={'authorization': 'admin'})
 
