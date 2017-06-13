@@ -37,7 +37,7 @@ class AppSettingsTestCase(TestCase):
     def test_should_get_the_app_info_from_tsuru(self):
         self.assertDictEqual(self.expected, self.response.context_data["app"])
 
-    @patch('requests.get')
+    @patch("requests.get")
     @patch("tsuru_dashboard.auth.views.token_is_valid")
     def test_not_found(self, token_is_valid, requests_mock):
         token_is_valid.return_value = True
@@ -47,3 +47,32 @@ class AppSettingsTestCase(TestCase):
 
         with self.assertRaises(Http404):
             Settings.as_view()(request, app_name="app1")
+
+    @patch("requests.get")
+    @patch("tsuru_dashboard.auth.views.token_is_valid")
+    def test_app_tags(self, token_is_valid, requests_mock):
+        token_is_valid.return_value = True
+        request = RequestFactory().get("/")
+        request.session = {"tsuru_token": "admin"}
+        response_mock = Mock(status_code=200)
+        requests_mock.return_value = response_mock
+
+        # Empty string
+        response_mock.json.return_value = {"tags": ""}
+        response = Settings.as_view()(request, app_name="app1")
+        self.assertEqual("", response.context_data["app"]["tags"])
+
+        # Empty array
+        response_mock.json.return_value = {"tags": []}
+        response = Settings.as_view()(request, app_name="app1")
+        self.assertEqual("", response.context_data["app"]["tags"])
+
+        # None
+        response_mock.json.return_value = {"tags": None}
+        response = Settings.as_view()(request, app_name="app1")
+        self.assertEqual("", response.context_data["app"]["tags"])
+
+        # Valid tags
+        response_mock.json.return_value = {"tags": ["tag1", "tag2"]}
+        response = Settings.as_view()(request, app_name="app1")
+        self.assertEqual("tag1, tag2", response.context_data["app"]["tags"])
