@@ -47,6 +47,7 @@ class SignupViewTest(TestCase):
     @patch('requests.get')
     def test_post_sends_to_tsuru_with_args_expected(self, get, post):
         get.return_value = Mock(status_code=200)
+        post.return_value = Mock(status_code=201)
         data = {'email': 'test@test.com', 'password': 'abc123',
                 'same_password_again': 'abc123'}
         request = self.factory.post('/signup', data)
