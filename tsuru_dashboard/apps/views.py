@@ -447,11 +447,11 @@ class Settings(AppMixin, TemplateView):
     def get_context_data(self, *args, **kwargs):
         context = super(Settings, self).get_context_data(*args, **kwargs)
         app_name = kwargs['app_name']
-        context['app']['envs'] = self.get_envs(app_name)
-        if context['app']['tags'] is None or '' or []:
-            context['app']['tags'] = ''
-        else:
-            context['app']['tags'] = ', '.join(context['app']['tags'])
+        ctx_app = context['app']
+        ctx_app['envs'] = self.get_envs(app_name)
+        if 'tags' not in ctx_app:
+            ctx_app['tags'] = None
+        ctx_app['tags'] = ', '.join(ctx_app['tags'] or [])
         return context
 
 

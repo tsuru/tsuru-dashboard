@@ -57,6 +57,11 @@ class AppSettingsTestCase(TestCase):
         response_mock = Mock(status_code=200)
         requests_mock.return_value = response_mock
 
+        # Not set
+        response_mock.json.return_value = {}
+        response = Settings.as_view()(request, app_name="app1")
+        self.assertEqual("", response.context_data["app"]["tags"])
+
         # Empty string
         response_mock.json.return_value = {"tags": ""}
         response = Settings.as_view()(request, app_name="app1")
