@@ -1,8 +1,6 @@
 FROM tsuru/python
 ADD . /home/application/current
 WORKDIR /home/application/current
-USER ubuntu
-RUN cat requirements.apt | xargs sudo apt-get install -y --force-yes
 RUN pip install -r requirements.txt
 RUN python manage.py migrate --noinput
 RUN python manage.py createcachetable
