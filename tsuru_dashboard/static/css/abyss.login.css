@@ -3,27 +3,36 @@ body {
 	padding-bottom: 40px;
 	background-color: #222233;
 }
+
+.login-container {
+	top: 50%;
+  left: 50%;
+  position: absolute;
+  transform: translate(-50%, -60%);
+}
+
 .logo {
-	max-width: 200px;
+	max-width: 650px;
 	padding: 19px 29px 29px;
 	margin: 0 auto 20px;
 }
 .logo img {
-    max-width: 100%;
+    width: 100%;
     height: auto;
 }
 .form-signin {
 	max-width: 300px;
-	padding: 19px 29px 29px;
-	margin: 0 auto 20px;
-	background-color: #fff;
-	border: 1px solid #e5e5e5;
-	-webkit-border-radius: 5px;
-	-moz-border-radius: 5px;
-	border-radius: 5px;
-	-webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
-	-moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
-	box-shadow: 0 1px 2px rgba(0,0,0,.05);
+	margin: 0 auto 30px;
+	border: none;
+}
+.form-signin__basic-auth {
+	background-color: transparent;
+  max-width: 360px;
+}
+.form-signin__basic-auth .form-actions .button-login {
+	width: 100%;
+  line-height: 45px;
+  margin-top: 25px;
 }
 .form-signin input[type="text"],
 .form-signin input[type="password"] {
@@ -31,6 +40,20 @@ body {
 	height: auto;
 	margin-bottom: 0;
 	padding: 7px 9px;
+  background: transparent;
+	border: none;
+	border-bottom: 1px solid #ccc;
+	color: #fff;
+}
+.form-signin input[type="text"]:focus,
+.form-signin input[type="password"]:focus {
+    outline: none;
+		border-bottom: 1px solid rgb(54, 216, 131);
+}
+.form-signin input[type="text"]:-webkit-autofill,
+.form-signin input[type="password"]:-webkit-autofill {
+	transition: background-color 5000s ease-in-out 0s;
+	-webkit-text-fill-color: #fff;
 }
 .form-signin div.input-wrapper {
 	margin-bottom: 15px;
@@ -54,4 +77,47 @@ body {
 }
 .form-actions {
 	margin: 0px;
+}
+.form-actions .button-login {
+	text-transform: uppercase;
+  color: #fff;
+  font-size: 20px;
+  text-align: center;
+  display: block;
+  line-height: 60px;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	background-color: rgb(54, 216, 131);
+}
+.form-actions .button-login:hover {
+	background-color: rgb(46, 185, 112);
+}
+.form-actions .button-login a {
+  color: #fff;
+	display: block;
+	height: 100%;
+}
+.form-actions .button-login a:hover {
+    text-decoration: none;
+}
+.form-actions .button-login input {
+  background-color: transparent;
+	border: none;
+	text-transform: uppercase;
+  font-size: 20px;
+	width: 100%;
+}
+.form-actions .button-login input:focus {
+	outline: none;
+}
+.form-actions .lost-password {
+	text-align: center;
+  margin-top: 5px;
+  display: block;
+}
+.form-actions .lost-password .flip-link{
+	text-decoration: underline;
+  letter-spacing: 0.8px;
+  color: #ccc;
 }

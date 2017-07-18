@@ -35,7 +35,7 @@ class TokenRequestForm(forms.Form):
 
 class LoginForm(forms.Form):
     username = forms.EmailField(max_length=60, widget=forms.TextInput(attrs={'placeholder': 'Username'}))
-    password = forms.CharField(widget=widgets.PasswordInput, min_length=6)
+    password = forms.CharField(widget=widgets.PasswordInput(attrs={'placeholder': 'Password'}), min_length=6)
 
 
 class AddUserToTeamForm(forms.Form):

@@ -12,23 +12,24 @@
 	<link rel="icon" type="image/x-icon" href="{% static "img/favicon.ico" %}" />
 </head>
 <body>
-	<div class="container">
+	<div class="container login-container">
 		<div class="logo">
 			<img src="{% static "img/brand.svg" %}" />
 		</div>
 		{% if scheme_info.name == "oauth" %}
 		<form class="form-signin" action="" method="get">
 			<div class="form-actions">
-				<a href="{{ authorize_url }}" class="btn btn-default">Login</a>
+				<div class="button-login">
+					<a href="{{ authorize_url }}">Login</a>
+				</div>
 			</div>
 		</form>
 		{% else %}
-		<form class="form-signin" action="" method="post">
+		<form class="form-signin form-signin__basic-auth" action="" method="post">
 			{% csrf_token %}
 			{% if form.non_field_errors|length > 0 %}
 			{% for error in form.non_field_errors %}<div class="alert alert-error">{{ error }}</div>{% endfor %}
 			{% else %}
-			<p>Enter username and password to continue.</p>
 			{% endif %}
 			<div class="input-wrapper">
 				{{ form.username }}
@@ -39,8 +40,8 @@
 				{{ form.password.errors }}
 			</div>
 			<div class="form-actions">
-				<span class="pull-left"><a href="#" class="flip-link" id="to-recover">Lost password?</a></span>
-				<span class="pull-right"><input type="submit" class="btn btn-default" value="Login" /></span>
+				<div class="button-login"><input type="submit" value="Login" /></div>
+				<span class="lost-password"><a href="#" class="flip-link" id="to-recover">Lost password?</a></span>
 				<div class="clearfix"></div>
 			</div>
 		</form>
