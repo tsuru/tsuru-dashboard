@@ -45,6 +45,10 @@ body {
 	border-bottom: 1px solid #ccc;
 	color: #fff;
 }
+.form-signin .errorlist + input[type="text"],
+.form-signin .errorlist + input[type="password"] {
+	border-bottom: 1px solid #d40b0b;
+}
 .form-signin input[type="text"]:focus,
 .form-signin input[type="password"]:focus {
     outline: none;
@@ -66,13 +70,14 @@ body {
             box-sizing: border-box;
 }
 .form-signin div.input-wrapper > ul.errorlist {
-	background: #FFC4C4;
-	border: 1px solid #C20000;
-	margin: 0;
+	margin-top: 2px;
+  color: #d40b0b;
+	padding: 0;
+  position: relative;
+  top: 66px;
 }
 .form-signin div.input-wrapper > ul.errorlist li {
 	list-style: none;
-	padding: 5px;
 	font-size: 0.9em;
 }
 .form-actions {
