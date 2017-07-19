@@ -6,9 +6,9 @@ body {
 
 .login-container {
 	top: 50%;
-  left: 50%;
-  position: absolute;
-  transform: translate(-50%, -60%);
+	left: 50%;
+	position: absolute;
+	transform: translate(-50%, -60%);
 }
 
 .logo {
