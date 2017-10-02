@@ -24,21 +24,47 @@ h1 {
   line-height: 1.1;
 }
 
-.events.table th, .events.table td {
+.events.table th {
   padding: 14px 0 14px 14px;
+}
+
+.events.table td {
+  padding: 0;
+}
+
+.events.table td a {
+  display: block;
+  padding: 14px 0 14px 14px;
+  color: inherit;
+}
+
+.events.table td.status-col a {
+  padding: 12px 0 12px 14px;
+}
+
+.events.table td a:hover,
+.events.table td a:visited,
+.events.table td a:focus {
+  text-decoration: none;
+  color: inherit;
+}
+
+.events.table tr:hover a {
+  color: #fff;
 }
 
 .events tbody tr:hover {
   background-color: #0769de;
-  color: #fff;
-  cursor: pointer;
 }
 
-.events tr:hover .status-success,
-.events tr:hover .status-running,
-.events tr:hover .status-error,
-.events tr:hover .status-canceled {
+.events tr:hover .status-block {
   color: #fff;
+}
+
+.events .status-block {
+  padding: 2px 5px 2px 5px;
+  display: inline-block;
+  border-radius: 5px;
 }
 
 .events a {
@@ -49,10 +75,12 @@ h1 {
   color: #527c2b;
 }
 
-.events .status-running {
-  color: #333;
+.events .status-running .status-block {
+  background-color: #333;
+  color: #fff;
 }
 
-.events .status-error {
-  color: #bc2e1b;
+.events .status-error .status-block {
+  color: #fff;
+  background-color: #bc2e1b;
 }

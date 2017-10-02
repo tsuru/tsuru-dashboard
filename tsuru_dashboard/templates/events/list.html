@@ -40,39 +40,52 @@
         </thead>
         <tbody>
           {% for event in events %}
-          <tr onclick='window.document.location = "{% url 'event-info' event.UniqueID %}"'>
+          <tr>
             <td>
+              <a href="{% url 'event-info' event.UniqueID %}">
                 {{ event.Kind.Name }}
+              </a>
             </td>
             <td>
-              {{ event.Target.Type }}: {{ event.Target.Value }}
+              <a href="{% url 'event-info' event.UniqueID %}">
+                {{ event.Target.Type }}: {{ event.Target.Value }}
+              </a>
             </td>
             <td>
-              {{ event.Owner.Type }}{% if event.Owner.Name %}: {{ event.Owner.Name }}{% endif %}
+              <a href="{% url 'event-info' event.UniqueID %}">
+                {{ event.Owner.Type }}{% if event.Owner.Name %}: {{ event.Owner.Name }}{% endif %}
+              </a>
             </td>
             <td>
-              {% if event.StartTime %}
-              {{ event.StartTime|date:" d-m-Y H:i:s " }}
-              {% endif %}
+              <a href="{% url 'event-info' event.UniqueID %}">
+                {% if event.StartTime %}
+                {{ event.StartTime|date:" d-m-Y H:i:s " }}
+                {% endif %}
+              </a>
             </td>
             <td>
-              {% if event.EndTime %}
-              {{ event.StartTime|timesince:event.EndTime }}
-              {% endif %}
+              <a href="{% url 'event-info' event.UniqueID %}">
+                {% if event.EndTime %}
+                {{ event.StartTime|timesince:event.EndTime }}
+                {% endif %}
+              </a>
             </td>
-            <td class="{% if not event.Running and not event.CancelInfo.Canceled and not event.Error %}status-success{% endif %}{% if event.Running %}status-running{% endif %}{% if event.Error %}status-error{% endif %}">
-              {% if event.Running %}
-              Running
-              {% endif %}
-              {% if event.Error %}
-              Error
-              {% endif %}
-              {% if not event.Running and not event.CancelInfo.Canceled and not event.Error %}
-              Success
-              {% endif %}
+            <td class="status-col {% if not event.Running and not event.CancelInfo.Canceled and not event.Error %}status-success{% endif %}{% if event.Running %}status-running{% endif %}{% if event.Error %}status-error{% endif %}">
+              <a href="{% url 'event-info' event.UniqueID %}">
+                <div class="status-block">
+                  {% if event.Running %}
+                  Running
+                  {% endif %}
+                  {% if event.Error %}
+                  Error
+                  {% endif %}
+                  {% if not event.Running and not event.CancelInfo.Canceled and not event.Error %}
+                  Success
+                  {% endif %}
+                </div>
+              </a>
             </td>
           </tr>
-          </a>
           {% endfor %}
         </tbody>
       </table>
