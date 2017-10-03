@@ -77,11 +77,13 @@
     <div class="content">
       <p>
         {% if app.cname or app.ip %}
-        <strong>App url:</strong>
-        <a href="http://{{ app.ip }}" target="_blank">http://{{ app.ip }}</a>
-        {% for cname in app.cname %}
-        <a href="http://{{ cname }}" target="_blank">http://{{ cname }}</a>
-        {% endfor %}
+          <strong>App url:</strong>
+          <span class="app-urls">
+            <a href="http://{{ app.ip }}" target="_blank">http://{{ app.ip }}</a>
+            {% for cname in app.cname %}
+              <a href="http://{{ cname }}" target="_blank">http://{{ cname }}</a>
+            {% endfor %}
+          </span>
         {% endif %}
       </p>
     </div>
