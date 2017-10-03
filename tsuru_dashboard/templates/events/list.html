@@ -90,15 +90,15 @@
         </tbody>
       </table>
       <div class="pager">
-        {% if previous %}
+        {% if previous is not None %}
         <span class="page">
-          <a href="?page={{ previous }}{% if request.GET.kindName %}&kindName={{ request.GET.kindName }}{% endif %}">&lt; Prev</a>
+          <a href="?{{ previous }}">&lt; Prev</a>
         </span>
         {% endif %}
 
-        {% if next %}
+        {% if next is not None %}
         <span class="page">
-          <a href="?page={{ next }}{% if request.GET.kindName %}&kindName={{ request.GET.kindName }}{% endif %}">Next &gt;</a>
+          <a href="?{{ next }}">Next &gt;</a>
         </span>
         {% endif %}
       </div>

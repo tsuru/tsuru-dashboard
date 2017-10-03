@@ -69,19 +69,28 @@ class ListEvent(LoginRequiredView, TemplateView):
     def get_context_data(self, *args, **kwargs):
         context = super(ListEvent, self).get_context_data(*args, **kwargs)
 
-        page = int(self.request.GET.get('page', '1'))
+        page = 1
+        try:
+            page = int(self.request.GET.get('page', '1'))
+        except ValueError:
+            pass
 
-        skip = (page * 20) - 20
-        limit = page * 20
+        skip = (page - 1) * 20
+        limit = 20
 
         context['events'] = self.get_events(skip, limit)
         context['kinds'] = self.get_kinds()
 
+        req_copy = self.request.GET.copy()
         if len(context['events']) >= 20:
-            context['next'] = page + 1
+            req_copy['page'] = page + 1
+            context['next'] = req_copy.urlencode()
 
-        if page > 0:
-            context['previous'] = page - 1
+        if page > 1:
+            req_copy['page'] = page - 1
+            if req_copy['page'] == 1:
+                del req_copy['page']
+            context['previous'] = req_copy.urlencode()
 
         return context
 

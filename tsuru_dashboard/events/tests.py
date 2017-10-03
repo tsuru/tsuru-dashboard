@@ -6,6 +6,7 @@ import bson
 
 from django.test import TestCase
 from django.test.client import RequestFactory
+from django.http import QueryDict
 
 from tsuru_dashboard import settings
 
@@ -40,9 +41,35 @@ class ListEventViewTest(TestCase):
 
         self.assertIn("events/list.html", response.template_name)
         self.assertIn('events', response.context_data.keys())
-        self.assertEqual(3, response.context_data["next"])
-        self.assertEqual(1, response.context_data["previous"])
+        self.assertEqual('page=3', response.context_data["next"])
+        self.assertEqual('', response.context_data["previous"])
         self.assertIn("2", httpretty.last_request().querystring["page"])
+
+    @httpretty.activate
+    @mock.patch("tsuru_dashboard.auth.views.token_is_valid")
+    def test_preserves_querystring_in_pagination(self, token_is_valid):
+        self.mock_kinds()
+
+        token_is_valid.return_value = True
+
+        url = '{}/events'.format(settings.TSURU_HOST)
+        body = json.dumps([{
+            "EndTime": u'2016-08-05T16:35:28.946-03:00',
+            "StartTime": u'2016-08-05T16:35:28.835-03:00'
+        }] * 1000)
+        httpretty.register_uri(httpretty.GET, url, body=body, status=200)
+
+        self.request = RequestFactory().get("/?page=3&kindName=something&errorOnly=true")
+        self.request.session = {"tsuru_token": "admin"}
+        response = ListEvent.as_view()(self.request)
+
+        self.assertIn("events/list.html", response.template_name)
+        self.assertIn('events', response.context_data.keys())
+        next_dict = QueryDict(response.context_data["next"])
+        prev_dict = QueryDict(response.context_data["previous"])
+        self.assertDictEqual(QueryDict('page=4&kindName=something&errorOnly=true'), next_dict)
+        self.assertDictEqual(QueryDict('page=2&kindName=something&errorOnly=true'), prev_dict)
+        self.assertIn("3", httpretty.last_request().querystring["page"])
 
     @httpretty.activate
     @mock.patch("tsuru_dashboard.auth.views.token_is_valid")
