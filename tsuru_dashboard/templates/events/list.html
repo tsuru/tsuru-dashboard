@@ -40,7 +40,7 @@
         </thead>
         <tbody>
           {% for event in events %}
-          <tr>
+          <tr {% if event.Error %}data-container="body" data-toggle="tooltip" title="{{ event.Error|truncatechars:300 }}"{% endif %}>
             <td>
               <a href="{% url 'event-info' event.UniqueID %}">
                 {{ event.Kind.Name }}
@@ -109,4 +109,9 @@
 
 {% block extra_js %}
 <script src="{% static "js/event-list.js" %}"></script>
+<script>
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip();
+})
+</script>
 {% endblock %}
