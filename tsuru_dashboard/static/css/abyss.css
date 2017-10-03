@@ -42,13 +42,8 @@ ul.no-style {
 }
 
 .userbar {
-	margin: 0 !important;
 	background-color: #222233;
 	opacity: 0.9;
-}
-
-.content {
-	margin: 0 !important;
 }
 
 .sidebar .nav {
@@ -149,12 +144,19 @@ select {
     color: #555;
 }
 
-.bar {
-	height: 72px;
+.col-md-12 .col-md-12 {
+	padding: 0;
+}
+
+.breadcrumb-bar {
 	background-color: #fff;
 	box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-	line-height: 72px;
 	padding-left: 23px;
+}
+
+.bar {
+	height: 72px;
+	line-height: 72px;
 	font-size: 14px;
 	letter-spacing: -0.2px;
 	color: #666;

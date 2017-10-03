@@ -14,6 +14,7 @@
 	{% endblock extra_css %}
 </head>
 <body>
+	<div class="container-fluid">
 	<div class="row">
 		<div class="menu col-md-12">
 			<div class="logo-tsuru">
@@ -37,21 +38,20 @@
 			{% include "sidebar.html" %}
 			{% endblock %}
 		</div>
-		<div class="col-md-12">
+		<div class="breadcrumb-bar col-md-12">
 			{% block bar %}{% endblock %}
 		</div>
 		<div class="content col-md-12">
 			<div class="container-fluid">
 				<div class="row">
-					<div class="col-md-12">
-						{% block header %}{% endblock %}
-					</div>
+					{% block header %}{% endblock %}
 				</div>
 			</div>
 			{% include "messages.html" %}
 			{% block content %}
 			{% endblock %}
 		</div>
+	</div>
 	</div>
 	<script src="{% static "js/jquery.min.js" %}"></script>
 	<script src="{% static "js/bootstrap.min.js" %}"></script>
