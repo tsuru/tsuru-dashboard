@@ -46,3 +46,9 @@
 h1 {
     display: inline-block;
 }
+
+.app-urls {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
