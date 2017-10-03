@@ -17,6 +17,16 @@
 </div>
 {% endblock %}
 
+{% block sidebar %}
+{% if request.GET.kindName == "healer" %}
+  {% include "sidebar.html" with active="healing" %}
+{% elif request.GET.kindName == "app.deploy" %}
+  {% include "sidebar.html" with active="deploys" %}
+{% else %}
+  {% include "sidebar.html" with active="events" %}
+{% endif %}
+{% endblock %}
+
 {% block header %}
 <h1>Events</h1>
 {% endblock %}
