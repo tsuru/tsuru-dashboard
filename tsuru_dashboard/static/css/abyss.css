@@ -1,16 +1,16 @@
 body {
 	padding-bottom: 40px;
-  font-family: 'Open Sans';
+	font-family: 'Open Sans' sans-serif;
 	background-color: #f6f6f6;
 }
 
 h1 {
-  font-family: 'Open Sans';
-  font-size: 34px;
-  letter-spacing: -1.5px;
-  font-weight: bold;
-  color: #2e2e2e;
-  line-height: 1.2;
+	font-family: 'Open Sans' sans-serif;
+	font-size: 34px;
+	letter-spacing: -1.5px;
+	font-weight: bold;
+	color: #2e2e2e;
+	line-height: 1.2;
 }
 
 ul.no-style {
@@ -29,8 +29,8 @@ ul.no-style {
 }
 
 .logo-tsuru img {
-    max-width: 100px;
-    height: auto;
+	max-width: 100px;
+	height: auto;
 }
 
 .drop {
@@ -46,31 +46,25 @@ ul.no-style {
 	opacity: 0.9;
 }
 
-.sidebar .nav {
-	margin-top: 10px;
+.sidebar.navbar {
+	margin-bottom: 0;
+	min-height: 0;
 }
 
 .sidebar .nav > li {
-	min-width: 90px;
-}
-
-.sidebar .nav > li.active > a {
-	background: none repeat scroll 0 0 #222233;
-	color: #fff;
+	padding: 4px 0;
 }
 
 .sidebar .nav > li > a {
 	color: #fff;
 	font-size: 13px;
+	padding: 6px 20px;
 }
 
-.sidebar .nav > li > a:hover {
-	background-color: transparent;
-	font-weight: bold;
-}
-
-.sidebar .nav > .active {
-	font-weight: bold;
+.sidebar .nav > li > a:hover,
+.sidebar .nav > li > a:focus,
+.sidebar .nav > li.active > a {
+	background-color: rgba(255,255,255,0.2);
 }
 
 .dropdown-menu {
@@ -140,8 +134,8 @@ select {
 }
 
 .ssh-key {
-    word-break: break-all;
-    color: #555;
+	word-break: break-all;
+	color: #555;
 }
 
 .col-md-12 .col-md-12 {
