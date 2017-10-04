@@ -3,6 +3,7 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static "css/detail.css" %}">
+<link rel="stylesheet" href="{% static "css/apps/apps.css" %}">
 {% endblock %}
 
 {% block sidebar %}
@@ -18,8 +19,10 @@
 {% endblock %}
 
 {% block header %}
-<h1>{{ app.name }}</h1>
-- <a href="http://{{ app.ip }}" target="_blank">http://{{ app.ip }}</a>
+<div class="header-wrapper">
+  <h1>{{ app.name }}</h1>
+  <a href="http://{{ app.ip }}" target="_blank">http://{{ app.ip }}</a>
+</div>
 {% endblock %}
 
 {% block content %}
