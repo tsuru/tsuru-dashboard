@@ -19,6 +19,13 @@ from tsuru_dashboard import settings
 from tsuru_dashboard.auth.views import LoginRequiredView
 
 
+def get_node_pool(node):
+    pool = node.get("Pool", node.get("pool"))
+    if pool:
+        return pool
+    return node.get("Metadata", {}).get("pool")
+
+
 class PoolList(LoginRequiredView, TemplateView):
     template_name = "admin/pool_list.html"
 
@@ -88,7 +95,7 @@ class PoolList(LoginRequiredView, TemplateView):
                 dt = node["Metadata"].get("LastSuccess")
                 node["Metadata"]["LastSuccess"] = self.node_last_success(dt)
                 node["Units"] = self.units_by_node(node["Address"], units)
-                pool = node["Metadata"].get("pool")
+                pool = get_node_pool(node)
                 nodes_by_pool = pools.get(pool, [])
                 nodes_by_pool.append(node)
                 pools[pool] = nodes_by_pool
@@ -285,7 +292,7 @@ class PoolInfo(LoginRequiredView, TemplateView):
             units = grequests.map(rs)
 
             for node in nodes:
-                if node["Metadata"].get("pool", "") != pool:
+                if get_node_pool(node) != pool:
                     continue
 
                 dt = node["Metadata"].get("LastSuccess")
@@ -293,7 +300,6 @@ class PoolInfo(LoginRequiredView, TemplateView):
 
                 node["Units"] = self.units_by_node(node["Address"], units)
 
-                pool = node["Metadata"].get("pool")
                 nodes_by_pool = pools.get(pool, [])
                 nodes_by_pool.append(node)
                 pools[pool] = nodes_by_pool

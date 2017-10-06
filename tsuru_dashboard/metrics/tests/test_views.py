@@ -85,6 +85,10 @@ class PoolMetricViewTest(TestCase):
                  "Metadata": {"LastSuccess": "2014-08-01T14:09:40-03:00",
                               "pool": "anotherpool"},
                  "Status": "ready"},
+                {"Address": "http://myserver2.com:2375",
+                 "Metadata": {"LastSuccess": "2014-08-01T14:09:40-03:00"},
+                 "Pool": "theonepool",
+                 "Status": "ready"},
             ],
         }
         self.api_body = json.dumps(data)
@@ -97,7 +101,7 @@ class PoolMetricViewTest(TestCase):
         httpretty.register_uri(httpretty.GET, self.api_url, body=self.api_body)
         view = views.PoolMetric(request=self.request)
         addrs = view.get_pool_nodes("theonepool")
-        self.assertEqual(addrs, ["128.0.0.1", "127.0.0.1"])
+        self.assertEqual(addrs, ["128.0.0.1", "127.0.0.1", "myserver2.com"])
 
     @httpretty.activate
     @patch("requests.post")
