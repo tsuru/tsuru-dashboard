@@ -3,6 +3,7 @@ from urlparse import urlparse
 
 from tsuru_dashboard import settings
 from tsuru_dashboard.auth.views import LoginRequiredView
+from tsuru_dashboard.admin.views import get_node_pool
 from .backends.elasticsearch import NodeMetricsBackend, NodesMetricsBackend
 from .backends import get_app_backend, get_tsuru_backend
 import json
@@ -70,7 +71,7 @@ class PoolMetric(Metric):
             nodes = response.json().get("nodes", [])
 
             for node in nodes:
-                if node["Metadata"].get("pool", "") == pool_name:
+                if get_node_pool(node) == pool_name:
                     addr = self.extract_ip(node["Address"])
                     pool_nodes.append(addr)
 
