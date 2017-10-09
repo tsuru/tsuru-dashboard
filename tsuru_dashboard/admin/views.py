@@ -210,7 +210,7 @@ class DeployInfo(LoginRequiredView, TemplateView):
 
 
 class ListHealing(LoginRequiredView, TemplateView):
-    template_name = "docker/list_healing.html"
+    template_name = "admin/list_healing.html"
 
     def get_context_data(self, *args, **kwargs):
         context = super(ListHealing, self).get_context_data(*args, **kwargs)
@@ -232,7 +232,7 @@ class ListHealing(LoginRequiredView, TemplateView):
 
 
 class PoolInfo(LoginRequiredView, TemplateView):
-    template_name = "docker/pool_info.html"
+    template_name = "admin/pool_info.html"
 
     def get_node(self, address, data):
         for response in data:
