@@ -28,7 +28,7 @@ class PoolInfoViewTest(TestCase):
 
         response = PoolInfo.as_view()(self.request, pool="mypool")
 
-        self.assertIn("docker/pool_info.html", response.template_name)
+        self.assertIn("admin/pool_info.html", response.template_name)
         self.assertEqual({}, response.context_data["pools"])
 
     @httpretty.activate
