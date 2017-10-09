@@ -121,13 +121,13 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static "js/jquery.min.js" %}"></script>
-<script src="{% static "js/jquery.flot.min.js" %}"></script>
-<script src="{% static "js/jquery.flot.time.min.js" %}"></script>
-<script src="{% static "js/jquery.flot.tooltip.min.js" %}"></script>
-<script src="{% static "js/confirmation.js" %}"></script>
-<script src="{% static "js/pool-info.js" %}"></script>
-{#<script src="{% static "js/pool-rebalance.js" %}"></script>#}
+<script src="{% static "js/lib/jquery.min.js" %}"></script>
+<script src="{% static "js/lib/jquery.flot.min.js" %}"></script>
+<script src="{% static "js/lib/jquery.flot.time.min.js" %}"></script>
+<script src="{% static "js/lib/jquery.flot.tooltip.min.js" %}"></script>
+<script src="{% static "js/lib/confirmation.js" %}"></script>
+<script src="{% static "js/pages/pool-info.js" %}"></script>
+{#<script src="{% static "js/pages/pool-rebalance.js" %}"></script>#}
 <script type="text/javascript">
 $.confirmation(".btn-rebalance", ".rebalance-confirmation", "{{ pool }}");
 </script>

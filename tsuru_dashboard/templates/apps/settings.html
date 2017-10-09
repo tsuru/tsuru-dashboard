@@ -156,7 +156,7 @@
   {% endblock %}
 
   {% block extra_js %}
-  <script src="{% static "js/confirmation.js" %}"></script>
+  <script src="{% static "js/lib/confirmation.js" %}"></script>
   <script type="text/javascript">
   var appName = "{{ app.name }}";
   $.confirmation(".btn-remove", ".remove-confirmation", appName);
