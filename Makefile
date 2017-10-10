@@ -24,4 +24,5 @@ node-deps:
 build-js: node-deps build-js-only
 
 build-js-only:
+	@bash -c 'mkdir -p ./tsuru_dashboard/static/js/pages'
 	@bash -c 'for i in `find . -regex ".*js/src/pages/.*.js"`; do A=`echo $$i | sed "s/src\///g"`; echo "$$i -> $$A"; ./node_modules/browserify/bin/cmd.js -t babelify -t reactify -o $$A $$i; done; echo "Done."'

@@ -13,6 +13,7 @@
 htmlcov
 local_settings.py
 tsuru_dashboard/apps/tests/example.tar.gz
+tsuru_dashboard/static/js/pages/*.js
 node_modules
 coverage
 build
