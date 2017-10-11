@@ -1,7 +1,7 @@
 import React from "react";
 import { shallow, mount } from "enzyme";
-import { AppList, AppSearch, AppTable } from "../jsx/components/list";
-import { Loading } from "../jsx/components/loading";
+import { AppList, AppSearch, AppTable } from "../js/src/components/list";
+import { Loading } from "../js/src/components/loading";
 import $ from "jquery";
 
 describe('AppList', () => {

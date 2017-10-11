@@ -1,6 +1,6 @@
 import React from "react";
 import { shallow, mount } from "enzyme";
-import { NodeCreate } from "../jsx/components/node-create";
+import { NodeCreate } from "../js/src/components/node-create";
 
 describe('NodeCreate', () => {
   it('should has node-create as className', () => {

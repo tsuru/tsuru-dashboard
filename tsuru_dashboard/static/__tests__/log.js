@@ -1,6 +1,6 @@
 import React from "react";
 import { shallow } from "enzyme";
-import { Log } from "../jsx/components/log";
+import { Log } from "../js/src/components/log";
 
 describe('Log', () => {
   it('should has log as classname', () => {

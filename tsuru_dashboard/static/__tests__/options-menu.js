@@ -1,6 +1,6 @@
 import React from "react";
 import { shallow, mount } from "enzyme";
-import { OptionsMenu } from "../jsx/components/options-menu";
+import { OptionsMenu } from "../js/src/components/options-menu";
 
 describe('OptionMenu', () => {
   it('has options-menu as className', () => {

@@ -1,9 +1,9 @@
 import React from "react";
 import { shallow, mount } from "enzyme";
 import $ from "jquery";
-import { Metrics } from "../jsx/components/metrics";
-import { NodeInfo, Node, MetricsTab, ContainersTab, MetadataTab, DeleteNodeBtn , ContainerRow, DeleteNodeConfirmation } from "../jsx/components/node-info";
-import { Tab, Tabs } from "../jsx/components/base";
+import { Metrics } from "../js/src/components/metrics";
+import { NodeInfo, Node, MetricsTab, ContainersTab, MetadataTab, DeleteNodeBtn , ContainerRow, DeleteNodeConfirmation } from "../js/src/components/node-info";
+import { Tab, Tabs } from "../js/src/components/base";
 
 describe('NodeInfo', () => {
   it('has node-container as className', () => {
