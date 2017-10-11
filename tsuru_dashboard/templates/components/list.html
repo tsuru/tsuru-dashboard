@@ -32,9 +32,9 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/flot/0.8.3/jquery.flot.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/flot/0.8.3/jquery.flot.time.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/flot.tooltip/0.8.5/jquery.flot.tooltip.js"></script>
+<script src="{% static "js/vendor/jquery.min.js" %}"></script>
+<script src="{% static "js/vendor/jquery.flot.min.js" %}"></script>
+<script src="{% static "js/vendor/jquery.flot.time.min.js" %}"></script>
+<script src="{% static "js/vendor/jquery.flot.tooltip.min.js" %}"></script>
 <script src="{% static "js/pages/component-list.js" %}"></script>
 {% endblock %}
