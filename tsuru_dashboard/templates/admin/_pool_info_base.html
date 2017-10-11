@@ -89,7 +89,7 @@
   {% endblock %}
 </div>
 
-<div id="pool-rebalance" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div id="pool-rebalance" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-url="{% url "pool-rebalance" pool %}">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <form method="post" action="{% url "pool-rebalance" pool %}">
@@ -127,7 +127,7 @@
 <script src="{% static "js/vendor/jquery.flot.tooltip.min.js" %}"></script>
 <script src="{% static "js/lib/confirmation.js" %}"></script>
 <script src="{% static "js/pages/pool-info.js" %}"></script>
-{#<script src="{% static "js/pages/pool-rebalance.js" %}"></script>#}
+<script src="{% static "js/pages/pool-rebalance.js" %}"></script>
 <script type="text/javascript">
 $.confirmation(".btn-rebalance", ".rebalance-confirmation", "{{ pool }}");
 </script>

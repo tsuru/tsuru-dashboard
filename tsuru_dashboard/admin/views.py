@@ -366,7 +366,7 @@ class PoolRebalance(LoginRequiredView):
 
     def post(self, *args, **kwargs):
         def sending_stream():
-            r = self.client.pools.rebalance(pool=kwargs["pool"])
-            for line in r.iter_lines():
-                yield "{}<br>".format(line)
+            gen = ("{}<br>".format(line["Message"]) for line in self.client.pools.rebalance(pool=kwargs["pool"]))
+            return gen
+
         return StreamingHttpResponse(sending_stream())
