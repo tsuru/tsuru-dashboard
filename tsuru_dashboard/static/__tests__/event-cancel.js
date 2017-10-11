@@ -1,6 +1,6 @@
 import React from "react";
 import { shallow, mount } from "enzyme";
-import EventCancel from "../jsx/components/event-cancel";
+import EventCancel from "../js/src/components/event-cancel";
 import Modal from "backstage-modal";
 
 describe('<EventCancel />', () => {

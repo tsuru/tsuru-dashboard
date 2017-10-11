@@ -1,8 +1,8 @@
 import React from "react";
 import { shallow, mount } from "enzyme";
 import $ from "jquery";
-import { Metrics, WebTransactionsMetrics, GraphContainer, Graph } from "../jsx/components/metrics";
-import { Loading } from "../jsx/components/loading";
+import { Metrics, WebTransactionsMetrics, GraphContainer, Graph } from "../js/src/components/metrics";
+import { Loading } from "../js/src/components/loading";
 
 describe('Metrics', () => {
   beforeEach(() => {

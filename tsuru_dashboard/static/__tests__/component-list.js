@@ -1,8 +1,8 @@
 import React from "react";
 import { mount, shallow } from "enzyme";
 import $ from "jquery";
-import { Component, ComponentList } from "../jsx/components/component-list";
-import { Metrics } from "../jsx/components/metrics";
+import { Component, ComponentList } from "../js/src/components/component-list";
+import { Metrics } from "../js/src/components/metrics";
 
 describe('ComponentList', () => {
   it('fetches the components url', () => {

@@ -1,6 +1,6 @@
 import React from "react";
 import { shallow } from "enzyme";
-import { Resources } from "../jsx/components/resources";
+import { Resources } from "../js/src/components/resources";
 
 describe('Resources', () => {
   it('has resources as className', () => {

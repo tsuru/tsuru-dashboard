@@ -1,6 +1,6 @@
 import React from "react";
 import { shallow } from "enzyme";
-import { Loading } from "../jsx/components/loading";
+import { Loading } from "../js/src/components/loading";
 
 describe('Loading', () => {
   it('renders an element with "loader" class', () => {

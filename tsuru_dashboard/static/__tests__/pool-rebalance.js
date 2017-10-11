@@ -1,6 +1,6 @@
 import React from "react";
 import { shallow } from "enzyme";
-import { PoolRebalance } from "../jsx/components/pool-rebalance";
+import { PoolRebalance } from "../js/src/components/pool-rebalance";
 
 describe('PoolRebalance', () => {
   it('should has pool-rebalance as className', () => {
