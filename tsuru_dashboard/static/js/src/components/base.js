@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 
-const Output = () =>
+export const Output = (props) =>
   <div id='output'>
     <img src="/static/img/ajax-loader.gif" />
-    <div className='messages' dangerouslySetInnerHTML={{__html: this.props.message}} />
+    <div className='messages' dangerouslySetInnerHTML={{__html: props.message}} />
   </div>;
 
 export const Button = (props) =>

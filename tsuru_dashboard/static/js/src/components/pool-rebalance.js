@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Button, Output, CancelBtn } from "./base";
 
-if(typeof window.jQuery === 'undefined') {
+if (typeof window.jQuery === 'undefined') {
   var $ = require('jquery');
 } else {
   var $ = window.jQuery;
