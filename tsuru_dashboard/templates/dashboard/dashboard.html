@@ -2,7 +2,7 @@
 {% load staticfiles %}
 
 {% block extra_css %}
-<link rel="stylesheet" type="text/css" href="{% static 'razorflow/files/css/razorflow.min.css'%}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/razorflow.min.css' %}">
 <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
 {% endblock %}
 
@@ -15,6 +15,6 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'razorflow/files/js/razorflow.min.js' %}"></script>
+<script src="{% static 'js/vendor/razorflow.min.js' %}"></script>
 <script src="{% static 'js/lib/dashboard.js' %}"></script>
 {% endblock %}
