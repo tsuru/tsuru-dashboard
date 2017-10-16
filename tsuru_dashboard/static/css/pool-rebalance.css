@@ -1,0 +1,19 @@
+.pool-rebalance-output .modal-body {
+    max-height: 60vh;
+    overflow-y: scroll;
+}
+
+#output {
+    color: #fff;
+    background-color: #333;
+    border-radius: 3px;
+    padding: 10px 20px;
+    position: relative;
+    min-height: 15px;
+}
+
+#output img {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
