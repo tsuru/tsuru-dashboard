@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, CancelBtn } from "./base";
+import { Button, Output, CancelBtn } from "./base";
 
 export class DeployBox extends Component {
   render() {
@@ -47,17 +47,6 @@ class Files extends Component {
     });
     return (
       <div id='files'>{files}</div>
-    )
-  }
-}
-
-class Output extends Component {
-  render() {
-    return (
-      <div id='output'>
-        <img src="/static/img/ajax-loader.gif" />
-        <div className='messages' dangerouslySetInnerHTML={{__html: this.props.message}} />
-      </div>
     )
   }
 }

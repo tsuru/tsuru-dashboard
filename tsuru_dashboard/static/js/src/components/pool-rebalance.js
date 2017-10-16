@@ -21,11 +21,11 @@ class PoolRebalanceConfirmation extends Component {
   }
 
   handleChange(event) {
+    var newState = {value: event.target.value};
     if (event.target.value === this.props.poolName) {
-      this.setState({value: event.target.value, ok: true});
-    } else {
-      this.setState({value: event.target.value});
+      newState.ok = true;
     }
+    this.setState(newState);
   }
 
   handleStart() {
@@ -72,7 +72,7 @@ export class PoolRebalance extends Component {
   rebalance() {
     this.setState({running: true, output: "Wait until rebalance is started."});
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', this.props.url, true);
+    xhr.open("POST", this.props.url, true);
     xhr.onprogress = () => {
       this.setState({output: xhr.responseText});
     };
@@ -96,7 +96,7 @@ export class PoolRebalance extends Component {
     }
 
     return (
-      <div className="modal-admin" role="document">
+      <div className="modal-dialog pool-rebalance-output" role="document">
         <div className="modal-content">
           <div className="modal-header">
               <h3 id="myModalLabel">Rebalance pool</h3>
