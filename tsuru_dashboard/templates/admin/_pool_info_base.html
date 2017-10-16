@@ -90,7 +90,17 @@
   {% endblock %}
 </div>
 
-<div id="pool-rebalance" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-url="{% url "pool-rebalance" pool %}" data-poolname="{{ pool }}">
+<div
+  id="pool-rebalance"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  data-keyboard="false"
+  data-backdrop="static"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+  data-url="{% url "pool-rebalance" pool %}"
+  data-poolname="{{ pool }}">
 </div>
 
 {% block metrics %}
@@ -103,13 +113,9 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static "js/vendor/jquery.min.js" %}"></script>
 <script src="{% static "js/vendor/jquery.flot.min.js" %}"></script>
 <script src="{% static "js/vendor/jquery.flot.time.min.js" %}"></script>
 <script src="{% static "js/vendor/jquery.flot.tooltip.min.js" %}"></script>
 <script src="{% static "js/pages/pool-info.js" %}"></script>
 <script src="{% static "js/pages/pool-rebalance.js" %}"></script>
-<script type="text/javascript">
-$.confirmation(".btn-rebalance", ".rebalance-confirmation", "{{ pool }}");
-</script>
 {% endblock %}

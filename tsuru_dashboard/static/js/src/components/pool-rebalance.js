@@ -17,7 +17,6 @@ class PoolRebalanceConfirmation extends Component {
     };
 
     this.handleChange = this.handleChange.bind(this);
-    this.handleStart = this.handleStart.bind(this);
   }
 
   handleChange(event) {
@@ -28,16 +27,11 @@ class PoolRebalanceConfirmation extends Component {
     this.setState(newState);
   }
 
-  handleStart() {
-    this.props.startRebalance();
-  }
-
   render() {
     return (
-      <div className="modal-dialog" role="document">
+      <div className="modal-dialog">
         <div className="modal-content">
           <div className="modal-header">
-            <button type="button" className="close" dataDismiss="modal" ariaHidden="true">×</button>
             <h3 id="myModalLabel">Are you sure?</h3>
           </div>
           <div className="modal-body">
@@ -46,14 +40,19 @@ class PoolRebalanceConfirmation extends Component {
             <input type="text" className="rebalance-confirmation" value={this.state.value} onChange={this.handleChange} />
           </div>
           <div className="modal-footer">
-            <button className="btn" dataDismiss="modal" ariaHidden="true">Cancel</button>
-            <button className="btn btn-danger btn-rebalance" disabled={this.state.ok ? "" : "disabled"} onClick={this.handleStart}>I understand the consequences, rebalance this pool</button>
+            <button className="btn" onClick={this.props.onClose}>Cancel</button>
+            <button className="btn btn-danger btn-rebalance" disabled={this.state.ok ? "" : "disabled"} onClick={this.props.onStart}>I understand the consequences, rebalance this pool</button>
           </div>
         </div>
       </div>
     )
   }
 }
+
+PoolRebalanceConfirmation.defaultProps = {
+  onStart: () => {},
+  onClose: () => {}
+};
 
 export class PoolRebalance extends Component {
   constructor(props) {
@@ -67,6 +66,7 @@ export class PoolRebalance extends Component {
 
     this.rebalance = this.rebalance.bind(this);
     this.startRebalance = this.startRebalance.bind(this);
+    this.handleClose = this.handleClose.bind(this);
   }
 
   rebalance() {
@@ -90,22 +90,31 @@ export class PoolRebalance extends Component {
     });
   }
 
+  handleClose() {
+    $("#pool-rebalance").modal("hide");
+  }
+
   render() {
     if (!this.state.confirmed) {
-      return <PoolRebalanceConfirmation poolName={this.props.poolName} startRebalance={this.startRebalance} />;
+      return (
+        <PoolRebalanceConfirmation
+          poolName={this.props.poolName}
+          onStart={this.startRebalance}
+          onClose={this.handleClose} />
+      );
     }
 
     return (
-      <div className="modal-dialog pool-rebalance-output" role="document">
+      <div className="modal-dialog pool-rebalance-output">
         <div className="modal-content">
           <div className="modal-header">
-              <h3 id="myModalLabel">Rebalance pool</h3>
+            <h3 id="myModalLabel">Rebalance pool</h3>
           </div>
           <div className="modal-body">
-              {this.state.output.length > 0 ? <Output message={this.state.output} /> : ""}
+            {this.state.output.length > 0 ? <Output message={this.state.output} /> : ""}
           </div>
           <div className="modal-footer">
-              <Button disabled={this.state.running ? "disabled" : ""} text="Close" />
+            <Button disabled={this.state.running ? "disabled" : ""} text="Close" onClick={this.handleClose} />
           </div>
         </div>
       </div>
