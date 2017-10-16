@@ -89,26 +89,7 @@
   {% endblock %}
 </div>
 
-<div id="pool-rebalance" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-url="{% url "pool-rebalance" pool %}">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <form method="post" action="{% url "pool-rebalance" pool %}">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-          <h3 id="myModalLabel">Are you sure?</h3>
-        </div>
-        <div class="modal-body">
-          <p>This action <strong>CANNOT</strong> be undone. This will permanently rebalance the <strong>{{ pool }}</strong> pool.</p>
-          <p>Please type in the pool name to confirm.</p>
-          <input type="text" class="rebalance-confirmation" />
-        </div>
-        <div class="modal-footer">
-          <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-          <button class="btn btn-danger btn-rebalance" disabled="disabled">I understand the consequences, rebalance this pool</button>
-        </div>
-      </form>
-    </div>
-  </div>
+<div id="pool-rebalance" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-url="{% url "pool-rebalance" pool %}" data-poolname="{{ pool }}">
 </div>
 
 {% block metrics %}
@@ -125,7 +106,6 @@
 <script src="{% static "js/vendor/jquery.flot.min.js" %}"></script>
 <script src="{% static "js/vendor/jquery.flot.time.min.js" %}"></script>
 <script src="{% static "js/vendor/jquery.flot.tooltip.min.js" %}"></script>
-<script src="{% static "js/lib/confirmation.js" %}"></script>
 <script src="{% static "js/pages/pool-info.js" %}"></script>
 <script src="{% static "js/pages/pool-rebalance.js" %}"></script>
 <script type="text/javascript">
