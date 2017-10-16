@@ -61,7 +61,7 @@ export class PoolRebalance extends Component {
 
     this.state = {
       output: "",
-      disabled: false,
+      running: false,
       confirmed: false
     }
 
@@ -70,7 +70,7 @@ export class PoolRebalance extends Component {
   }
 
   rebalance() {
-    this.setState({disabled: true, output: 'Wait until rebalance is started.'});
+    this.setState({running: true, output: "Wait until rebalance is started."});
     var xhr = new XMLHttpRequest();
     xhr.open('POST', this.props.url, true);
     xhr.onprogress = () => {
@@ -78,7 +78,7 @@ export class PoolRebalance extends Component {
     };
     var self = this;
     xhr.onload = () => {
-      self.setState({disabled: false});
+      self.setState({running: false});
     };
     xhr.send();
   }
@@ -96,7 +96,7 @@ export class PoolRebalance extends Component {
     }
 
     return (
-      <div className="modal-dialog" role="document">
+      <div className="modal-admin" role="document">
         <div className="modal-content">
           <div className="modal-header">
               <h3 id="myModalLabel">Rebalance pool</h3>
@@ -105,8 +105,7 @@ export class PoolRebalance extends Component {
               {this.state.output.length > 0 ? <Output message={this.state.output} /> : ""}
           </div>
           <div className="modal-footer">
-              <CancelBtn disabled={this.state.disabled} />
-              <Button text="rebalance" disabled={this.state.disabled} onClick={this.rebalance} />
+              <Button disabled={this.state.running ? "disabled" : ""} text="Close" />
           </div>
         </div>
       </div>
