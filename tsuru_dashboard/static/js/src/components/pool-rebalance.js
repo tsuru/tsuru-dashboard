@@ -71,12 +71,14 @@ export class PoolRebalance extends Component {
 
   rebalance() {
     this.setState({running: true, output: "Wait until rebalance is started."});
+    var self = this;
     var xhr = new XMLHttpRequest();
     xhr.open("POST", this.props.url, true);
     xhr.onprogress = () => {
-      this.setState({output: xhr.responseText});
+      this.setState({output: xhr.responseText}, () => {
+        self.refs.modalBody.scrollTop += 200;
+      });
     };
-    var self = this;
     xhr.onload = () => {
       self.setState({running: false});
     };
@@ -115,7 +117,7 @@ export class PoolRebalance extends Component {
           <div className="modal-header">
             <h3 id="myModalLabel">Rebalance pool</h3>
           </div>
-          <div className="modal-body">
+          <div className="modal-body" ref="modalBody">
             {this.state.output.length > 0 ? <Output message={this.state.output} /> : ""}
           </div>
           <div className="modal-footer">
