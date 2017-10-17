@@ -90,8 +90,13 @@ export class PoolRebalance extends Component {
     });
   }
 
-  handleClose() {
+  hide() {
     $("#pool-rebalance").modal("hide");
+  }
+
+  handleClose() {
+    this.hide();
+    this.setState({running: false, confirmed: false, output: ""});
   }
 
   render() {
@@ -100,7 +105,7 @@ export class PoolRebalance extends Component {
         <PoolRebalanceConfirmation
           poolName={this.props.poolName}
           onStart={this.startRebalance}
-          onClose={this.handleClose} />
+          onClose={this.hide} />
       );
     }
 
