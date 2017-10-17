@@ -1,6 +1,7 @@
 import React from "react";
 import { shallow, mount } from "enzyme";
 import { PoolRebalance } from "../js/src/components/pool-rebalance";
+import sinon from "sinon";
 
 describe("PoolRebalance", () => {
   describe("initial state", () => {
@@ -60,14 +61,36 @@ describe("PoolRebalance", () => {
   });
 
   describe("rebalance", () => {
-    it("makes a request to rebalance route", () => {
-      const hideFunc = spyOn(PoolRebalance.prototype, "hide");
-      const poolRebalance = mount(<PoolRebalance poolName="mypool" url="/rebalance" />);
-      spyOn(XMLHttpRequest.prototype, "open");
-      spyOn(XMLHttpRequest.prototype, "send");
+    var xhr, requests;
 
+    beforeEach(() => {
+      xhr =  sinon.useFakeXMLHttpRequest();
+      requests = [];
+      xhr.onCreate = (req) => { requests.push(req); };
+    });
+
+    afterEach(() => {
+      xhr.restore();
+    });
+
+    it("makes a request to rebalance route", () => {
+      const poolRebalance = mount(<PoolRebalance url="/rebalance" />);
       poolRebalance.instance().startRebalance();
-      expect(XMLHttpRequest.prototype.open).toHaveBeenCalledWith("POST", "/rebalance", true);
+
+      expect(requests.length).toEqual(1);
+      expect(requests[0].method).toEqual("POST");
+      expect(requests[0].url).toEqual("/rebalance");
+    });
+
+    it("outputs the API response stream", () => {
+      const poolRebalance = mount(<PoolRebalance url="/rebalance" />);
+      poolRebalance.instance().startRebalance();
+      const output = poolRebalance.find("Output");
+      expect(output.length).toEqual(1);
+      expect(output.text()).toEqual("Wait until rebalance is started.");
+
+      requests[0].respond(200, {"Content-Type": "application/x-json-stream"}, "starting rebalance");
+      expect(output.text()).toEqual("starting rebalance");
     });
   });
 });
