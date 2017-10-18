@@ -5,9 +5,10 @@ RUN make build-js
 
 FROM tsuru/python
 ENV PORT 8000
-COPY --chown=ubuntu:ubuntu . /home/application/current
+COPY . /home/application/current
 WORKDIR /home/application/current
-COPY --from=builder --chown=ubuntu:ubuntu /build/tsuru_dashboard/static /home/application/current/tsuru_dashboard/static/
+COPY --from=builder /build/tsuru_dashboard/static /home/application/current/tsuru_dashboard/static/
+RUN sudo chown -R ubuntu:ubuntu /home/application/current
 RUN pip install -r requirements.txt
 RUN python manage.py migrate --noinput
 RUN python manage.py createcachetable
