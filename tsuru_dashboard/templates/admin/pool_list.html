@@ -8,6 +8,10 @@ table td, table th {
   display: inline-block;
   white-space: nowrap;
 }
+.pool-link {
+  display: inline-block;
+  margin-right: 10px;
+}
 </style>
 {% endblock %}
 
@@ -33,9 +37,10 @@ table td, table th {
     <div class="col-md-12">
       <div class="panel panel-default">
         <div class="panel-heading">
-          <a href="{% url "pool-info" pool.0 %}">
+          <a href="{% url "pool-info" pool.0 %}" class="pool-link">
             <h4>{{ pool.0 }}</h4>
           </a>
+          <span>{{ pool.1 | length }} nodes</span>
         </div>
         <table class="table">
           <thead>
