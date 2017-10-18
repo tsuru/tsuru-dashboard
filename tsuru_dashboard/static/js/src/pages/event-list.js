@@ -15,10 +15,11 @@ function getParameterByName(name, url) {
 ReactDOM.render(
   <EventFilters
     kind={getParameterByName('kindName')}
-    errorOnly={getParameterByName('errorOnly') === 'true'}
-    running={getParameterByName('running') === 'true'}
     target={getParameterByName('target.value')}
     owner={getParameterByName('ownerName')}
+    errorOnly={getParameterByName('errorOnly') === 'true'}
+    running={getParameterByName('running') === 'true'}
+    includeRemoved={getParameterByName('includeRemoved') === 'true'}
   />,
   document.getElementById('controls')
 );

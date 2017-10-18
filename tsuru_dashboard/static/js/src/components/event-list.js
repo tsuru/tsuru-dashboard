@@ -65,6 +65,12 @@ export class EventFilters extends Component {
             style={styles.eventFilter}
             checked={this.props.running}
           />
+          <SwitchButton
+            label='include removed'
+            name='includeRemoved'
+            style={styles.eventFilter}
+            checked={this.props.includeRemoved}
+          />
           <button ref='btn' type='submit'>filter</button>
         </form>
       </div>
