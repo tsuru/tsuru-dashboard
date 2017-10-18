@@ -31,5 +31,5 @@ build-js-only:
 	@bash -c 'cp ./tsuru_dashboard/static/js/src/lib/*.js ./tsuru_dashboard/static/js/lib/'
 	@bash -c 'for i in `find . -regex "./tsuru_dashboard/static/js/src/pages/.*.js"`; do A=`echo $$i | sed "s/src\///g"`; echo "$$i -> $$A"; ./node_modules/browserify/bin/cmd.js -t babelify -t reactify -o $$A $$i; done; echo "Done."'
 
-dist:
+dist: build-js
 	@python ./setup.py sdist upload
