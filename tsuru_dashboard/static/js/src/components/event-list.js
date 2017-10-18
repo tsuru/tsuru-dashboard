@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import SwitchButton from 'backstage-switch-button';
 import Dropdown from 'backstage-dropdown';
+import TextInput from './text-input';
 import styles from './event-list.css';
 
 
@@ -39,6 +40,12 @@ export class EventFilters extends Component {
             style={styles.eventFilter}
             name='kindName'
             value={this.props.kind}
+          />
+          <TextInput
+            placeholder='search by target'
+            name='target.value'
+            value={this.props.target}
+            style={styles.eventFilter}
           />
           <SwitchButton
             label='error only'
