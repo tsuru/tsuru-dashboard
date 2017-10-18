@@ -47,6 +47,12 @@ export class EventFilters extends Component {
             value={this.props.target}
             style={styles.eventFilter}
           />
+          <TextInput
+            placeholder='search by owner'
+            name='ownerName'
+            value={this.props.owner}
+            style={styles.eventFilter}
+          />
           <SwitchButton
             label='error only'
             name='errorOnly'
