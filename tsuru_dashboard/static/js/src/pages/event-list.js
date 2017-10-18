@@ -18,6 +18,7 @@ ReactDOM.render(
     errorOnly={getParameterByName('errorOnly') === 'true'}
     running={getParameterByName('running') === 'true'}
     target={getParameterByName('target.value')}
+    owner={getParameterByName('ownerName')}
   />,
   document.getElementById('controls')
 );
