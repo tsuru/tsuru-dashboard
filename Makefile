@@ -27,4 +27,4 @@ build-js-only:
 	@bash -c 'mkdir -p ./tsuru_dashboard/static/js/{lib,pages,vendor}'
 	@bash -c 'cp ./tsuru_dashboard/static/js/src/vendor/*.js ./tsuru_dashboard/static/js/vendor/'
 	@bash -c 'cp ./tsuru_dashboard/static/js/src/lib/*.js ./tsuru_dashboard/static/js/lib/'
-	@bash -c 'for i in `find . -regex ".*js/src/pages/.*.js"`; do A=`echo $$i | sed "s/src\///g"`; echo "$$i -> $$A"; ./node_modules/browserify/bin/cmd.js -t babelify -t reactify -o $$A $$i; done; echo "Done."'
+	@bash -c 'for i in `find . -regex "./tsuru_dashboard/static/js/src/pages/.*.js"`; do A=`echo $$i | sed "s/src\///g"`; echo "$$i -> $$A"; ./node_modules/browserify/bin/cmd.js -t babelify -t reactify -o $$A $$i; done; echo "Done."'
