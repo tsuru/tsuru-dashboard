@@ -12,7 +12,7 @@
 {% endblock %}
 
 {% block header %}
-<h1>Admin/Nodes{{ key }}</h1>
+<h1>Admin/Nodes - {{ pool }}</h1>
 {% endblock %}
 
 {% block bar %}
@@ -55,7 +55,7 @@
   <div class="col-md-12">
     <br>
     <div class="panel panel-default">
-      <div class="panel-heading">Nodes</div>
+      <div class="panel-heading">Nodes: {{ nodes | length }}</div>
       <table class="table">
         <thead>
           <tr>
