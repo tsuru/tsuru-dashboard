@@ -1,5 +1,5 @@
 export default {
   eventFilter: {
-    paddingRight: '10px',
+    marginRight: '10px',
   },
 };
