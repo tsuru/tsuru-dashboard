@@ -20,6 +20,8 @@ ReactDOM.render(
     errorOnly={getParameterByName('errorOnly') === 'true'}
     running={getParameterByName('running') === 'true'}
     includeRemoved={getParameterByName('includeRemoved') === 'true'}
+    since={getParameterByName('since')}
+    until={getParameterByName('until')}
   />,
   document.getElementById('controls')
 );

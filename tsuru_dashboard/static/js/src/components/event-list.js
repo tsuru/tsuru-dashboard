@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import SwitchButton from 'backstage-switch-button';
 import Dropdown from 'backstage-dropdown';
 import TextInput from './text-input';
+import DateTimeField from './datetime-field';
 import styles from './event-list.css';
 
 
@@ -51,6 +52,18 @@ export class EventFilters extends Component {
             placeholder='search by owner'
             name='ownerName'
             value={this.props.owner}
+            style={styles.eventFilter}
+          />
+          <DateTimeField
+            placeholder='search by since date'
+            name='since'
+            value={this.props.since}
+            style={styles.eventFilter}
+          />
+          <DateTimeField
+            placeholder='search by until date'
+            name='until'
+            value={this.props.until}
             style={styles.eventFilter}
           />
           <SwitchButton
