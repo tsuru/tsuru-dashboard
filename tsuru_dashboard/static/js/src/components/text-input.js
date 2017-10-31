@@ -3,11 +3,12 @@ import styles from './text-input.css.js';
 
 const TextInput = (props) => {
   return (
-    <input type="text"
+    <input
+      type='text'
       name={props.name}
       placeholder={props.placeholder}
       defaultValue={props.value}
-      style={Object.assign({}, props.style || {}, styles.textInput)}
+      style={Object.assign({}, styles.textInput, props.style || {})}
       onChange={props.onChange}
     />
   );
