@@ -5,7 +5,7 @@ import TextInput from '../js/src/components/text-input';
 import styles from '../js/src/components/text-input.css.js';
 
 describe('TextInput', () => {
-  it('should render and input text element', () => {
+  it('should render an input text element', () => {
     const textInput = shallow(<TextInput/>);
     expect(textInput.is('input[type="text"]')).toBe(true);
   });
