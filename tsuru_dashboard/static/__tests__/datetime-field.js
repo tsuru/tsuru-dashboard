@@ -28,8 +28,10 @@ describe('DateTimeField', () => {
   });
 
   it('should set an initial formatted date value via props', () => {
-    const dtField = shallow(<DateTimeField value={'2017-10-31T02:00:00.000Z'} />);
-    expect(dtField.find(DateTime).prop('value')).toBe('10/31/2017 12:00 AM');
+    const isoDate = '2017-10-31T02:00:00.000Z';
+    const dtField = shallow(<DateTimeField value={isoDate} />);
+    const expectedDate = moment(isoDate).format('MM/DD/YYYY h:mm A');
+    expect(dtField.find(DateTime).prop('value')).toBe(expectedDate);
   });
 
   it('should customize inputProps.placeholder via props', () => {
@@ -70,7 +72,7 @@ describe('DateTimeField', () => {
   it('should set a display formatted date value to the DateTime component', () => {
     const selectedDate = moment('2017-10-31 14:00:00-02:00');
     const dtField = shallow(<DateTimeField />);
-    const formatedDate = '10/31/2017 2:00 PM';
+    const formatedDate = selectedDate.format('MM/DD/YYYY h:mm A');
     dtField.find(DateTime).simulate('change', selectedDate);
     expect(dtField.state('value')).toBe(formatedDate);
     expect(dtField.find(DateTime).prop('value')).toBe(formatedDate);
