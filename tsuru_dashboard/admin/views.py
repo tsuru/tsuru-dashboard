@@ -286,9 +286,13 @@ class PoolInfo(LoginRequiredView, TemplateView):
             nodes = data.get("nodes", [])
 
             url = "{}/docker/node/{}/containers"
-            urls = [url.format(settings.TSURU_HOST, node["Address"]) for node in nodes]
 
-            rs = (grequests.get(u, headers=self.authorization) for u in urls)
+            rs = []
+            for node in nodes:
+                if get_node_pool(node) == pool:
+                    u = url.format(settings.TSURU_HOST, node["Address"])
+                    rs.append(grequests.get(u, headers=self.authorization))
+
             units = grequests.map(rs)
 
             for node in nodes:

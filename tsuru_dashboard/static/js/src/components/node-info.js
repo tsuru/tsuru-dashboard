@@ -58,10 +58,10 @@ export class Node extends Component {
 
   render() {
     var info = this.props.node.info;
-    var nodeAddr = info.Address.split('/')[2].split(':')[0];
+    var nodeAddr = info.Address.replace(/^https?:\/\//g, '').replace(/:.*$|\/$/, '');
     return (
       <div className="node">
-        <h1>{info.Metadata.pool} - {info.Address} - {info.Status}</h1>
+        <h1>{info.Pool || info.Metadata.pool} - {info.Address} - {info.Status}</h1>
         <Tabs tabs={["Containers", "Metadata", "Metrics"]} setActive={this.setActive} />
         <div className="tab-content">
           {this.state.tab === "Containers" ? <ContainersTab containers={this.props.node.containers}/> : ""}

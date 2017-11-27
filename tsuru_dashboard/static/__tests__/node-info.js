@@ -98,6 +98,36 @@ describe('Node', () => {
     expect(node.find(MetricsTab).props().addr).toBe("127.0.0.1");
   });
 
+  it('renders <MetricsTab/> with correct addr', () => {
+    var urls = [
+      "http://127.0.0.1/",
+      "http://127.0.0.1:8080",
+      "http://127.0.0.1:8080/",
+      "http://127.0.0.1",
+      "127.0.0.1:8080/",
+      "127.0.0.1:8080",
+      "127.0.0.1/",
+      "127.0.0.1"
+    ];
+    $.ajax = jest.genMockFunction();
+    for (var u of urls) {
+      let data = {
+        info: {
+          Status: "ready",
+          Metadata: {
+            pool: "pool"
+          },
+          Address: u
+        },
+        containers: []
+      }
+      const node = mount(<Node node={data}/>);
+      node.find(Tab).at(2).find("a").simulate("click");
+      expect(node.find(MetricsTab).length).toBe(1);
+      expect(node.find(MetricsTab).props().addr).toBe("127.0.0.1");
+    }
+  });
+
   it('renders <MetadataTab/>', () => {
     const node = mount(<Node node={nodeData}/>);
     node.find(Tab).at(1).find("a").simulate("click");
