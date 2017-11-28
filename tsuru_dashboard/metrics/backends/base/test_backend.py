@@ -25,15 +25,15 @@ class BackendTest(TestCase):
         tests = [
             ("", ""),
             ("x", "x"),
-            ("127.0.0.9", "127.0.0.9"),
-            ("127.0.0.9:1234", "127.0.0.9:1234"),
-            ("127.0.0.1", "127.0.0.1(localhost)"),
-            ("127.0.0.1:1234", "127.0.0.1:1234(localhost)"),
+            ("127.0.0.9", "127\.0\.0\.9"),
+            ("127.0.0.9:1234", "127\.0\.0\.9:1234"),
+            ("127.0.0.1", "127\.0\.0\.1\(.*localhost\)"),
+            ("127.0.0.1:1234", "127\.0\.0\.1:1234\(.*localhost\)"),
         ]
         settings.RESOLVE_CONNECTION_HOSTS = False
         for v1, v2 in tests:
             self.assertEqual(base.set_destination_hostname(v1), v1)
         settings.RESOLVE_CONNECTION_HOSTS = True
         for v1, v2 in tests:
-            self.assertEqual(base.set_destination_hostname(v1), v2)
+            self.assertRegexpMatches(base.set_destination_hostname(v1), v2)
         settings.RESOLVE_CONNECTION_HOSTS = False
