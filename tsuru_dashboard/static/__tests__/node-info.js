@@ -22,13 +22,14 @@ describe('NodeInfo', () => {
     var data = {
       node: {
         info: {
-          Status: "ready",
-          Metadata: {
+          status: "ready",
+          metadata: {
             pool: "pool"
           },
-          Address: "http://127.0.0.1"
+          pool: "pool",
+          address: "http://127.0.0.1",
+          units: []
         },
-        containers: []
       }
     };
     $.ajax = jest.genMockFunction().mockImplementation((p) => {
@@ -44,33 +45,34 @@ describe('NodeInfo', () => {
 describe('Node', () => {
   var nodeData = {
     info: {
-      Status: "ready",
-      Metadata: {
+      status: "ready",
+      metadata: {
         pool: "pool"
       },
-      Address: "http://127.0.0.1"
-    },
-    containers: [{
-      Status: "started",
-      LastStatusUpdate: "2016-05-11T21:40:52.615Z",
-      BuildingImage: "",
-      Version: "",
-      Name: "tsuru-dashboard-67e5f5a8030600d33856",
-      AppName: "tsuru-dashboard",
-      IP: "172.17.0.3",
-      Image: "127.0.0.1:5000/tsuru/app-tsuru-dashboard:v1",
-      LastSuccessStatusUpdate: "2016-05-11T21:40:52.615Z",
-      PrivateKey: "",
-      Routable: false,
-      ProcessName: "web",
-      HostAddr: "127.0.0.1",
-      LockedUntil: "0001-01-01T00:00:00Z",
-      User: "",
-      HostPort: "49153",
-      MongoID: "56f921202b55bb887efd00db",
-      Type: "python",
-      ID: "b32c7754dd93e440d4fd36941677b11c865eeb12f3a43c7b1775fa31c642b85f"
-    }]
+      pool: "pool",
+      address: "http://127.0.0.1",
+      units: [{
+        Status: "started",
+        LastStatusUpdate: "2016-05-11T21:40:52.615Z",
+        BuildingImage: "",
+        Version: "",
+        Name: "tsuru-dashboard-67e5f5a8030600d33856",
+        AppName: "tsuru-dashboard",
+        IP: "172.17.0.3",
+        Image: "127.0.0.1:5000/tsuru/app-tsuru-dashboard:v1",
+        LastSuccessStatusUpdate: "2016-05-11T21:40:52.615Z",
+        PrivateKey: "",
+        Routable: false,
+        ProcessName: "web",
+        HostAddr: "127.0.0.1",
+        LockedUntil: "0001-01-01T00:00:00Z",
+        User: "",
+        HostPort: "49153",
+        MongoID: "56f921202b55bb887efd00db",
+        Type: "python",
+        ID: "b32c7754dd93e440d4fd36941677b11c865eeb12f3a43c7b1775fa31c642b85f"
+      }]
+    }
   };
 
   it('has node as className', () => {
@@ -87,7 +89,7 @@ describe('Node', () => {
   it('renders <ContainersTab/>', () => {
     const node = shallow(<Node node={nodeData}/>);
     var containers = node.find(ContainersTab);
-    expect(containers.props().containers).toEqual(nodeData.containers);
+    expect(containers.props().containers).toEqual(nodeData.info.units);
   });
 
   it('renders <MetricsTab/>', () => {
@@ -113,13 +115,14 @@ describe('Node', () => {
     for (var u of urls) {
       let data = {
         info: {
-          Status: "ready",
-          Metadata: {
+          status: "ready",
+          metadata: {
             pool: "pool"
           },
-          Address: u
-        },
-        containers: []
+          pool: "pool",
+          address: u,
+          units: []
+        }
       }
       const node = mount(<Node node={data}/>);
       node.find(Tab).at(2).find("a").simulate("click");
@@ -132,7 +135,7 @@ describe('Node', () => {
     const node = mount(<Node node={nodeData}/>);
     node.find(Tab).at(1).find("a").simulate("click");
     expect(node.find(MetadataTab).length).toBe(1);
-    expect(node.find(MetadataTab).props().metadata).toBe(nodeData.info.Metadata);
+    expect(node.find(MetadataTab).props().metadata).toBe(nodeData.info.metadata);
   });
 
   it('renders the h1 title', () => {
