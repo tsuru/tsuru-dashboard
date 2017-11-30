@@ -70,13 +70,29 @@ class NodeInfoViewTest(TestCase):
         httpretty.disable()
         httpretty.reset()
 
-    def teste_should_get_list_of_containers_from_tsuru(self):
+    def test_should_get_list_of_containers_from_tsuru(self):
         containers = self.containers
         containers[0]["DashboardURL"] = u"/apps/myapp/"
-        self.assertListEqual(containers, self.responseContent["node"]["containers"])
+        self.assertListEqual(containers, self.responseContent["node"]["info"]["units"])
 
-    def teste_should_get_node_info_from_tsuru(self):
-        self.assertDictEqual(self.nodes["nodes"][0], self.responseContent["node"]["info"])
+    def test_should_get_node_info_from_tsuru(self):
+        expected = {
+            "status": "ready",
+            "metadata": {
+                "pool": "tsuru1",
+                "iaas": "ec2",
+                "LastSuccess": "2015-11-16T18:44:36-02:00",
+            },
+            "pool": "tsuru1",
+            "last_success": '2015-11-16T20:44:36Z',
+            "units": [
+                {"DashboardURL": "/apps/myapp/", "id": "blabla", "type": "python",
+                 "AppName": "myapp", "hostaddr": "http://127.0.0.2:4243"},
+            ],
+            "units_stats": {"total": 1},
+            "address": "http://127.0.0.2:4243"
+        }
+        self.assertDictEqual(expected, self.responseContent["node"]["info"])
 
     def test_get_request_run_url_should_not_return_404(self):
         response = self.client.get(reverse('node-info-json', args=[self.address.replace("http://", "")]))
@@ -87,7 +103,7 @@ class NodeInfoViewTest(TestCase):
         self.assertEqual(expected, self.responseContent["node"]["nodeRemovalURL"])
 
     @patch("tsuru_dashboard.auth.views.token_is_valid")
-    def teste_should_get_list_of_containers_empty_list(self, token_is_valid):
+    def test_should_get_list_of_containers_empty_list(self, token_is_valid):
         httpretty.reset()
         token_is_valid.return_value = True
 
@@ -106,10 +122,10 @@ class NodeInfoViewTest(TestCase):
             status=200
         )
         response = NodeInfoJson.as_view()(self.request, address=self.address)
-        self.assertListEqual([], json.loads(response.content)["node"]["containers"])
+        self.assertListEqual([], json.loads(response.content)["node"]["info"]["units"])
 
     @patch("tsuru_dashboard.auth.views.token_is_valid")
-    def teste_should_get_list_of_containers_on_error(self, token_is_valid):
+    def test_should_get_list_of_containers_on_error(self, token_is_valid):
         httpretty.reset()
         token_is_valid.return_value = True
 
@@ -128,10 +144,10 @@ class NodeInfoViewTest(TestCase):
             status=200
         )
         response = NodeInfoJson.as_view()(self.request, address=self.address)
-        self.assertListEqual([], json.loads(response.content)["node"]["containers"])
+        self.assertListEqual([], json.loads(response.content)["node"]["info"]["units"])
 
     @patch("tsuru_dashboard.auth.views.token_is_valid")
-    def teste_should_get_empty_node(self, token_is_valid):
+    def test_should_get_empty_node(self, token_is_valid):
         httpretty.reset()
         token_is_valid.return_value = True
 

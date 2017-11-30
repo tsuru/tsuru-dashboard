@@ -71,15 +71,15 @@
           {% for node in nodes %}
           <tr>
             <td>
-              <a href="{% url 'node-info' node.Address %}" title="Containers List">
-                {{ node.Address }}
+              <a href="{% url 'node-info' node.address %}" title="Containers List">
+                {{ node.address }}
               </a>
             </td>
-            <td>{{ node.Units.started|default:"0" }}</td>
-            <td>{{ node.Units.stopped|default:"0" }}</td>
-            <td>{{ node.Units.total|default:"0" }}</td>
-            <td>{{ node.Metadata.LastSuccess|date:"Y/m/d H:i:s e" }}</td>
-            <td>{{ node.Status }}</td>
+            <td>{{ node.units_stats.started|default:"0" }}</td>
+            <td>{{ node.units_stats.stopped|default:"0" }}</td>
+            <td>{{ node.units_stats.total|default:"0" }}</td>
+            <td>{{ node.last_success|date:"Y/m/d H:i:s e" }}</td>
+            <td>{{ node.status }}</td>
           </tr>
           {% endfor %}
         </tbody>
