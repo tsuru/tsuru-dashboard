@@ -1,5 +1,0 @@
--e .
-gunicorn==19.6.0
-gevent==1.1.1
-raven==4.2.3
-whitenoise==3.2.1

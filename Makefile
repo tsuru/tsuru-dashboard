@@ -5,15 +5,16 @@ clean:
 	@rm -rf tsuru_dashboard.egg-info build dist
 
 deps:
-	@pip install -r test-requirements.txt
+	@pip install pipenv
+	@pipenv install --dev
 
 python-test: clean deps
-	@coverage run manage.py test
-	@coverage report --omit="*/tests/*,manage.py,abyss/settings.py" --include="./*" -m
-	@flake8 --max-line-length 130 .
+	@pipenv run coverage run manage.py test
+	@pipenv run coverage report --omit="*/tests/*,manage.py,abyss/settings.py" --include="./*" -m
+	@pipenv run flake8 --max-line-length 130 .
 
 run: clean deps
-	@DEBUG=true ./manage.py runserver
+	@DEBUG=true pipenv run ./manage.py runserver
 
 node-test: node-deps
 	@npm test
