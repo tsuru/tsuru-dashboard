@@ -4,6 +4,7 @@ from freezegun import freeze_time
 
 from mock import patch
 from datetime import datetime, timedelta
+from time import mktime
 
 
 class PrometheusTest(TestCase):
@@ -14,10 +15,16 @@ class PrometheusTest(TestCase):
     @patch("requests.get")
     def test_mem_max(self, get_mock):
         self.backend.mem_max()
+        start = datetime.now() - timedelta(hours=1)
+        end = datetime.now()
         expected = self.backend.url
         expected += "/api/v1/query_range?"
         expected += "query=min(container_memory_usage_bytes{key=value})/1024/1024"
-        expected += "&start=1333305135.0&end=1333308735.0&step={}".format(self.backend.resolution)
+        expected += "&start={}&end={}&step={}".format(
+            mktime(start.timetuple()),
+            mktime(end.timetuple()),
+            self.backend.resolution,
+        )
         get_mock.assert_called_with(expected)
 
     @freeze_time("2012-04-01 16:32:15", tz_offset=0)
