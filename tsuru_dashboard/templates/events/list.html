@@ -59,7 +59,10 @@
             </td>
             <td>
               <a href="{% url 'event-info' event.UniqueID %}">
-                {{ event.Target.Type }}: {{ event.Target.Value }}
+                <div>{{ event.Target.Type }}: {{ event.Target.Value }}</div>
+                {% for et in event.ExtraTargets %}
+                  <div>{{ et.Target.Type }}: {{ et.Target.Value }}</div>
+                {% endfor %}
               </a>
             </td>
             <td>
