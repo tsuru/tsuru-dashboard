@@ -40,7 +40,7 @@
               {% endif %}
             </td>
             <td>
-              {% if event.EndTime and event.StartTime %}
+              {% if event.EndTime and event.StartTime and not event.Running %}
               {{ event.StartTime|timesince:event.EndTime }}
               {% endif %}
             </td>

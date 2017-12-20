@@ -79,7 +79,7 @@
             </td>
             <td>
               <a href="{% url 'event-info' event.UniqueID %}">
-                {% if event.EndTime %}
+                {% if event.EndTime and not event.Running %}
                 {{ event.StartTime|timesince:event.EndTime }}
                 {% endif %}
               </a>
