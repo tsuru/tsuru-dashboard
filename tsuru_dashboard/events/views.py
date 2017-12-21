@@ -36,6 +36,7 @@ class KindList(LoginRequiredView):
 
 class ListEvent(LoginRequiredView, TemplateView):
     template_name = "events/list.html"
+    EVENTS_PER_PAGE = 20
 
     def get_events(self, skip, limit):
         url = '{}/events?skip={}&limit={}'.format(
@@ -74,15 +75,17 @@ class ListEvent(LoginRequiredView, TemplateView):
             page = int(self.request.GET.get('page', '1'))
         except ValueError:
             pass
+        if page < 1:
+            page = 1
 
-        skip = (page - 1) * 20
-        limit = 20
+        skip = (page - 1) * self.EVENTS_PER_PAGE
+        limit = self.EVENTS_PER_PAGE
 
         context['events'] = self.get_events(skip, limit)
         context['kinds'] = self.get_kinds()
 
         req_copy = self.request.GET.copy()
-        if len(context['events']) >= 20:
+        if len(context['events']) >= self.EVENTS_PER_PAGE:
             req_copy['page'] = page + 1
             context['next'] = req_copy.urlencode()
 

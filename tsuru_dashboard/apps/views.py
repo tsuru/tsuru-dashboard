@@ -473,6 +473,7 @@ class Unlock(LoginRequiredView):
 
 class EventList(AppMixin, TemplateView):
     template_name = 'apps/events.html'
+    EVENTS_PER_PAGE = 20
 
     def get_events(self, skip, limit, app):
         url = '{}/events?skip={}&limit={}&target.type=app&target.value={}'
@@ -495,19 +496,27 @@ class EventList(AppMixin, TemplateView):
     def get_context_data(self, *args, **kwargs):
         context = super(EventList, self).get_context_data(*args, **kwargs)
 
-        page = int(self.request.GET.get('page', '1'))
+        page = 1
+        try:
+            page = int(self.request.GET.get('page', '1'))
+        except ValueError:
+            pass
+        if page < 1:
+            page = 1
 
-        skip = (page * 20) - 20
-        limit = page * 20
+        skip = (page - 1) * self.EVENTS_PER_PAGE
+        limit = page * self.EVENTS_PER_PAGE
 
         app_name = kwargs['app_name']
         context['events'] = self.get_events(skip, limit, app_name)
 
-        if len(context['events']) >= 20:
-            context['next'] = page + 1
+        if len(context['events']) >= self.EVENTS_PER_PAGE:
+            context['next'] = 'page=' + str(page + 1)
 
-        if page > 0:
-            context['previous'] = page - 1
+        if page > 2:
+            context['previous'] = 'page=' + str(page - 1)
+        elif page == 2:
+            context['previous'] = ''
 
         return context
 

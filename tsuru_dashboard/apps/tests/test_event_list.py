@@ -68,7 +68,27 @@ class EventListViewTest(TestCase):
 
     @httpretty.activate
     @patch("tsuru_dashboard.auth.views.token_is_valid")
-    def test_pagination(self, token_is_valid):
+    def test_pagination_page1(self, token_is_valid):
+        token_is_valid.return_value = True
+
+        url = '{}/events'.format(settings.TSURU_HOST)
+        body = json.dumps([{
+            "EndTime": u'2016-08-05T16:35:28.946-03:00',
+            "StartTime": u'2016-08-05T16:35:28.835-03:00'
+        }] * 1000)
+        httpretty.register_uri(httpretty.GET, url, body=body, status=200)
+
+        self.request = RequestFactory().get("/")
+        self.request.session = {"tsuru_token": "admin"}
+
+        response = EventList.as_view()(self.request, app_name="bla")
+
+        self.assertEqual("page=2", response.context_data["next"])
+        self.assertEqual(None, response.context_data.get("previous"))
+
+    @httpretty.activate
+    @patch("tsuru_dashboard.auth.views.token_is_valid")
+    def test_pagination_page2(self, token_is_valid):
         token_is_valid.return_value = True
 
         url = '{}/events'.format(settings.TSURU_HOST)
@@ -80,5 +100,25 @@ class EventListViewTest(TestCase):
 
         response = EventList.as_view()(self.request, app_name="bla")
 
-        self.assertEqual(3, response.context_data["next"])
-        self.assertEqual(1, response.context_data["previous"])
+        self.assertEqual("page=3", response.context_data["next"])
+        self.assertEqual("", response.context_data["previous"])
+
+    @httpretty.activate
+    @patch("tsuru_dashboard.auth.views.token_is_valid")
+    def test_pagination_page3(self, token_is_valid):
+        token_is_valid.return_value = True
+
+        url = '{}/events'.format(settings.TSURU_HOST)
+        body = json.dumps([{
+            "EndTime": u'2016-08-05T16:35:28.946-03:00',
+            "StartTime": u'2016-08-05T16:35:28.835-03:00'
+        }] * 1000)
+        httpretty.register_uri(httpretty.GET, url, body=body, status=200)
+
+        self.request = RequestFactory().get("/?page=3")
+        self.request.session = {"tsuru_token": "admin"}
+
+        response = EventList.as_view()(self.request, app_name="bla")
+
+        self.assertEqual("page=4", response.context_data["next"])
+        self.assertEqual("page=2", response.context_data["previous"])
