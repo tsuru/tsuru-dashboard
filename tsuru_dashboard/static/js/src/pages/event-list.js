@@ -12,16 +12,19 @@ function getParameterByName(name, url) {
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
-ReactDOM.render(
-  <EventFilters
-    kind={getParameterByName('kindName')}
-    target={getParameterByName('target.value')}
-    owner={getParameterByName('ownerName')}
-    errorOnly={getParameterByName('errorOnly') === 'true'}
-    running={getParameterByName('running') === 'true'}
-    includeRemoved={getParameterByName('includeRemoved') === 'true'}
-    since={getParameterByName('since')}
-    until={getParameterByName('until')}
-  />,
-  document.getElementById('controls')
-);
+const controls = document.getElementById('controls');
+if (controls) {
+  ReactDOM.render(
+    <EventFilters
+      kind={getParameterByName('kindName')}
+      target={getParameterByName('target.value')}
+      owner={getParameterByName('ownerName')}
+      errorOnly={getParameterByName('errorOnly') === 'true'}
+      running={getParameterByName('running') === 'true'}
+      includeRemoved={getParameterByName('includeRemoved') === 'true'}
+      since={getParameterByName('since')}
+      until={getParameterByName('until')}
+    />,
+    controls
+  );
+}
