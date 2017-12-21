@@ -1,0 +1,61 @@
+{% load staticfiles %}
+{% load filters_deploys %}
+
+<div id="modal"></div>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="content event-info">
+        <label>Status:</label>
+        <span class="{% if not event.Running and not event.CancelInfo.Canceled and not event.Error %}status-success{% endif %}{% if event.Running %}status-running{% endif %}{% if event.Error %}status-error{% endif %}">
+          {% if event.Running %}
+          Running
+          {% endif %}
+          {% if event.Error %}
+          Error
+          {% endif %}
+          {% if not event.Running and not event.CancelInfo.Canceled and not event.Error %}
+          Success
+          {% endif %}
+        </span>
+        {% if event.Error %}
+        <label>Error message:</label><span>{{ event.Error }}</span>
+        {% endif %}
+        {% if event.CancelInfo.Canceled %}
+        <label>Event canceled by:</label><span>{{ event.CancelInfo.Owner }}</span>
+        <label>Reason:</label><span>{{ event.CancelInfo.Reason }}</span>
+        {% endif %}
+        <label>ID:</label><span>{{ event.UniqueID }}</span>
+        <label>Kind:</label><span>{{ event.Kind.Type }}({{ event.Kind.Name }})</span>
+        <label>Owner:</label><span>{{ event.Owner.Type }}({{ event.Owner.Name }})</span>
+        <label>Targets:</label>
+        <span>{{ event.Target.Type }}({{ event.Target.Value }})</span>
+        {% for et in event.ExtraTargets %}
+          <span>{{ et.Target.Type }}({{ et.Target.Value }})</span>
+        {% endfor %}
+        {% if event.StartTime %}
+        <label>Started at:</label><span>{{ event.StartTime|string_to_date|date:" d-m-Y H:i:s " }}</span>
+        {% endif %}
+        {% if event.EndTime %}
+        <label>Finished at:</label><span>{{ event.EndTime|string_to_date|date:" d-m-Y H:i:s " }}</span>
+        {% endif %}
+        {% if event.StartCustomData.Kind %}
+        <label class="break">Start Custom Data:</label>
+        {{ event.StartCustomData.Data | safe }}
+        {% endif %}
+        {% if event.EndCustomData.Kind %}
+        <label class="break">End Custom Data:</label>
+        {{ event.EndCustomData.Data | safe }}
+        {% endif %}
+        {% if event.OtherCustomData.Kind %}
+        <label class="break">Other Custom Data:</label>
+        {{ event.OtherCustomData.Data | safe }}
+        {% endif %}
+        {% if event.Log %}
+        <label class="break">Log:</label>
+        <div><pre>{{ event.Log | escape }}</pre></div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
