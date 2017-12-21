@@ -1,3 +1,5 @@
+{% load events %}
+
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-12">
@@ -16,14 +18,15 @@
         </thead>
         <tbody>
           {% for event in events %}
+          {% event_url event.UniqueID app_name as event_info_url %}
           <tr {% if event.Error %}data-container="body" data-toggle="tooltip" title="{{ event.Error|truncatechars:300 }}"{% endif %}>
             <td>
-              <a href="{% url 'event-info' event.UniqueID %}">
+              <a href="{{ event_info_url }}">
                 {{ event.Kind.Name }}
               </a>
             </td>
             <td>
-              <a href="{% url 'event-info' event.UniqueID %}">
+              <a href="{{ event_info_url }}">
                 <div>{{ event.Target.Type }}: {{ event.Target.Value }}</div>
                 {% for et in event.ExtraTargets %}
                   <div>{{ et.Target.Type }}: {{ et.Target.Value }}</div>
@@ -31,26 +34,26 @@
               </a>
             </td>
             <td>
-              <a href="{% url 'event-info' event.UniqueID %}">
+              <a href="{{ event_info_url }}">
                 {{ event.Owner.Type }}{% if event.Owner.Name %}: {{ event.Owner.Name }}{% endif %}
               </a>
             </td>
             <td>
-              <a href="{% url 'event-info' event.UniqueID %}">
+              <a href="{{ event_info_url }}">
                 {% if event.StartTime %}
                 {{ event.StartTime|date:" d-m-Y H:i:s " }}
                 {% endif %}
               </a>
             </td>
             <td>
-              <a href="{% url 'event-info' event.UniqueID %}">
+              <a href="{{ event_info_url }}">
                 {% if event.EndTime and not event.Running %}
                 {{ event.StartTime|timesince:event.EndTime }}
                 {% endif %}
               </a>
             </td>
             <td class="status-col {% if not event.Running and not event.CancelInfo.Canceled and not event.Error %}status-success{% endif %}{% if event.Running %}status-running{% endif %}{% if event.Error %}status-error{% endif %}">
-              <a href="{% url 'event-info' event.UniqueID %}">
+              <a href="{{ event_info_url }}">
                 <div class="status-block">
                   {% if event.Running %}
                   Running
