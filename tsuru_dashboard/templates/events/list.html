@@ -3,8 +3,7 @@
 {% load filters_deploys %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static "css/pages/event-list.css" %}">
-<link rel="stylesheet" href="{% static "css/datepicker.css" %}">
+{% include "events/list/_css.html" %}
 {% endblock %}
 
 {% block bar %}
@@ -33,14 +32,9 @@
 {% endblock %}
 
 {% block content %}
-{% include "events/_list.html" with show_controls=True %}
+{% include "events/list/_content.html" with show_controls=True %}
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static "js/pages/event-list.js" %}"></script>
-<script>
-$(function () {
-  $('[data-toggle="tooltip"]').tooltip();
-})
-</script>
+{% include "events/list/_js.html" %}
 {% endblock %}

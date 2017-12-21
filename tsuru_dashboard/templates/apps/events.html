@@ -4,8 +4,7 @@
 
 {% block extra_css %}
 {{ block.super }}
-<link rel="stylesheet" href="{% static "css/pages/event-list.css" %}">
-<link rel="stylesheet" href="{% static "css/datepicker.css" %}">
+{% include "events/list/_css.html" %}
 {% endblock %}
 
 {% block navbar %}
@@ -13,14 +12,9 @@
 {% endblock %}
 
 {% block app-content %}
-{% include "events/_list.html" %}
+{% include "events/list/_content.html" %}
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static "js/pages/event-list.js" %}"></script>
-<script>
-$(function () {
-  $('[data-toggle="tooltip"]').tooltip();
-})
-</script>
+{% include "events/list/_js.html" %}
 {% endblock %}
