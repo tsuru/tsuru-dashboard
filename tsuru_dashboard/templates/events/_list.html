@@ -10,7 +10,7 @@
         <thead>
           <tr>
             <th>Action</th>
-            <th>Target</th>
+            {% if not app_name %}<th>Target</th>{% endif %}
             <th>Owner</th>
             <th>Start</th>
             <th>Duration</th>
@@ -26,6 +26,7 @@
                 {{ event.Kind.Name }}
               </a>
             </td>
+            {% if not app_name %}
             <td>
               <a href="{{ event_info_url }}">
                 <div>{{ event.Target.Type }}: {{ event.Target.Value }}</div>
@@ -34,6 +35,7 @@
                 {% endfor %}
               </a>
             </td>
+            {% endif %}
             <td>
               <a href="{{ event_info_url }}">
                 {{ event.Owner.Type }}{% if event.Owner.Name %}: {{ event.Owner.Name }}{% endif %}
