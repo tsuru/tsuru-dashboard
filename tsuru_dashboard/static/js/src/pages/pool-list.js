@@ -13,15 +13,15 @@ class PoolList extends Component {
           <span>{this.props.nodes.length} nodes</span>
         </div>
 
-        <table className="table">
+        <table className="table text-center">
           <thead>
             <tr>
-              <th className="col-xs-2">Host</th>
-              <th className="col-xs-2">Started units</th>
-              <th className="col-xs-2">Stopped units</th>
-              <th className="col-xs-2">Total units</th>
-              <th className="col-xs-2">Last success</th>
-              <th className="col-xs-2">Status</th>
+              <th className="col-xs-2 text-center">Host</th>
+              <th className="col-xs-2 text-center">Started units</th>
+              <th className="col-xs-2 text-center">Stopped units</th>
+              <th className="col-xs-2 text-center">Total units</th>
+              <th className="col-xs-2 text-center">Last success</th>
+              <th className="col-xs-2 text-center">Status</th>
             </tr>
           </thead>
           <tbody>
@@ -73,7 +73,7 @@ class PoolNode extends Component {
 
   renderTableLine(nodeInfo) {
     let cols = [
-      <td key={`${nodeInfo.address}-col0`} className="col-xs-2">
+      <td key={`${nodeInfo.address}-col0`} className="col-xs-2 text-left">
         <a href={`/admin/${nodeInfo.address}/`} title="Containers List">
           {nodeInfo.address}
         </a>
@@ -82,7 +82,7 @@ class PoolNode extends Component {
 
     if (this.state.loading) {
       cols.push(
-        <td key={`${nodeInfo.address}-col${cols.length}`} colSpan="4" className="col-xs-8" style={{textAlign: "center"}}>
+        <td key={`${nodeInfo.address}-col${cols.length}`} colSpan="4" className="col-xs-8">
           <img src="/static/img/spinner.gif" />
         </td>
       )
