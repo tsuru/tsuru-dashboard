@@ -29,18 +29,16 @@ class PoolList(LoginRequiredView, TemplateView):
             data = response.json()
             nodes = data.get("nodes", [])
 
-            url = "{}/docker/node/{}/containers"
-            urls = [url.format(settings.TSURU_HOST, Node(node).address()) for node in nodes]
-
-            rs = (grequests.get(u, headers=self.authorization) for u in urls)
-            units = grequests.map(rs)
-
             for node in nodes:
-                node = Node(node, units)
-                pool = node.pool()
+                n = Node(node, [])
+                pool = n.pool()
                 nodes_by_pool = pools.get(pool, [])
-                nodes_by_pool.append(node.to_dict())
+                data = {"address": node["Address"], "status": node["Status"]}
+                nodes_by_pool.append(data)
                 pools[pool] = nodes_by_pool
+
+            for pool in pools:
+                pools[pool] = json.dumps(nodes_by_pool)
         return sorted(pools.items())
 
     def get_context_data(self, **kwargs):
