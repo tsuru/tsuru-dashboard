@@ -1,5 +1,6 @@
 import React, { Component } from "react"
 import ReactDOM from "react-dom"
+import moment from "moment"
 
 class PoolList extends Component {
   render() {
@@ -62,6 +63,14 @@ class PoolNode extends Component {
     }
   }
 
+  formatDate(dateStr) {
+    const m = moment(dateStr)
+    if (m.isValid()){
+      return m.format("YYYY/MM/DD hh:mm:ss ZZ")
+    }
+    return ""
+  }
+
   renderTableLine(nodeInfo) {
     let cols = [
       <td key={`${nodeInfo.address}-col0`} className="col-xs-2">
@@ -81,7 +90,7 @@ class PoolNode extends Component {
       cols.push(<td key={`${nodeInfo.address}-col${cols.length}`} className="col-xs-2">{nodeInfo.units_stats.started || 0}</td>)
       cols.push(<td key={`${nodeInfo.address}-col${cols.length}`} className="col-xs-2">{nodeInfo.units_stats.stopped || 0}</td>)
       cols.push(<td key={`${nodeInfo.address}-col${cols.length}`} className="col-xs-2">{nodeInfo.units_stats.total || 0}</td>)
-      cols.push(<td key={`${nodeInfo.address}-col${cols.length}`} className="col-xs-2">{nodeInfo.last_success}</td>)
+      cols.push(<td key={`${nodeInfo.address}-col${cols.length}`} className="col-xs-2">{this.formatDate(nodeInfo.last_success)}</td>)
     }
     cols.push(<td key={`${nodeInfo.address}-col${cols.length}`} className="col-xs-2">{nodeInfo.status}</td>)
 
