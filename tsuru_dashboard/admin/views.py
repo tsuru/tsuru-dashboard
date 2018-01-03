@@ -38,7 +38,7 @@ class PoolList(LoginRequiredView, TemplateView):
                 pools[pool] = nodes_by_pool
 
             for pool in pools:
-                pools[pool] = json.dumps(nodes_by_pool)
+                pools[pool] = json.dumps(pools[pool])
         return sorted(pools.items())
 
     def get_context_data(self, **kwargs):
