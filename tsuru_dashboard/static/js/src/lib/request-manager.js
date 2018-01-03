@@ -1,7 +1,7 @@
 export class RequestManager {
   constructor() {
     this.queue = []
-    this.concurrentRequests = 4
+    this.concurrentRequests = 8
     this.running = 0
     this.processQueue()
   }
@@ -10,19 +10,16 @@ export class RequestManager {
     this.queue.push(request)
   }
 
-  remove(index) {
-    if (index >= 0) {
-      this.queue.splice(index, 1)
-    }
-  }
-
   processQueue() {
     let q = Object.assign(this.queue)
     for (let i = 0; i < q.length; i++) {
       if (this.running >= this.concurrentRequests) {
         break
       }
-      this.doRequest(q[i], i)
+      if (!q[i].started) {
+        this.queue[i].started = true
+        this.doRequest(q[i], i)
+      }
     }
 
     window.setTimeout(this.processQueue.bind(this), 500)
@@ -42,7 +39,6 @@ export class RequestManager {
       },
       complete: () => {
         self.running--
-        self.remove(index)
       }
     })
   }
@@ -54,5 +50,6 @@ export class Request {
     this.url = opts.url
     this.resolve = opts.resolve || (() => {})
     this.reject = opts.reject || (() => {})
+    this.started = false
   }
 }
