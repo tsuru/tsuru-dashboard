@@ -24,7 +24,7 @@ class PoolList extends Component {
             </tr>
           </thead>
           <tbody>
-            {this.props.nodes.map((node) => <PoolNode key={node.address} address={node.address} status={node.status} /> )}
+            {this.props.nodes.map((node) => <PoolNode key={`${node.address}-node`} address={node.address} status={node.status} /> )}
           </tbody>
         </table>
       </div>
@@ -64,8 +64,8 @@ class PoolNode extends Component {
 
   renderTableLine(nodeInfo) {
     let cols = [
-      <td className="col-xs-2">
-        <a href={`/admin/${nodeInfo.address}`} title="Containers List">
+      <td key={`${nodeInfo.address}-col0`} className="col-xs-2">
+        <a href={`/admin/${nodeInfo.address}/`} title="Containers List">
           {nodeInfo.address}
         </a>
       </td>
@@ -73,17 +73,17 @@ class PoolNode extends Component {
 
     if (this.state.loading) {
       cols.push(
-        <td colSpan="4" className="col-xs-8" style={{textAlign: "center"}}>
+        <td key={`${nodeInfo.address}-col${cols.length}`} colSpan="4" className="col-xs-8" style={{textAlign: "center"}}>
           <img src="/static/img/spinner.gif" />
         </td>
       )
     } else {
-      cols.push(<td className="col-xs-2">{nodeInfo.units_stats.started || 0}</td>)
-      cols.push(<td className="col-xs-2">{nodeInfo.units_stats.stopped || 0}</td>)
-      cols.push(<td className="col-xs-2">{nodeInfo.units_stats.total || 0}</td>)
-      cols.push(<td className="col-xs-2">{nodeInfo.last_success}</td>)
+      cols.push(<td key={`${nodeInfo.address}-col${cols.length}`} className="col-xs-2">{nodeInfo.units_stats.started || 0}</td>)
+      cols.push(<td key={`${nodeInfo.address}-col${cols.length}`} className="col-xs-2">{nodeInfo.units_stats.stopped || 0}</td>)
+      cols.push(<td key={`${nodeInfo.address}-col${cols.length}`} className="col-xs-2">{nodeInfo.units_stats.total || 0}</td>)
+      cols.push(<td key={`${nodeInfo.address}-col${cols.length}`} className="col-xs-2">{nodeInfo.last_success}</td>)
     }
-    cols.push(<td className="col-xs-2">{nodeInfo.status}</td>)
+    cols.push(<td key={`${nodeInfo.address}-col${cols.length}`} className="col-xs-2">{nodeInfo.status}</td>)
 
     return (
       <tr>
