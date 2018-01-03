@@ -15,16 +15,16 @@ class PoolList extends Component {
         <table className="table">
           <thead>
             <tr>
-              <th>Host</th>
-              <th>Started units</th>
-              <th>Stopped units</th>
-              <th>Total units</th>
-              <th>Last success</th>
-              <th>Status</th>
+              <th className="col-xs-2">Host</th>
+              <th className="col-xs-2">Started units</th>
+              <th className="col-xs-2">Stopped units</th>
+              <th className="col-xs-2">Total units</th>
+              <th className="col-xs-2">Last success</th>
+              <th className="col-xs-2">Status</th>
             </tr>
           </thead>
           <tbody>
-            {this.props.nodes.map((node) => <PoolNode key={node.address} address={node.address} /> )}
+            {this.props.nodes.map((node) => <PoolNode key={node.address} address={node.address} status={node.status} /> )}
           </tbody>
         </table>
       </div>
@@ -64,7 +64,7 @@ class PoolNode extends Component {
 
   renderTableLine(nodeInfo) {
     let cols = [
-      <td>
+      <td className="col-xs-2">
         <a href={`/admin/${nodeInfo.address}`} title="Containers List">
           {nodeInfo.address}
         </a>
@@ -73,17 +73,17 @@ class PoolNode extends Component {
 
     if (this.state.loading) {
       cols.push(
-        <td colspan="3" style={{textAlign: "center"}}>
+        <td colSpan="4" className="col-xs-8" style={{textAlign: "center"}}>
           <img src="/static/img/spinner.gif" />
         </td>
       )
     } else {
-      cols.push(<td>{nodeInfo.units_stats.started || 0}</td>)
-      cols.push(<td>{nodeInfo.units_stats.stopped || 0}</td>)
-      cols.push(<td>{nodeInfo.units_stats.total || 0}</td>)
-      cols.push(<td>{nodeInfo.last_success}</td>)
+      cols.push(<td className="col-xs-2">{nodeInfo.units_stats.started || 0}</td>)
+      cols.push(<td className="col-xs-2">{nodeInfo.units_stats.stopped || 0}</td>)
+      cols.push(<td className="col-xs-2">{nodeInfo.units_stats.total || 0}</td>)
+      cols.push(<td className="col-xs-2">{nodeInfo.last_success}</td>)
     }
-    cols.push(<td>{nodeInfo.status}</td>)
+    cols.push(<td className="col-xs-2">{nodeInfo.status}</td>)
 
     return (
       <tr>
