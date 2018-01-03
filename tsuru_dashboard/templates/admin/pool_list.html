@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load staticfiles %}
 
 {% block extra_css %}
 <style>
@@ -34,45 +35,13 @@ table td, table th {
 <div class="container-fluid">
   {% for pool in pools %}
   <div class="row">
-    <div class="col-md-12">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <a href="{% url "pool-info" pool.0 %}" class="pool-link">
-            <h4>{{ pool.0 }}</h4>
-          </a>
-          <span>{{ pool.1 | length }} nodes</span>
-        </div>
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Host</th>
-              <th>Started units</th>
-              <th>Stopped units</th>
-              <th>Total units</th>
-              <th>Last success</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for node in pool.1 %}
-            <tr>
-              <td>
-                <a href="{% url 'node-info' node.address %}" title="Containers List">
-                  {{ node.address }}
-                </a>
-              </td>
-              <td>{{ node.units_stats.started|default:"0" }}</td>
-              <td>{{ node.units_stats.stopped|default:"0" }}</td>
-              <td>{{ node.units_stats.total|default:"0" }}</td>
-              <td>{{ node.last_success|date:"Y/m/d H:i:s e" }}</td>
-              <td>{{ node.status }}</td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
+    <div class="pool-list col-md-12" data-pool-name="{{ pool.0 }}" data-nodes="{{ pool.1 }}">
     </div>
   </div>
   {% endfor %}
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static "js/pages/pool-list.js" %}"></script>
 {% endblock %}
