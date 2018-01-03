@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import ReactDOM from "react-dom";
+import React, { Component } from "react"
+import ReactDOM from "react-dom"
 
 class PoolList extends Component {
   render() {
@@ -34,10 +34,11 @@ class PoolList extends Component {
 
 class PoolNode extends Component {
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
-      node: null
+      node: null,
+      loading: true
     }
   }
 
@@ -50,37 +51,55 @@ class PoolNode extends Component {
       type: 'GET',
       url: this.url(),
       success: (data) => {
-        this.setState({node: data.node});
+        this.setState({node: data.node, loading: false})
       }
-    });
+    })
   }
 
   componentDidMount() {
     if (this.props.address !== "") {
-      this.nodeInfo();
+      this.nodeInfo()
     }
+  }
+
+  renderTableLine(nodeInfo) {
+    let cols = [
+      <td>
+        <a href={`/admin/${nodeInfo.address}`} title="Containers List">
+          {nodeInfo.address}
+        </a>
+      </td>
+    ]
+
+    if (this.state.loading) {
+      cols.push(
+        <td colspan="3" style={{textAlign: "center"}}>
+          <img src="/static/img/spinner.gif" />
+        </td>
+      )
+    } else {
+      cols.push(<td>{nodeInfo.units_stats.started || 0}</td>)
+      cols.push(<td>{nodeInfo.units_stats.stopped || 0}</td>)
+      cols.push(<td>{nodeInfo.units_stats.total || 0}</td>)
+      cols.push(<td>{nodeInfo.last_success}</td>)
+    }
+    cols.push(<td>{nodeInfo.status}</td>)
+
+    return (
+      <tr>
+        {cols}
+      </tr>
+    )
   }
 
   render() {
     if (this.state.node === null || this.state.node.info === null) {
-      return null
+      if (this.props.address === "") {
+        return null
+      }
+      return this.renderTableLine({address: this.props.address, status: this.props.status})
     }
-
-    const nodeInfo = this.state.node.info
-    return (
-      <tr>
-        <td>
-          <a href={`/admin/${nodeInfo.address}`} title="Containers List">
-            {nodeInfo.address}
-          </a>
-        </td>
-        <td>{nodeInfo.units_stats.started || 0}</td>
-        <td>{nodeInfo.units_stats.stopped || 0}</td>
-        <td>{nodeInfo.units_stats.total || 0}</td>
-        <td>{nodeInfo.last_success}</td>
-        <td>{nodeInfo.status}</td>
-      </tr>
-    )
+    return this.renderTableLine(this.state.node.info)
   }
 }
 
@@ -93,5 +112,5 @@ document.querySelectorAll(".pool-list").forEach(function(item) {
   ReactDOM.render(
     <PoolList poolName={item.getAttribute("data-pool-name")} nodes={nodes} />,
     item
-  );
-});
+  )
+})
