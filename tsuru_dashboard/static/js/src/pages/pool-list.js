@@ -1,6 +1,9 @@
 import React, { Component } from "react"
 import ReactDOM from "react-dom"
+import { RequestManager, Request } from "../lib/request-manager"
 import moment from "moment"
+
+let Requests = new RequestManager()
 
 class PoolList extends Component {
   render() {
@@ -48,13 +51,14 @@ class PoolNode extends Component {
   }
 
   nodeInfo() {
-    $.ajax({
-      type: 'GET',
+    const request = new Request({
+      method: "GET",
       url: this.url(),
-      success: (data) => {
+      resolve: (data) => {
         this.setState({node: data.node, loading: false})
       }
     })
+    Requests.add(request)
   }
 
   componentDidMount() {
