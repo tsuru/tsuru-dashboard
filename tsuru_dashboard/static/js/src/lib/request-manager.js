@@ -1,3 +1,10 @@
+let $
+if (typeof window.jQuery === "undefined") {
+  $ = require("jquery")
+} else {
+  $ = window.jQuery
+}
+
 export class RequestManager {
   constructor() {
     this.queue = []
