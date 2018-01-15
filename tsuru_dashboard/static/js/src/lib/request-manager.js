@@ -42,7 +42,7 @@ export class RequestManager {
         request.resolve(data)
       },
       error: (e) => {
-        request.reject(e)
+        request.reject(e.responseText)
       },
       complete: () => {
         self.running--
