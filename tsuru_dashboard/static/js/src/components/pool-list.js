@@ -69,7 +69,7 @@ export class PoolNode extends Component {
 
   formatDate(dateStr) {
     const m = moment(dateStr)
-    if (m.isValid()){
+    if (m.isValid()) {
       return m.format("YYYY/MM/DD hh:mm:ss ZZ")
     }
     return ""
