@@ -5,7 +5,7 @@ import moment from "moment"
 
 let Requests = new RequestManager()
 
-export class PoolList extends Component {
+export class Pool extends Component {
   render() {
     return (
       <div className="panel panel-default">
