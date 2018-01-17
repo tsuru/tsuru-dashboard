@@ -1,5 +1,6 @@
 import React from "react"
 import ReactDOM from "react-dom"
+import { PoolList } from "../components/pool-list"
 
 document.querySelectorAll(".pool-list").forEach(function(item) {
   let nodes = []
