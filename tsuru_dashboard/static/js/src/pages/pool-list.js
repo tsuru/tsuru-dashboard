@@ -1,6 +1,6 @@
 import React from "react"
 import ReactDOM from "react-dom"
-import { PoolList } from "../components/pool-list"
+import { Pool } from "../components/pool"
 
 document.querySelectorAll(".pool-list").forEach(function(item) {
   let nodes = []
@@ -9,6 +9,6 @@ document.querySelectorAll(".pool-list").forEach(function(item) {
   } catch(e) {}
 
   ReactDOM.render(
-    <PoolList poolName={item.getAttribute("data-pool-name")} nodes={nodes} />,
+    <Pool poolName={item.getAttribute("data-pool-name")} nodes={nodes} />,
     item)
 })

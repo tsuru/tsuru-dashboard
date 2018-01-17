@@ -1,10 +1,10 @@
 import React from "react"
 import { mount } from "enzyme"
-import { PoolList, PoolNode } from "../js/src/components/pool-list"
+import { Pool, PoolNode } from "../js/src/components/pool"
 import { RequestManager } from "../js/src/lib/request-manager"
 import sinon from "sinon"
 
-describe("PoolList", () => {
+describe("Pool", () => {
   let defaultAddRequest
 
   beforeEach(() => {
@@ -22,7 +22,7 @@ describe("PoolList", () => {
       { address: "5.6.7.8", status: "stopped" }
     ]
     const poolList = mount(
-      <PoolList nodes={nodes} />
+      <Pool nodes={nodes} />
     )
     const poolNodes = poolList.find(PoolNode)
 
@@ -37,7 +37,7 @@ describe("PoolList", () => {
       { address: "5.6.7.8", status: "stopped" },
       { address: "9.10.11.12", status: "running" }
     ]
-    mount(<PoolList nodes={nodes} />)
+    mount(<Pool nodes={nodes} />)
 
     expect(RequestManager.prototype.add.callCount).toEqual(3)
     expect(RequestManager.prototype.add.getCall(0).args[0].url).toEqual("/admin/1.2.3.4/containers/")
