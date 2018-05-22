@@ -15,6 +15,13 @@ from .forms import (LoginForm, SignupForm, KeyForm, TokenRequestForm,
                     PasswordRecoveryForm, ChangePasswordForm)
 
 
+def get_oauth_redirect_url(request):
+    scheme = request.scheme
+    host = request.META.get('HTTP_HOST', request.META.get('SERVER_NAME'))
+
+    return "{}://{}/auth/callback/".format(scheme, host)
+
+
 def token_is_valid(token):
     headers = {'authorization': token}
     url = "{0}/users/info".format(settings.TSURU_HOST)
@@ -137,7 +144,7 @@ class Login(FormView):
         if scheme_data is None:
             return data
         authorize_url = scheme_data.get('authorizeUrl', '')
-        callback_url = "http://{}/auth/callback/".format(self.request.META.get('HTTP_HOST'))
+        callback_url = get_oauth_redirect_url(self.request)
         data["authorize_url"] = authorize_url.replace('__redirect_url__', callback_url)
         return data
 
@@ -210,7 +217,7 @@ class Signup(View):
 class Callback(View):
     def get(self, request):
         code = request.GET.get("code")
-        redirect_url = "http://{}/auth/callback/".format(request.META.get('HTTP_HOST'))
+        redirect_url = get_oauth_redirect_url(request)
         data = {
             "code": code,
             "redirectUrl": redirect_url,
