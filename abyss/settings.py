@@ -121,3 +121,5 @@ if RVN_CONFIG:
     INSTALLED_APPS = INSTALLED_APPS + [
         'raven.contrib.django.raven_compat',
     ]
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
