@@ -31,6 +31,22 @@ describe("Pool", () => {
     expect(poolNodes.last().props()).toEqual(nodes[1])
   })
 
+  it("renders a link with the pool name", () => {
+    const pool = mount(<Pool poolName="mypool" nodes={[]} />)
+    const link = pool.find("a")
+    expect(link.length).toEqual(1)
+    expect(link.prop("className")).toEqual("pool-header")
+    expect(link.text()).toEqual("mypool")
+  })
+
+  it("renders a header when the node doesn't have pool", () => {
+    const pool = mount(<Pool nodes={[]} />)
+    const header = pool.find("h4")
+    expect(header.length).toEqual(1)
+    expect(header.prop("className")).toEqual("pool-header")
+    expect(header.text()).toEqual("Nodes without pool")
+  })
+
   it("fetches nodes info", () => {
     const nodes = [
       { address: "1.2.3.4", status: "running" },

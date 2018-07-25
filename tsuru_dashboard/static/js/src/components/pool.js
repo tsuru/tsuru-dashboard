@@ -6,13 +6,23 @@ import moment from "moment"
 let Requests = new RequestManager()
 
 export class Pool extends Component {
+  renderPoolName() {
+    if (this.props.poolName) {
+      return (
+        <a href={`/admin/pool/${this.props.poolName}/`} className="pool-header">
+          <h4>{this.props.poolName}</h4>
+        </a>
+      )
+    } else {
+      return <h4 className="pool-header">Nodes without pool</h4>
+    }
+  }
+
   render() {
     return (
       <div className="panel panel-default">
         <div className="panel-heading">
-          <a href={`/admin/pool/${this.props.poolName}/`} className="pool-link">
-            <h4>{this.props.poolName}</h4>
-          </a>
+          { this.renderPoolName() }
           <span>{this.props.nodes.length} nodes</span>
         </div>
 

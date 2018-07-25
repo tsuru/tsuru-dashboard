@@ -55,7 +55,7 @@ class Node():
         pool = self.data.get("Pool", self.data.get("pool"))
         if pool:
             return pool
-        return str(self.metadata().get("pool"))
+        return str(self.metadata().get("pool", ""))
 
     def status(self):
         return self.data.get("Status")
