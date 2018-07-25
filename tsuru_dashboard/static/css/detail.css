@@ -52,3 +52,7 @@ h1 {
   flex-direction: column;
   align-items: flex-start;
 }
+
+.resources-content {
+  margin-top: 20px;
+}
