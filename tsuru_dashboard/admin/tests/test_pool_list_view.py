@@ -86,3 +86,41 @@ class PoolListViewTest(TestCase):
         }
         self.assertEqual(sorted(expected.items()),
                          response.context_data["pools"])
+
+    @httpretty.activate
+    @patch("tsuru_dashboard.auth.views.token_is_valid")
+    def test_should_map_nodes_without_pool(self, token_is_valid):
+        token_is_valid.return_value = True
+
+        url = "{}/docker/node".format(settings.TSURU_HOST)
+        data = {
+            "nodes": [
+                {"Address": "http://128.0.0.1:4243",
+                 "Status": "ready",
+                 "Pool": "theonepool"},
+                {"Address": "http://127.0.0.1:2375",
+                 "Status": "ready",
+                 "Pool": ""},
+                {"Address": "http://myserver.com:2375",
+                 "Status": "ready",
+                 "Pool": ""},
+            ],
+        }
+        body = json.dumps(data)
+        httpretty.register_uri(httpretty.GET, url, body=body)
+        response = PoolList.as_view()(self.request)
+
+        expected = {
+            "theonepool": json.dumps([
+                {"address": "http://128.0.0.1:4243",
+                 "status": "ready"},
+            ]),
+            "": json.dumps([
+                {"address": "http://127.0.0.1:2375",
+                 "status": "ready"},
+                {"address": "http://myserver.com:2375",
+                 "status": "ready"},
+            ]),
+        }
+        self.assertEqual(sorted(expected.items()),
+                         response.context_data["pools"])
