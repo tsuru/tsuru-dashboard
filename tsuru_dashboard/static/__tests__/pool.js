@@ -32,7 +32,7 @@ describe("Pool", () => {
   })
 
   it("renders a link with the pool name", () => {
-    const pool = mount(<Pool poolName="mypool" nodes={[]} />)
+    const pool = mount(<Pool poolName="mypool" />)
     const link = pool.find("a")
     expect(link.length).toEqual(1)
     expect(link.prop("className")).toEqual("pool-header")
@@ -40,7 +40,7 @@ describe("Pool", () => {
   })
 
   it("renders a header when the node doesn't have pool", () => {
-    const pool = mount(<Pool nodes={[]} />)
+    const pool = mount(<Pool />)
     const header = pool.find("h4")
     expect(header.length).toEqual(1)
     expect(header.prop("className")).toEqual("pool-header")

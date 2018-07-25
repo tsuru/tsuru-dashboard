@@ -46,6 +46,11 @@ export class Pool extends Component {
   }
 }
 
+Pool.defaultProps = {
+  poolName: "",
+  nodes: []
+}
+
 export class PoolNode extends Component {
   constructor(props) {
     super(props)
