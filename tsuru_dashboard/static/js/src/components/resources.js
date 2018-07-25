@@ -88,8 +88,10 @@ class ProcessInfo extends Component {
     var units = this.props.process;
     var kind = this.props.kind;
     var classNames = "table containers-app";
-    if (this.state.hide)
+    if (this.state.hide) {
       classNames += " hide";
+    }
+
     return (
       <div className="units-toggle" onClick={this.onClick}>
         <p><a href="#">&#x25BC;</a> {units.length} {kind} units</p>

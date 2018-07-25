@@ -158,11 +158,12 @@
   {% block extra_js %}
   <script src="{% static "js/lib/confirmation.js" %}"></script>
   <script type="text/javascript">
-  var appName = "{{ app.name }}";
-  $.confirmation(".btn-remove", ".remove-confirmation", appName);
-  $.confirmation(".btn-unlock", ".unlock-confirmation", appName);
-  $(".settings-toggle").on("click", function() {
-    $(".settings-content").toggleClass("hide");
-  });
+    var appName = "{{ app.name }}";
+    $.confirmation(".btn-remove", ".remove-confirmation", appName);
+    $.confirmation(".btn-unlock", ".unlock-confirmation", appName);
+    $(".settings-toggle").on("click", function(e) {
+      e.preventDefault();
+      $(".settings-content").toggleClass("hide");
+    });
   </script>
   {% endblock %}
