@@ -17,17 +17,14 @@ class Node():
         if not units_responses:
             return
         for response in units_responses:
-            if not response:
-                continue
-
-            if response.status_code != 200:
+            if not response or response.status_code != 200:
                 continue
 
             node_units = response.json()
             if not node_units:
                 continue
 
-            addr = node_units[0].get('HostAddr') or node_units[0].get('hostaddr')
+            addr = node_units[0].get('IP')
             if not addr:
                 continue
 

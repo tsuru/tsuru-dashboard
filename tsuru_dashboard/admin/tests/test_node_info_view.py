@@ -4,7 +4,7 @@ from django.test import TestCase
 from django.test.client import RequestFactory
 
 
-class ListAppJsonViewTest(TestCase):
+class NodeInfoViewTest(TestCase):
     @patch("tsuru_dashboard.auth.views.token_is_valid")
     def test_should_use_node_info_template(self, token_is_valid):
         token_is_valid.return_value = True

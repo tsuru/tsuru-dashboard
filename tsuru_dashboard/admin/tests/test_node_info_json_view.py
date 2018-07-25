@@ -11,7 +11,7 @@ from tsuru_dashboard import settings
 from tsuru_dashboard.admin.views import NodeInfoJson
 
 
-class NodeInfoViewTest(TestCase):
+class NodeInfoJsonViewTest(TestCase):
     @patch("tsuru_dashboard.auth.views.token_is_valid")
     def setUp(self, token_is_valid):
         token_is_valid.return_value = True
@@ -25,7 +25,7 @@ class NodeInfoViewTest(TestCase):
 
         url = "{}/docker/node/{}/containers".format(settings.TSURU_HOST, 'http://127.0.0.2:4243')
         self.containers = [
-            {"id": "blabla", "type": "python", "AppName": "myapp", "hostaddr": "http://127.0.0.2:4243"}
+            {"id": "blabla", "type": "python", "AppName": "myapp", "hostaddr": self.address, "IP": self.address}
         ]
         httpretty.register_uri(
             httpretty.GET,
@@ -87,7 +87,7 @@ class NodeInfoViewTest(TestCase):
             "last_success": '2015-11-16T20:44:36Z',
             "units": [
                 {"DashboardURL": "/apps/myapp/", "id": "blabla", "type": "python",
-                 "AppName": "myapp", "hostaddr": "http://127.0.0.2:4243"},
+                 "AppName": "myapp", "hostaddr": "http://127.0.0.2:4243", "IP": "http://127.0.0.2:4243"},
             ],
             "units_stats": {"total": 1},
             "address": "http://127.0.0.2:4243"
@@ -167,3 +167,31 @@ class NodeInfoViewTest(TestCase):
         )
         response = NodeInfoJson.as_view()(self.request, address=self.address)
         self.assertFalse(json.loads(response.content)["node"]["info"])
+
+    @patch("tsuru_dashboard.auth.views.token_is_valid")
+    def test_should_use_container_ip(self, token_is_valid):
+        token_is_valid.return_value = True
+
+        node_data = {
+            "machines": None,
+            "nodes": [
+                {"Address": "http://128.0.0.1:4243"},
+            ],
+        }
+        node_url = "{}/docker/node".format(settings.TSURU_HOST)
+        httpretty.register_uri(httpretty.GET, node_url, body=json.dumps(node_data), status=200)
+
+        container_data = [
+            {"IP": "128.0.0.1"},
+        ]
+        container_url = "{}/docker/node/http://128.0.0.1:4243/containers".format(settings.TSURU_HOST)
+        httpretty.register_uri(httpretty.GET, container_url, body=json.dumps(container_data), status=200)
+
+        factory = RequestFactory()
+        request = factory.get('/')
+        request.session = {'tsuru_token': 'tokentest'}
+
+        response = NodeInfoJson.as_view()(self.request, address='http://128.0.0.1:4243')
+        node_info = json.loads(response.content)["node"]["info"]
+        self.assertEquals({"total": 1}, node_info["units_stats"])
+        self.assertEquals(container_data, node_info["units"])
