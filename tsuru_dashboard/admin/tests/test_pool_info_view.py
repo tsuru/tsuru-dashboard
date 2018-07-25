@@ -65,7 +65,7 @@ class PoolInfoViewTest(TestCase):
         for addr in ["http://128.0.0.1:4243", "http://myserver.com:2375", "http://127.0.0.1:2375", "http://myserver2.com:2375"]:
             url = "{}/docker/node/{}/containers".format(settings.TSURU_HOST, addr)
             body = json.dumps(
-                [{"Status": "started", "HostAddr": addr}, {"Status": "stopped", "HostAddr": addr}])
+                [{"Status": "started", "HostAddr": addr, "IP": addr}, {"Status": "stopped", "HostAddr": addr, "IP": addr}])
             httpretty.register_uri(httpretty.GET, url, body=body, status=200)
 
         response = PoolInfo.as_view()(self.request, pool="mypool")
@@ -76,23 +76,23 @@ class PoolInfoViewTest(TestCase):
              "metadata": {"LastSuccess": "2014-08-01T14:09:40-03:00", "pool": "mypool"},
              "pool": "mypool",
              "last_success": date,
-             "units": [{"HostAddr": "http://128.0.0.1:4243", "Status": "started"},
-                       {"HostAddr": "http://128.0.0.1:4243", "Status": "stopped"}],
+             "units": [{"HostAddr": "http://128.0.0.1:4243", "IP": "http://128.0.0.1:4243", "Status": "started"},
+                       {"HostAddr": "http://128.0.0.1:4243", "IP": "http://128.0.0.1:4243", "Status": "stopped"}],
              "status": "ready"},
             {"address": "http://127.0.0.1:2375",
              "units_stats": {"started": 1, "stopped": 1, "total": 2},
              "metadata": {"LastSuccess": "2014-08-01T14:09:40-03:00", "pool": "mypool"},
              "pool": "mypool",
-             "units": [{"HostAddr": "http://127.0.0.1:2375", "Status": "started"},
-                       {"HostAddr": "http://127.0.0.1:2375", "Status": "stopped"}],
+             "units": [{"HostAddr": "http://127.0.0.1:2375", "IP": "http://127.0.0.1:2375", "Status": "started"},
+                       {"HostAddr": "http://127.0.0.1:2375", "IP": "http://127.0.0.1:2375", "Status": "stopped"}],
              "last_success": date,
              "status": "ready"},
             {"address": "http://myserver2.com:2375",
              "units_stats": {"started": 1, "stopped": 1, "total": 2},
              "metadata": {"LastSuccess": "2014-08-01T14:09:40-03:00"},
              "pool": "mypool",
-             "units": [{"HostAddr": "http://myserver2.com:2375", "Status": "started"},
-                       {"HostAddr": "http://myserver2.com:2375", "Status": "stopped"}],
+             "units": [{"HostAddr": "http://myserver2.com:2375", "IP": "http://myserver2.com:2375", "Status": "started"},
+                       {"HostAddr": "http://myserver2.com:2375", "IP": "http://myserver2.com:2375", "Status": "stopped"}],
              "last_success": date,
              "status": "ready"},
         ]}
