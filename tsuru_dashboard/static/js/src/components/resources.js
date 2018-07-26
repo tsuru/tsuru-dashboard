@@ -87,15 +87,23 @@ class ProcessInfo extends Component {
   render() {
     var units = this.props.process;
     var kind = this.props.kind;
-    var classNames = "table containers-app";
+    var arrowClassNames = "toggle-arrow";
+    var tableClassNames = "table containers-app";
     if (this.state.hide) {
-      classNames += " hide";
+      tableClassNames += " hide";
+    } else {
+      arrowClassNames += " toggle-arrow-open";
     }
 
     return (
       <div className="units-toggle" onClick={this.onClick}>
-        <p><a href="#">&#x25BC;</a> {units.length} {kind} units</p>
-        <table className={classNames}>
+        <p><span className={arrowClassNames}></span> {units.length} {kind} units</p>
+        <table className={tableClassNames}>
+          <thead>
+            <td>ID</td>
+            <td>Host</td>
+            <td>Port</td>
+          </thead>
           <Trs units={units} />
         </table>
       </div>
