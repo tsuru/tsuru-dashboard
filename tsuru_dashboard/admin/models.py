@@ -24,7 +24,7 @@ class Node():
             if not node_units:
                 continue
 
-            addr = node_units[0].get('IP')
+            addr = node_units[0].get('IP') or node_units[0].get('Ip')
             if not addr:
                 continue
 

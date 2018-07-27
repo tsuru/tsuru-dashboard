@@ -195,3 +195,32 @@ class NodeInfoJsonViewTest(TestCase):
         node_info = json.loads(response.content)["node"]["info"]
         self.assertEquals({"total": 1}, node_info["units_stats"])
         self.assertEquals(container_data, node_info["units"])
+
+    @patch("tsuru_dashboard.auth.views.token_is_valid")
+    def test_should_accept_older_ip_field(self, token_is_valid):
+        token_is_valid.return_value = True
+
+        node_data = {
+            "machines": None,
+            "nodes": [
+                {"Address": "http://128.0.0.1:4243"},
+            ],
+        }
+        node_url = "{}/docker/node".format(settings.TSURU_HOST)
+        httpretty.register_uri(httpretty.GET, node_url, body=json.dumps(node_data), status=200)
+
+        container_data = [
+            {"ID": 1, "Ip": "128.0.0.1"},
+            {"ID": 2, "Ip": "128.0.0.1"},
+        ]
+        container_url = "{}/docker/node/http://128.0.0.1:4243/containers".format(settings.TSURU_HOST)
+        httpretty.register_uri(httpretty.GET, container_url, body=json.dumps(container_data), status=200)
+
+        factory = RequestFactory()
+        request = factory.get('/')
+        request.session = {'tsuru_token': 'tokentest'}
+
+        response = NodeInfoJson.as_view()(self.request, address='http://128.0.0.1:4243')
+        node_info = json.loads(response.content)["node"]["info"]
+        self.assertEquals({"total": 2}, node_info["units_stats"])
+        self.assertEquals(container_data, node_info["units"])
