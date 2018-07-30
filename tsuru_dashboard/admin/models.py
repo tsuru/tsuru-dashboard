@@ -11,25 +11,25 @@ def extract_ip(address):
 
 
 class Node():
-    def __init__(self, data, units_responses=None):
+    def __init__(self, data, units_response=None):
         self.data = data or {}
+        self.load_units(units_response)
+
+    def load_units(self, response):
         self.units = []
-        if not units_responses:
+        if not response or response.status_code != 200:
             return
-        for response in units_responses:
-            if not response or response.status_code != 200:
-                continue
 
-            node_units = response.json()
-            if not node_units:
-                continue
+        node_units = response.json()
+        if not node_units:
+            return
 
-            addr = node_units[0].get('IP') or node_units[0].get('Ip')
-            if not addr:
-                continue
+        addr = node_units[0].get('IP') or node_units[0].get('Ip')
+        if not addr:
+            return
 
-            if extract_ip(addr) == extract_ip(self.address()):
-                self.units = node_units
+        if extract_ip(addr) == extract_ip(self.address()):
+            self.units = node_units
 
     def address(self):
         return self.data.get('Address')

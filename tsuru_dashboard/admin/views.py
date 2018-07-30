@@ -30,8 +30,7 @@ class PoolList(LoginRequiredView, TemplateView):
             nodes = data.get("nodes", [])
 
             for node in nodes:
-                n = Node(node, [])
-                pool = n.pool()
+                pool = Node(node).pool()
                 nodes_by_pool = pools.get(pool, [])
                 data = {"address": node["Address"], "status": node["Status"]}
                 nodes_by_pool.append(data)
@@ -78,7 +77,7 @@ class NodeInfoJson(LoginRequiredView):
         node = self.get_node(address)
         if node:
             containers_rsp = self.get_containers(address)
-            node = Node(node, [containers_rsp])
+            node = Node(node, containers_rsp)
             node_dict = node.to_dict()
             for container in node_dict["units"]:
                 if "AppName" in container:
@@ -182,22 +181,21 @@ class PoolInfo(LoginRequiredView, TemplateView):
             return pools
 
         data = response.json()
-        nodes = data.get("nodes", [])
+        node_list = data.get("nodes", [])
+        nodes = map(lambda n: Node(n), node_list)
+        nodes = filter(lambda n: n.pool() == pool, nodes)
 
         url = "{}/docker/node/{}/containers"
 
         rs = []
         for node in nodes:
-            if Node(node).pool() == pool:
-                u = url.format(settings.TSURU_HOST, node["Address"])
-                rs.append(grequests.get(u, headers=self.authorization))
+            u = url.format(settings.TSURU_HOST, node.address())
+            rs.append(grequests.get(u, headers=self.authorization))
 
         units = grequests.map(rs)
 
-        for node in nodes:
-            node = Node(node, units)
-            if node.pool() != pool:
-                continue
+        for i, node in enumerate(nodes):
+            node.load_units(units[i])
             nodes_by_pool = pools.get(pool, [])
             nodes_by_pool.append(node.to_dict())
             pools[pool] = nodes_by_pool
