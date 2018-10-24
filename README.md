@@ -11,7 +11,7 @@ For issue tracking:
 # Deploying to tsuru
 
 tsuru-dashboard can be deployed to tsuru like any other app.
-all you need is create a python app and deploy to tsuru using `git push` or `tsuru app-deploy`.
+ All you need to do is create a python app and deploy to tsuru using `git push` or `tsuru app-deploy`.
 
 # Setting up a development environment
 
