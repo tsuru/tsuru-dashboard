@@ -1,3 +1,4 @@
+import Cookie from 'js-cookie';
 import React, { Component } from "react";
 import { Button, Output, CancelBtn } from "./base";
 
@@ -147,6 +148,12 @@ export class DeployPopin extends Component {
 
     var xhr = new XMLHttpRequest();
     xhr.open('POST', location.pathname, true);
+
+    const csrfToken = Cookie.get('csrftoken');
+    if (csrfToken != null ) {
+      xhr.setRequestHeader('X-CSRFToken', csrftoken);
+    }
+
     xhr.onprogress = () => {
       this.setState({output: xhr.responseText});
     }
