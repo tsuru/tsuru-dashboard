@@ -4,12 +4,15 @@ import requests
 from tsuruclient import client
 
 from tsuru_dashboard import settings
+
 from django.template.response import TemplateResponse
 from django.shortcuts import redirect
 from django.views.generic.base import View, TemplateView
 from django.views.generic.edit import FormView
 from django.core.urlresolvers import reverse
 from django.contrib import messages
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import ensure_csrf_cookie
 
 from .forms import (LoginForm, SignupForm, KeyForm, TokenRequestForm,
                     PasswordRecoveryForm, ChangePasswordForm)
@@ -62,6 +65,7 @@ class LoginRequiredMixin(object):
     def authorization(self):
         return {'authorization': self.request.session.get('tsuru_token')}
 
+    @method_decorator(ensure_csrf_cookie)
     def dispatch(self, request, *args, **kwargs):
         token = request.session.get('tsuru_token')
         if not token or not token_is_valid(token):
