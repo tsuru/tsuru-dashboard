@@ -1,3 +1,4 @@
+import Cookie from 'js-cookie';
 import React, { Component } from "react";
 import { Button, Output, CancelBtn } from "./base";
 
@@ -74,6 +75,7 @@ export class PoolRebalance extends Component {
     var self = this;
     var xhr = new XMLHttpRequest();
     xhr.open("POST", this.props.url, true);
+    xhr.setRequestHeader('X-CSRFToken', Cookie.get('csrftoken'));
     xhr.onprogress = () => {
       this.setState({output: xhr.responseText}, () => {
         self.refs.modalBody.scrollTop += 200;
