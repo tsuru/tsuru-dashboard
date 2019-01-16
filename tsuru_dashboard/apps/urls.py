@@ -1,5 +1,4 @@
 from django.conf.urls import url
-from django.views.decorators.csrf import csrf_exempt
 
 import views
 
@@ -25,11 +24,7 @@ urlpatterns = [
         views.DeployInfo.as_view(), name='app-deploy'),
     url(r'^(?P<app_name>[\w-]+)/rollback/(?P<image>.+)/$',
         views.AppRollback.as_view(), name='app-rollback'),
-    url(
-        r'^(?P<app_name>[\w-]+)/events/$',
-        csrf_exempt(views.EventList.as_view()),
-        name='app-events'
-    ),
+    url(r'^(?P<app_name>[\w-]+)/events/$', views.EventList.as_view(), name='app-events'),
     url(r'^(?P<app_name>[\w-]+)/events/(?P<uuid>[\s\w@\.-]+)/$',
         views.EventInfo.as_view(), name='app-event'),
 ]
