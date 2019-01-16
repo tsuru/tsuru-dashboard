@@ -1,3 +1,4 @@
+import Cookie from 'js-cookie';
 import React, { Component } from "react";
 
 if(typeof window.jQuery === 'undefined') {
@@ -316,6 +317,9 @@ export class NodeCreate extends Component {
     $.ajax({
       type: "POST",
       url: url,
+      headers: {
+        'X-CSRFToken': Cookie.get('csrftoken')
+      },
       data: data.join("&"),
       success: () => {
         location.reload();

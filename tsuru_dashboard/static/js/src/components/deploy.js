@@ -148,12 +148,7 @@ export class DeployPopin extends Component {
 
     var xhr = new XMLHttpRequest();
     xhr.open('POST', location.pathname, true);
-
-    const csrfToken = Cookie.get('csrftoken');
-    if (csrfToken != null ) {
-      xhr.setRequestHeader('X-CSRFToken', csrftoken);
-    }
-
+    xhr.setRequestHeader('X-CSRFToken', Cookie.get('csrftoken'));
     xhr.onprogress = () => {
       this.setState({output: xhr.responseText});
     }

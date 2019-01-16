@@ -1,3 +1,4 @@
+import Cookie from 'js-cookie';
 import React, { Component } from 'react';
 import Modal from "backstage-modal";
 
@@ -15,6 +16,9 @@ export default class EventCancel extends Component {
     $.ajax({
       type: 'POST',
       url: "/events/" + this.props.uuid + "/cancel/",
+      headers: {
+        'X-CSRFToken': Cookie.get('csrftoken'),
+      },
       data: {reason: this.refs.reason.value},
       success: () => {
         window.location = "/events/";
