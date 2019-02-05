@@ -80,6 +80,8 @@ class ListDeployViewTest(TestCase):
 
         request = RequestFactory().post("/", {"filecontent": encoded})
         request.session = {"tsuru_token": "admin"}
+        request.session = {"X-CSRFToken": "whatever"}
+
         tar_path = os.path.join(BASE_DIR, "example.tar.gz")
 
         def deploy(self, request, app_name, content):

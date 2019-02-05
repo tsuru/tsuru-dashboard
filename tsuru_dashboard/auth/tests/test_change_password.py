@@ -38,7 +38,7 @@ class TestResetPasswordView(TestCase):
         url = "{0}/users/password".format(settings.TSURU_HOST)
         put.assert_called_with(url, data=data, headers=headers)
         self.assertEqual(302, response.status_code)
-        self.assertEqual('/auth/change-password/', response.items()[1][1])
+        self.assertEqual('/auth/change-password/', response.items()[2][1])
 
     @patch("django.contrib.messages.success")
     @patch("requests.put")
@@ -79,4 +79,4 @@ class TestResetPasswordView(TestCase):
         request.session = {}
         response = ChangePassword.as_view()(request)
         self.assertEqual(302, response.status_code)
-        self.assertEqual("%s?next=%s" % (reverse('login'), request.path), response.items()[1][1])
+        self.assertEqual("%s?next=%s" % (reverse('login'), request.path), response.items()[2][1])

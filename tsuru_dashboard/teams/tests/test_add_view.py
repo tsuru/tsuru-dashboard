@@ -58,7 +58,7 @@ class TeamViewTest(TestCase):
         post.return_value = Mock(status_code=200)
         response = Add.as_view()(self.request_post)
         self.assertEqual(302, response.status_code)
-        self.assertEqual(reverse('team-list'), response.items()[1][1])
+        self.assertEqual(reverse('team-list'), response.items()[2][1])
 
     @patch('requests.post')
     @patch('requests.get')

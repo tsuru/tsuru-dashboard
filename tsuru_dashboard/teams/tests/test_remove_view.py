@@ -21,7 +21,7 @@ class RemoveViewTest(TestCase):
         team_name = "avengers"
         response = Remove.as_view()(self.request, team=team_name)
         self.assertEqual(302, response.status_code)
-        self.assertEqual(reverse("team-list"), response.items()[1][1])
+        self.assertEqual(reverse("team-list"), response.items()[2][1])
         delete.assert_called_with(
             '{0}/teams/{1}'.format(
                 settings.TSURU_HOST,
