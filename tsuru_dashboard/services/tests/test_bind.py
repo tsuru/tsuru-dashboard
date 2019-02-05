@@ -23,6 +23,6 @@ class BindViewTest(TestCase):
 
         self.assertEqual(302, response.status_code)
         url = reverse('service-detail', args=[service, instance])
-        self.assertEqual(url, response.items()[1][1])
+        self.assertEqual(url, response.items()[2][1])
         url = '{}/services/{}/instances/{}/{}'.format(settings.TSURU_HOST, service, instance, app)
         put.assert_called_with(url, headers={'authorization': 'admin'})

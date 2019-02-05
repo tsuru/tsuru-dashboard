@@ -77,7 +77,7 @@ class KeysAddViewTest(TestCase):
         post.return_value = Mock(status_code=200)
         response = KeysAdd.as_view()(self.request_post)
         self.assertEqual(302, response.status_code)
-        self.assertEqual(reverse('add-keys'), response.items()[1][1])
+        self.assertEqual(reverse('add-keys'), response.items()[2][1])
 
     @patch("django.contrib.messages.error")
     @patch('requests.post')
@@ -87,7 +87,7 @@ class KeysAddViewTest(TestCase):
         post.return_value = Mock(status_code=500, content='Error')
         response = KeysAdd.as_view()(self.request_post)
         self.assertEqual(302, response.status_code)
-        self.assertEqual(reverse('add-keys'), response.items()[1][1])
+        self.assertEqual(reverse('add-keys'), response.items()[2][1])
 
     @patch('requests.post')
     @patch('requests.get')

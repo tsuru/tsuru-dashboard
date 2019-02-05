@@ -19,7 +19,7 @@ class ServiceAddViewTest(TestCase):
         request.session = {"tsuru_token": "admin"}
         response = ServiceAdd.as_view()(request, service_name="service")
         self.assertEqual(302, response.status_code)
-        self.assertEqual(reverse('service-list'), response.items()[1][1])
+        self.assertEqual(reverse('service-list'), response.items()[2][1])
         post.assert_called_with(
             '{0}/services/service/instances'.format(settings.TSURU_HOST),
             headers={'authorization': 'admin'},
@@ -41,7 +41,7 @@ class ServiceAddViewTest(TestCase):
         request.session = {"tsuru_token": "admin"}
         response = ServiceAdd.as_view()(request, service_name="service")
         self.assertEqual(302, response.status_code)
-        self.assertEqual(reverse('service-list'), response.items()[1][1])
+        self.assertEqual(reverse('service-list'), response.items()[2][1])
         post.assert_called_with(
             '{0}/services/service/instances'.format(settings.TSURU_HOST),
             headers={'authorization': 'admin'},

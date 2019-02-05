@@ -23,6 +23,6 @@ class KeysRemoveViewTest(TestCase):
         payload = {'name': key}
 
         self.assertEqual(302, response.status_code)
-        self.assertEqual(reverse("list-keys"), response.items()[1][1])
+        self.assertEqual(reverse("list-keys"), response.items()[2][1])
         url = '{}/users/keys'.format(settings.TSURU_HOST)
         delete.assert_called_with(url, data=json.dumps(payload), headers={'authorization': 'admin'})

@@ -21,6 +21,6 @@ class ServiceRemoveViewTest(TestCase):
         response = ServiceRemove.as_view()(request, service=service, instance=instance)
 
         self.assertEqual(302, response.status_code)
-        self.assertEqual(reverse("service-list"), response.items()[1][1])
+        self.assertEqual(reverse("service-list"), response.items()[2][1])
         url = '{}/services/{}/instances/{}'.format(settings.TSURU_HOST, service, instance)
         delete.assert_called_with(url, headers={'authorization': 'admin'})

@@ -24,6 +24,7 @@ class PoolRebalanceTest(TestCase):
         factory = RequestFactory()
         request = factory.post('/')
         request.session = {'tsuru_token': 'tokentest'}
+        request.session = {"X-CSRFToken": "whatever"}
 
         url = "{}/docker/containers/rebalance".format(settings.TSURU_HOST)
         httpretty.register_uri(
@@ -34,5 +35,5 @@ class PoolRebalanceTest(TestCase):
         )
 
         response = PoolRebalance.as_view()(request, pool="mypool")
-
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual('/auth/login/?next=/', response.items()[2][1])
