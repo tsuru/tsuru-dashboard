@@ -29,11 +29,10 @@ class NodeRemoveViewTest(TestCase):
         self.session["tsuru_token"] = "admin"
         self.session.save()
 
-        response = self.client.get(
+        response = self.client.delete(
             reverse("node-remove", kwargs={"address": "http://localhost:2345"}))
 
-        self.assertEqual(302, response.status_code)
-        self.assertRedirects(response, reverse("pool-list"))
+        self.assertEqual(200, response.status_code)
 
         api_url = "{}/docker/node/http://localhost:2345".format(tsuru_settings.TSURU_HOST)
         query = "?remove-iaas=false&no-rebalance=true"
@@ -43,7 +42,7 @@ class NodeRemoveViewTest(TestCase):
     @patch("requests.get")
     @patch("requests.delete")
     @patch("tsuru_dashboard.auth.views.token_is_valid")
-    def test_remove_node_with_detroy_and_rebalance_true(self, token_is_valid, delete, get):
+    def test_remove_node_with_destroy_and_rebalance_true(self, token_is_valid, delete, get):
         token_is_valid.return_value = True
 
         response_mock = Mock(status_code=200)
@@ -52,12 +51,10 @@ class NodeRemoveViewTest(TestCase):
         self.session["tsuru_token"] = "admin"
         self.session.save()
 
-        url = "{}?rebalance=true&destroy=true".format(
-            reverse("node-remove", kwargs={"address": "http://localhost:2345"}))
-        response = self.client.get(url)
+        url = reverse("node-remove", kwargs={"address": "http://localhost:2345"})
+        response = self.client.delete(url, data="rebalance=true&destroy=true")
 
-        self.assertEqual(302, response.status_code)
-        self.assertRedirects(response, reverse("pool-list"))
+        self.assertEqual(200, response.status_code)
 
         api_url = "{}/docker/node/http://localhost:2345".format(tsuru_settings.TSURU_HOST)
         query = "?remove-iaas=true&no-rebalance=false"
@@ -67,7 +64,7 @@ class NodeRemoveViewTest(TestCase):
     @patch("requests.get")
     @patch("requests.delete")
     @patch("tsuru_dashboard.auth.views.token_is_valid")
-    def test_remove_node_with_detroy_and_rebalance_false(self, token_is_valid, delete, get):
+    def test_remove_node_with_destroy_and_rebalance_false(self, token_is_valid, delete, get):
         token_is_valid.return_value = True
 
         response_mock = Mock(status_code=204)
@@ -76,12 +73,10 @@ class NodeRemoveViewTest(TestCase):
         self.session["tsuru_token"] = "admin"
         self.session.save()
 
-        url = "{}?rebalance=false&destroy=false".format(
-            reverse("node-remove", kwargs={"address": "http://localhost:2345"}))
-        response = self.client.get(url)
+        url = reverse("node-remove", kwargs={"address": "http://localhost:2345"})
+        response = self.client.delete(url, data="rebalance=false&destroy=false")
 
-        self.assertEqual(302, response.status_code)
-        self.assertRedirects(response, reverse("pool-list"))
+        self.assertEqual(200, response.status_code)
 
         api_url = "{}/docker/node/http://localhost:2345".format(tsuru_settings.TSURU_HOST)
         query = "?remove-iaas=false&no-rebalance=true"
@@ -99,9 +94,8 @@ class NodeRemoveViewTest(TestCase):
         self.session["tsuru_token"] = "admin"
         self.session.save()
 
-        url = "{}?rebalance=true&destroy=true".format(
-            reverse("node-remove", kwargs={"address": "http://localhost:2345"}))
-        response = self.client.get(url)
+        url = reverse("node-remove", kwargs={"address": "http://localhost:2345"})
+        response = self.client.delete(url, data="rebalance=true&destroy=true")
 
         self.assertEqual(404, response.status_code)
         self.assertEqual("custom error", response.content)
@@ -123,9 +117,9 @@ class NodeRemoveViewTest(TestCase):
         self.session["tsuru_token"] = "admin"
         self.session.save()
 
-        url = "{}?rebalance=another&destroy=false".format(
-            reverse("node-remove", kwargs={"address": "http://localhost:2345"}))
-        response = self.client.get(url)
+        url = reverse("node-remove", kwargs={"address": "http://localhost:2345"})
+        response = self.client.delete(url, data="rebalance=another&destroy=false")
+
 
         self.assertEqual(400, response.status_code)
         self.assertEqual("The value for 'rebalance' parameter should be 'true' or 'false'", response.content)
@@ -142,9 +136,8 @@ class NodeRemoveViewTest(TestCase):
         self.session["tsuru_token"] = "admin"
         self.session.save()
 
-        url = "{}?rebalance=true&destroy=another".format(
-            reverse("node-remove", kwargs={"address": "http://localhost:2345"}))
-        response = self.client.get(url)
+        url = reverse("node-remove", kwargs={"address": "http://localhost:2345"})
+        response = self.client.delete(url, data="rebalance=true&destroy=another")
 
         self.assertEqual(400, response.status_code)
         self.assertEqual("The value for 'destroy' parameter should be 'true' or 'false'", response.content)

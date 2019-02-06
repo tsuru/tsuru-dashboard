@@ -3,7 +3,7 @@ import grequests
 import json
 
 from django.views.generic import TemplateView
-from django.http import HttpResponse, Http404, JsonResponse, StreamingHttpResponse
+from django.http import HttpResponse, Http404, JsonResponse, StreamingHttpResponse, QueryDict
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.contrib import messages
@@ -15,6 +15,7 @@ from pygments.formatters import HtmlFormatter
 from tsuru_dashboard import settings
 from tsuru_dashboard.auth.views import LoginRequiredView
 from tsuru_dashboard.admin.models import Node
+
 
 
 class PoolList(LoginRequiredView, TemplateView):
@@ -209,18 +210,20 @@ class PoolInfo(LoginRequiredView, TemplateView):
 
 
 class NodeRemove(LoginRequiredView):
-    def get(self, request, *args, **kwargs):
+    def delete(self, *args, **kwargs):
         address = self.kwargs['address']
+        params = QueryDict(self.request.body)
 
         msg = u"The value for '{}' parameter should be 'true' or 'false'"
 
-        destroy = self.request.GET.get("destroy", "false")
+        destroy = params.get("destroy", "false")
         if destroy not in ["true", "false"]:
             return HttpResponse(msg.format("destroy"), status=400)
 
-        rebalance = self.request.GET.get("rebalance", "false")
+        rebalance = params.get("rebalance", "false")
         if rebalance not in ["true", "false"]:
             return HttpResponse(msg.format("rebalance"), status=400)
+
         no_rebalance = "false" if rebalance == "true" else "true"
 
         response = requests.delete(
@@ -232,8 +235,8 @@ class NodeRemove(LoginRequiredView):
 
         if response.status_code > 399:
             return HttpResponse(response.text, status=response.status_code)
-
-        return redirect(reverse('pool-list'))
+        
+        return HttpResponse('Node was successfully removed', status=200)
 
 
 class TemplateListJson(LoginRequiredView):

@@ -1,3 +1,4 @@
+import Cookie from 'js-cookie';
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import { Metrics } from "./metrics";
@@ -196,7 +197,7 @@ export class DeleteNodeConfirmation extends Component {
     this.handleConfirmationChange = this.handleConfirmationChange.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleClose = this.handleClose.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
+    this.nodeRemove = this.nodeRemove.bind(this);
   }
 
   componentDidMount() {
@@ -226,10 +227,26 @@ export class DeleteNodeConfirmation extends Component {
     }
   }
 
-  onSubmit(e) {
-    if(!this.state.isConfirmed){
-      e.preventDefault();
-    }
+  nodeRemove() {
+    var url = this.props.removeAction;
+    var data = []
+    data.push("rebalance=" + this.state.rebalance);
+    data.push("destroy=" + this.state.destroy);
+
+    $.ajax({
+      type: "DELETE",
+      url: url,
+      headers: {
+        'X-CSRFToken': Cookie.get('csrftoken')
+      },
+      data: data.join("&"),
+      success: () => {
+        window.location.href = "/admin/"
+      },
+      error: () => {
+        location.reload();
+      }
+    });
   }
 
   render() {
@@ -237,7 +254,6 @@ export class DeleteNodeConfirmation extends Component {
       <div id="confirmation" className="modal fade" role="dialog" aria-labelledby="myModalLabel">
         <div className="modal-dialog" role="document">
           <div className="modal-content">
-            <form onSubmit={this.onSubmit} action={this.props.removeAction} method="get">
               <div className="modal-header">
                 <button type="button" className="close" data-dismiss="modal" aria-hidden="true" onClick={this.handleClose}>×</button>
                 <h3 id="myModalLabel">Are you sure?</h3>
@@ -253,9 +269,8 @@ export class DeleteNodeConfirmation extends Component {
               </div>
               <div className="modal-footer">
                 <button className="btn cancel" data-dismiss="modal" aria-hidden="true" onClick={this.handleClose}>Cancel</button>
-                <button className="btn btn-danger btn-remove" disabled={!this.state.isConfirmed}>I understand the consequences, delete this node</button>
+                <button className="btn btn-danger btn-remove" onClick={this.nodeRemove} disabled={!this.state.isConfirmed}>I understand the consequences, delete this node</button>
               </div>
-            </form>
           </div>
         </div>
       </div>

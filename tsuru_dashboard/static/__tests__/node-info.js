@@ -283,15 +283,6 @@ describe('DeleteNodeConfirmation', () => {
     expect(onClose.mock.calls.length).toBe(2);
   });
 
-  it('prevents form submition when not confirmed', () => {
-    var mockEvent = {preventDefault: jest.genMockFunction()};
-    const confirmation = shallow(
-      <DeleteNodeConfirmation addr="http://127.0.0.1"/>
-    );
-    confirmation.find("form").simulate("submit", mockEvent);
-    expect(mockEvent.preventDefault).toBeCalled();
-  });
-
   it('submit form if is confirmed', () => {
     var mockEvent = {preventDefault: jest.genMockFunction()};
     const confirmation = shallow(
@@ -302,7 +293,7 @@ describe('DeleteNodeConfirmation', () => {
         value: "http://127.0.0.1"
       }
     });
-    confirmation.find("form").simulate("submit", mockEvent);
+    confirmation.find(".btn-remove").simulate("click", mockEvent);
     expect(mockEvent.preventDefault.mock.calls.length).toBe(0);
   });
 
@@ -320,14 +311,5 @@ describe('DeleteNodeConfirmation', () => {
     });
     expect(confirmation.state().rebalance).toBe(false);
     expect(confirmation.state().destroy).toBe(false);
-  });
-
-  it('renders a form with correct action', () => {
-    const confirmation = shallow(
-      <DeleteNodeConfirmation addr="http://127.0.0.1" removeAction={"/remove"}/>
-    );
-    var form = confirmation.find("form");
-    expect(form.length).toBe(1);
-    expect(form.props().action).toBe("/remove");
   });
 });
