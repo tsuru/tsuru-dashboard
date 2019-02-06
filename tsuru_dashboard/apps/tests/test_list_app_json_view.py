@@ -37,7 +37,7 @@ class ListAppJsonViewTest(TestCase):
             }]
         }
         self.assertDictEqual(expected, json.loads(response.content))
-        url = "{}/apps".format(settings.TSURU_HOST)
+        url = "{}/apps?simplified=true".format(settings.TSURU_HOST)
         get.assert_called_with(url, headers={'authorization': 'admin'})
 
     @patch('requests.get')
@@ -65,5 +65,5 @@ class ListAppJsonViewTest(TestCase):
             }]
         }
         self.assertDictEqual(expected, json.loads(response.content))
-        url = "{}/apps?name=pacote".format(settings.TSURU_HOST)
+        url = "{}/apps?simplified=true&name=pacote".format(settings.TSURU_HOST)
         get.assert_called_with(url, headers={'authorization': 'admin'})

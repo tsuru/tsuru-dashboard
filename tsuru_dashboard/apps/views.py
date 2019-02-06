@@ -319,10 +319,10 @@ class ListApp(LoginRequiredMixin, TemplateView):
 
 class ListAppJson(LoginRequiredView):
     def list_apps(self, name=None):
-        url = "{}/apps".format(settings.TSURU_HOST)
+        url = "{}/apps?simplified=true".format(settings.TSURU_HOST)
 
         if name:
-            url = "{}?name={}".format(url, name)
+            url = "{}&name={}".format(url, name)
 
         response = requests.get(url, headers=self.authorization)
 
