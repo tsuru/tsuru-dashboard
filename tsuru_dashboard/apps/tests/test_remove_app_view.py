@@ -1,7 +1,6 @@
 from django.test import TestCase
 from django.test.client import RequestFactory
-from django.http import HttpResponseRedirect
-from django.core.urlresolvers import reverse
+from django.http import HttpResponse
 
 from tsuru_dashboard.apps.views import RemoveApp
 
@@ -10,7 +9,7 @@ import mock
 
 class RemoveAppTestCase(TestCase):
     def setUp(self):
-        self.request = RequestFactory().get("/name/remove")
+        self.request = RequestFactory().delete("/name/remove")
         self.request.session = {"tsuru_token": "admin"}
 
     @mock.patch('requests.delete')
@@ -28,6 +27,5 @@ class RemoveAppTestCase(TestCase):
         get.return_value = mock.Mock(status_code=200)
         delete.return_value = mock.Mock(status_code=200)
         response = RemoveApp.as_view()(self.request, name="appname")
-        self.assertEqual(302, response.status_code)
-        self.assertIsInstance(response, HttpResponseRedirect)
-        self.assertEqual(reverse('list-app'), response['Location'])
+        self.assertEqual(200, response.status_code)
+        self.assertIsInstance(response, HttpResponse)
