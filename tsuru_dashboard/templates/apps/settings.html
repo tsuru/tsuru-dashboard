@@ -101,37 +101,8 @@
 </div>
 
 <div class="row">
-  <div class="col-md-12">
-    <h3>Delete app</h3>
-    <div class="content">
-      <a class="btn btn-danger" href="#confirmation" data-toggle="modal">
-        Delete app</a>
-      </div>
-    </div>
-  </div>
-
-  <div id="confirmation" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-          <h3 id="myModalLabel">Are you sure?</h3>
-        </div>
-        <div class="modal-body">
-          <p>This action <strong>CANNOT</strong> be undone. This will permanently delete the <strong>{{ app.name }}</strong> application.</p>
-
-          <p>Please type in the name of your application to confirm.</p>
-          <input type="text" class="remove-confirmation" />
-        </div>
-        <div class="modal-footer">
-          <form method="get" action="{% url 'remove_app' app.name %}">
-            <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-            <button class="btn btn-danger btn-remove" disabled="disabled">I understand the consequences, delete this application</button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
+  <div class="col-md-12" id="app-remove"></div>
+</div>
 
   <div id="unlock-confirmation" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -157,9 +128,9 @@
 
   {% block extra_js %}
   <script src="{% static "js/lib/confirmation.js" %}"></script>
+  <script src="{% static "js/pages/app-settings.js" %}"></script>
   <script type="text/javascript">
     var appName = "{{ app.name }}";
-    $.confirmation(".btn-remove", ".remove-confirmation", appName);
     $.confirmation(".btn-unlock", ".unlock-confirmation", appName);
     $(".settings-toggle").on("click", function() {
       $(".settings-content").toggleClass("hide");

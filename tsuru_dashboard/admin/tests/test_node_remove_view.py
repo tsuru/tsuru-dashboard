@@ -120,7 +120,6 @@ class NodeRemoveViewTest(TestCase):
         url = reverse("node-remove", kwargs={"address": "http://localhost:2345"})
         response = self.client.delete(url, data="rebalance=another&destroy=false")
 
-
         self.assertEqual(400, response.status_code)
         self.assertEqual("The value for 'rebalance' parameter should be 'true' or 'false'", response.content)
 

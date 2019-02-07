@@ -5,7 +5,6 @@ import json
 from django.views.generic import TemplateView
 from django.http import HttpResponse, Http404, JsonResponse, StreamingHttpResponse, QueryDict
 from django.core.urlresolvers import reverse
-from django.shortcuts import redirect
 from django.contrib import messages
 
 from pygments import highlight
@@ -15,7 +14,6 @@ from pygments.formatters import HtmlFormatter
 from tsuru_dashboard import settings
 from tsuru_dashboard.auth.views import LoginRequiredView
 from tsuru_dashboard.admin.models import Node
-
 
 
 class PoolList(LoginRequiredView, TemplateView):
@@ -235,7 +233,7 @@ class NodeRemove(LoginRequiredView):
 
         if response.status_code > 399:
             return HttpResponse(response.text, status=response.status_code)
-        
+
         return HttpResponse('Node was successfully removed', status=200)
 
 

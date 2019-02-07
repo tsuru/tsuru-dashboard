@@ -301,16 +301,17 @@ class CreateApp(LoginRequiredView):
 
 
 class RemoveApp(LoginRequiredView):
-    def get(self, request, *args, **kwargs):
+    def delete(self, *args, **kwargs):
         app_name = self.kwargs['name']
-        authorization = {'authorization': request.session.get('tsuru_token')}
+        authorization = {'authorization': self.request.session.get('tsuru_token')}
         response = requests.delete(
             '{}/apps/{}'.format(settings.TSURU_HOST, app_name),
             headers=authorization
         )
         if response.status_code > 399:
             return HttpResponse(response.text, status=response.status_code)
-        return redirect(reverse('list-app'))
+
+        return HttpResponse('App was successfully removed', status=200)
 
 
 class ListApp(LoginRequiredMixin, TemplateView):
