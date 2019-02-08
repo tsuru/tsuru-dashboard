@@ -457,7 +457,7 @@ class Settings(AppMixin, TemplateView):
 
 
 class Unlock(LoginRequiredView):
-    def get(self, request, *args, **kwargs):
+    def post(self, *args, **kwargs):
         app_name = self.kwargs['name']
         response = requests.delete(
             '{}/apps/{}/lock'.format(settings.TSURU_HOST, app_name),
@@ -465,11 +465,11 @@ class Unlock(LoginRequiredView):
         )
 
         if response.status_code > 399:
-            messages.error(request, response.text, fail_silently=True)
-        else:
-            messages.success(request, u'App was successfully unlocked', fail_silently=True)
+            messages.error(self.request, response.text, fail_silently=True)
+            return HttpResponse(response.text, status=response.status_code)
 
-        return redirect(reverse('app-settings', args=[app_name]))
+        messages.success(self.request, u'App was successfully unlocked', fail_silently=True)
+        return HttpResponse('App was successfully unlocked', status=200)
 
 
 class EventList(AppMixin, TemplateView):

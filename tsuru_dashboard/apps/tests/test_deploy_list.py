@@ -64,9 +64,10 @@ class ListDeployViewTest(TestCase):
         headers = {'authorization': 'admin'}
         get.assert_called_with(url, headers=headers)
 
+    @patch('requests.get')
     @patch('requests.post')
     @patch("tsuru_dashboard.auth.views.token_is_valid")
-    def test_targz(self, token_is_valid, post):
+    def test_targz(self, token_is_valid, post, get):
         response_mock = Mock(status_code=200)
         response_mock.iter_lines.return_value = iter(["expected"])
 

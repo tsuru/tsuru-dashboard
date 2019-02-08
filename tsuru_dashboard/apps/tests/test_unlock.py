@@ -1,7 +1,6 @@
 from django.test import TestCase
 from django.test.client import RequestFactory
-from django.http import HttpResponseRedirect
-from django.core.urlresolvers import reverse
+from django.http import HttpResponse
 from tsuru_dashboard import settings
 
 from tsuru_dashboard.apps.views import Unlock
@@ -11,7 +10,7 @@ import mock
 
 class UnlockTestCase(TestCase):
     def setUp(self):
-        self.request = RequestFactory().get("/name/remove")
+        self.request = RequestFactory().post("/name/unlock")
         self.request.session = {"tsuru_token": "admin"}
 
     @mock.patch('requests.delete')
@@ -23,7 +22,7 @@ class UnlockTestCase(TestCase):
 
         response = Unlock.as_view()(self.request, name="appname")
 
-        self.assertEqual(302, response.status_code)
+        self.assertEqual(404, response.status_code)
         msg_mock.assert_called_with(self.request, 'app not found', fail_silently=True)
 
     @mock.patch('requests.delete')
@@ -35,9 +34,8 @@ class UnlockTestCase(TestCase):
 
         response = Unlock.as_view()(self.request, name="appname")
 
-        self.assertEqual(302, response.status_code)
-        self.assertIsInstance(response, HttpResponseRedirect)
-        self.assertEqual(reverse('app-settings', args=["appname"]), response['Location'])
+        self.assertEqual(200, response.status_code)
+        self.assertIsInstance(response, HttpResponse)
 
         url = "{}/apps/appname/lock".format(settings.TSURU_HOST)
         delete.assert_called_with(url, headers={'authorization': 'admin'})
