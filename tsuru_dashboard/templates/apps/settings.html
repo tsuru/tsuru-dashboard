@@ -20,7 +20,7 @@
     <div class="content">
       <p><strong>Reason:</strong> {{ app.lock.Reason }}</p>
       <p><strong>Acquire date:</strong> {{ app.lock.AcquireDate }}</p>
-      <a class="btn" href="#unlock-confirmation" data-toggle="modal">
+      <a class="btn unlock" href="#unlock" data-toggle="modal">
         Unlock app
       </a>
     </div>
@@ -104,34 +104,18 @@
   <div class="col-md-12" id="app-remove"></div>
 </div>
 
-  <div id="unlock-confirmation" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-          <h3 id="myModalLabel">Unlock {{ app.name }}</h3>
-        </div>
-        <div class="modal-body">
-          <p>Please type in the name of your application to confirm.</p>
-          <input type="text" class="unlock-confirmation" />
-        </div>
-        <div class="modal-footer">
-          <form method="get" action="{% url "unlock-app"  app.name %}">
-            <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-            <button class="btn btn-unlock" disabled="disabled">Unlock app</button>
-          </form>
-        </div>
-      </div>
-    </div>
+  <div id="unlock" 
+  class="modal fade" 
+  tabindex="-1" 
+  role="dialog" 
+  aria-labelledby="myModalLabel" 
+  aria-hidden="true">
   </div>
   {% endblock %}
 
   {% block extra_js %}
-  <script src="{% static "js/lib/confirmation.js" %}"></script>
   <script src="{% static "js/pages/app-settings.js" %}"></script>
   <script type="text/javascript">
-    var appName = "{{ app.name }}";
-    $.confirmation(".btn-unlock", ".unlock-confirmation", appName);
     $(".settings-toggle").on("click", function() {
       $(".settings-content").toggleClass("hide");
       $(".toggle-arrow").toggleClass("toggle-arrow-open");
