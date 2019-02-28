@@ -21,6 +21,11 @@ class FakeTsuruClient(object):
 
 
 class CreateAppViewTest(TestCase):
+    @patch("tsuru_dashboard.auth.views.token_is_valid")
+    def setUp(self, token_is_valid):
+        token_is_valid.return_value = True
+        self.request = RequestFactory().get("/")
+        self.request.session = {'tsuru_token': 'tokentest'}
 
     @patch('requests.get')
     def test_should_use_create_template(self, get):
@@ -144,57 +149,30 @@ class CreateAppViewTest(TestCase):
         self.assertEquals("/apps/", response.url)
 
     @patch('requests.get')
-    def test_pools_old_format(self, get):
-        content = u"""[{"Pools": ["basic", "one"], "Team": "andrews"}]"""
-        m = Mock(status_code=200, content=content)
-        m.json.return_value = json.loads(content)
-        get.return_value = m
-        request = RequestFactory().get("/")
-        request.session = {'tsuru_token': 'tokentest'}
-
+    def test_pools_when_api_returns_pools_in_older_format(self, get):
+        mocked_response = Mock(status_code=200)
+        mocked_response.json.return_value = json.loads('[{"Name": "dead"}]')
+        get.return_value = mocked_response
         view = CreateApp()
-        pools = view.pools(request)
-        self.assertListEqual([("", ""), ('one', 'one'), ('basic', 'basic')], pools)
-
-    @patch('requests.get')
-    def test_pools_1_0(self, get):
-        content = u"""[{"Name": "dead"}]"""
-        m = Mock(status_code=200, content=content)
-        m.json.return_value = json.loads(content)
-        get.return_value = m
-        request = RequestFactory().get("/")
-        request.session = {'tsuru_token': 'tokentest'}
-
-        view = CreateApp()
-        pools = view.pools(request)
-        self.assertListEqual([("", ""), ('dead', 'dead')], pools)
+        pools = view.pools(self.request)
+        self.assertListEqual([("", ""), ("dead", "dead")], pools)
 
     @patch("requests.get")
-    def test_pools_empty(self, get):
-        content = u"[]"
-        m = Mock(status_code=200, content=content)
-        m.json.return_value = json.loads(content)
-        get.return_value = m
-        request = RequestFactory().get("/")
-        request.session = {'tsuru_token': 'tokentest'}
-
+    def test_pools_when_api_returns_no_content(self, get):
+        mocked_response = Mock(status_code=204)
+        get.return_value = mocked_response
         view = CreateApp()
-        pools = view.pools(request)
+        pools = view.pools(self.request)
         self.assertListEqual([('', '')], pools)
 
     @patch('requests.get')
-    def test_pools_new_api(self, get):
-        content = u"""{"pools_by_team": [{"Pools": ["one"], "Team": "admin"}],
-            "public_pools": [{"Default": "True", "Public": "True", "Name": "basic", "Teams": []}]}"""
-        m = Mock(status_code=200, content=content)
-        m.json.return_value = json.loads(content)
-        get.return_value = m
-        request = RequestFactory().get("/")
-        request.session = {"tsuru_token": "tokentest"}
-
+    def test_pools_when_api_returns_pools_in_new_format(self, get):
+        mocked_response = Mock(status_code=200)
+        mocked_response.json.return_value = json.loads('[{"name": "theonepool"}]')
+        get.return_value = mocked_response
         view = CreateApp()
-        pools = view.pools(request)
-        self.assertEqual([("", ""), ('one', 'one'), ('basic', 'basic')], pools)
+        pools = view.pools(self.request)
+        self.assertEqual([("", ""), ("theonepool", "theonepool")], pools)
 
     @patch('requests.get')
     def test_teams(self, get):
