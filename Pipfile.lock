@@ -332,6 +332,7 @@
         },
         "isort": {
             "hashes": [
+                "sha256:ee5fddfd792e6e1d664ee28f3fbe00dfc26d8d3c6f059ee78f4da4c19718007c",
                 "sha256:f19b23b22fb5a919a081bc31aabcc0991614c244d9215267e11abf2ca7b684ce"
             ],
             "version": "==4.3.9"
@@ -423,9 +424,9 @@
         },
         "pylint-plugin-utils": {
             "hashes": [
-                "sha256:8ad25a82bcce390d1d6b7c006c123e0cb18051839c9df7b8bdb7823c53fe676e"
+                "sha256:8d9e31d5ea8b7b0003e1f0f136b44a5235896a32e47c5bc2ef1143e9f6ba0b74"
             ],
-            "version": "==0.4"
+            "version": "==0.5"
         },
         "python-dateutil": {
             "hashes": [
