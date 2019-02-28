@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block title %}Alarms{% endblock %}
+
+{% block content %}
+    <ul>
+      {% for item in list %}
+      <li>{{ item.ID }} - {{ item.StartTime }} - {{ item.EndTime }} - {{ item.Alarm.Name }} - {{ item.Successful }} - {{ item.Error }} - {{ item.Action.Name }}</li>
+      {% endfor %}
+    </ul>
+{% endblock %}

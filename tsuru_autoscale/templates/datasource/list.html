@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}Data sources{% endblock %}
+
+{% block content %}
+    <p>
+    <a href="{% url 'datasource-new' %}">new</a>
+    </p>
+    <ul>
+      {% for item in list %}
+      <li>{{ item.Name }} - {{ item.Method }} on {{ item.URL }} <a href="{% url 'datasource-get' item.Name %}">view details</a></li>
+      {% endfor %}
+    </ul>
+{% endblock %}

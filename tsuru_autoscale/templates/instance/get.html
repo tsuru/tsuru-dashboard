@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row-fluid">
+    <div class="span12">
+        <h3>Info</h3>
+        <div class="content">
+            <p><strong>ID:</strong> {{ item.Name }}</p>
+            <p><strong>Application:</strong> {{ item.Apps.0 }}</p>
+        </div>
+    </div>
+</div>
+{% if not alarms %}
+<p>
+    <a href="{% url 'wizard-new' item.Name %}">
+        add new scale
+    </a>
+</p>
+{% endif %}
+{% if alarms %}
+<h2>Alarms</h2>
+<ul class="list-group">
+{% for alarm in alarms %}
+<li class="list-group-item">{{ alarm.name }} - {{ alarm.expression }}</li>
+{% endfor %}
+</ul>
+{% endif %}
+
+{% if events %}
+<h2>Events</h2>
+<ul class="list-group">
+{% for event in events %}
+<li class="list-group-item">{{ event.Alarm.name }} - {{ event.Successful }} - {{ event.StartTime }} - {{ event.EndTime }}</li>
+{% endfor %}
+</ul>
+{% endif %}
+{% endblock %}

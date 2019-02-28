@@ -66,6 +66,10 @@ INSTALLED_APPS = [
     'tsuru_dashboard',
 ]
 
+AUTOSCALE_HOST = os.environ.get("AUTOSCALE_HOST")
+if AUTOSCALE_HOST:
+    INSTALLED_APPS += ['tsuru_autoscale']
+
 SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
 
 LOGGING = {

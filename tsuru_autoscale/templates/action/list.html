@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}Actions{% endblock %}
+
+{% block content %}
+    <p>
+    <a href="{% url 'action-new' %}">new</a>
+    </p>
+    <ul>
+      {% for item in list %}
+
+      <li>{{ item.Name }} - {{ item.Method }} on {{ item.URL }} <a href="{% url 'action-get' item.Name %}">view details</a></li>
+      {% endfor %}
+    </ul>
+{% endblock %}

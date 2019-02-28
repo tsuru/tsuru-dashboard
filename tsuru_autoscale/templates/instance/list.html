@@ -1,0 +1,16 @@
+{% extends "apps/base.html" %}
+
+{% block navbar %}
+{% endblock %}
+
+{% block app-content %}
+    <ul class="list-group">
+      {% for item in list %}
+      <li class="list-group-item">
+        <a href="{% url 'instance-get' item.Name %}">
+            {{ item.Name }}
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+{% endblock %}

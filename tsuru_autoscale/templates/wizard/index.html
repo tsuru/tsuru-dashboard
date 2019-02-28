@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Creating auto scale{% endblock %}
+
+{% block content %}
+<form method="POST" action="" class="form-horizontal">
+    {% csrf_token %}
+    <fieldset>
+        {{ config_form.as_p }}
+    </fieldset>
+    <fieldset>
+        <legend>Scale up</legend>
+        {{ scale_up_form.as_p }}
+    </fieldset>
+    <fieldset class="elist">
+        <legend>Scale down</legend>
+        {{ scale_down_form.as_p }}
+    </fieldset>
+    <fieldset>
+        <button type="submit">OK</button>
+    </fieldset>
+</form>
+{% endblock %}

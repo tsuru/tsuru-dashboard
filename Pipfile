@@ -12,6 +12,13 @@ httpretty = "==0.8.14"
 pylint-django = "==0.11.1"
 
 [packages]
+django = ">=1.11,<2.0"
+requests = ">=2.21"
+python-dateutil = ">=2.4.2"
+tsuruclient = ">=0.4.0"
+grequests = ">=0.3.0"
+pygments = ">=2.1.3"
+pyyaml = "==3.11"
 gunicorn = "*"
 gevent = "*"
 raven = "==4.2.3"

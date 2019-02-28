@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block title %}Actions{% endblock %}
+
+{% block content %}
+<p>name: {{ item.Name }}</p>
+<p>method: {{ item.Method }}</p>
+<p>url: {{ item.URL }}</p>
+<a href="{% url 'action-remove' item.Name %}">remove</a>
+{% endblock %}

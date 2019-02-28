@@ -1,0 +1,85 @@
+{% extends "apps/base.html" %}
+
+{% block header %}
+<h1>{{ app }}</h1>
+{% endblock %}
+
+{% block navbar %}
+<div class="navbar navbar-default">
+  <div class="navbar-inner">
+    <ul class="nav navbar-nav">
+      <li>
+        <a title="resources" href="{% url 'detail-app' app %}">resources</a>
+      </li>
+      <li>
+        <a title="deploys" href="{% url 'app-deploys' app %}">deploys</a>
+      </li>
+      <li>
+        <a title="log" href="{% url 'app_log' app %}">log</a>
+      </li>
+      <li>
+        <a title="settings" href="{% url 'app-settings' app %}">settings</a>
+      </li>
+      <li class="active">
+        <a title="autoscale" href="{% url 'app-settings' app %}">autoscale</a>
+      </li>
+    </ul>
+  </div>
+</div>
+{% endblock %}
+
+{% block app-content %}
+{% if autoscale_disabled %}
+    <p>Autoscale is disabled. Please contact the Administrator</p>
+{% else %}
+    {% if auto_scale %}
+    <p><strong>Start with units:</strong> {{ auto_scale.minUnits }}</p>
+
+    <h3>Scale up </h3>
+    <p><strong>Expression:</strong> {{ auto_scale.scaleUp.metric }} {{ auto_scale.scaleUp.operator }} {{ auto_scale.scaleUp.value }}</p>
+    <p><strong>Aggregator:</strong> {{ auto_scale.scaleUp.aggregator }}</p>
+    <p><strong>Step (in units):</strong> {{ auto_scale.scaleUp.step }} </p>
+    <p><strong>Wait time (in seconds):</strong> {{ auto_scale.scaleUp.wait }}</p>
+    <h3>Scale down </h3>
+    <p><strong>Expression:</strong> {{ auto_scale.scaleDown.metric }} {{ auto_scale.scaleDown.operator }} {{ auto_scale.scaleDown.value }}</p>
+    <p><strong>Aggregator:</strong> {{ auto_scale.scaleDown.aggregator }}</p>
+    <p><strong>Step (in units):</strong> {{ auto_scale.scaleDown.step }} </p>
+    <p><strong>Wait time (in seconds):</strong> {{ auto_scale.scaleDown.wait }}</p>
+    {% if events %}
+    <h3>events</h3>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>action</th>
+          <th>start</th>
+          <th>end</th>
+          <th>successful</th>
+          <th>error</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for event in events %}
+        {% if event.Action.Name != "enable_alarm" and event.Action.Name != "disable_alarm" %}
+        <tr>
+          <td>{{ event.Action.Name}}</td>
+          <td>{{ event.StartTime }}</td>
+          <td>{{ event.EndTime }}</td>
+          <td>{{ event.Successful }}</td>
+          <td>{{ event.Error }}</td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+    <a href="{% url 'wizard-remove' instance.Name %}">remove auto scale</a>
+    {% if auto_scale.enabled %}
+    <a href="{% url 'wizard-disable' instance.Name %}">disable auto scale</a>
+    {% else %}
+    <a href="{% url 'wizard-enable' instance.Name %}">enable auto scale</a>
+    {% endif %}
+    {% else %}
+    <a href="{% url 'wizard-new' app %}" class="btn btn-default">add auto scale</a>
+    {% endif %}
+{% endif %}
+{% endblock %}
