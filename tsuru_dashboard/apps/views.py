@@ -237,28 +237,9 @@ class CreateApp(LoginRequiredView):
         url = '{}/pools'.format(settings.TSURU_HOST)
         response = requests.get(url, headers=authorization)
         pools = set()
-        pools_json = response.json()
-        pools_by_team = pools_json
-
-        # backward compatibility
-        if isinstance(pools_json, dict):
-            pools_by_team = pools_json["pools_by_team"]
-            for pool in pools_json.get('public_pools', []):
-                pools.add(pool.get("Name", pool))
-
-            for team_list in pools_by_team:
-                for pool in team_list['Pools']:
-                    pools.add(pool)
-
-        if isinstance(pools_json, list):
-            for pool in pools_json:
-                # backward compatibility
-                if "Pools" in pool:
-                    pools.update(pool.get("Pools"))
-
-                if "Name" in pool:
-                    pools.add(pool.get("Name"))
-
+        if response.status_code == 200:
+            for pool in response.json():
+                pools.add(pool.get('name', pool.get('Name')))
         result = [('', '')]
         result.extend([(p, p) for p in pools])
         return result
