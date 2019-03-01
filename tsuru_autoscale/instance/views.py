@@ -1,8 +1,6 @@
 from django.views.generic import TemplateView
 
 from tsuru_autoscale.auth.views import LoginRequiredView
-from tsuru_autoscale.instance import client
-from tsuru_autoscale.event import client as eclient
 
 class ListInstance(LoginRequiredView, TemplateView):
     template_name = 'instance/list.html'
