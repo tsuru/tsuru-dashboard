@@ -1,34 +1,32 @@
-from django.template.response import TemplateResponse
+from django.views.generic import TemplateView
 
-from tsuru_dashboard.auth.views import LoginRequiredView, LoginRequiredMixin
+from tsuru_autoscale.auth.views import LoginRequiredView
 from tsuru_autoscale.instance import client
 from tsuru_autoscale.event import client as eclient
 
-class ListInstance(LoginRequiredView):
+class ListInstance(LoginRequiredView, TemplateView):
     template_name = 'instance/list.html'
 
-    def get(self, request, *args, **kwargs):
-        token = request.session.get('tsuru_token').split(" ")[-1]
-        instances = client.list(token).json()
+    def get_context_data(self, **kwargs):
+        instances = self.client.instance.list().json()
         context = {
             "list": instances,
         }
-        return TemplateResponse(request, self.template_name, context=context)
+        return context
 
 
-class InstanceInfo(LoginRequiredView):
+class InstanceInfo(LoginRequiredView, TemplateView):
     template_name = 'instance/get.html'
 
-    def get(self, request, *args, **kwargs):
+    def get_context_data(self, **kwargs):
         name = kwargs['name']
-        token = request.session.get('tsuru_token').split(" ")[-1]
-        instance = client.get(name, token).json()
-        alarms = client.alarms_by_instance(name, token).json() or []
+        instance = self.client.instance.get(name).json()
+        alarms = self.client.instance.alarms_by_instance(name).json() or []
 
         events = []
 
         for alarm in alarms:
-            events.extend(eclient.list(alarm["name"], token).json())
+            events.extend(self.client.event.list(alarm["name"]).json())
 
         context = {
             "item": instance,
@@ -36,4 +34,4 @@ class InstanceInfo(LoginRequiredView):
             "events": events,
         }
         
-        return TemplateResponse(request, self.template_name, context=context)
+        return context

@@ -1,116 +1,87 @@
 from django.test import TestCase
 from django.core.urlresolvers import reverse
-from django.conf import settings
+from django.test.client import RequestFactory
 
-from tsuru_autoscale.instance import client
+from tsuru_autoscale.instance.views import ListInstance, InstanceInfo
 
+from tsuru_autoscale import settings
 from importlib import import_module
-
 import httpretty
-import mock
+from mock import patch, Mock
 
 import os
 
+class FakeAutoScaleClient(object):
+    def __init__(self, instance={}, event={}):
+        self.instance = Mock(**instance)
+        self.event = Mock(**event)
 
-class ListTestCase(TestCase):
+
+class ListInstanceTestCase(TestCase):
     def setUp(self):
-        settings.SESSION_ENGINE = 'django.contrib.sessions.backends.file'
-        engine = import_module(settings.SESSION_ENGINE)
-        store = engine.SessionStore()
-        store.save()
-        self.session = store
-        self.client.cookies[settings.SESSION_COOKIE_NAME] = store.session_key
-        self.session["tsuru_token"] = "b bla"
-        self.session.save()
+        self.request = RequestFactory().get("/")
+        self.request.session = {"tsuru_token": "admin"}       
 
-    @mock.patch("tsuru_autoscale.instance.client.list")
-    def test_list(self, list_mock):
-        url = "{}?TSURU_TOKEN=bla".format(reverse("instance-list"))
-        response = self.client.get(url)
+    @patch.object(ListInstance, "client")
+    @patch("tsuru_dashboard.auth.views.token_is_valid")
+    def test_list(self, token_is_valid, fake_client):
+        token_is_valid.return_value = True
 
-        self.assertTemplateUsed(response, "instance/list.html")
-        self.assertIn('list', response.context)
-        list_mock.assert_called_with("bla")
+        json_mock = Mock()
+        json_mock.json.return_value = [{"Name": "myinstance"}]
+
+        fake_client = FakeAutoScaleClient(instance={"list.return_value": json_mock})
+
+        response = ListInstance.as_view()(self.request)
+
+        self.assertIn("instance/list.html", response.template_name)
+        self.assertIn('list', response.context_data)
+        ListInstance.client.instance.list.assert_called()
 
 
-class GetTestCase(TestCase):
+
+class InstanceInfoTestCase(TestCase):
     def setUp(self):
-        settings.SESSION_ENGINE = 'django.contrib.sessions.backends.file'
-        engine = import_module(settings.SESSION_ENGINE)
-        store = engine.SessionStore()
-        store.save()
-        self.session = store
-        self.client.cookies[settings.SESSION_COOKIE_NAME] = store.session_key
-        self.session["tsuru_token"] = "b bla"
-        self.session.save()
+        self.request = RequestFactory().get("/")
+        self.request.session = {"tsuru_token": "admin"}       
 
-    @mock.patch("tsuru_autoscale.instance.client.alarms_by_instance")
-    @mock.patch("tsuru_autoscale.instance.client.get")
-    def test_get_without_alarms(self, list_mock, alarms_by_instance_mock):
-        json_mock = mock.Mock()
+    @patch("tsuru_dashboard.auth.views.token_is_valid")
+    @patch.object(InstanceInfo, "client")
+    def test_get_without_alarms(self, fake_client, token_is_valid):
+        token_is_valid.return_value = True
+        instance_attrs = {}
+
+        json_mock = Mock()
         json_mock.json.return_value = {"Name": "instance"}
-        list_mock.return_value = json_mock
+        instance_attrs["get.return_value"] = json_mock
 
-        aresponse = mock.Mock()
+        aresponse = Mock()
         aresponse.json.return_value = None
-        alarms_by_instance_mock.return_value = aresponse
+        instance_attrs["alarm_by_instance.return_value"] = aresponse
 
-        url = "{}?TSURU_TOKEN=bla".format(reverse("instance-get", args=["instance"]))
-        response = self.client.get(url)
+        fake_client = FakeAutoScaleClient(instance=instance_attrs)
 
-        self.assertTemplateUsed(response, "instance/get.html")
-        self.assertIn('item', response.context)
-        self.assertIn('alarms', response.context)
-        self.assertIn('events', response.context)
-        list_mock.assert_called_with("instance", "bla")
+        response = InstanceInfo.as_view()(self.request, name="myinstance")
 
-    @mock.patch("tsuru_autoscale.instance.client.alarms_by_instance")
-    @mock.patch("tsuru_autoscale.instance.client.get")
-    def test_get(self, list_mock, alarms_by_instance_mock):
-        json_mock = mock.Mock()
-        json_mock.json.return_value = {"Name": "instance"}
-        list_mock.return_value = json_mock
-        url = "{}?TSURU_TOKEN=bla".format(reverse("instance-get", args=["instance"]))
-        response = self.client.get(url)
+        self.assertIn("instance/get.html", response.template_name)
+        self.assertIn('item', response.context_data)
+        self.assertIn('alarms', response.context_data)
+        self.assertIn('events', response.context_data)
+        InstanceInfo.client.instance.get.assert_called_with("myinstance")
 
-        self.assertTemplateUsed(response, "instance/get.html")
-        self.assertIn('item', response.context)
-        self.assertIn('alarms', response.context)
-        self.assertIn('events', response.context)
-        list_mock.assert_called_with("instance", "bla")
+    @patch("tsuru_dashboard.auth.views.token_is_valid")
+    @patch.object(InstanceInfo, "client")
+    def test_get(self, fake_client, token_is_valid):
+        json_mock = Mock()
+        json_mock.json.return_value = {"Name": "myinstance"}
+        instance_attrs = {"get.return_value": json_mock}
+        fake_client = FakeAutoScaleClient(instance=instance_attrs)
+        token_is_valid.return_value = True
 
+        response = InstanceInfo.as_view()(self.request, name="myinstance")
 
-class ClientTestCase(TestCase):
-    def setUp(self):
-        httpretty.enable()
-
-    def tearDown(self):
-        httpretty.disable()
-        httpretty.reset()
-
-    def test_list(self):
-        os.environ["AUTOSCALE_HOST"] = "http://autoscalehost.com"
-        httpretty.register_uri(
-            httpretty.GET,
-            "http://autoscalehost.com/service/instance",
-        )
-
-        client.list("token")
-
-    def test_get(self):
-        os.environ["AUTOSCALE_HOST"] = "http://autoscalehost.com"
-        httpretty.register_uri(
-            httpretty.GET,
-            "http://autoscalehost.com/service/instance/name",
-        )
-
-        client.get("name", "token")
-
-    def test_alarms_by_instance(self):
-        os.environ["AUTOSCALE_HOST"] = "http://autoscalehost.com"
-        httpretty.register_uri(
-            httpretty.GET,
-            "http://autoscalehost.com/alarm/instance/name",
-        )
-
-        client.alarms_by_instance("name", "token")
+        self.assertIn("instance/get.html", response.template_name)
+        self.assertIn('item', response.context_data)
+        self.assertIn('alarms', response.context_data)
+        self.assertIn('events', response.context_data)
+        InstanceInfo.client.instance.get.assert_called_with("myinstance")
