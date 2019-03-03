@@ -13,7 +13,7 @@ class InstanceClient(object):
 		logging.debug("trying to get service instances - {}".format(url))
 		response = requests.get(url, headers=headers)
 		logging.debug("service instances response - {}".format(response))
-		return response
+		return response.json()
 
 
 	def get(self, name):

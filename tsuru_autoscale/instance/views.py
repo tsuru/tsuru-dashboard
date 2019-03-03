@@ -1,12 +1,11 @@
 from django.views.generic import TemplateView
-
 from tsuru_autoscale.auth.views import LoginRequiredView
 
 class ListInstance(LoginRequiredView, TemplateView):
     template_name = 'instance/list.html'
 
     def get_context_data(self, **kwargs):
-        instances = self.client.instance.list().json()
+        instances = self.client.instance.list()
         context = {
             "list": instances,
         }

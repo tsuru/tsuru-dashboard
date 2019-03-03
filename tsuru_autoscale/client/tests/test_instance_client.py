@@ -1,3 +1,4 @@
+import json
 import httpretty
 from django.test import TestCase
 
@@ -17,9 +18,12 @@ class InstanceClientTestCase(TestCase):
         httpretty.reset()
 
     def test_list(self):
+        instances_data = []
         httpretty.register_uri(
             httpretty.GET,
             "http://autoscalehost.com/service/instance",
+            body=json.dumps(instances_data),
+            status=200
         )
 
         self.client.list()
