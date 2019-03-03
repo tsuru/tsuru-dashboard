@@ -1,36 +1,45 @@
 from django.test import TestCase
-from django.core.urlresolvers import reverse
-from django.conf import settings
+from django.test.client import RequestFactory
+from tsuru_autoscale.app.views import IndexView
 
-from importlib import import_module
-
-import mock
+from mock import patch, Mock
 
 
-class IndexTestCase(TestCase):
+class IndexViewTestCase(TestCase):
     def setUp(self):
-        settings.SESSION_ENGINE = 'django.contrib.sessions.backends.file'
-        engine = import_module(settings.SESSION_ENGINE)
-        store = engine.SessionStore()
-        store.save()
-        self.session = store
-        self.client.cookies[settings.SESSION_COOKIE_NAME] = store.session_key
-        self.session["tsuru_token"] = "b bla"
-        self.session.save()
+        self.request = RequestFactory().get("/")
+        self.request.session = {"tsuru_token": "admin"}       
+      
+    @patch("tsuru_dashboard.auth.views.token_is_valid")
+    @patch.object(IndexView, "client")
+    def test_index(self, fake_client, token_is_valid):
+        token_is_valid.return_value = True
 
-    @mock.patch("tsuru_autoscale.instance.client.list")
-    def test_index(self, list_mock):
-        url = "{}?TSURU_TOKEN=bla".format(reverse("autoscale-app-info", args=["app"]))
-        response = self.client.get(url)
-        self.assertTemplateUsed(response, "app/index.html")
+        expected_instance = {"Name": "myinstance", "Apps": ["myapp"]}
+        fake_client.instance.list.return_value = [expected_instance]
+        fake_client.wizard.get.return_value.status_code = 200
 
-    @mock.patch("tsuru_autoscale.instance.client.list")
-    def test_index_instance_not_found(self, list_mock):
-        response_mock = mock.Mock()
-        response_mock.json.return_value = None
-        list_mock.return_value = response_mock
+        response = IndexView.as_view()(self.request, app="myapp")
+        self.assertIn("app/index.html", response.template_name)
+        self.assertIn('instance', response.context_data)
+        self.assertIn('auto_scale', response.context_data)
+        self.assertIn('app', response.context_data)
+        self.assertIn('events', response.context_data)
+        self.assertEqual(expected_instance, response.context_data['instance'])
+        IndexView.client.instance.list.assert_called()
+        IndexView.client.wizard.get.assert_called_with("myinstance")
+        IndexView.client.wizard.events.assert_called_with("myinstance")
 
-        url = "{}?TSURU_TOKEN=bla".format(reverse("autoscale-app-info", args=["app"]))
-        response = self.client.get(url)
+    @patch("tsuru_dashboard.auth.views.token_is_valid")
+    @patch.object(IndexView, "client")
+    def test_index_instance_not_found(self, fake_client, token_is_valid):
+        token_is_valid.return_value = True
 
-        self.assertTemplateUsed(response, "app/index.html")
+        fake_client.instance.list.return_value = []
+
+        response = IndexView.as_view()(self.request, app="myapp")
+
+        self.assertIn("app/index.html", response.template_name)
+        IndexView.client.instance.list.assert_called()
+        IndexView.client.wizard.get.assert_not_called()
+        IndexView.client.wizard.events.assert_not_called()

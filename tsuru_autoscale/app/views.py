@@ -1,27 +1,15 @@
-from django.shortcuts import render
-from django.template.response import TemplateResponse
-from django.views.generic import TemplateView
-
-from tsuru_autoscale.instance import client
-from tsuru_autoscale.wizard import client as wclient
-from tsuru_dashboard.auth.views import LoginRequiredView
-
 import urllib
+from django.views.generic import TemplateView
+from tsuru_autoscale.auth.views import LoginRequiredView
 
 
-class AutoScale(LoginRequiredView, TemplateView):
+class IndexView(LoginRequiredView, TemplateView):
     template_name = 'app/index.html'
 
-    def get(self, request, *args, **kwargs):
+    def get_context_data(self, **kwargs):
         app = kwargs['app']
 
-        token = request.session.get('tsuru_token').split(" ")[-1]
-        instances = client.list(token)
-        if instances:
-            instances = instances.json()
-        else:
-            instances = []
-
+        instances = self.client.instance.list()
         instance = None
         auto_scale = None
         events = None
@@ -30,10 +18,10 @@ class AutoScale(LoginRequiredView, TemplateView):
             if app in inst.get('Apps', []):
                 instance = inst
 
-                response = wclient.get(instance["Name"], token)
+                response = self.client.wizard.get(instance["Name"])
                 if response.status_code == 200:
                     auto_scale = response.json()
-                    events = wclient.events(instance["Name"], token).json()
+                    events = self.client.wizard.events(instance["Name"]).json()
 
         context = {
             "instance": instance,
@@ -42,4 +30,4 @@ class AutoScale(LoginRequiredView, TemplateView):
             "events": events,
         }
         
-        return TemplateResponse(request, self.template_name, context)
+        return context
