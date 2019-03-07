@@ -77,7 +77,15 @@ class DeployInfo(AppMixin, TemplateView):
 class ListDeploy(LoginRequiredView):
     template = 'apps/deploys.html'
 
-    def zip_to_targz(self, zip_file):
+    @staticmethod
+    def create_file_object_from_string(content):
+        file_handler = StringIO()
+        file_handler.write(content)
+        file_handler.seek(0)
+        return file_handler
+
+    @staticmethod
+    def create_targz_file_object_from_zip_file(zip_file):
         fd = StringIO()
         tar = tarfile.open(fileobj=fd, mode='w:gz')
         timeshift = int((datetime.datetime.now() - datetime.datetime.utcnow()).total_seconds())
@@ -101,34 +109,33 @@ class ListDeploy(LoginRequiredView):
         fd.seek(0)
         return fd
 
-    def read_zip(self, request):
-        fd = StringIO()
-        fd.write(decodestring(request.POST['filecontent']))
-        fd.seek(0)
-        return fd
-
-    def deploy(self, request, app_name, tar_file):
+    def deploy(self, request, app_name, file_content):
         def sending_stream():
             origin = 'drag-and-drop'
             url = '{}/apps/{}/deploy?origin={}'.format(settings.TSURU_HOST, app_name, origin)
-            r = requests.post(url, headers=self.authorization, files={'file': tar_file}, stream=True)
+            r = requests.post(url, headers=self.authorization, files={'file': ('archive.tar.gz', file_content)}, stream=True)
             for line in r.iter_lines():
                 yield "{}<br>".format(line)
         return StreamingHttpResponse(sending_stream())
 
-    def post(self, request, *args, **kwargs):
-        app_name = kwargs['app_name']
-        zip_file = self.read_zip(request)
-        tar_file = self.zip_to_targz(zip_file)
-        return self.deploy(request, app_name, tar_file)
+    def post(self, request, app_name):
+        zip_raw_content = ''
+        try:
+            zip_raw_content = decodestring(request.POST.get('filecontent'))
+        except:
+            return HttpResponse('the "filecontent" parameter is missing or it is not well formatted', status=400)
+        zip_file_object = ListDeploy.create_file_object_from_string(zip_raw_content)
+        tar_file_object = ListDeploy.create_targz_file_object_from_zip_file(zip_file_object)
+        zip_file_object.close()
+        content = tar_file_object.getvalue()
+        tar_file_object.close()
+        return self.deploy(request, app_name, content)
 
     def get_app(self, app_name):
         url = '{}/apps/{}'.format(settings.TSURU_HOST, app_name)
         return requests.get(url, headers=self.authorization).json()
 
-    def get(self, request, *args, **kwargs):
-        app_name = kwargs['app_name']
-
+    def get(self, request, app_name):
         page = int(request.GET.get('page', '1'))
 
         skip = (page * 20) - 20
