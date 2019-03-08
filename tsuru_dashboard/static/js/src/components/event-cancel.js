@@ -15,7 +15,7 @@ export default class EventCancel extends Component {
   cancel() {
     $.ajax({
       type: 'POST',
-      url: "/events/" + this.props.uuid + "/cancel/",
+      url: `/events/${this.props.uuid}/cancel/`,
       headers: {
         'X-CSRFToken': Cookie.get('csrftoken'),
       },
@@ -27,7 +27,6 @@ export default class EventCancel extends Component {
   }
 
   onChange() {
-    console.log("aaaaa", this.refs.reason.value);
     this.setState({ enabled: this.refs.reason.value.length > 0 });
   }
 
