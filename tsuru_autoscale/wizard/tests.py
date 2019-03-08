@@ -1,15 +1,13 @@
-from django.test import TestCase
-from django.core.urlresolvers import reverse, resolve
-from django.conf import settings
+from django.test import TestCase, override_settings
+from django.core.urlresolvers import reverse
 
 from tsuru_autoscale.wizard import forms
 from tsuru_autoscale.wizard import client
 
-from importlib import import_module
 
-import mock
-import httpretty
-import os
+from django.test.client import RequestFactory
+from mock import patch, Mock
+from tsuru_autoscale.wizard.views import Wizard, WizardRemove, WizardEnable, WizardDisable
 
 
 class ScaleFormTest(TestCase):
@@ -41,153 +39,94 @@ class ConfigFormTest(TestCase):
             self.assertEqual(form.fields[field].required, required)
 
 
-class IndexTestCase(TestCase):
+@patch("tsuru_dashboard.auth.views.token_is_valid", return_value=True)
+@patch.object(Wizard, "client")
+class WizardTestCase(TestCase):
     def setUp(self):
-        settings.SESSION_ENGINE = 'django.contrib.sessions.backends.file'
-        engine = import_module(settings.SESSION_ENGINE)
-        store = engine.SessionStore()
-        store.save()
-        self.session = store
-        self.client.cookies[settings.SESSION_COOKIE_NAME] = store.session_key
-        self.session["tsuru_token"] = "b bla"
-        self.session.save()
+        self.view = Wizard()
+        self.request = RequestFactory().get("/")
+        self.request.session = {"tsuru_token": "admin"}   
 
-    @mock.patch("tsuru_autoscale.wizard.views.process_list")
-    @mock.patch("tsuru_autoscale.datasource.client.list")
-    def test_index(self, dlist_mock, process_mock):
-        url = "{}?TSURU_TOKEN=bla".format(reverse("wizard-new", args=["instance"]))
-        response = self.client.get(url)
-        self.assertTemplateUsed(response, "wizard/index.html")
+    def test_index(self, fake_client, token_is_valid):
+        self.view.process_list = Mock()
+        response = self.view.get(self.request, instance="myinstance")
+        self.assertIn("wizard/index.html", response.template_name)
 
-    @mock.patch("tsuru_autoscale.wizard.views.process_list")
-    @mock.patch("tsuru_autoscale.datasource.client.list")
-    def test_forms_prefix(self, dlist_mock, process_mock):
-        url = "{}?TSURU_TOKEN=bla".format(reverse("wizard-new", args=["instance"]))
-        response = self.client.get(url)
-
+    def test_forms_prefix(self, fake_client, token_is_valid):
+        self.view.process_list = Mock()
+        response = self.view.get(self.request, instance="myinstance")
         forms = {
             "scale_up_form": "scale_up",
             "scale_down_form": "scale_down",
         }
 
         for f, prefix in forms.items():
-            self.assertEqual(response.context[f].prefix, prefix)
+            self.assertEqual(response.context_data[f].prefix, prefix)
 
-    @mock.patch("tsuru_autoscale.wizard.views.process_list")
-    @mock.patch("tsuru_autoscale.datasource.client.list")
-    def test_config_process_list(self, dlist_mock, process_mock):
+    def test_config_process_list(self, fake_client, token_is_valid):
         process = [("web", "web")]
-        process_mock.return_value = process
+        self.view.process_list = lambda r: process
 
-        url = "{}?TSURU_TOKEN=bla".format(reverse("wizard-new", args=["instance"]))
-        response = self.client.get(url)
+        response = self.view.get(self.request, instance="myinstance")
 
-        choices = response.context["config_form"].fields["process"].choices
+        choices = response.context_data["config_form"].fields["process"].choices
         self.assertListEqual(process, choices)
 
-    @mock.patch("tsuru_autoscale.wizard.views.process_list")
-    @mock.patch("tsuru_autoscale.datasource.client.list")
-    def test_scale_metrics(self, dlist_mock, process_mock):
+    def test_scale_metrics(self, fake_client, token_is_valid):
         data = [{"Name": "cpu"}, {"Name": "mem"}]
-        response_mock = mock.Mock()
+        response_mock = Mock()
         response_mock.json.return_value = data
-        dlist_mock.return_value = response_mock
+        fake_client.datasource.list.return_value = response_mock
 
-        url = "{}?TSURU_TOKEN=bla".format(reverse("wizard-new", args=["instance"]))
-        response = self.client.get(url)
+        self.view.process_list = Mock()
+        response = self.view.get(self.request, instance="myinstance")
 
         expected_choices = [("cpu", "cpu"), ("mem", "mem")]
 
-        choices = response.context["scale_up_form"].fields["metric"].choices
+        choices = response.context_data["scale_up_form"].fields["metric"].choices
         self.assertListEqual(expected_choices, choices)
 
-        choices = response.context["scale_down_form"].fields["metric"].choices
+        choices = response.context_data["scale_down_form"].fields["metric"].choices
         self.assertListEqual(expected_choices, choices)
 
 
-class ClientTestCase(TestCase):
-    def setUp(self):
-        httpretty.enable()
-
-    def tearDown(self):
-        httpretty.disable()
-        httpretty.reset()
-
-    def test_new(self):
-        os.environ["AUTOSCALE_HOST"] = "http://autoscalehost.com"
-        httpretty.register_uri(
-            httpretty.POST,
-            "http://autoscalehost.com/wizard",
-        )
-
-        client.new({}, "token")
-
-    def test_get(self):
-        os.environ["AUTOSCALE_HOST"] = "http://autoscalehost.com"
-        httpretty.register_uri(
-            httpretty.GET,
-            "http://autoscalehost.com/wizard/name",
-        )
-
-        client.get("name", "token")
-
-    def test_events(self):
-        os.environ["AUTOSCALE_HOST"] = "http://autoscalehost.com"
-        httpretty.register_uri(
-            httpretty.GET,
-            "http://autoscalehost.com/wizard/name/events",
-        )
-
-        client.events("name", "token")
-
-    def test_remove(self):
-        os.environ["AUTOSCALE_HOST"] = "http://autoscalehost.com"
-        httpretty.register_uri(
-            httpretty.DELETE,
-            "http://autoscalehost.com/wizard/name",
-        )
-
-        client.remove("name", "token")
-
-
-class RemoveTestCase(TestCase):
-    def setUp(self):
-        settings.SESSION_ENGINE = 'django.contrib.sessions.backends.file'
-        engine = import_module(settings.SESSION_ENGINE)
-        store = engine.SessionStore()
-        store.save()
-        self.session = store
-        self.client.cookies[settings.SESSION_COOKIE_NAME] = store.session_key
-        self.session["tsuru_token"] = "testtoken"
-        self.session.save()
-
-    @mock.patch("tsuru_autoscale.wizard.client.remove")
-    def test_remove(self, remove_mock):
-        url = reverse("wizard-remove", args=["name"])
-    #    url = "{}?TSURU_TOKEN=bla".format(reverse("wizard-remove", args=["name"]))
-        resolver = resolve(url)
-        self.assertEqual(resolver.view_name, 'wizard-remove')
-
-        response = self.client.get(url)
-        print(response)
-        remove_mock.assert_called_with("name", "bla")
+class WizardRemoveTestCase(TestCase):
+    @patch("tsuru_dashboard.auth.views.token_is_valid", return_value=True)
+    @patch.object(WizardRemove, "client")
+    def test_remove(self, fake_client, token_is_valid):
+        request = RequestFactory().get("/")
+        request.session = {"tsuru_token": "admin"}   
+        
+        response = WizardRemove.as_view()(request, instance="name")
+        fake_client.wizard.remove.assert_called_with("name")
         url = reverse("autoscale-app-info", args=["name"])
+
         self.assertIn(url, response.url)
 
-    @mock.patch("tsuru_autoscale.wizard.client.enable")
-    def test_enable(self, enable_mock):
-        url = reverse("wizard-enable", args=["name"])
-        response = self.client.get(url)
+
+class WizardEnableTestCase(TestCase):
+    @patch("tsuru_dashboard.auth.views.token_is_valid", return_value=True)
+    @patch.object(WizardEnable, "client")
+    def test_enable(self, fake_client, token_is_valid):
+        request = RequestFactory().get("/")
+        request.session = {"tsuru_token": "admin"}   
+        
+        response = WizardEnable.as_view()(request, instance="name")
 
         url = reverse("autoscale-app-info", args=["name"])
         self.assertIn(url, response.url)
-        enable_mock.assert_called_with("name", "bla")
+        fake_client.wizard.enable.assert_called_with("name")
 
-    @mock.patch("tsuru_autoscale.wizard.client.disable")
-    def test_disable(self, disable_mock):
-        url = reverse("wizard-disable", args=["name"])
-        response = self.client.get(url)
+
+class WizardDisableTestCase(TestCase):
+    @patch("tsuru_dashboard.auth.views.token_is_valid", return_value=True)
+    @patch.object(WizardDisable, "client")
+    def test_disable(self, fake_client, token_is_valid):
+        request = RequestFactory().get("/")
+        request.session = {"tsuru_token": "admin"}   
+        
+        response = WizardDisable.as_view()(request, instance="name")
 
         url = reverse("autoscale-app-info", args=["name"])
         self.assertIn(url, response.url)
-        disable_mock.assert_called_with("name", "bla")
+        fake_client.wizard.disable.assert_called_with("name")
