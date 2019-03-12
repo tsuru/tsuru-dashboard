@@ -2,6 +2,10 @@ import React from "react";
 import { shallow, mount } from "enzyme";
 import { PoolRebalance } from "../js/src/components/pool-rebalance";
 import sinon from "sinon";
+import Cookies from 'js-cookie';
+
+Cookies.get = jest.fn()
+        .mockImplementation(() => 'csrftokentest');
 
 describe("PoolRebalance", () => {
   describe("initial state", () => {
@@ -66,7 +70,7 @@ describe("PoolRebalance", () => {
     beforeEach(() => {
       xhr =  sinon.useFakeXMLHttpRequest();
       requests = [];
-      xhr.onCreate = (req) => { requests.push(req); };
+      xhr.onCreate = (req) => { requests.push(req) };
     });
 
     afterEach(() => {
@@ -75,8 +79,8 @@ describe("PoolRebalance", () => {
 
     it("makes a request to rebalance route", () => {
       const poolRebalance = mount(<PoolRebalance url="/rebalance" />);
+      
       poolRebalance.instance().startRebalance();
-
       expect(requests.length).toEqual(1);
       expect(requests[0].method).toEqual("POST");
       expect(requests[0].url).toEqual("/rebalance");
