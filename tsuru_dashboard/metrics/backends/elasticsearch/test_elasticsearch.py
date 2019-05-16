@@ -9,73 +9,82 @@ class ElasticSearchTest(TestCase):
     def setUp(self):
         self.maxDiff = None
         self.es = ElasticSearch("http://url.com", AppFilter(app="app_name").query())
-        self.index = ".measure-tsuru-{}*".format(datetime.datetime.utcnow().strftime("%Y.%m.%d"))
+        self.index = ".measures-tsuru-{}*".format(datetime.datetime.utcnow().strftime("%Y.%m.%d"))
 
     @patch("requests.post")
     def test_cpu_max(self, post_mock):
         self.es.process = Mock()
         self.es.cpu_max()
-        url = "{}/{}/{}/_search".format(self.es.url, self.index, "cpu_max")
-        post_mock.assert_called_with(url, data=json.dumps(self.es.query()))
+        url = "{}/{}/_search".format(self.es.url, self.index)
+        query = self.es.query("cpu_max")
+        query["query"]["bool"]["filter"].append(
+            {"range": {"value": {"lt": 500}}}
+        )
+        post_mock.assert_called_with(url, headers={'Content-Type': 'application/json'}, data=json.dumps(query))
 
     @patch("requests.post")
     def test_mem_max(self, post_mock):
         self.es.process = Mock()
         self.es.mem_max()
-        url = "{}/{}/{}/_search".format(self.es.url, self.index, "mem_max")
-        post_mock.assert_called_with(url, data=json.dumps(self.es.query()))
+        url = "{}/{}/_search".format(self.es.url, self.index)
+        post_mock.assert_called_with(url, headers={'Content-Type': 'application/json'}, data=json.dumps(self.es.query("mem_max")))
 
     @patch("requests.post")
     def test_swap(self, post_mock):
         self.es.process = Mock()
         self.es.swap()
-        url = "{}/{}/{}/_search".format(self.es.url, self.index, "swap")
-        post_mock.assert_called_with(url, data=json.dumps(self.es.query()))
+        url = "{}/{}/_search".format(self.es.url, self.index)
+        post_mock.assert_called_with(url, headers={'Content-Type': 'application/json'}, data=json.dumps(self.es.query("swap")))
 
     @patch("requests.post")
     def test_units(self, post_mock):
         self.es.units()
-        url = "{}/{}/{}/_search".format(self.es.url, self.index, "cpu_max")
+        url = "{}/{}/_search".format(self.es.url, self.index)
         aggregation = {"units": {"cardinality": {"field": "host.keyword"}}}
-        post_mock.assert_called_with(url, data=json.dumps(self.es.query(aggregation=aggregation)))
+        post_mock.assert_called_with(url, headers={'Content-Type': 'application/json'},
+                                     data=json.dumps(self.es.query("cpu_max", aggregation=aggregation)))
 
     @patch("requests.post")
     def test_requests_min(self, post_mock):
         self.es.requests_min()
-        url = "{}/{}/{}/_search".format(self.es.url, self.index, "response_time")
+        url = "{}/{}/_search".format(self.es.url, self.index)
         aggregation = {"sum": {"sum": {"field": "count"}}}
-        post_mock.assert_called_with(url, data=json.dumps(self.es.query(aggregation=aggregation)))
+        post_mock.assert_called_with(url, headers={'Content-Type': 'application/json'},
+                                     data=json.dumps(self.es.query("response_time", aggregation=aggregation)))
 
     @patch("requests.post")
     def test_response_time(self, post_mock):
         self.es.response_time()
-        url = "{}/{}/{}/_search".format(self.es.url, self.index, "response_time")
+        url = "{}/{}/_search".format(self.es.url, self.index)
         aggregation = {
             "stats": {"stats": {"field": "value"}},
             "percentiles": {"percentiles": {"field": "value"}}
         }
-        post_mock.assert_called_with(url, data=json.dumps(self.es.query(aggregation=aggregation)))
+        post_mock.assert_called_with(url, headers={'Content-Type': 'application/json'},
+                                     data=json.dumps(self.es.query("response_time", aggregation=aggregation)))
 
     @patch("requests.post")
     def test_http_methods(self, post_mock):
         self.es.http_methods()
-        url = "{}/{}/{}/_search".format(self.es.url, self.index, "response_time")
+        url = "{}/{}/_search".format(self.es.url, self.index)
         aggregation = {"method": {"terms": {"field": "method"}}}
-        post_mock.assert_called_with(url, data=json.dumps(self.es.query(aggregation=aggregation)))
+        post_mock.assert_called_with(url, headers={'Content-Type': 'application/json'},
+                                     data=json.dumps(self.es.query("response_time", aggregation=aggregation)))
 
     @patch("requests.post")
     def test_status_code(self, post_mock):
         self.es.status_code()
-        url = "{}/{}/{}/_search".format(self.es.url, self.index, "response_time")
+        url = "{}/{}/_search".format(self.es.url, self.index)
         aggregation = {"status_code": {"terms": {"field": "status_code"}}}
-        post_mock.assert_called_with(url, data=json.dumps(self.es.query(aggregation=aggregation)))
+        post_mock.assert_called_with(url, headers={'Content-Type': 'application/json'},
+                                     data=json.dumps(self.es.query("response_time", aggregation=aggregation)))
 
     @patch("requests.post")
     def test_top_slow(self, post_mock):
         self.es.top_slow()
-        url = "{}/{}/{}/_search".format(self.es.url, self.index, "response_time")
+        url = "{}/{}/_search".format(self.es.url, self.index)
         query = {
-            "query": self.es.filtered_query,
+            "query": self.es.add_metric_filter(self.es.filtered_query, "response_time"),
             "size": 0,
             "aggs": {
                 "top": {
@@ -98,26 +107,29 @@ class ElasticSearchTest(TestCase):
                 }
             }
         }
-        post_mock.assert_called_with(url, data=json.dumps(query))
+        post_mock.assert_called_with(url, headers={'Content-Type': 'application/json'}, data=json.dumps(query))
 
     @patch("requests.post")
     def test_connections(self, post_mock):
         self.es.connections()
-        url = "{}/{}/{}/_search".format(self.es.url, self.index, "connection")
+        url = "{}/{}/_search".format(self.es.url, self.index)
         aggregation = {"connection": {"terms": {"field": "connection.keyword"}}}
-        post_mock.assert_called_with(url, data=json.dumps(self.es.query(aggregation=aggregation)))
+        post_mock.assert_called_with(url, headers={'Content-Type': 'application/json'},
+                                     data=json.dumps(self.es.query("connection", aggregation=aggregation)))
 
     @patch("requests.post")
     def test_netrx(self, post_mock):
         self.es.netrx()
-        url = "{}/{}/{}/_search".format(self.es.url, self.index, "netrx")
-        post_mock.assert_called_with(url, data=json.dumps(self.es.query(aggregation=NET_AGGREGATION)))
+        url = "{}/{}/_search".format(self.es.url, self.index)
+        post_mock.assert_called_with(url, headers={'Content-Type': 'application/json'},
+                                     data=json.dumps(self.es.query("netrx", aggregation=NET_AGGREGATION)))
 
     @patch("requests.post")
     def test_nettx(self, post_mock):
         self.es.nettx()
-        url = "{}/{}/{}/_search".format(self.es.url, self.index, "nettx")
-        post_mock.assert_called_with(url, data=json.dumps(self.es.query(aggregation=NET_AGGREGATION)))
+        url = "{}/{}/_search".format(self.es.url, self.index)
+        post_mock.assert_called_with(url, headers={'Content-Type': 'application/json'},
+                                     data=json.dumps(self.es.query("nettx", aggregation=NET_AGGREGATION)))
 
     def test_process(self):
         data = {

@@ -45,7 +45,7 @@ class TsuruMetricsBackendTest(TestCase):
 class NodesMetricsBackendTest(TestCase):
     def setUp(self):
         self.backend = NodesMetricsBackend(addrs=["127.0.0.1", "128.0.0.1"])
-        self.index = ".measure-tsuru-{}*".format(datetime.datetime.utcnow().strftime("%Y.%m.%d"))
+        self.index = ".measures-tsuru-{}*".format(datetime.datetime.utcnow().strftime("%Y.%m.%d"))
         self.aggregation = {
             "addrs": {
                 "terms": {
@@ -71,60 +71,68 @@ class NodesMetricsBackendTest(TestCase):
     @patch("requests.post")
     def test_cpu_max(self, post_mock):
         self.backend.cpu_max()
-        url = "{}/{}/{}/_search".format(self.backend.url, self.index, "host_cpu_busy")
-        post_mock.assert_called_with(url, data=json.dumps(self.backend.query(aggregation=self.aggregation)))
+        url = "{}/{}/_search".format(self.backend.url, self.index)
+        post_mock.assert_called_with(url, headers={'Content-Type': 'application/json'},
+                                     data=json.dumps(self.backend.query("host_cpu_busy", aggregation=self.aggregation)))
 
     @patch("requests.post")
     def test_cpu_wait(self, post_mock):
         self.backend.cpu_wait()
-        url = "{}/{}/{}/_search".format(self.backend.url, self.index, "host_cpu_wait")
-        post_mock.assert_called_with(url, data=json.dumps(self.backend.query(aggregation=self.aggregation)))
+        url = "{}/{}/_search".format(self.backend.url, self.index)
+        post_mock.assert_called_with(url, headers={'Content-Type': 'application/json'},
+                                     data=json.dumps(self.backend.query("host_cpu_wait", aggregation=self.aggregation)))
 
     @patch("requests.post")
     def test_load(self, post_mock):
         self.backend.load1()
-        url = "{}/{}/{}/_search".format(self.backend.url, self.index, "host_load1")
-        post_mock.assert_called_with(url, data=json.dumps(self.backend.query(aggregation=self.aggregation)))
+        url = "{}/{}/_search".format(self.backend.url, self.index)
+        post_mock.assert_called_with(url, headers={'Content-Type': 'application/json'},
+                                     data=json.dumps(self.backend.query("host_load1", aggregation=self.aggregation)))
 
         self.backend.load5()
-        url = "{}/{}/{}/_search".format(self.backend.url, self.index, "host_load5")
-        post_mock.assert_called_with(url, data=json.dumps(self.backend.query(aggregation=self.aggregation)))
+        url = "{}/{}/_search".format(self.backend.url, self.index)
+        post_mock.assert_called_with(url, headers={'Content-Type': 'application/json'},
+                                     data=json.dumps(self.backend.query("host_load5", aggregation=self.aggregation)))
 
         self.backend.load15()
-        url = "{}/{}/{}/_search".format(self.backend.url, self.index, "host_load15")
-        post_mock.assert_called_with(url, data=json.dumps(self.backend.query(aggregation=self.aggregation)))
+        url = "{}/{}/_search".format(self.backend.url, self.index)
+        post_mock.assert_called_with(url, headers={'Content-Type': 'application/json'},
+                                     data=json.dumps(self.backend.query("host_load15", aggregation=self.aggregation)))
 
     @patch("requests.post")
     def test_mem_max(self, post_mock):
         self.backend.mem_max()
-        url = "{}/{}/{}/_search".format(self.backend.url, self.index, "host_mem_used")
-        post_mock.assert_called_with(url, data=json.dumps(self.backend.query(aggregation=self.aggregation)))
+        url = "{}/{}/_search".format(self.backend.url, self.index)
+        post_mock.assert_called_with(url, headers={'Content-Type': 'application/json'},
+                                     data=json.dumps(self.backend.query("host_mem_used", aggregation=self.aggregation)))
 
     @patch("requests.post")
     def test_swap(self, post_mock):
         self.backend.swap()
-        url = "{}/{}/{}/_search".format(self.backend.url, self.index, "host_swap_used")
-        post_mock.assert_called_with(url, data=json.dumps(self.backend.query(aggregation=self.aggregation)))
+        url = "{}/{}/_search".format(self.backend.url, self.index)
+        post_mock.assert_called_with(url, headers={'Content-Type': 'application/json'},
+                                     data=json.dumps(self.backend.query("host_swap_used", aggregation=self.aggregation)))
 
     @patch("requests.post")
     def test_disk(self, post_mock):
         self.backend.disk()
-        url = "{}/{}/{}/_search".format(self.backend.url, self.index, "host_disk_used")
-        post_mock.assert_called_with(url, data=json.dumps(self.backend.query(aggregation=self.aggregation)))
+        url = "{}/{}/_search".format(self.backend.url, self.index)
+        post_mock.assert_called_with(url, headers={'Content-Type': 'application/json'},
+                                     data=json.dumps(self.backend.query("host_disk_used", aggregation=self.aggregation)))
 
     @patch("requests.post")
     def test_nettx(self, post_mock):
         self.backend.nettx()
-        url = "{}/{}/{}/_search".format(self.backend.url, self.index, "host_nettx")
-        post_mock.assert_called_with(url, data=json.dumps(
-            self.backend.query(aggregation=self.net_aggregation)))
+        url = "{}/{}/_search".format(self.backend.url, self.index)
+        post_mock.assert_called_with(url, headers={'Content-Type': 'application/json'}, data=json.dumps(
+            self.backend.query("host_nettx", aggregation=self.net_aggregation)))
 
     @patch("requests.post")
     def test_netrx(self, post_mock):
         self.backend.netrx()
-        url = "{}/{}/{}/_search".format(self.backend.url, self.index, "host_netrx")
-        post_mock.assert_called_with(url, data=json.dumps(
-            self.backend.query(aggregation=self.net_aggregation)))
+        url = "{}/{}/_search".format(self.backend.url, self.index)
+        post_mock.assert_called_with(url, headers={'Content-Type': 'application/json'}, data=json.dumps(
+            self.backend.query("host_netrx", aggregation=self.net_aggregation)))
 
     def test_process(self):
         data = {
@@ -194,26 +202,29 @@ class NodesMetricsBackendTest(TestCase):
 class NodeMetricsBackendTest(TestCase):
     def setUp(self):
         self.backend = NodeMetricsBackend(addr="127.0.0.1")
-        self.index = ".measure-tsuru-{}*".format(datetime.datetime.utcnow().strftime("%Y.%m.%d"))
+        self.index = ".measures-tsuru-{}*".format(datetime.datetime.utcnow().strftime("%Y.%m.%d"))
 
     @patch("requests.post")
     def test_nettx(self, post_mock):
         self.backend.nettx()
-        url = "{}/{}/{}/_search".format(self.backend.url, self.index, "host_nettx")
-        post_mock.assert_called_with(url, data=json.dumps(self.backend.query(aggregation=NET_AGGREGATION)))
+        url = "{}/{}/_search".format(self.backend.url, self.index)
+        post_mock.assert_called_with(url, headers={'Content-Type': 'application/json'},
+                                     data=json.dumps(self.backend.query("host_nettx", aggregation=NET_AGGREGATION)))
 
     @patch("requests.post")
     def test_netrx(self, post_mock):
         self.backend.netrx()
-        url = "{}/{}/{}/_search".format(self.backend.url, self.index, "host_netrx")
-        post_mock.assert_called_with(url, data=json.dumps(self.backend.query(aggregation=NET_AGGREGATION)))
+        url = "{}/{}/_search".format(self.backend.url, self.index)
+        post_mock.assert_called_with(url, headers={'Content-Type': 'application/json'},
+                                     data=json.dumps(self.backend.query("host_netrx", aggregation=NET_AGGREGATION)))
 
     @patch("requests.post")
     def test_mem_max(self, post_mock):
         self.backend.process = Mock()
         self.backend.mem_max()
-        url = "{}/{}/{}/_search".format(self.backend.url, self.index, "host_mem_used")
-        post_mock.assert_called_with(url, data=json.dumps(self.backend.query()))
+        url = "{}/{}/_search".format(self.backend.url, self.index)
+        post_mock.assert_called_with(url, headers={'Content-Type': 'application/json'},
+                                     data=json.dumps(self.backend.query("host_mem_used")))
 
     @patch("requests.post")
     def test_cpu_max(self, post_mock):
@@ -224,9 +235,9 @@ class NodeMetricsBackendTest(TestCase):
             }
         }
         self.backend.cpu_max()
-        url = "{}/{}/{}/_search".format(
-            self.backend.url, self.index, "host_cpu_user,host_cpu_sys,host_cpu_wait")
-        post_mock.assert_called_with(url, data=json.dumps(self.backend.query(aggregation=aggregation)))
+        url = "{}/{}/_search".format(self.backend.url, self.index)
+        post_mock.assert_called_with(url, headers={'Content-Type': 'application/json'}, data=json.dumps(self.backend.query(
+            "host_cpu_user,host_cpu_sys,host_cpu_wait", aggregation=aggregation)))
 
     @patch("requests.post")
     def test_load(self, post_mock):
@@ -237,8 +248,9 @@ class NodeMetricsBackendTest(TestCase):
             }
         }
         self.backend.load()
-        url = "{}/{}/{}/_search".format(self.backend.url, self.index, "host_load1,host_load5,host_load15")
-        post_mock.assert_called_with(url, data=json.dumps(self.backend.query(aggregation=aggregation)))
+        url = "{}/{}/_search".format(self.backend.url, self.index)
+        post_mock.assert_called_with(url, headers={'Content-Type': 'application/json'}, data=json.dumps(self.backend.query(
+            "host_load1,host_load5,host_load15", aggregation=aggregation)))
 
     @patch("requests.post")
     def test_swap(self, post_mock):
@@ -249,8 +261,9 @@ class NodeMetricsBackendTest(TestCase):
             }
         }
         self.backend.swap()
-        url = "{}/{}/{}/_search".format(self.backend.url, self.index, "host_swap_used,host_swap_total")
-        post_mock.assert_called_with(url, data=json.dumps(self.backend.query(aggregation=aggregation)))
+        url = "{}/{}/_search".format(self.backend.url, self.index)
+        post_mock.assert_called_with(url, headers={'Content-Type': 'application/json'}, data=json.dumps(self.backend.query(
+            "host_swap_used,host_swap_total", aggregation=aggregation)))
 
     @patch("requests.post")
     def test_disk(self, post_mock):
@@ -261,8 +274,9 @@ class NodeMetricsBackendTest(TestCase):
             }
         }
         self.backend.disk()
-        url = "{}/{}/{}/_search".format(self.backend.url, self.index, "host_disk_used,host_disk_total")
-        post_mock.assert_called_with(url, data=json.dumps(self.backend.query(aggregation=aggregation)))
+        url = "{}/{}/_search".format(self.backend.url, self.index)
+        post_mock.assert_called_with(url, headers={'Content-Type': 'application/json'}, data=json.dumps(self.backend.query(
+            "host_disk_used,host_disk_total", aggregation=aggregation)))
 
     def test_load_process(self):
         data = {

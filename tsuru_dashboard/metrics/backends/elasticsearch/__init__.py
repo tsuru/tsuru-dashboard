@@ -1,9 +1,13 @@
 from tsuru_dashboard import settings
 from tsuru_dashboard.metrics.backends import base
 
+import logging
 import requests
 import json
 import datetime
+import copy
+
+logger = logging.getLogger(__name__)
 
 
 NET_AGGREGATION = {
@@ -81,13 +85,13 @@ class ElasticSearchFilter(object):
     def metric_filter(self, *filters):
         bool_filter = {
             "bool": {
-                "must": [
+                "filter": [
                     self.timestamp_filter(self.date_range)
                 ]
             }
         }
         if list(filters):
-            bool_filter["bool"]["must"].append({"bool": {"should": list(filters)}})
+            bool_filter["bool"]["filter"].append({"bool": {"should": list(filters)}})
 
         return bool_filter
 
@@ -108,7 +112,7 @@ class ComponentFilter(ElasticSearchFilter):
 
     def component_filter(self, component):
         f = self.metric_filter()
-        f["bool"]["must"].append(self.term_filter("container.keyword", component))
+        f["bool"]["filter"].append(self.term_filter("container.keyword", component))
         return f
 
 
@@ -119,11 +123,11 @@ class AppFilter(ElasticSearchFilter):
 
     def app_filter(self, app, process_name):
         f = self.metric_filter()
-        f["bool"]["must"].append(self.term_filter("app.keyword", app))
+        f["bool"]["filter"].append(self.term_filter("app.keyword", app))
 
         if process_name:
             p = self.term_filter("process.keyword", process_name)
-            f["bool"]["must"].append(p)
+            f["bool"]["filter"].append(p)
         return f
 
 
@@ -141,10 +145,17 @@ class ElasticSearch(object):
         self.filtered_query = query
         self.date_range = date_range
 
-    def post(self, data, metric):
-        url = "{}/{}/{}/_search".format(self.url, self.index, metric)
-        result = requests.post(url, data=json.dumps(data))
-        return result.json()
+    def post(self, data):
+        url = "{}/{}/_search".format(self.url, self.index)
+        query_json = json.dumps(data)
+        result = requests.post(url, data=query_json, headers={
+            'Content-Type': 'application/json',
+        })
+        result_data = result.json()
+        logger.debug(
+            "Elasticsearch request - POST {} - Body: {}\nElasticsearch response {} - {} - {}".format(
+                url, query_json, result.status_code, result.headers, result_data))
+        return result_data
 
     def process(self, data, formatter=None):
         if not formatter:
@@ -170,21 +181,21 @@ class ElasticSearch(object):
         return self.base_process(data, processor)
 
     def cpu_max(self, interval=None):
-        query = self.query(interval=interval)
-        query["query"]["bool"]["must"].append(
+        query = self.query("cpu_max", interval=interval)
+        query["query"]["bool"]["filter"].append(
             {"range": {"value": {"lt": 500}}}
         )
-        response = self.post(query, "cpu_max")
+        response = self.post(query)
         process = self.process(response)
         return process
 
     def mem_max(self, interval=None):
-        query = self.query(interval=interval)
-        return self.process(self.post(query, "mem_max"), formatter=lambda x: x / (1024 * 1024))
+        query = self.query("mem_max", interval=interval)
+        return self.process(self.post(query), formatter=lambda x: x / (1024 * 1024))
 
     def swap(self, interval=None):
-        query = self.query(interval=interval)
-        return self.process(self.post(query, "swap"), formatter=lambda x: x / (1024 * 1024))
+        query = self.query("swap", interval=interval)
+        return self.process(self.post(query), formatter=lambda x: x / (1024 * 1024))
 
     def netrx(self, interval=None):
         return self.net_metric("netrx", interval)
@@ -193,8 +204,8 @@ class ElasticSearch(object):
         return self.net_metric("nettx", interval)
 
     def net_metric(self, kind, interval=None):
-        query = self.query(interval=interval, aggregation=NET_AGGREGATION)
-        return self.base_process(self.post(query, kind), self.net_process)
+        query = self.query(kind, interval=interval, aggregation=NET_AGGREGATION)
+        return self.base_process(self.post(query), self.net_process)
 
     def net_process(self, result, bucket):
         value = 0
@@ -207,8 +218,8 @@ class ElasticSearch(object):
 
     def units(self, interval=None):
         aggregation = {"units": {"cardinality": {"field": "host.keyword"}}}
-        query = self.query(interval=interval, aggregation=aggregation)
-        return self.base_process(self.post(query, "cpu_max"), self.units_process)
+        query = self.query("cpu_max", interval=interval, aggregation=aggregation)
+        return self.base_process(self.post(query), self.units_process)
 
     def units_process(self, result, bucket):
         value = bucket["units"]["value"]
@@ -219,8 +230,8 @@ class ElasticSearch(object):
 
     def requests_min(self, interval=None):
         aggregation = {"sum": {"sum": {"field": "count"}}}
-        query = self.query(interval=interval, aggregation=aggregation)
-        return self.base_process(self.post(query, "response_time"), self.requests_min_process)
+        query = self.query("response_time", interval=interval, aggregation=aggregation)
+        return self.base_process(self.post(query), self.requests_min_process)
 
     def requests_min_process(self, result, bucket):
         value = bucket["sum"]["value"]
@@ -234,8 +245,8 @@ class ElasticSearch(object):
             "stats": {"stats": {"field": "value"}},
             "percentiles": {"percentiles": {"field": "value"}}
         }
-        query = self.query(interval=interval, aggregation=aggregation)
-        return self.base_process(self.post(query, "response_time"), self.response_time_process)
+        query = self.query("response_time", interval=interval, aggregation=aggregation)
+        return self.base_process(self.post(query), self.response_time_process)
 
     def response_time_process(self, result, bucket):
         bucket_max = bucket["stats"]["max"]
@@ -258,7 +269,7 @@ class ElasticSearch(object):
 
     def top_slow(self, interval=None):
         query = {
-            "query": self.filtered_query,
+            "query": self.add_metric_filter(self.filtered_query, "response_time"),
             "size": 0,
             "aggs": {
                 "top": {
@@ -281,7 +292,7 @@ class ElasticSearch(object):
                 }
             }
         }
-        return self.top_slow_process(self.post(query, "response_time"))
+        return self.top_slow_process(self.post(query))
 
     def top_slow_process(self, data):
         buckets = []
@@ -310,8 +321,8 @@ class ElasticSearch(object):
 
     def http_methods(self, interval=None):
         aggregation = {"method": {"terms": {"field": "method"}}}
-        query = self.query(interval=interval, aggregation=aggregation)
-        return self.base_process(self.post(query, "response_time"), self.http_methods_process)
+        query = self.query("response_time", interval=interval, aggregation=aggregation)
+        return self.base_process(self.post(query), self.http_methods_process)
 
     def http_methods_process(self, result, bucket):
         max_value = 0
@@ -335,8 +346,8 @@ class ElasticSearch(object):
 
     def status_code(self, interval=None):
         aggregation = {"status_code": {"terms": {"field": "status_code"}}}
-        query = self.query(interval=interval, aggregation=aggregation)
-        return self.base_process(self.post(query, "response_time"), self.status_code_process)
+        query = self.query("response_time", interval=interval, aggregation=aggregation)
+        return self.base_process(self.post(query), self.status_code_process)
 
     def status_code_process(self, result, bucket):
         max_value = 0
@@ -364,8 +375,8 @@ class ElasticSearch(object):
                 "terms": {"field": "connection.keyword"}
             }
         }
-        query = self.query(interval=interval, aggregation=aggregation)
-        return self.base_process(self.post(query, "connection"), self.connections_process)
+        query = self.query("connection", interval=interval, aggregation=aggregation)
+        return self.base_process(self.post(query), self.connections_process)
 
     def connections_process(self, result, bucket):
         min_value = 0
@@ -404,14 +415,30 @@ class ElasticSearch(object):
             "max": max_value + 1,
         }
 
-    def query(self, interval=None, aggregation=None):
+    def add_metric_filter(self, query_segment, metric):
+        parts = metric.split(',')
+        q = {}
+        if len(parts) == 1:
+            q["term"] = {
+                "metric.keyword": metric,
+            }
+        else:
+            q["terms"] = {
+                "metric.keyword": parts,
+            }
+        query_copy = copy.deepcopy(query_segment)
+        query_copy["bool"]["filter"].append(q)
+        return query_copy
+
+    def query(self, metric, interval=None, aggregation=None):
         if not interval:
             interval = "1m"
 
         if not aggregation:
             aggregation = {"stats": {"stats": {"field": "value"}}}
+
         return {
-            "query": self.filtered_query,
+            "query": self.add_metric_filter(self.filtered_query, metric),
             "size": 0,
             "aggs": {
                 "date": {
@@ -491,18 +518,17 @@ class NodeMetricsBackend(TsuruMetricsBackend):
         }
 
     def load(self, interval=None):
-        query = self.query(interval=interval, aggregation=self.per_type_agg())
-        return self.base_process(self.post(query, "host_load1,host_load5,host_load15"), self.load_process)
+        query = self.query("host_load1,host_load5,host_load15", interval=interval, aggregation=self.per_type_agg())
+        return self.base_process(self.post(query), self.load_process)
 
     def cpu_max(self, interval=None):
-        query = self.query(interval=interval, aggregation=self.per_type_agg())
-        process = self.base_process(self.post(
-            query, "host_cpu_user,host_cpu_sys,host_cpu_wait"), self.cpu_max_process)
+        query = self.query("host_cpu_user,host_cpu_sys,host_cpu_wait", interval=interval, aggregation=self.per_type_agg())
+        process = self.base_process(self.post(query), self.cpu_max_process)
         return process
 
     def mem_max(self, interval=None):
-        query = self.query(interval=interval)
-        return self.process(self.post(query, "host_mem_used"), formatter=lambda x: x / (1024 * 1024))
+        query = self.query("host_mem_used", interval=interval)
+        return self.process(self.post(query), formatter=lambda x: x / (1024 * 1024))
 
     def netrx(self, interval=None):
         return self.net_metric("host_netrx", interval)
@@ -511,12 +537,12 @@ class NodeMetricsBackend(TsuruMetricsBackend):
         return self.net_metric("host_nettx", interval)
 
     def swap(self, interval=None):
-        query = self.query(interval=interval, aggregation=self.per_type_agg())
-        return self.base_process(self.post(query, "host_swap_used,host_swap_total"), self.disk_process)
+        query = self.query("host_swap_used,host_swap_total", interval=interval, aggregation=self.per_type_agg())
+        return self.base_process(self.post(query), self.disk_process)
 
     def disk(self, interval=None):
-        query = self.query(interval=interval, aggregation=self.per_type_agg())
-        return self.base_process(self.post(query, "host_disk_used,host_disk_total"), self.disk_process)
+        query = self.query("host_disk_used,host_disk_total", interval=interval, aggregation=self.per_type_agg())
+        return self.base_process(self.post(query), self.disk_process)
 
 
 class NodesMetricsBackend(TsuruMetricsBackend):
@@ -558,34 +584,32 @@ class NodesMetricsBackend(TsuruMetricsBackend):
         }
 
     def mem_max(self, interval=None):
-        query = self.query(interval=interval, aggregation=self.per_addr_agg())
-        return self.process(self.post(query, "host_mem_used"), formatter=lambda x: x / (1024 * 1024))
+        query = self.query("host_mem_used", interval=interval, aggregation=self.per_addr_agg())
+        return self.process(self.post(query), formatter=lambda x: x / (1024 * 1024))
 
     def cpu_max(self, interval=None):
-        query = self.query(interval=interval, aggregation=self.per_addr_agg())
-        return self.process(self.post(query, "host_cpu_busy"), formatter=lambda x: x * 100)
+        query = self.query("host_cpu_busy", interval=interval, aggregation=self.per_addr_agg())
+        return self.process(self.post(query), formatter=lambda x: x * 100)
 
     def cpu_wait(self, interval=None):
-        query = self.query(interval=interval, aggregation=self.per_addr_agg())
-        return self.process(self.post(query, "host_cpu_wait"), formatter=lambda x: x * 100)
+        query = self.query("host_cpu_wait", interval=interval, aggregation=self.per_addr_agg())
+        return self.process(self.post(query), formatter=lambda x: x * 100)
 
     def swap(self, interval=None):
-        query = self.query(interval=interval, aggregation=self.per_addr_agg())
-        return self.process(self.post(query, "host_swap_used"), formatter=lambda x: x / (1024 * 1024))
+        query = self.query("host_swap_used", interval=interval, aggregation=self.per_addr_agg())
+        return self.process(self.post(query), formatter=lambda x: x / (1024 * 1024))
 
     def disk(self, interval=None):
-        query = self.query(interval=interval, aggregation=self.per_addr_agg())
-        return self.process(self.post(query, "host_disk_used"), formatter=lambda x: x / (1024 * 1024))
+        query = self.query("host_disk_used", interval=interval, aggregation=self.per_addr_agg())
+        return self.process(self.post(query), formatter=lambda x: x / (1024 * 1024))
 
     def netrx(self, interval=None):
-        query = self.query(interval=interval, aggregation=self.per_addr_agg(
-            aggs=NET_AGGREGATION["units"]["aggs"]))
-        return self.process(self.post(query, "host_netrx"), processor=self.net_processor)
+        query = self.query("host_netrx", interval=interval, aggregation=self.per_addr_agg(aggs=NET_AGGREGATION["units"]["aggs"]))
+        return self.process(self.post(query), processor=self.net_processor)
 
     def nettx(self, interval=None):
-        query = self.query(interval=interval, aggregation=self.per_addr_agg(
-            aggs=NET_AGGREGATION["units"]["aggs"]))
-        return self.process(self.post(query, "host_nettx"), processor=self.net_processor)
+        query = self.query("host_nettx", interval=interval, aggregation=self.per_addr_agg(aggs=NET_AGGREGATION["units"]["aggs"]))
+        return self.process(self.post(query), processor=self.net_processor)
 
     def load1(self, interval=None):
         return self.load(mins=1, interval=interval)
@@ -597,8 +621,8 @@ class NodesMetricsBackend(TsuruMetricsBackend):
         return self.load(mins=15, interval=interval)
 
     def load(self, mins, interval=None):
-        query = self.query(interval=interval, aggregation=self.per_addr_agg())
-        return self.process(self.post(query, "host_load" + str(mins)))
+        query = self.query("host_load" + str(mins), interval=interval, aggregation=self.per_addr_agg())
+        return self.process(self.post(query))
 
     def net_processor(self, result, bucket):
         if not result:

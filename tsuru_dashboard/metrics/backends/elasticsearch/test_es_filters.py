@@ -6,7 +6,7 @@ class ElasticSearchFilterTest(TestCase):
     def test_app_filters(self):
         expected_filter = {
             "bool": {
-                "must": [
+                "filter": [
                     {
                         "range": {
                             "@timestamp": {
@@ -30,7 +30,7 @@ class ElasticSearchFilterTest(TestCase):
     def test_component_filters(self):
         expected_filter = {
             "bool": {
-                "must": [
+                "filter": [
                     {
                         "range": {
                             "@timestamp": {
@@ -51,7 +51,7 @@ class ElasticSearchFilterTest(TestCase):
     def test_node_filters(self):
         expected_filter = {
             "bool": {
-                "must": [
+                "filter": [
                     {
                         "range": {
                             "@timestamp": {
