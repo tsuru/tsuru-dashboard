@@ -8,6 +8,9 @@ from .backends.elasticsearch import NodeMetricsBackend, NodesMetricsBackend
 from .backends import get_app_backend, get_tsuru_backend
 import json
 import requests
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class Metric(LoginRequiredView):
@@ -33,6 +36,7 @@ class Metric(LoginRequiredView):
             try:
                 data = getattr(backend, metric)(interval=interval)
             except:
+                logger.exception("unable query backend")
                 continue
             if isinstance(data, dict) and len(data["data"]) > 0:
                 data["source"] = backend.url

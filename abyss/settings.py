@@ -68,18 +68,14 @@ INSTALLED_APPS = [
 
 SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
 
+LOG_LEVEL = 'DEBUG' if DEBUG else 'INFO'
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
-    'filters': {
-        'require_debug_false': {
-            '()': 'django.utils.log.RequireDebugFalse'
-        }
-    },
     'handlers': {
         'console': {
-            'level': 'INFO',
-            'filters': ['require_debug_false'],
+            'level': LOG_LEVEL,
             'class': 'logging.StreamHandler',
             'formatter': 'verbose'
         }
@@ -92,12 +88,17 @@ LOGGING = {
     'loggers': {
         'django': {
             'handlers': ['console'],
-            'level': 'INFO',
+            'level': LOG_LEVEL,
             'propagate': True,
         },
         'dashboard': {
             'handlers': ['console'],
-            'level': 'INFO',
+            'level': LOG_LEVEL,
+            'propagate': True,
+        },
+        'tsuru_dashboard': {
+            'handlers': ['console'],
+            'level': LOG_LEVEL,
             'propagate': True,
         },
     }

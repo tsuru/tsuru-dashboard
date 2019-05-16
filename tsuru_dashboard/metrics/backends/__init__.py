@@ -31,16 +31,14 @@ def get_app_backend(app_name, token, **kwargs):
     if envs and "METRICS_PROMETHEUS_HOST" in envs:
         url = envs["METRICS_PROMETHEUS_HOST"]
         backends.append(prometheus.AppBackend(app=app, url=url, **kwargs))
+    elif settings.PROMETHEUS_HOST:
+        url = settings.PROMETHEUS_HOST
+        backends.append(prometheus.AppBackend(app=app, url=url, **kwargs))
 
     if envs and "METRICS_ELASTICSEARCH_HOST" in envs:
         url = envs["METRICS_ELASTICSEARCH_HOST"]
         backends.append(elasticsearch.AppBackend(app=app, url=url, **kwargs))
-
-    if settings.PROMETHEUS_HOST:
-        url = settings.PROMETHEUS_HOST
-        backends.append(prometheus.AppBackend(app=app, url=url, **kwargs))
-
-    if settings.ELASTICSEARCH_HOST:
+    elif settings.ELASTICSEARCH_HOST:
         url = settings.ELASTICSEARCH_HOST
         backends.append(elasticsearch.AppBackend(app=app, url=url, **kwargs))
 
