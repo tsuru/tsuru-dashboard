@@ -11,7 +11,7 @@ deps:
 python-test: clean deps
 	@pipenv run coverage run manage.py test
 	@pipenv run coverage report --omit="*/tests/*,manage.py,abyss/settings.py" --include="./*" -m
-	@pipenv run flake8 --max-line-length 130 .
+	@pipenv run flake8 --max-line-length 500 .
 
 run: clean deps
 	@DEBUG=true pipenv run ./manage.py runserver
