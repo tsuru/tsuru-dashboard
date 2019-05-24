@@ -12,7 +12,7 @@ describe('AppList', () => {
     expect(wrapper.find(".app-list").length).toBe(1);
   });
 
-  it ('should be composed by AppSearch and AppTable', () => {
+  it('should be composed by AppSearch and AppTable', () => {
     const wrapper = shallow(
       <AppList url="http://localhost:80/apps/list.json" />
     );
@@ -21,11 +21,11 @@ describe('AppList', () => {
     expect(wrapper.find(AppTable).length).toBe(1);
   });
 
-  it ('should contain Loading if its loading', () => {
+  it('should contain Loading if its loading', () => {
     const wrapper = shallow(
       <AppList url="http://localhost:80/apps/list.json" />
     );
-    wrapper.setState({loading: true})
+    wrapper.setState({ loading: true })
     expect(wrapper.find(Loading).length).toBe(1);
   });
 
@@ -35,39 +35,90 @@ describe('AppList', () => {
       <AppList url="http://localhost:80/apps/list.json" />
     )
 
-    $.ajax.mock.calls[0][0].success({apps: [{name: "appname"}, {name: "otherapp"}]});
+    $.ajax.mock.calls[0][0].success({
+      apps: [
+        { name: "appname", teamowner: "team-A", pool: "dev", plan: { name: "small" } },
+        { name: "other", teamowner: "team-B", pool: "dev", plan: { name: "small" } }
+      ]
+    });
 
-    expect({apps: [{name: "appname"}, {name: "otherapp"}], cached: [{name: "appname"}, {name: "otherapp"}], loading: false, term: ''}).toEqual(wrapper.state());
 
+    const expected = {
+      apps: [
+        { name: "appname", teamowner: "team-A", pool: "dev", plan: { name: "small" } },
+        { name: "other", teamowner: "team-B", pool: "dev", plan: { name: "small" } }
+      ],
+      cached: [
+        { name: "appname", teamowner: "team-A", pool: "dev", plan: { name: "small" } },
+        { name: "other", teamowner: "team-B", pool: "dev", plan: { name: "small" } }
+      ],
+      loading: false,
+      term: ''
+    }
+
+    expect(expected).toEqual(wrapper.state());
     var items = wrapper.find("td");
-    expect(items.length).toBe(2);
+    expect(items.length).toBe(8);
   });
 
   it('should filter list by app name', () => {
     $.ajax = jest.fn((obj) => {
-      obj.success({apps: [{name: "appname"}, {name: "other"}]});
+      obj.success({
+        apps: [
+          { name: "appname", teamowner: "team-A", pool: "dev", plan: { name: "small" } },
+          { name: "other", teamowner: "team-B", pool: "dev", plan: { name: "small" } }
+        ]
+      });
     });
     const wrapper = mount(
       <AppList url="http://localhost:80/apps/list.json" />
     )
 
-    wrapper.find("input").simulate('change', {target: {value: "oth"}});
-    expect({apps: [{name: "other"}], cached: [{name: "appname"}, {name: "other"}], loading: false, term: ''}).toEqual(wrapper.state());
-    expect(wrapper.find("td").length).toBe(1);
+    const expected = {
+      apps: [
+        { name: "other", teamowner: "team-B", pool: "dev", plan: { name: "small" } }
+      ],
+      cached: [
+        { name: "appname", teamowner: "team-A", pool: "dev", plan: { name: "small" } },
+        { name: "other", teamowner: "team-B", pool: "dev", plan: { name: "small" } }
+      ],
+      loading: false,
+      term: ''
+    }
+
+    wrapper.find("input").simulate('change', { target: { value: "oth" } });
+    expect(expected).toEqual(wrapper.state());
+    expect(wrapper.find("td").length).toBe(4);
   });
 
   it('should list all on empty search', () => {
     $.ajax = jest.fn((obj) => {
-      obj.success({apps: [{name: "appname"}, {name: "other"}]});
+      obj.success({
+        apps: [
+          { name: "appname", teamowner: "team-A", pool: "dev", plan: { name: "small" } },
+          { name: "other", teamowner: "team-B", pool: "dev", plan: { name: "small" } }
+        ]
+      });
+
+      const wrapper = mount(
+        <AppList url="http://localhost:80/apps/list.json" />
+      )
+
+      const expected = {
+        apps: [
+          { name: "other", teamowner: "team-B", pool: "dev", plan: { name: "small" } }
+        ],
+        cached: [
+          { name: "appname", teamowner: "team-A", pool: "dev", plan: { name: "small" } },
+          { name: "other", teamowner: "team-B", pool: "dev", plan: { name: "small" } }
+        ],
+        loading: false,
+        term: ''
+      };
+
+      wrapper.find("input").simulate('change', { target: { value: "" } });
+      expect(expected).toEqual(wrapper.state());
+      expect(wrapper.find("td").length).toBe(8);
     });
-
-    const wrapper = mount(
-      <AppList url="http://localhost:80/apps/list.json" />
-    )
-
-    wrapper.find("input").simulate('change', {target: {value: ""}});
-    expect({apps: [{name: "appname"}, {name: "other"}], cached: [{name: "appname"}, {name: "other"}], loading: false, term: ''}).toEqual(wrapper.state());
-	  expect(wrapper.find("td").length).toBe(2);
   });
-
 });

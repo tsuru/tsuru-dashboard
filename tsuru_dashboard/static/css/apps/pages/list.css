@@ -23,6 +23,56 @@ i.icono-plus {
   clear: both;
 }
 
-.table {
-    clear: both;
+.app-list.table {
+  clear: both;
+  font-family: Open Sans;
+  font-size: 14px;
+  margin-top: 20px;
+}
+
+.app-list.table tr {
+  border-bottom: 2px solid #ddd;
+}
+
+.app-list.table thead {
+  background-color: #ddd;
+  color: #333;
+  font-weight: bold;
+  line-height: 1.1;
+}
+
+
+.app-list.table th {
+  padding: 10px 0 10px 7px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.app-list.table td {
+  padding: 0;
+}
+
+.app-list.table td a {
+  display: block;
+  padding: 5px;
+  color: inherit;
+}
+
+.app-list.table td.status-col a {
+  padding: 12px 0 12px 14px;
+}
+
+.app-list.table td a:hover,
+.app-list.table td a:visited,
+.app-list.table td a:focus {
+  text-decoration: none;
+  color: inherit;
+}
+
+.app-list.table tr:hover a {
+  color: #fff;
+}
+
+.app-list.table tr:hover td {
+  background-color: #337ab7;
 }
