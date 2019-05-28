@@ -21,3 +21,4 @@ coverage
 build
 dist
 tsuru_dashboard.egg-info
+package-lock.json
