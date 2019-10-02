@@ -6,7 +6,7 @@ import { Loading } from "../js/src/components/loading";
 
 describe('Metrics', () => {
   beforeEach(() => {
-    $.plot = jest.genMockFunction();
+    $.plot = jest.fn();
   });
 
   it('has metrics as className', () => {
@@ -72,7 +72,7 @@ describe('Metrics', () => {
   });
 
   it('call onFromChange when from changes', () => {
-    var onChange = jest.genMockFunction();
+    var onChange = jest.fn();
     const metrics = mount(
       <Metrics targetName={"myApp"} onFromChange={onChange} />
     );
@@ -149,9 +149,11 @@ describe('GraphContainer', () => {
     },
     min: 0
   };
+
   beforeEach(() => {
-    $.plot = jest.genMockFunction();
-    $.getJSON = jest.fn((url, callback) => {
+    jest.useFakeTimers();
+    $.plot = jest.fn();
+    $.getJSON = jest.fn((_, callback) => {
       callback(data);
     });
   });
@@ -163,7 +165,7 @@ describe('GraphContainer', () => {
   });
 
   it('fetches the data url', () => {
-    var loadMock = jest.genMockFunction();
+    var loadMock = jest.fn();
     const graphContainer = mount(
       <GraphContainer data_url={"/metrics/app/myApp/?metric=cpu_max&interval=1m&date_range=1h&process_name=myProcess"}
         onLoad={loadMock}
@@ -223,7 +225,7 @@ describe('GraphContainer', () => {
 
     graphContainer.setProps({ data_url: "/metrics?call=1", refresh: false});
     expect(clearInterval.mock.calls.length).toBe(1);
-  })
+  });
 
   it('re-fetches data when refresh is on', () => {
     const graphContainer = mount(
@@ -238,7 +240,7 @@ describe('GraphContainer', () => {
   });
 
   it('doesnt renders when no data is fetched', () => {
-    $.getJSON = jest.fn((url, callback) => {
+    $.getJSON = jest.fn((_, callback) => {
       callback({data: {}});
     });
     const graphContainer = mount(<GraphContainer data_url={"/"}/>);
@@ -253,13 +255,12 @@ describe('GraphContainer', () => {
     graphContainer.unmount();
     expect(clearInterval.mock.calls.length).toBe(1);
   });
-
 });
 
 describe('Graph', () => {
 
   beforeEach(() => {
-    $.plot = jest.genMockFunction();
+    $.plot = jest.fn();
   });
 
   it('has graph as className', () => {

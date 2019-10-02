@@ -7,7 +7,7 @@ import { Metrics } from "../js/src/components/metrics";
 describe('ComponentList', () => {
   it('fetches the components url', () => {
     var ajax = $.ajax;
-    $.ajax = jest.genMockFunction();
+    $.ajax = jest.fn();
     const componentList = mount(
       <ComponentList url={"components.json"}/>
     );
@@ -24,7 +24,7 @@ describe('ComponentList', () => {
   });
 
   it('renders a component for each one that was fetched', () => {
-    $.getJSON= jest.genMockFunction();
+    $.getJSON= jest.fn();
     var ajax = $.ajax;
     $.ajax = jest.fn((obj) => {
       obj.success({components: ["registry", "big-sibling"]});
@@ -42,7 +42,7 @@ describe('ComponentList', () => {
 describe('Component', () => {
   it('renders Metrics for the component', () => {
     var ajax = $.ajax;
-    $.ajax = jest.genMockFunction();
+    $.ajax = jest.fn();
     const component = mount(
       <Component name={"big-sibling"}/>
     );

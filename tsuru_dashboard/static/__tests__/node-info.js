@@ -12,7 +12,7 @@ describe('NodeInfo', () => {
   });
 
   it('fetches the url from node data', () => {
-    $.ajax = jest.genMockFunction();
+    $.ajax = jest.fn();
     const nodeInfo = mount(<NodeInfo url="url"/>);
     expect($.ajax.mock.calls.length).toBe(1);
     expect($.ajax.mock.calls[0][0].url).toBe("url");
@@ -32,7 +32,7 @@ describe('NodeInfo', () => {
         },
       }
     };
-    $.ajax = jest.genMockFunction().mockImplementation((p) => {
+    $.ajax = jest.fn().mockImplementation((p) => {
       p.success(data)
     });
     const nodeInfo = mount(<NodeInfo url="url"/>);
@@ -93,7 +93,7 @@ describe('Node', () => {
   });
 
   it('renders <MetricsTab/>', () => {
-    $.ajax = jest.genMockFunction();
+    $.ajax = jest.fn();
     const node = mount(<Node node={nodeData}/>);
     node.find(Tab).at(2).find("a").simulate("click");
     expect(node.find(MetricsTab).length).toBe(1);
@@ -111,7 +111,7 @@ describe('Node', () => {
       "127.0.0.1/",
       "127.0.0.1"
     ];
-    $.ajax = jest.genMockFunction();
+    $.ajax = jest.fn();
     for (var u of urls) {
       let data = {
         info: {
@@ -274,7 +274,7 @@ describe('DeleteNodeConfirmation', () => {
   });
 
   it('calls onClose when dialog is closed', () => {
-    var onClose = jest.genMockFunction();
+    var onClose = jest.fn();
     const confirmation = shallow(
       <DeleteNodeConfirmation addr="http://127.0.0.1" onClose={onClose}/>
     );
@@ -284,7 +284,7 @@ describe('DeleteNodeConfirmation', () => {
   });
 
   it('submit form if is confirmed', () => {
-    var mockEvent = {preventDefault: jest.genMockFunction()};
+    var mockEvent = {preventDefault: jest.fn()};
     const confirmation = shallow(
       <DeleteNodeConfirmation addr="http://127.0.0.1"/>
     );
