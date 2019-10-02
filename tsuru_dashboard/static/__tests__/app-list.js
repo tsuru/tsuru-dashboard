@@ -30,7 +30,7 @@ describe('AppList', () => {
   });
 
   it('should load apps on render', () => {
-    $.ajax = jest.genMockFunction();
+    $.ajax = jest.fn();
     const wrapper = mount(
       <AppList url="http://localhost:80/apps/list.json" />
     )

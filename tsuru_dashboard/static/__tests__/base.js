@@ -27,7 +27,7 @@ describe('Tab', () => {
   });
 
   it('triggers setActive on click', () => {
-    var setActive = jest.genMockFunction();
+    var setActive = jest.fn();
     const tab = mount(<Tab name={"tab"} active={false} setActive={setActive}/>);
     expect(setActive.mock.calls.length).toBe(0);
     tab.find("a").simulate("click");

@@ -65,7 +65,7 @@ describe('AppRemoveConfirmation', () => {
   });
 
   it('calls onClose when dialog is closed', () => {
-    var onClose = jest.genMockFunction();
+    var onClose = jest.fn();
     const confirmation = shallow(
       <AppRemoveConfirmation app="myapp" onClose={onClose}/>
     );
@@ -75,7 +75,7 @@ describe('AppRemoveConfirmation', () => {
   });
 
   it('call appRemove if is confirmed', () => {
-    var appRemove = jest.genMockFunction();
+    var appRemove = jest.fn();
     const confirmation = shallow(
       <AppRemoveConfirmation app="myapp"/>
     );
@@ -126,7 +126,7 @@ describe('AppUnlockConfirmation', () => {
   });
 
   it('calls onClose when dialog is closed', () => {
-    var onClose = jest.genMockFunction();
+    var onClose = jest.fn();
     const confirmation = shallow(
       <AppUnlockConfirmation app="myapp" onClose={onClose}/>
     );
@@ -136,7 +136,7 @@ describe('AppUnlockConfirmation', () => {
   });
 
   it('call appUnlock if is confirmed', () => {
-    var appUnlock = jest.genMockFunction();
+    var appUnlock = jest.fn();
     const confirmation = shallow(
       <AppUnlockConfirmation app="myapp"/>
     );
