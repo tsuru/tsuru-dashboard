@@ -5,7 +5,6 @@
   "main": "index.js",
   "dependencies": {},
   "devDependencies": {
-    "merge": "^1.2.1",
     "babel": "^6.23.0",
     "babel-jest": "^14.1.0",
     "babel-loader": "^6.4.1",
@@ -22,6 +21,7 @@
     "jest-cli": "^24.0.0",
     "jquery": "^3.4.0",
     "js-cookie": "^2.2.0",
+    "merge": "^1.2.1",
     "moment": "^2.24.0",
     "oboe": "^2.1.4",
     "react": "^15.6.2",
@@ -30,7 +30,7 @@
     "react-datetime": "^2.16.3",
     "react-dom": "^15.6.2",
     "reactify": "^1.1.1",
-    "sinon": "^4.5.0"
+    "sinon": "7.5.0"
   },
   "scripts": {
     "test": "jest --silent"
