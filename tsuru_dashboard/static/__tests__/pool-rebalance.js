@@ -25,18 +25,15 @@ describe("PoolRebalance", () => {
 
     it("enables the confirmation button when the correct pool name is set", () => {
       const poolRebalance = mount(<PoolRebalance poolName="mypool" />);
-      const input = poolRebalance.find("input");
-      expect(input.length).toEqual(1);
-      const button = poolRebalance.find(".btn-rebalance");
-      expect(button.length).toEqual(1);
+      const input = poolRebalance.find("input").at(0);
 
-      input.node.value = "wrong pool name";
+      input.instance().value = "wrong pool name";
       input.simulate("change", input);
-      expect(button.props().disabled).toEqual("disabled");
+      expect(poolRebalance.find(".btn-rebalance").at(0).props().disabled).toEqual("disabled");
 
-      input.node.value = "mypool";
+      input.instance().value = "mypool";
       input.simulate("change", input);
-      expect(button.props().disabled).toEqual("");
+      expect(poolRebalance.find(".btn-rebalance").at(0).props().disabled).toEqual("");
     });
 
     it("hides after clicking the cancel button", () => {
@@ -56,7 +53,7 @@ describe("PoolRebalance", () => {
       expect(input.length).toEqual(1);
       const button = poolRebalance.find(".btn-rebalance");
       expect(button.length).toEqual(1);
-      input.node.value = "mypool";
+      input.at(0).instance().value = "mypool";
       input.simulate("change", input);
 
       button.simulate("click");
@@ -79,7 +76,7 @@ describe("PoolRebalance", () => {
 
     it("makes a request to rebalance route", () => {
       const poolRebalance = mount(<PoolRebalance url="/rebalance" />);
-      
+
       poolRebalance.instance().startRebalance();
       expect(requests.length).toEqual(1);
       expect(requests[0].method).toEqual("POST");
@@ -89,9 +86,10 @@ describe("PoolRebalance", () => {
     it("outputs the API response stream", () => {
       const poolRebalance = mount(<PoolRebalance url="/rebalance" />);
       poolRebalance.instance().startRebalance();
+      poolRebalance.update();
       const output = poolRebalance.find("Output");
       expect(output.length).toEqual(1);
-      expect(output.text()).toEqual("Wait until rebalance is started.");
+      expect(output.at(0).text()).toEqual("Wait until rebalance is started.");
 
       requests[0].respond(200, {"Content-Type": "application/x-json-stream"}, "starting rebalance");
       expect(output.text()).toEqual("starting rebalance");

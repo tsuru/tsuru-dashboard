@@ -95,7 +95,7 @@ GraphContainer.defaultProps = {
 
 export class Graph extends Component {
   getOptions() {
-    var seriesCount = Object.keys(this.props.model).length
+    var seriesCount = Object.keys(this.props.model || {}).length
     var showLegend = this.props.legend && seriesCount < 10
     return {
       xaxis: {

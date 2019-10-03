@@ -121,7 +121,6 @@ export class AppList extends Component {
           this.appsByName(this.state.term);
           this.setState({ term: '' });
         }
-
       }
     });
   }
