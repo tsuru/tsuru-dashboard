@@ -1,6 +1,6 @@
 import React from "react";
 import { shallow, mount } from "enzyme";
-import { AppList, AppSearch, AppTable } from "../js/src/components/list";
+import { AppList, AppTable } from "../js/src/components/list";
 import { Loading } from "../js/src/components/loading";
 import $ from "jquery";
 
@@ -10,15 +10,6 @@ describe('AppList', () => {
       <AppList url="http://localhost:80/apps/list.json" />
     );
     expect(wrapper.find(".app-list").length).toBe(1);
-  });
-
-  it('should be composed by AppSearch and AppTable', () => {
-    const wrapper = shallow(
-      <AppList url="http://localhost:80/apps/list.json" />
-    );
-    expect(wrapper.find(".app-list").children().length).toBe(2);
-    expect(wrapper.find(AppSearch).length).toBe(1);
-    expect(wrapper.find(AppTable).length).toBe(1);
   });
 
   it('should contain Loading if its loading', () => {
@@ -42,7 +33,6 @@ describe('AppList', () => {
       ]
     });
 
-
     const expected = {
       apps: [
         { name: "appname", teamowner: "team-A", pool: "dev", plan: { name: "small" } },
@@ -56,9 +46,10 @@ describe('AppList', () => {
       term: ''
     }
 
+    wrapper.update();
     expect(expected).toEqual(wrapper.state());
-    var items = wrapper.find("td");
-    expect(items.length).toBe(8);
+    expect(wrapper.find(AppTable).length).toBe(1);
+    expect(wrapper.find("td").length).toBe(8);
   });
 
   it('should filter list by app name', () => {

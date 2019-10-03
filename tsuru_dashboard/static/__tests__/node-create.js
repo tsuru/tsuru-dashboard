@@ -41,9 +41,11 @@ describe('NodeCreate', () => {
   it('metadata items', () => {
     const nodeCreate = mount(<NodeCreate />);
 
-    nodeCreate.get(0).addMetadata("key", "value");
-    nodeCreate.get(0).addMetadata("anotherkey", "v");
+    const instance = nodeCreate.instance();
+    instance.addMetadata("key", "value");
+    instance.addMetadata("anotherkey", "v");
 
+    nodeCreate.update();
     var items = nodeCreate.find(".meta-item");
     expect(items.length).toEqual(2);
 

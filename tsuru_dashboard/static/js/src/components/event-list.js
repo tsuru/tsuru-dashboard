@@ -6,6 +6,12 @@ import DateTimeField from './datetime-field';
 import styles from './event-list.css';
 
 
+if (typeof window.jQuery === 'undefined') {
+  var $ = require('jquery');
+} else {
+  var $ = window.jQuery;
+}
+
 export class EventFilters extends Component {
   constructor(props) {
     super(props);

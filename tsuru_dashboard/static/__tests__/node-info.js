@@ -231,24 +231,26 @@ describe('DeleteNodeBtn', () => {
 });
 
 describe('DeleteNodeConfirmation', () => {
-
   it('has modal as className', () => {
-    const confirmation = shallow(
+    $.prototype.modal = jest.fn();
+    const confirmation = mount(
       <DeleteNodeConfirmation addr="http://127.0.0.1"/>
     );
     expect(confirmation.find(".modal").length).toBe(1);
   });
 
   it('is not confirmed when rendered', () => {
-    const confirmation = shallow(
+    $.prototype.modal = jest.fn();
+    const confirmation = mount(
       <DeleteNodeConfirmation addr="http://127.0.0.1"/>
     );
     expect(confirmation.find(".btn-remove").props().disabled).toBe(true);
     expect(confirmation.state().isConfirmed).toBe(false);
   })
 
-  it('is not confirmed if confirmatio not fully typed', () => {
-    const confirmation = shallow(
+  it('is not confirmed if confirmation not fully typed', () => {
+    $.prototype.modal = jest.fn();
+    const confirmation = mount(
       <DeleteNodeConfirmation addr="http://127.0.0.1"/>
     );
     confirmation.find(".remove-confirmation").simulate("change", {
@@ -261,7 +263,8 @@ describe('DeleteNodeConfirmation', () => {
   });
 
   it('is confirmed when confirmation is fully entered', () => {
-    const confirmation = shallow(
+    $.prototype.modal = jest.fn();
+    const confirmation = mount(
       <DeleteNodeConfirmation addr="http://127.0.0.1"/>
     );
     confirmation.find(".remove-confirmation").simulate("change", {
@@ -274,8 +277,9 @@ describe('DeleteNodeConfirmation', () => {
   });
 
   it('calls onClose when dialog is closed', () => {
+    $.prototype.modal = jest.fn();
     var onClose = jest.fn();
-    const confirmation = shallow(
+    const confirmation = mount(
       <DeleteNodeConfirmation addr="http://127.0.0.1" onClose={onClose}/>
     );
     confirmation.find(".close").simulate("click", { preventDefault() {}});
@@ -284,8 +288,9 @@ describe('DeleteNodeConfirmation', () => {
   });
 
   it('submit form if is confirmed', () => {
+    $.prototype.modal = jest.fn();
     var mockEvent = {preventDefault: jest.fn()};
-    const confirmation = shallow(
+    const confirmation = mount(
       <DeleteNodeConfirmation addr="http://127.0.0.1"/>
     );
     confirmation.find(".remove-confirmation").simulate("change", {
@@ -298,7 +303,8 @@ describe('DeleteNodeConfirmation', () => {
   });
 
   it('handle changes on the checkboxes', () => {
-    const confirmation = shallow(
+    $.prototype.modal = jest.fn();
+    const confirmation = mount(
       <DeleteNodeConfirmation addr="http://127.0.0.1"/>
     );
     expect(confirmation.state().rebalance).toBe(true);

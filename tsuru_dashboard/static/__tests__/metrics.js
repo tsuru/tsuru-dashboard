@@ -60,10 +60,12 @@ describe('Metrics', () => {
       "/metrics/app/myApp/?metric=cpu_max&interval=1m&date_range=1h"
     );
     metrics.find('select[name="from"]').simulate('change', {target: { value: "3h"}});
+    container = metrics.find(GraphContainer);
     expect(container.props().data_url).toBe(
       "/metrics/app/myApp/?metric=cpu_max&interval=1m&date_range=3h"
     );
     metrics.find('select[name="serie"]').simulate('change', {target: { value: "1d"}});
+    container = metrics.find(GraphContainer);
     expect(container.props().data_url).toBe(
       "/metrics/app/myApp/?metric=cpu_max&interval=1d&date_range=3h"
     );
@@ -270,7 +272,7 @@ describe('Graph', () => {
   });
 
   it('renders a div with the specified id', () => {
-    const graph = shallow(<Graph id="123"/>);
+    const graph = shallow(<Graph id="123" />);
 
     expect(graph.find("div").props().id).toBe("123");
   });

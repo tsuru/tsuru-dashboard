@@ -28,7 +28,7 @@ export class AppRemove extends Component {
 
   handleCancel(e) {
     this.setState({isOnConfirmation: false});
-  }  
+  }
 
   render() {
     return (
@@ -47,50 +47,50 @@ export class AppRemove extends Component {
 export class AppRemoveConfirmation extends Component {
     constructor(props) {
       super(props);
-  
+
       this.state = {
         confirmation: "",
         isConfirmed: false
       }
-  
+
       this.handleConfirmationChange = this.handleConfirmationChange.bind(this);
       this.handleChange = this.handleChange.bind(this);
       this.handleClose = this.handleClose.bind(this);
       this.appRemove = this.appRemove.bind(this);
     }
-  
+
     componentDidMount() {
       var domElem = $(ReactDOM.findDOMNode(this));
       if(domElem !== undefined){
         domElem.modal('show');
       }
     }
-  
+
     handleConfirmationChange(e) {
       var state = this.state;
       state.confirmation = e.target.value;
       state.isConfirmed = state.confirmation === this.props.app;
       this.setState(state);
     }
-  
+
     handleChange(e) {
       var state = this.state;
       state[e.target.name] = !state[e.target.name];
       this.setState(state);
     }
-  
+
     handleClose(e) {
       e.preventDefault();
       if(this.props.onClose !== undefined) {
         this.props.onClose(e);
       }
     }
-  
+
     appRemove() {
       var app = this.props.app;
       var data = []
       var url = "/apps/"+app+"/remove/"
-      
+
       $.ajax({
         type: "DELETE",
         url: url,
@@ -106,7 +106,7 @@ export class AppRemoveConfirmation extends Component {
         }
       });
     }
-  
+
     render() {
       return (
         <div id="confirmation" className="modal fade" role="dialog" aria-labelledby="myModalLabel">
@@ -179,7 +179,7 @@ export class AppUnlockConfirmation extends Component {
     var app = this.props.app;
     var data = []
     var url = "/apps/"+app+"/unlock/"
-    
+
     $.ajax({
       type: "POST",
       url: url,

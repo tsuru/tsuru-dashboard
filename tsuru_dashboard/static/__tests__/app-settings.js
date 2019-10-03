@@ -2,7 +2,6 @@ import React from "react";
 import { shallow, mount } from "enzyme";
 import $ from "jquery";
 import { AppRemove, AppRemoveConfirmation, AppUnlockConfirmation } from "../js/src/components/app-settings";
-import { Tab, Tabs } from "../js/src/components/base";
 
 
 describe('AppRemove', () => {
@@ -22,25 +21,28 @@ describe('AppRemove', () => {
 });
 
 describe('AppRemoveConfirmation', () => {
+  beforeEach(() => {
+    $.prototype.modal = jest.fn();
+  });
 
   it('has modal as className', () => {
-    const confirmation = shallow(
-      <AppRemoveConfirmation app="myapp"/>
+    const confirmation = mount(
+      <AppRemoveConfirmation app="myapp" />
     );
     expect(confirmation.find(".modal").length).toBe(1);
   });
 
   it('is not confirmed when rendered', () => {
-    const confirmation = shallow(
-      <AppRemoveConfirmation app="myapp"/>
+    const confirmation = mount(
+      <AppRemoveConfirmation app="myapp" />
     );
     expect(confirmation.find(".btn-remove").props().disabled).toBe(true);
     expect(confirmation.state().isConfirmed).toBe(false);
   })
 
   it('is not confirmed if confirmation not fully typed', () => {
-    const confirmation = shallow(
-      <AppRemoveConfirmation app="myapp"/>
+    const confirmation = mount(
+      <AppRemoveConfirmation app="myapp" />
     );
     confirmation.find(".remove-confirmation").simulate("change", {
       target: {
@@ -52,7 +54,7 @@ describe('AppRemoveConfirmation', () => {
   });
 
   it('is confirmed when confirmation is fully entered', () => {
-    const confirmation = shallow(
+    const confirmation = mount(
       <AppRemoveConfirmation app="myapp"/>
     );
     confirmation.find(".remove-confirmation").simulate("change", {
@@ -66,7 +68,7 @@ describe('AppRemoveConfirmation', () => {
 
   it('calls onClose when dialog is closed', () => {
     var onClose = jest.fn();
-    const confirmation = shallow(
+    const confirmation = mount(
       <AppRemoveConfirmation app="myapp" onClose={onClose}/>
     );
     confirmation.find(".close").simulate("click", { preventDefault() {}});
@@ -76,7 +78,7 @@ describe('AppRemoveConfirmation', () => {
 
   it('call appRemove if is confirmed', () => {
     var appRemove = jest.fn();
-    const confirmation = shallow(
+    const confirmation = mount(
       <AppRemoveConfirmation app="myapp"/>
     );
     confirmation.find(".remove-confirmation").simulate("change", {
@@ -90,9 +92,12 @@ describe('AppRemoveConfirmation', () => {
 });
 
 describe('AppUnlockConfirmation', () => {
+  beforeEach(() => {
+    $.prototype.modal = jest.fn();
+  });
 
   it('is not confirmed when rendered', () => {
-    const confirmation = shallow(
+    const confirmation = mount(
       <AppUnlockConfirmation app="myapp"/>
     );
     expect(confirmation.find(".btn-unlock").props().disabled).toBe(true);
@@ -100,7 +105,7 @@ describe('AppUnlockConfirmation', () => {
   })
 
   it('is not confirmed if confirmation not fully typed', () => {
-    const confirmation = shallow(
+    const confirmation = mount(
       <AppUnlockConfirmation app="myapp"/>
     );
     confirmation.find(".unlock-confirmation").simulate("change", {
@@ -113,7 +118,7 @@ describe('AppUnlockConfirmation', () => {
   });
 
   it('is confirmed when confirmation is fully entered', () => {
-    const confirmation = shallow(
+    const confirmation = mount(
       <AppUnlockConfirmation app="myapp"/>
     );
     confirmation.find(".unlock-confirmation").simulate("change", {
@@ -127,7 +132,7 @@ describe('AppUnlockConfirmation', () => {
 
   it('calls onClose when dialog is closed', () => {
     var onClose = jest.fn();
-    const confirmation = shallow(
+    const confirmation = mount(
       <AppUnlockConfirmation app="myapp" onClose={onClose}/>
     );
     confirmation.find(".close").simulate("click", { preventDefault() {}});
@@ -137,7 +142,7 @@ describe('AppUnlockConfirmation', () => {
 
   it('call appUnlock if is confirmed', () => {
     var appUnlock = jest.fn();
-    const confirmation = shallow(
+    const confirmation = mount(
       <AppUnlockConfirmation app="myapp"/>
     );
     confirmation.find(".unlock-confirmation").simulate("change", {
