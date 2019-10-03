@@ -15,7 +15,8 @@
     "backstage-modal": "^0.1.0",
     "backstage-switch-button": "^0.2.0",
     "browserify": "^13.3.0",
-    "enzyme": "^2.9.1",
+    "enzyme": "3.10.0",
+    "enzyme-adapter-react-15": "^1.4.0",
     "fuzzy": "^0.1.1",
     "jest": "^24.0.0",
     "jest-cli": "^24.0.0",
@@ -29,6 +30,7 @@
     "react-addons-test-utils": "^15.6.2",
     "react-datetime": "^2.16.3",
     "react-dom": "^15.6.2",
+    "react-test-renderer": "^15.5.0",
     "reactify": "^1.1.1",
     "sinon": "7.5.0"
   },
@@ -45,6 +47,9 @@
       "js",
       "jsx",
       "json"
+    ],
+    "setupFilesAfterEnv": [
+      "./jest/setup.js"
     ]
   },
   "repository": {
