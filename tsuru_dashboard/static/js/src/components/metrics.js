@@ -293,9 +293,6 @@ class TimeRangeFilter extends Component {
           <option value="6h">last 6 hours</option>
           <option value="12h">last 12 hours</option>
           <option value="1d">last 24 hours</option>
-          <option value="3d">last 3 days</option>
-          <option value="1w">last 1 week</option>
-          <option value="2w">last 2 weeks</option>
         </select>
       </div>
     )
