@@ -11,11 +11,17 @@
 {% block app-content %}
 <div class="row">
     <div class="col-md-12">
-        <div id="resources"></div>
+      <div id="resources">
+        {% if grafana_url %}
+          <iframe class="grafana_frame" src="{{ grafana_url }}"></iframe>
+        {% endif %}
+      </div>
     </div>
 </div>
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static "js/pages/resources.js" %}"></script>
+  {% if not grafana_url %}
+    <script src="{% static "js/pages/resources.legacy.js" %}"></script>
+  {% endif %}
 {% endblock %}
