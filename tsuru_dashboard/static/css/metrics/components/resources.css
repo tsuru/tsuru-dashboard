@@ -1,0 +1,7 @@
+.grafana_frame {
+    display: block;
+    background: #000;
+    border: none;
+    width: 100%;
+    height: 4000px;
+}

@@ -1,0 +1,21 @@
+{% extends "apps/base.html" %}
+{% load staticfiles %}
+
+{% block extra_css %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static "css/abyss.widget.css" %}">
+<link rel="stylesheet" href="{% static "css/detail.css" %}">
+<link rel="stylesheet" href="{% static "css/metrics/components/resources.css" %}">
+{% endblock %}
+
+{% block app-content %}
+<div class="row">
+    <div class="col-md-12">
+        <div id="resources"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static "js/pages/resources.js" %}"></script>
+{% endblock %}
