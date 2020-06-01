@@ -1,6 +1,7 @@
 import tarfile
 import datetime
 import calendar
+import urllib
 from cStringIO import StringIO
 from zipfile import ZipFile
 from base64 import decodestring
@@ -166,6 +167,26 @@ class ListDeploy(LoginRequiredView):
 class AppResources(AppMixin,  TemplateView):
     template_name = 'apps/resources.html'
 
+    def get_context_data(self, *args, **kwargs):
+        context = super(AppResources, self).get_context_data(*args, **kwargs)
+        context['grafana_url'] = self.get_grafana_url(context['app'])
+
+        return context
+
+
+    def get_grafana_url(self, app):
+        if not settings.GRAFANA_DASHBOARD:
+            return
+
+        args = {
+            'var-datasource': settings.GRAFANA_DEFAULT_DATASOURCE,
+            'var-pool': app['pool'],
+            'var-app': self.kwargs['app_name'],
+            'theme': settings.GRAFANA_THEME,
+            'kiosk': settings.GRAFANA_KIOSK,
+        }
+
+        return settings.GRAFANA_DASHBOARD + '?' + urllib.urlencode(args)
 
 class AppInfo(AppMixin, TemplateView):
     template_name = 'apps/info.html'
