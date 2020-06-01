@@ -3,7 +3,12 @@ from tsuru_dashboard import engine
 
 class ResourcesTab(engine.Tab):
     name = 'resources'
-    url_name = 'detail-app'
+    url_name = 'app-resources'
+
+
+class InfoTab(engine.Tab):
+    name = 'info'
+    url_name = 'app-info'
 
 
 class DeploysTab(engine.Tab):
@@ -18,7 +23,7 @@ class EventsTab(engine.Tab):
 
 class LogTab(engine.Tab):
     name = 'log'
-    url_name = 'app_log'
+    url_name = 'app-log'
 
 
 class SettingsTab(engine.Tab):
@@ -30,7 +35,7 @@ class App(engine.App):
     name = 'app'
 
     def __init__(self):
-        self.tabs = [ResourcesTab, DeploysTab, EventsTab, LogTab, SettingsTab]
+        self.tabs = [ResourcesTab, InfoTab, DeploysTab, EventsTab, LogTab, SettingsTab]
 
 
 engine.register(App)

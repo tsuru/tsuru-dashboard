@@ -163,8 +163,12 @@ class ListDeploy(LoginRequiredView):
         return TemplateResponse(request, self.template, context=context)
 
 
-class AppDetail(AppMixin, TemplateView):
-    template_name = 'apps/details.html'
+class AppResources(AppMixin,  TemplateView):
+    template_name = 'apps/resources.html'
+
+
+class AppInfo(AppMixin, TemplateView):
+    template_name = 'apps/info.html'
 
     def service_instances(self, app_name):
         tsuru_url = '{}/services/instances?app={}'.format(settings.TSURU_HOST, app_name)
@@ -174,7 +178,7 @@ class AppDetail(AppMixin, TemplateView):
         return []
 
     def get_context_data(self, *args, **kwargs):
-        context = super(AppDetail, self).get_context_data(*args, **kwargs)
+        context = super(AppInfo, self).get_context_data(*args, **kwargs)
         app_name = kwargs['app_name']
         service_instances = []
 
