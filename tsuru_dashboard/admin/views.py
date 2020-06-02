@@ -81,7 +81,7 @@ class NodeInfoJson(LoginRequiredView):
             for container in node_dict["units"]:
                 if "AppName" in container:
                     container["DashboardURL"] = reverse(
-                        'detail-app', kwargs={'app_name': container["AppName"]})
+                        'app-info', kwargs={'app_name': container["AppName"]})
         return JsonResponse({
             "node": {
                 "info": node_dict,

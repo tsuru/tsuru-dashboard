@@ -23,112 +23,112 @@
 
 {% block content %}
 <div class="container-fluid">
-	<div class="row">
-		<div class="col-md-12">
-			<div class="widget">
-				<div class="title">
-					<span class="icon">
-						<i class="icon-signal"></i>
-					</span>
-					<h5>Info</h5>
-				</div>
-				<div class="content">
-					<ul class="no-style">
-						<li><strong>Service:</strong> {{ service_name }}</li>
-						<li><strong>Teams:</strong> {{ instance.Teams|join:", " }}</li>
-						<li><strong>Team Owner:</strong> {{ instance.TeamOwner }}</li>
-						<li><strong>Description:</strong> {{ instance.Description }}</li>
-						<li><strong>Tags:</strong> {{ instance.Tags }}</li>
-						<li><strong>Plan:</strong> {{ instance.PlanName }}</li>
-						<li><strong>Plan description:</strong> {{instance.PlanDescription}}</li>
-					</ul>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-md-12">
-			<div class="widget">
-				<div class="title">
-					<span class="icon">
-						<i class="icon-signal"></i>
-					</span>
-					<h5>Bound apps</h5>
-				</div>
-				<div class="content">
-					<ul class="no-style">
-						{% for app in instance.Apps %}
-						<li>
-							<div class="row">
-								<div class="col-md-3">
-									<a href="{% url 'detail-app' app %}"> {{ app }} </a>
-								</div>
-								<div class="col-md-8">
-									<a class="btn btn-primary" href="{% url 'unbind' service_name instance_name app %}">Unbind</a>
-								</div>
-							</div>
-						</li>
-						{% endfor %}
-						<li>
-							<div class="row">
-								<form action="{% url 'bind' service_name instance_name %}" method="post">
-									<div class="col-md-3">
-										{% csrf_token %}
-										<select name="app">
-											<option>Select an app...</option>
-											{% for app in apps %}
-											<option value="{{ app }}">{{ app }}</option>
-											{% endfor %}
-										</select>
-									</div>
-									<div class="col-md-8">
-										<button class="btn btn-primary" href="#">Bind</button>
-									</div>
-								</form>
-							</div>
-						</li>
-					</ul>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-md-12">
-			<div class="widget">
-				<div class="title">
-					<span class="icon">
-						<i class="icon-signal"></i>
-					</span>
-					<h5>Dangerous!</h5>
-				</div>
-				<div class="content">
-					<a class="btn btn-danger" href="#confirmation" data-toggle="modal"><i class="icon-remove icon-white"></i> Delete instance</a>
-				</div>
-			</div>
-		</div>
-	</div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="widget">
+                <div class="title">
+                    <span class="icon">
+                        <i class="icon-signal"></i>
+                    </span>
+                    <h5>Info</h5>
+                </div>
+                <div class="content">
+                    <ul class="no-style">
+                        <li><strong>Service:</strong> {{ service_name }}</li>
+                        <li><strong>Teams:</strong> {{ instance.Teams|join:", " }}</li>
+                        <li><strong>Team Owner:</strong> {{ instance.TeamOwner }}</li>
+                        <li><strong>Description:</strong> {{ instance.Description }}</li>
+                        <li><strong>Tags:</strong> {{ instance.Tags }}</li>
+                        <li><strong>Plan:</strong> {{ instance.PlanName }}</li>
+                        <li><strong>Plan description:</strong> {{instance.PlanDescription}}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="widget">
+                <div class="title">
+                    <span class="icon">
+                        <i class="icon-signal"></i>
+                    </span>
+                    <h5>Bound apps</h5>
+                </div>
+                <div class="content">
+                    <ul class="no-style">
+                        {% for app in instance.Apps %}
+                        <li>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <a href="{% url 'app-info' app %}"> {{ app }} </a>
+                                </div>
+                                <div class="col-md-8">
+                                    <a class="btn btn-primary" href="{% url 'unbind' service_name instance_name app %}">Unbind</a>
+                                </div>
+                            </div>
+                        </li>
+                        {% endfor %}
+                        <li>
+                            <div class="row">
+                                <form action="{% url 'bind' service_name instance_name %}" method="post">
+                                    <div class="col-md-3">
+                                        {% csrf_token %}
+                                        <select name="app">
+                                            <option>Select an app...</option>
+                                            {% for app in apps %}
+                                            <option value="{{ app }}">{{ app }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <button class="btn btn-primary" href="#">Bind</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="widget">
+                <div class="title">
+                    <span class="icon">
+                        <i class="icon-signal"></i>
+                    </span>
+                    <h5>Dangerous!</h5>
+                </div>
+                <div class="content">
+                    <a class="btn btn-danger" href="#confirmation" data-toggle="modal"><i class="icon-remove icon-white"></i> Delete instance</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <div id="confirmation" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-				<h3 id="myModalLabel">Are you sure?</h3>
-			</div>
-			<div class="modal-body">
-				<p>with {{ instance_name }} This action CANNOT be undone. This will delete the <strong>{{ instance_name }}</strong></p>
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 id="myModalLabel">Are you sure?</h3>
+            </div>
+            <div class="modal-body">
+                <p>with {{ instance_name }} This action CANNOT be undone. This will delete the <strong>{{ instance_name }}</strong></p>
 
-				<p>Please type in the name of your service instance to confirm.</p>
-				<input type="text" class="remove-confirmation" />
-			</div>
-			<div class="modal-footer">
-				<form method="get" action="{% url 'service-remove' service_name instance_name %}">
-					<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-					<button class="btn btn-danger btn-remove" disabled="disabled">Delete instance</button>
-				</form>
-			</div>
-		</div>
-	</div>
+                <p>Please type in the name of your service instance to confirm.</p>
+                <input type="text" class="remove-confirmation" />
+            </div>
+            <div class="modal-footer">
+                <form method="get" action="{% url 'service-remove' service_name instance_name %}">
+                    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                    <button class="btn btn-danger btn-remove" disabled="disabled">Delete instance</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
 

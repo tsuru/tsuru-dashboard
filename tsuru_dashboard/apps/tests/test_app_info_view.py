@@ -3,12 +3,12 @@ from django.test.client import RequestFactory
 from django.http import Http404
 
 from tsuru_dashboard import settings
-from tsuru_dashboard.apps.views import AppDetail
+from tsuru_dashboard.apps.views import AppInfo
 
 from mock import patch, Mock
 
 
-class AppDetailTestCase(TestCase):
+class AppInfoTestCase(TestCase):
     @patch("requests.get")
     def setUp(self, requests_mock):
         request = RequestFactory().get("/")
@@ -31,17 +31,17 @@ class AppDetailTestCase(TestCase):
         service_instances_mock = Mock()
         service_instances_mock.return_value = [{"service": "mongodb", "instances": ["mymongo"]}]
 
-        self.old_service_instances = AppDetail.service_instances
-        AppDetail.service_instances = service_instances_mock
+        self.old_service_instances = AppInfo.service_instances
+        AppInfo.service_instances = service_instances_mock
 
-        self.response = AppDetail.as_view()(request, app_name="app1")
+        self.response = AppInfo.as_view()(request, app_name="app1")
         self.request = request
 
     def tearDown(self):
-        AppDetail.service_instances = self.old_service_instances
+        AppInfo.service_instances = self.old_service_instances
 
-    def test_should_use_detail_template(self):
-        self.assertIn("apps/details.html", self.response.template_name)
+    def test_should_use_info_template(self):
+        self.assertIn("apps/info.html", self.response.template_name)
 
     def test_should_get_the_app_info_from_tsuru(self):
         self.assertDictEqual(self.expected, self.response.context_data["app"])
@@ -56,8 +56,8 @@ class AppDetailTestCase(TestCase):
         response = Mock(status_code=204)
         response.json.side_effect = ValueError
         get.return_value = response
-        AppDetail.service_instances = self.old_service_instances
-        app_detail = AppDetail()
+        AppInfo.service_instances = self.old_service_instances
+        app_detail = AppInfo()
         app_detail.request = self.request
         app_detail.service_instances("appname")
         get.assert_called_with(
@@ -74,7 +74,7 @@ class AppDetailTestCase(TestCase):
 
         service_instances_mock = Mock()
         service_instances_mock.return_value = [{"service": "mongodb", "instances": ["mymongo"]}]
-        AppDetail.service_instances = service_instances_mock
+        AppInfo.service_instances = service_instances_mock
 
         with self.assertRaises(Http404):
-            AppDetail.as_view()(request, app_name="app1")
+            AppInfo.as_view()(request, app_name="app1")

@@ -174,7 +174,6 @@ class AppResources(AppMixin,  TemplateView):
 
         return context
 
-
     def get_grafana_url(self, app):
         if not settings.GRAFANA_DASHBOARD:
             return
@@ -194,6 +193,7 @@ class AppResources(AppMixin,  TemplateView):
 
         return settings.GRAFANA_DASHBOARD + '?' + urllib.urlencode(args)
 
+
 class AppInfo(AppMixin, TemplateView):
     template_name = 'apps/info.html'
 
@@ -208,7 +208,7 @@ class AppInfo(AppMixin, TemplateView):
         groups = defaultdict(lambda: list())
 
         for unit in app['units']:
-            groups[(unit['ProcessName'], unit['Version'])].append(unit)
+            groups[(unit['ProcessName'], unit.get('Version'))].append(unit)
 
         return [
                 {"process_name": process, "version": version, "units": units}
