@@ -2,14 +2,21 @@
 {% load staticfiles %}
 
 {% block extra_css %}
-{{ block.super }}
-<link rel="stylesheet" href="{% static "css/abyss.widget.css" %}">
-<link rel="stylesheet" href="{% static "css/detail.css" %}">
-<link rel="stylesheet" href="{% static "css/metrics/components/resources.css" %}">
+  {{ block.super }}
+  <link rel="stylesheet" href="{% static "css/abyss.widget.css" %}">
+  <link rel="stylesheet" href="{% static "css/detail.css" %}">
+  <link rel="stylesheet" href="{% static "css/metrics/components/resources.css" %}">
+  {% if not grafana_url %}
+    <link rel="stylesheet" href="{% static "css/metrics/components/metrics.legacy.css" %}">
+  {% endif %}
+{% endblock %}
+
+{% block navbar %}
+  {% include "apps/navbar.html" with active="resources" %}
 {% endblock %}
 
 {% block app-content %}
-<div class="row">
+  <div class="row">
     <div class="col-md-12">
       <div id="resources">
         {% if grafana_url %}
@@ -17,10 +24,13 @@
         {% endif %}
       </div>
     </div>
-</div>
+  </div>
 {% endblock %}
 
 {% block extra_js %}
+  <script src="{% static "js/vendor/jquery.flot.min.js" %}"></script>
+  <script src="{% static "js/vendor/jquery.flot.time.min.js" %}"></script>
+  <script src="{% static "js/vendor/jquery.flot.tooltip.min.js" %}"></script>
   {% if not grafana_url %}
     <script src="{% static "js/pages/resources.legacy.js" %}"></script>
   {% endif %}
