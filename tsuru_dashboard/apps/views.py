@@ -6,6 +6,7 @@ from cStringIO import StringIO
 from zipfile import ZipFile
 from base64 import decodestring
 from dateutil import parser
+from collections import defaultdict
 
 import requests
 import json
@@ -178,8 +179,13 @@ class AppResources(AppMixin,  TemplateView):
         if not settings.GRAFANA_DASHBOARD:
             return
 
+        datasource = settings.GRAFANA_DATASOURCE_FOR_POOL.get(
+            app['pool'],
+            settings.GRAFANA_DEFAULT_DATASOURCE
+        )
+
         args = {
-            'var-datasource': settings.GRAFANA_DEFAULT_DATASOURCE,
+            'var-datasource': datasource,
             'var-pool': app['pool'],
             'var-app': self.kwargs['app_name'],
             'theme': settings.GRAFANA_THEME,
@@ -198,6 +204,17 @@ class AppInfo(AppMixin, TemplateView):
             return response.json()
         return []
 
+    def get_grouped_units(self, app):
+        groups = defaultdict(lambda: list())
+
+        for unit in app['units']:
+            groups[(unit['ProcessName'], unit['Version'])].append(unit)
+
+        return [
+                {"process_name": process, "version": version, "units": units}
+                for (process, version), units in groups.items()
+         ]
+
     def get_context_data(self, *args, **kwargs):
         context = super(AppInfo, self).get_context_data(*args, **kwargs)
         app_name = kwargs['app_name']
@@ -209,6 +226,7 @@ class AppInfo(AppMixin, TemplateView):
                     {'name': service['instances'][0], 'servicename': service['service']}
                 )
 
+        context['app']['grouped_units'] = self.get_grouped_units(context['app'])
         context['app']['service_instances'] = service_instances
         return context
 
