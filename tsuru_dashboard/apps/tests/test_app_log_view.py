@@ -24,5 +24,5 @@ class AppLogViewTest(TestCase):
         self.assertIn('app', self.response.context_data)
 
     def test_get_request_run_url_should_not_return_404(self):
-        response = self.client.get(reverse('app_log', args=[self.app_name]))
+        response = self.client.get(reverse('app-log', args=[self.app_name]))
         self.assertNotEqual(404, response.status_code)

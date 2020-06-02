@@ -72,7 +72,7 @@ class NodeInfoJsonViewTest(TestCase):
 
     def test_should_get_list_of_containers_from_tsuru(self):
         containers = self.containers
-        containers[0]["DashboardURL"] = u"/apps/myapp/"
+        containers[0]["DashboardURL"] = u"/apps/myapp/info/"
         self.assertListEqual(containers, self.responseContent["node"]["info"]["units"])
 
     def test_should_get_node_info_from_tsuru(self):
@@ -86,7 +86,7 @@ class NodeInfoJsonViewTest(TestCase):
             "pool": "tsuru1",
             "last_success": '2015-11-16T20:44:36Z',
             "units": [
-                {"DashboardURL": "/apps/myapp/", "id": "blabla", "type": "python",
+                {"DashboardURL": "/apps/myapp/info/", "id": "blabla", "type": "python",
                  "AppName": "myapp", "hostaddr": "http://127.0.0.2:4243", "IP": "http://127.0.0.2:4243"},
             ],
             "units_stats": {"total": 1},
