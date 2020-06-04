@@ -6,6 +6,7 @@ urlpatterns = [
     url(r'^$', views.PoolList.as_view(), name='pool-list'),
     url(r'^pool/(?P<pool>[\w\\.-]+)/rebalance/$', views.PoolRebalance.as_view(), name='pool-rebalance'),
     url(r'^pool/(?P<pool>[\w\\.-]+)/$', views.PoolInfo.as_view(), name='pool-info'),
+    url(r'^pool/(?P<pool>[\w\\.-]+)/metrics/$', views.PoolMetrics.as_view(), name='pool-metrics'),
     url(r'^node/(?P<address>.+)/remove/$', views.NodeRemove.as_view(), name='node-remove'),
     url(r'^node/add/$', views.NodeAdd.as_view(), name='node-add'),
     url(r'^deploys/$', views.ListDeploy.as_view(), name='list-deploys'),

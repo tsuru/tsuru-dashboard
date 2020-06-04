@@ -1,0 +1,14 @@
+<ul class="nav nav-tabs">
+  <li role="presentation"{% if active == "info" %} class="active"{% endif %}>
+    <a class="btn" href="{% url 'pool-info' pool %}">Nodes</a>
+  </li>
+  <li role="presentation"{% if active == "metrics" %} class="active"{% endif %}>
+    <a class="btn" href="{% url 'pool-metrics' pool %}">Metrics</a>
+  </li>
+  <li role="presentation">
+    <a href="#node-create" data-toggle="modal">Create node</a>
+  </li>
+  <li role="presentation">
+    <a class="btn" href="#pool-rebalance" data-toggle="modal">Rebalance</a>
+  </li>
+</ul>

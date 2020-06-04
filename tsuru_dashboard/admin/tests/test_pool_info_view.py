@@ -29,7 +29,7 @@ class PoolInfoViewTest(TestCase):
         response = PoolInfo.as_view()(self.request, pool="mypool")
 
         self.assertIn("admin/pool_info.html", response.template_name)
-        self.assertEqual({}, response.context_data["pools"])
+        self.assertEqual([], response.context_data["nodes"])
 
     @httpretty.activate
     @mock.patch("tsuru_dashboard.auth.views.token_is_valid")
@@ -70,7 +70,7 @@ class PoolInfoViewTest(TestCase):
 
         response = PoolInfo.as_view()(self.request, pool="mypool")
         date = parser.parse("2014-08-01T14:09:40-03:00")
-        expected = {"mypool": [
+        expected = [
             {"address": "http://128.0.0.1:4243",
              "units_stats": {"started": 1, "stopped": 1, "total": 2},
              "metadata": {"LastSuccess": "2014-08-01T14:09:40-03:00", "pool": "mypool"},
@@ -95,8 +95,8 @@ class PoolInfoViewTest(TestCase):
                        {"HostAddr": "http://myserver2.com:2375", "IP": "http://myserver2.com:2375", "Status": "stopped"}],
              "last_success": date,
              "status": "ready"},
-        ]}
-        self.assertEqual(expected, response.context_data["pools"])
+        ]
+        self.assertEqual(expected, response.context_data["nodes"])
 
     @httpretty.activate
     @mock.patch("tsuru_dashboard.auth.views.token_is_valid")
@@ -132,7 +132,7 @@ class PoolInfoViewTest(TestCase):
 
         response = PoolInfo.as_view()(self.request, pool="mypool")
         date = parser.parse("2014-08-01T14:09:40-03:00")
-        expected = {"mypool": [
+        expected = [
             {"address": "http://128.0.0.1:4243",
              "units_stats": {},
              "units": [],
@@ -147,5 +147,5 @@ class PoolInfoViewTest(TestCase):
              "metadata": {"LastSuccess": "2014-08-01T14:09:40-03:00", "pool": "mypool"},
              "last_success": date,
              "status": "ready"},
-        ]}
-        self.assertEqual(expected, response.context_data["pools"])
+        ]
+        self.assertEqual(expected, response.context_data["nodes"])

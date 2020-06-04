@@ -2,120 +2,59 @@
 {% load staticfiles %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static "css/pool-rebalance.css" %}" />
-<link rel="stylesheet" href="{% static "css/pages/node-create.css" %}">
-<link rel="stylesheet" href="{% static "css/metrics/components/metrics.css" %}">
+  <link rel="stylesheet" href="{% static "css/pool-rebalance.css" %}" />
+  <link rel="stylesheet" href="{% static "css/pages/node-create.css" %}">
 {% endblock %}
 
 {% block sidebar %}
-{% include "sidebar.html" with active="docker" %}
+  {% include "sidebar.html" with active="docker" %}
 {% endblock %}
 
 {% block header %}
-<h1>Admin/Nodes - {{ pool }}</h1>
+  <h1>Admin/Nodes - {{ pool }}</h1>
 {% endblock %}
 
 {% block bar %}
-<div class="bar">
-  <a href="/">dashboard</a> <span class="arrow">></span>
-  <a href="{% url 'pool-list' %}">hosts</a> <span class="arrow">></span>
-  {{ pool }}
-</div>
+  <div class="bar">
+    <a href="/">dashboard</a> <span class="arrow">></span>
+    <a href="{% url 'pool-list' %}">hosts</a> <span class="arrow">></span>
+    {{ pool }}
+  </div>
 {% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-  <div class="col-md-12">
-    {% block content_menu %}
-    <ul class="nav nav-tabs">
-      <li role="presentation" class="active">
-        <a class="btn" href="#">Nodes</a>
-      </li>
-      <li role="presentation">
-        <a href="#node-create" data-toggle="modal">Create node</a>
-      </li>
-      <li role="presentation">
-        <a class="btn" href="#pool-rebalance" data-toggle="modal">Rebalance</a>
-      </li>
-    </ul>
-    {% endblock %}
-  </div>
-  {% block content_body %}
-  {% for key, nodes in pools.items %}
-  <div class="row">
+  <div class="container-fluid">
+    <div class="col-md-12">
+      {% block content_menu %}{% endblock %}
+    </div>
     <div class="col-md-12">
       <div id="node-create"
+           class="modal fade"
+           tabindex="-1"
+           role="dialog"
+           aria-labelledby="myModalLabel"
+           aria-hidden="true">
+      </div>
+    </div>
+    {% block content_body %}{% endblock %}
+  </div>
+
+  <div
+      id="pool-rebalance"
       class="modal fade"
       tabindex="-1"
       role="dialog"
+      data-keyboard="false"
+      data-backdrop="static"
       aria-labelledby="myModalLabel"
-      aria-hidden="true">
-    </div>
+      aria-hidden="true"
+      data-url="{% url "pool-rebalance" pool %}"
+      data-poolname="{{ pool }}">
   </div>
-  <div class="col-md-12">
-    <br>
-    <div class="panel panel-default">
-      <div class="panel-heading">Nodes: {{ nodes | length }}</div>
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Host</th>
-            <th>Started units</th>
-            <th>Stopped units</th>
-            <th>Total units</th>
-            <th>Last success</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for node in nodes %}
-          <tr>
-            <td>
-              <a href="{% url 'node-info' node.address %}" title="Containers List">
-                {{ node.address }}
-              </a>
-            </td>
-            <td>{{ node.units_stats.started|default:"0" }}</td>
-            <td>{{ node.units_stats.stopped|default:"0" }}</td>
-            <td>{{ node.units_stats.total|default:"0" }}</td>
-            <td>{{ node.last_success|date:"Y/m/d H:i:s e" }}</td>
-            <td>{{ node.status }}</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-  </div>
-  {% endfor %}
-  {% endblock %}
-</div>
-
-<div
-  id="pool-rebalance"
-  class="modal fade"
-  tabindex="-1"
-  role="dialog"
-  data-keyboard="false"
-  data-backdrop="static"
-  aria-labelledby="myModalLabel"
-  aria-hidden="true"
-  data-url="{% url "pool-rebalance" pool %}"
-  data-poolname="{{ pool }}">
-</div>
-
-{% block metrics %}
-<div class="col-md-12" id="metrics-container">
-  <div id="pool-metrics">
-  </div>
-</div>
-{% endblock %}
 
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static "js/vendor/jquery.flot.min.js" %}"></script>
-<script src="{% static "js/vendor/jquery.flot.time.min.js" %}"></script>
-<script src="{% static "js/vendor/jquery.flot.tooltip.min.js" %}"></script>
-<script src="{% static "js/pages/pool-info.js" %}"></script>
-<script src="{% static "js/pages/pool-rebalance.js" %}"></script>
+  <script src="{% static "js/pages/pool-rebalance.js" %}"></script>
+  <script src="{% static "js/pages/pool-info.js" %}"></script>
 {% endblock %}

@@ -8,8 +8,10 @@ PROMETHEUS_HOST = os.environ.get("PROMETHEUS_HOST")
 ELASTICSEARCH_INDEX = os.environ.get("ELASTICSEARCH_INDEX", ".measures-tsuru")
 METRICS_COMPONENTS = os.environ.get("METRICS_COMPONENTS", "registry, big-sibling")
 RESOLVE_CONNECTION_HOSTS = os.environ.get("RESOLVE_CONNECTION_HOSTS", "") in ['true', 'True', '1']
+METRICS_ENABLED = os.environ.get("METRICS_ENABLED", "true") in ['true', 'True', '1']
 
 GRAFANA_DASHBOARD = os.environ.get("GRAFANA_DASHBOARD")
+GRAFANA_POOL_DASHBOARD = os.environ.get("GRAFANA_POOL_DASHBOARD")
 GRAFANA_THEME = os.environ.get("GRAFANA_THEME", "light")
 GRAFANA_KIOSK = os.environ.get("GRAFANA_KIOSK", "tv")
 GRAFANA_DEFAULT_DATASOURCE = os.environ.get("GRAFANA_DEFAULT_DATASOURCE")

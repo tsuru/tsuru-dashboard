@@ -1,5 +1,6 @@
 import requests
 import grequests
+import urllib
 import json
 
 from django.views.generic import TemplateView
@@ -174,10 +175,9 @@ class PoolInfo(LoginRequiredView, TemplateView):
     def nodes_by_pool(self, pool):
         url = "{}/docker/node".format(settings.TSURU_HOST)
         response = requests.get(url, headers=self.authorization)
-        pools = {}
 
         if response.status_code == 204:
-            return pools
+            return []
 
         data = response.json()
         node_list = data.get("nodes", [])
@@ -192,18 +192,44 @@ class PoolInfo(LoginRequiredView, TemplateView):
             rs.append(grequests.get(u, headers=self.authorization))
 
         units = grequests.map(rs)
+        nodes_with_units = []
 
         for i, node in enumerate(nodes):
             node.load_units(units[i])
-            nodes_by_pool = pools.get(pool, [])
-            nodes_by_pool.append(node.to_dict())
-            pools[pool] = nodes_by_pool
+            nodes_with_units.append(node.to_dict())
 
-        return pools
+        return nodes_with_units
 
     def get_context_data(self, **kwargs):
         context = super(PoolInfo, self).get_context_data(**kwargs)
-        context.update({"pools": self.nodes_by_pool(kwargs["pool"])})
+        context.update({"nodes": self.nodes_by_pool(kwargs["pool"])})
+        return context
+
+
+class PoolMetrics(LoginRequiredView, TemplateView):
+    template_name = "admin/pool_metrics.html"
+
+    def get_grafana_url(self):
+        if not settings.GRAFANA_POOL_DASHBOARD:
+            return
+
+        datasource = settings.GRAFANA_DATASOURCE_FOR_POOL.get(
+            self.kwargs['pool'],
+            settings.GRAFANA_DEFAULT_DATASOURCE
+        )
+
+        args = {
+            'var-datasource': datasource,
+            'var-pool': self.kwargs['pool'],
+            'theme': settings.GRAFANA_THEME,
+            'kiosk': settings.GRAFANA_KIOSK,
+        }
+
+        return settings.GRAFANA_POOL_DASHBOARD + '?' + urllib.urlencode(args)
+
+    def get_context_data(self, **kwargs):
+        context = super(PoolMetrics, self).get_context_data(**kwargs)
+        context["grafana_url"] = self.get_grafana_url()
         return context
 
 

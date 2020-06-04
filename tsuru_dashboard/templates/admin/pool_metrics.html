@@ -1,0 +1,36 @@
+{% extends 'admin/_pool_info_base.html' %}
+{% load staticfiles %}
+
+{% block extra_css %}
+  {{ block.super }}
+  <link rel="stylesheet" href="{% static "css/metrics/components/resources.css" %}">
+  {% if not grafana_url %}
+    <link rel="stylesheet" href="{% static "css/metrics/components/metrics.legacy.css" %}">
+  {% endif %}
+{% endblock %}
+
+
+{% block content_menu %}
+  {% include "admin/_pool_navbar.html" with active="metrics" %}
+{% endblock %}
+
+{% block content_body %}
+  <div class="col-md-12" id="metrics-container">
+    <div id="pool-metrics">
+      {% if grafana_url %}
+        <iframe class="grafana_frame" src="{{ grafana_url }}"></iframe>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}
+
+{% block extra_js %}
+  {{ block.super }}
+
+  {% if not grafana_url %}
+  <script src="{% static "js/vendor/jquery.flot.min.js" %}"></script>
+  <script src="{% static "js/vendor/jquery.flot.time.min.js" %}"></script>
+  <script src="{% static "js/vendor/jquery.flot.tooltip.min.js" %}"></script>
+  <script src="{% static "js/pages/pool-legacy-metrics.js" %}"></script>
+  {% endif  %}
+{% endblock %}
