@@ -18,6 +18,7 @@ setup(
         "pytz>=2015.4",
         "Pygments>=2.0.2",
         "tsuruclient>=0.3.13",
+        "django-settings-export==1.2.1",
         "grequests>=0.3.0",
         "Pygments>=2.1.3",
         "pymongo>=3.3.0",

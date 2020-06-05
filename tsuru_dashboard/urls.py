@@ -16,7 +16,7 @@ urlpatterns = [
     url(r'^events/', include('tsuru_dashboard.events.urls')),
 ]
 
-if settings.METRICS_ENABLED:
+if settings.LEGACY_METRICS_ENABLED:
     urlpatterns.append(
         url(r'^metrics/', include('tsuru_dashboard.metrics.urls')),
     )

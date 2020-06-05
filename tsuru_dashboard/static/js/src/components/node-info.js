@@ -10,6 +10,8 @@ if(typeof window.jQuery === 'undefined') {
   var $ = window.jQuery;
 }
 
+const settings = JSON.parse(document.getElementById('django-settings').textContent);
+
 export class NodeInfo extends Component {
     constructor(props) {
       super(props);
@@ -60,10 +62,16 @@ export class Node extends Component {
   render() {
     var info = this.props.node.info;
     var nodeAddr = info.address.replace(/^https?:\/\//g, '').replace(/:.*$|\/$/, '');
+    var tabs = ["Containers", "Metadata"];
+
+    if (settings.LEGACY_METRICS_ENABLED) {
+       tabs.push("Metrics");
+    }
+
     return (
       <div className="node">
         <h1>{info.pool} - {info.address} - {info.status}</h1>
-        <Tabs tabs={["Containers", "Metadata", "Metrics"]} setActive={this.setActive} />
+        <Tabs tabs={tabs} setActive={this.setActive} />
         <div className="tab-content">
           {this.state.tab === "Containers" ? <ContainersTab containers={this.props.node.info.units}/> : ""}
           {this.state.tab === "Metrics" ? <MetricsTab addr={nodeAddr}/> : ""}
@@ -105,7 +113,7 @@ export class ContainerRow extends Component {
     var container = this.props.container;
     return (
       <tr>
-        <td>{container.ID.slice(0,12)}</td>
+        <td>{container.ID}</td>
         <td><a href={container.DashboardURL}>{container.AppName}</a></td>
         <td>{container.Type}</td>
         <td>{container.ProcessName}</td>

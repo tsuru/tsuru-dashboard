@@ -40,10 +40,17 @@ TEMPLATES = [
                 "django.template.context_processors.static",
                 'django.template.context_processors.tz',
                 'django.contrib.messages.context_processors.messages',
+                'django_settings_export.settings_export',
             ],
         },
     },
 ]
+
+SETTINGS_EXPORT = [
+    'LEGACY_METRICS_ENABLED',
+]
+
+LEGACY_METRICS_ENABLED = os.environ.get("LEGACY_METRICS_ENABLED", "true") in ['true', 'True', '1']
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',

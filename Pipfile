@@ -17,6 +17,7 @@ gunicorn = "*"
 gevent = "*"
 raven = "==4.2.3"
 whitenoise = "==3.2.1"
+django-settings-export = "==1.2.1"
 tsuru-dashboard = {path = ".",editable = true}
 
 [requires]
