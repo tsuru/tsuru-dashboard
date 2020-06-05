@@ -1,0 +1,32 @@
+<div class="col-md-12">
+  <div class="panel panel-default">
+    <div class="panel-heading">Nodes: {{ nodes | length }}</div>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Host</th>
+          <th>Started units</th>
+          <th>Stopped units</th>
+          <th>Total units</th>
+          <th>Last success</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for node in nodes %}
+          <tr>
+            <td>
+              <a href="{% url 'node-info' node.address %}" title="Containers List">
+                {{ node.address }}
+              </a>
+            </td>
+            <td>{{ node.units_stats.started|default:"0" }}</td>
+            <td>{{ node.units_stats.stopped|default:"0" }}</td>
+            <td>{{ node.units_stats.total|default:"0" }}</td>
+            <td>{{ node.last_success|date:"Y/m/d H:i:s e" }}</td>
+            <td>{{ node.status }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
