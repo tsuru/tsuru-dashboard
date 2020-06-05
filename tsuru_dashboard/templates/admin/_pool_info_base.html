@@ -25,7 +25,9 @@
 {% block content %}
   <div class="container-fluid">
     <div class="col-md-12">
-      {% block content_menu %}{% endblock %}
+      <ul class="nav nav-tabs">
+        {% block content_menu %}{% endblock %}
+      </ul>
     </div>
     <div class="col-md-12">
       <div id="node-create"
