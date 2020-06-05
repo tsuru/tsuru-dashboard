@@ -440,11 +440,16 @@ class LogStream(LoginRequiredView):
         unit = request.GET.get('unit')
 
         def sending_stream():
-            url = '{}/apps/{}/log?lines=15&follow=1'.format(settings.TSURU_HOST, app_name)
-            if source is not None:
-                url += "&source={}".format(source)
-            if unit is not None:
-                url += "&unit={}".format(unit)
+            params = {
+                'lines': '15',
+                'follow': '1',
+            }
+            if source:
+                params['source'] = source
+            if unit:
+                params['unit'] = unit
+
+            url = '{}/apps/{}/log?{}'.format(settings.TSURU_HOST, app_name, urllib.urlencode(params))
             r = requests.get(url, headers=self.authorization, stream=True)
             for line in r.iter_lines():
                 yield line

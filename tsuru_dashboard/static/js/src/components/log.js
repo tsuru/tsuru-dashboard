@@ -10,6 +10,14 @@ if(typeof window.jQuery === 'undefined') {
   var $ = window.jQuery;
 }
 
+var hexRegex = new RegExp('^[a-f0-9]+$');
+function shortID(id) {
+    if (id.match(hexRegex)) {
+        return id.substring(0,12);
+    }
+    return id;
+}
+
 class Follow extends Component {
   constructor(props) {
     super(props);
@@ -130,7 +138,7 @@ export class LogFilters extends Component {
         if (this.state.unitsList !== null) {
             units = [""];
             for (var i=0; i < this.state.unitsList.length; i ++) {
-                units.push(this.state.unitsList[i].ID.substring(0,12));
+                units.push(shortID(this.state.unitsList[i].ID));
             }
         }
         return (
