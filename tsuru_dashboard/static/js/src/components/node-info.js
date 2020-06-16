@@ -10,7 +10,6 @@ if(typeof window.jQuery === 'undefined') {
   var $ = window.jQuery;
 }
 
-const settings = JSON.parse(document.getElementById('django-settings').textContent);
 
 export class NodeInfo extends Component {
     constructor(props) {
@@ -38,7 +37,7 @@ export class NodeInfo extends Component {
   render() {
     return (
       <div className="node-container">
-        {this.state.node === null ? "" : <Node node={this.state.node} />}
+        {this.state.node === null ? "" : <Node node={this.state.node} settings={this.props.settings} />}
       </div>
     )
   }
@@ -64,7 +63,7 @@ export class Node extends Component {
     var nodeAddr = info.address.replace(/^https?:\/\//g, '').replace(/:.*$|\/$/, '');
     var tabs = ["Containers", "Metadata"];
 
-    if (settings.ELASTICSEARCH_METRICS_ENABLED) {
+    if (this.props.settings && this.props.settings.ELASTICSEARCH_METRICS_ENABLED) {
        tabs.push("Metrics");
     }
 
