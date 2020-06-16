@@ -35,6 +35,9 @@ def get_app_backend(app_name, token, **kwargs):
         url = settings.PROMETHEUS_HOST
         backends.append(prometheus.AppBackend(app=app, url=url, **kwargs))
 
+    if not settings.ELASTICSEARCH_METRICS_ENABLED:
+        return backends
+
     if envs and "METRICS_ELASTICSEARCH_HOST" in envs:
         url = envs["METRICS_ELASTICSEARCH_HOST"]
         backends.append(elasticsearch.AppBackend(app=app, url=url, **kwargs))

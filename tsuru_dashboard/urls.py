@@ -1,7 +1,6 @@
 from django.conf.urls import url, include
 
 from tsuru_dashboard.dashboard.views import IndexView
-from tsuru_dashboard import settings
 
 urlpatterns = [
     url(r'^$', IndexView.as_view()),
@@ -14,9 +13,5 @@ urlpatterns = [
     url(r'^dashboard/', include('tsuru_dashboard.dashboard.urls')),
     url(r'^components/', include('tsuru_dashboard.components.urls')),
     url(r'^events/', include('tsuru_dashboard.events.urls')),
+    url(r'^metrics/', include('tsuru_dashboard.metrics.urls')),
 ]
-
-if settings.LEGACY_METRICS_ENABLED:
-    urlpatterns.append(
-        url(r'^metrics/', include('tsuru_dashboard.metrics.urls')),
-    )
