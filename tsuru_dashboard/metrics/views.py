@@ -53,11 +53,17 @@ class AppMetric(Metric):
 
 class ComponentMetric(Metric):
     def get_metrics_backend(self, metric, target, date_range, token):
+        if not settings.ELASTICSEARCH_METRICS_ENABLED:
+            return
+
         return get_tsuru_backend(component=target, token=token, date_range=date_range)
 
 
 class NodeMetric(Metric):
     def get_metrics_backend(self, metric, target, date_range, token):
+        if not settings.ELASTICSEARCH_METRICS_ENABLED:
+            return
+
         return NodeMetricsBackend(addr=target, date_range=date_range)
 
 
@@ -82,5 +88,8 @@ class PoolMetric(Metric):
         return pool_nodes
 
     def get_metrics_backend(self, metric, target, date_range, token):
+        if not settings.ELASTICSEARCH_METRICS_ENABLED:
+            return
+
         addrs = self.get_pool_nodes(target)
         return NodesMetricsBackend(addrs=addrs, date_range=date_range)

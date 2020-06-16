@@ -64,7 +64,7 @@ export class Node extends Component {
     var nodeAddr = info.address.replace(/^https?:\/\//g, '').replace(/:.*$|\/$/, '');
     var tabs = ["Containers", "Metadata"];
 
-    if (settings.LEGACY_METRICS_ENABLED) {
+    if (settings.ELASTICSEARCH_METRICS_ENABLED) {
        tabs.push("Metrics");
     }
 

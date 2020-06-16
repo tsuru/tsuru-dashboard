@@ -47,10 +47,10 @@ TEMPLATES = [
 ]
 
 SETTINGS_EXPORT = [
-    'LEGACY_METRICS_ENABLED',
+    'ELASTICSEARCH_METRICS_ENABLED',
 ]
 
-LEGACY_METRICS_ENABLED = os.environ.get("LEGACY_METRICS_ENABLED", "true") in ['true', 'True', '1']
+ELASTICSEARCH_METRICS_ENABLED = os.environ.get("ELASTICSEARCH_METRICS_ENABLED", "true") in ['true', 'True', '1']
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
