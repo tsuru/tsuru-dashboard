@@ -43,6 +43,9 @@ describe('NodeInfo', () => {
 });
 
 describe('Node', () => {
+  var settings = {
+    ELASTICSEARCH_METRICS_ENABLED: true
+  };
   var nodeData = {
     info: {
       status: "ready",
@@ -76,25 +79,25 @@ describe('Node', () => {
   };
 
   it('has node as className', () => {
-    const node = shallow(<Node node={nodeData}/>);
+    const node = shallow(<Node node={nodeData} settings={settings}/>);
     expect(node.find(".node").length).toBe(1);
   });
 
   it('renders the tabs', () => {
-    const node = shallow(<Node node={nodeData}/>);
+    const node = shallow(<Node node={nodeData} settings={settings}/>);
     var tabs = node.find(Tabs);
     expect(tabs.props().tabs).toEqual(["Containers", "Metadata", "Metrics"]);
   });
 
   it('renders <ContainersTab/>', () => {
-    const node = shallow(<Node node={nodeData}/>);
+    const node = shallow(<Node node={nodeData} settings={settings}/>);
     var containers = node.find(ContainersTab);
     expect(containers.props().containers).toEqual(nodeData.info.units);
   });
 
   it('renders <MetricsTab/>', () => {
     $.ajax = jest.fn();
-    const node = mount(<Node node={nodeData}/>);
+    const node = mount(<Node node={nodeData} settings={settings}/>);
     node.find(Tab).at(2).find("a").simulate("click");
     expect(node.find(MetricsTab).length).toBe(1);
     expect(node.find(MetricsTab).props().addr).toBe("127.0.0.1");
@@ -124,7 +127,7 @@ describe('Node', () => {
           units: []
         }
       }
-      const node = mount(<Node node={data}/>);
+      const node = mount(<Node node={data} settings={settings}/>);
       node.find(Tab).at(2).find("a").simulate("click");
       expect(node.find(MetricsTab).length).toBe(1);
       expect(node.find(MetricsTab).props().addr).toBe("127.0.0.1");
