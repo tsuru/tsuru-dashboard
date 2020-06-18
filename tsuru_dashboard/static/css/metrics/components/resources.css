@@ -3,5 +3,9 @@
     background: #000;
     border: none;
     width: 100%;
-    height: 4000px;
+    height: calc(100vh - 271px);
+}
+
+body {
+    overflow: hidden !important;
 }
