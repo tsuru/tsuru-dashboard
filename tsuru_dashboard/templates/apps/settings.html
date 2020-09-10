@@ -1,5 +1,6 @@
 {% extends "apps/base.html" %}
 {% load staticfiles %}
+{% load math %}
 
 {% block navbar %}
 {% include "apps/navbar.html" with active="settings" %}
@@ -32,8 +33,30 @@
     <h3>Plan</h3>
     <div class="content">
       <p><strong>Name:</strong> {{ app.plan.name }}</p>
-      <p><strong>Memory:</strong> {{ app.plan.memory|filesizeformat }}</p>
-      <p><strong>Swap:</strong> {{ app.plan.swap|filesizeformat }}</p>
+
+      <p>
+        <strong>CPU:</strong>
+        {% if app.plan.override.cpumilli %}
+          {{ app.plan.override.cpumilli |divide:10 }}% (override)
+        {% elif app.plan.cpumilli %}
+          {{ app.plan.cpumilli |divide:10 }}%
+        {% else %}
+          {{ app.plan.cpushare }} (CPU share)
+        {% endif %}
+      </p>
+
+      <p>
+        <strong>Memory:</strong>
+        {% if app.plan.override.memory %}
+          {{ app.plan.override.memory|filesizeformat }} (override)
+        {% else %}
+          {{ app.plan.memory|filesizeformat }}
+        {% endif %}
+      </p>
+
+      {% if app.plan.swap > 0 %}
+        <p><strong>Swap:</strong> {{ app.plan.swap|filesizeformat }}</p>
+      {% endif %}
     </div>
   </div>
 </div>
