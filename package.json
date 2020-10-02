@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Web dashboard for tsuru PaaS",
   "main": "index.js",
+  "engines": {
+    "node": ">=12"
+  },
   "dependencies": {},
   "devDependencies": {
     "babel": "^6.23.0",
