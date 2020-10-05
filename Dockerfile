@@ -1,4 +1,4 @@
-FROM node:8 as builder
+FROM node:12.8 as builder
 COPY . /build
 WORKDIR /build
 RUN make build-js
