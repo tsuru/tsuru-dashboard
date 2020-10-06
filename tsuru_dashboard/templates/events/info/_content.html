@@ -55,6 +55,9 @@
         <label class="break">Other Custom Data:</label>
         {{ event.OtherCustomData.Data | safe }}
         {% endif %}
+        {% if event.Instance.Name %}
+          <label>Instance:</label><span>{{ event.Instance.Name }}</span>
+        {% endif %}
         {% if event.Log %}
         <label class="break">Log:</label>
         <div>
