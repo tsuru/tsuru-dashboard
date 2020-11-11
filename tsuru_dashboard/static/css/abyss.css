@@ -64,8 +64,8 @@ ul.no-style {
 
 .sidebar .nav > li > a:hover,
 .sidebar .nav > li > a:focus,
-.sidebar .nav > li.active > a {
-	background-color: rgba(255,255,255,0.2);
+.sidebar .nav > li.active> a {
+	background-color: rgba(255, 255, 255, 0.2);
 }
 
 .dropdown-menu {
@@ -104,7 +104,8 @@ select {
 	padding-bottom: 5px;
 }
 
-.table th, .table td {
+.table th,
+.table td {
 	vertical-align: middle;
 }
 
@@ -124,10 +125,10 @@ select {
 }
 
 .pager .current {
-	  border: 3px solid #444444;
-	  margin-left: 2px;
-	  margin-right: 2px;
-	  padding-left: 2px;
+	border: 3px solid #444444;
+	margin-left: 2px;
+	margin-right: 2px;
+	padding-left: 2px;
 }
 
 .text-right-important {
@@ -204,4 +205,8 @@ select {
 .button[disabled] {
 	cursor: not-allowed;
 	background-color: #dddddd;
+}
+
+.alert-error {
+	background-color: #f2dede;
 }
