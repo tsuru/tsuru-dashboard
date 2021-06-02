@@ -13,6 +13,7 @@ import json
 import yaml
 import bson
 import base64
+import fnmatch
 
 from bson import json_util
 
@@ -174,17 +175,24 @@ class AppResources(AppMixin,  TemplateView):
 
         return context
 
+    def get_grafana_datasource(self, app):
+        datasource = None
+        for pool_pattern, pool_datasource in settings.GRAFANA_DATASOURCE_FOR_POOL.items():
+            if fnmatch.fnmatch(app['pool'], pool_pattern):
+                datasource = pool_datasource
+                break
+
+        if not datasource:
+            return settings.GRAFANA_DEFAULT_DATASOURCE
+
+        return datasource.replace('$cluster', app.get('cluster', ''))
+
     def get_grafana_url(self, app):
         if not settings.GRAFANA_DASHBOARD:
             return
 
-        datasource = settings.GRAFANA_DATASOURCE_FOR_POOL.get(
-            app['pool'],
-            settings.GRAFANA_DEFAULT_DATASOURCE
-        )
-
         args = {
-            'var-datasource': datasource,
+            'var-datasource': self.get_grafana_datasource(app),
             'var-pool': app['pool'],
             'var-app': self.kwargs['app_name'],
             'theme': settings.GRAFANA_THEME,
