@@ -21,7 +21,15 @@
 {% block header %}
 <div class="header-wrapper">
   <h1>{{ app.name }}</h1>
-  <a href="http://{{ app.ip }}" target="_blank">http://{{ app.ip }}</a>
+  {% if app.routers %}
+  {% with router=app.routers|first %}
+  {% if "https://" in router.address or "http://" in router.address %}
+  <a href="{{ router.address }}" target="_blank">{{ router.address }}</a>
+  {% elif router.address %}
+  <a href="http://{{ router.address }}" target="_blank">http://{{ router.address }}</a>
+  {% endif %}
+  {% endwith %}
+  {% endif %}
 </div>
 {% endblock %}
 
