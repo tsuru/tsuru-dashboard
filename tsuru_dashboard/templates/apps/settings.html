@@ -99,10 +99,17 @@
     <h3>Domains</h3>
     <div class="content">
       <p>
-        {% if app.cname or app.ip %}
-          <strong>App url:</strong>
+        {% if app.cname or app.routers %}
+          <strong>App URL:</strong>
           <span class="app-urls">
-            <a href="http://{{ app.ip }}" target="_blank">http://{{ app.ip }}</a>
+            {% for router in app.routers %}
+            {% if "https://" in router.address or "http://" in router.address %}
+            <a href="{{ router.address }}" target="_blank">{{ router.address }}</a>
+            {% else %}
+            <a href="http://{{ router.address }}" target="_blank">http://{{ router.address }}</a>
+            {% endif %}
+
+            {% endfor %}
             {% for cname in app.cname %}
               <a href="http://{{ cname }}" target="_blank">http://{{ cname }}</a>
             {% endfor %}
