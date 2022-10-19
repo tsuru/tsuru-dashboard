@@ -18,7 +18,7 @@
     <div class="col-md-12">
       <script id="settings" type="application/json">
        {
-           "GRAFANA_URL": "{{ grafana_url|safe }}"
+           "GRAFANA_URL": {% if grafana_url  %}"{{ grafana_url|safe }}"{% else %}null{% endif %}
        }
       </script>
       <div id="resources"></div>

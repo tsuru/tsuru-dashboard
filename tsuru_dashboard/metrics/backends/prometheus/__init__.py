@@ -85,6 +85,8 @@ class AppBackend(Prometheus):
         self.app_name = app["name"]
         self.process_name = process_name
         self.app_metric_templates = [
+            '{container_metric}{{container=~"{app_name}-{process_name}.*",{extra_query}}}',
+            '{container_metric}{{container="POD",pod=~"{app_name}-{process_name}.*",{extra_query}}}',
             '{container_metric}{{container_name=~"{app_name}-{process_name}.*",{extra_query}}}',
             '{container_metric}{{container_name="POD",pod_name=~"{app_name}-{process_name}.*",{extra_query}}}',
             '{container_metric}{{container_label_app_name="{app_name}",container_label_app_process{process_name_op}"{process_name}",{extra_query}}}',
