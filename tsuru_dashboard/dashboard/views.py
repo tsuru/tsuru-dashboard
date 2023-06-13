@@ -16,27 +16,6 @@ class DashboardView(LoginRequiredView, TemplateView):
     template_name = "dashboard/dashboard.html"
 
 
-class HealingView(LoginRequiredView):
-    def get(self, request):
-        url = "{}/docker/healing".format(settings.TSURU_HOST)
-        response = requests.get(url, headers=self.authorization)
-
-        if response.status_code != 200:
-            return JsonResponse({"healing": 0})
-
-        healings = 0
-        for healing in response.json():
-            end_time = parser.parse(healing['EndTime'])
-            if end_time.tzinfo:
-                end_time = end_time.astimezone(utc)
-            else:
-                end_time = utc.localize(end_time)
-            now = utc.localize(datetime.utcnow())
-            if (now - end_time < timedelta(days=1)):
-                healings += 1
-        return JsonResponse({"healing": healings}, safe=False)
-
-
 class CloudStatusView(LoginRequiredView):
     def total_apps_and_containers(self):
         url = "{}/apps".format(settings.TSURU_HOST)
@@ -52,31 +31,12 @@ class CloudStatusView(LoginRequiredView):
 
         return len(apps), total_containers
 
-    def total_nodes(self):
-        url = "{}/docker/node".format(settings.TSURU_HOST)
-        response = requests.get(url, headers=self.authorization)
-
-        if response.status_code != 200:
-            return 0
-
-        nodes = response.json()
-        return len(nodes['nodes'])
-
-    def containers_by_nodes(self, containers, nodes):
-        if containers <= 0 or nodes <= 0:
-            return 0
-        return containers/nodes
-
     def get(self, request):
         total_apps, total_containers = self.total_apps_and_containers()
-        total_nodes = self.total_nodes()
-        containers_by_nodes = self.containers_by_nodes(total_containers, total_nodes)
 
         data = {
             "total_apps": total_apps,
-            "containers_by_nodes": containers_by_nodes,
             "total_containers": total_containers,
-            "total_nodes": total_nodes,
         }
         return JsonResponse(data, safe=False)
 

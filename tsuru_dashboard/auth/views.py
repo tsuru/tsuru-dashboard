@@ -32,26 +32,6 @@ def token_is_valid(token):
     return response.status_code == 200
 
 
-def get_permissions(token):
-    headers = {"authorization": token}
-    permissions = {}
-
-    url = "{0}/users/info".format(settings.TSURU_HOST)
-    response = requests.get(url, headers=headers)
-    user = response.json()
-    permissions["admin"] = False
-    permissions["healing"] = False
-    for perm in user["Permissions"]:
-        if perm["Name"] == "" and perm["ContextType"] == "global":
-            permissions["admin"] = True
-            for k in permissions:
-                permissions[k] = True
-            return permissions
-        elif perm["Name"] == "healing.read":
-            permissions["healing"] = True
-
-    return permissions
-
 
 class LoginRequiredMixin(object):
 
@@ -72,19 +52,6 @@ class LoginRequiredMixin(object):
             return redirect("%s?next=%s" % (reverse('login'), request.path))
         return super(LoginRequiredMixin, self).dispatch(
             request, *args, **kwargs)
-
-
-class PermissionRequiredMixin(object):
-    required_permission = "admin"
-
-    def dispatch(self, request, *args, **kwargs):
-        permission = request.session.get('permissions', {}).get(self.required_permission, False)
-        if not permission:
-            messages.error(self.request, u'Permission denied.', fail_silently=True)
-            return redirect('/')
-        else:
-            return super(PermissionRequiredMixin, self).dispatch(
-                request, *args, **kwargs)
 
 
 class ChangePassword(LoginRequiredMixin, FormView):
@@ -172,7 +139,6 @@ class Login(FormView):
             result = response.json()
             self.request.session['username'] = username
             self.request.session['tsuru_token'] = "type {0}".format(result['token'])
-            self.request.session['permissions'] = get_permissions(result['token'])
             return super(Login, self).form_valid(form)
 
         form.add_error(None, response.content)
@@ -231,7 +197,6 @@ class Callback(View):
         if response.status_code == 200:
             result = response.json()
             self.request.session['tsuru_token'] = "type {}".format(result['token'])
-            self.request.session['permissions'] = get_permissions(result['token'])
             next_url = self.request.session["next_url"]
             return redirect(next_url)
         return redirect('/auth/login')
